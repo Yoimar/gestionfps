@@ -18,6 +18,10 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
         ],
+        'authManager'       => [
+            'class'         => 'yii\rbac\DbManager',
+            'defaultRoles'  => ['guest'],
+        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
@@ -38,14 +42,14 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
-        /*
+        
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
+        
     ],
     'params' => $params,
 ];

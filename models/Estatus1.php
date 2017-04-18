@@ -1,6 +1,11 @@
 <?php
 
 namespace app\models;
+use yii\db\Expression;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\AttributeBehavior;
+use yii\db\ActiveRecord;
 
 use Yii;
 
@@ -10,7 +15,6 @@ use Yii;
  * @property integer $id
  * @property string $nombre
  * @property string $dim
- * @property integer $version
  * @property string $created_at
  * @property integer $created_by
  * @property string $updated_at
@@ -34,7 +38,7 @@ class Estatus1 extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['version', 'created_by', 'updated_by'], 'integer'],
+            [['created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['nombre'], 'string', 'max' => 60],
             [['dim'], 'string', 'max' => 5],
@@ -50,7 +54,6 @@ class Estatus1 extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nombre' => 'Nombre',
             'dim' => 'Dim',
-            'version' => 'Version',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
@@ -65,4 +68,30 @@ class Estatus1 extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Estatus2::className(), ['estatus1_id' => 'id']);
     }
+    
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+            'blameable' => [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
+
+        ];
+    }
+    
+    
+    
+    
+    
+    
 }

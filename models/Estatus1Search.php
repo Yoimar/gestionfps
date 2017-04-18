@@ -18,7 +18,7 @@ class Estatus1Search extends Estatus1
     public function rules()
     {
         return [
-            [['id', 'version', 'created_by', 'updated_by'], 'integer'],
+            [['id', 'created_by', 'updated_by'], 'integer'],
             [['nombre', 'dim', 'created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -60,7 +60,6 @@ class Estatus1Search extends Estatus1
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'version' => $this->version,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,

@@ -21,11 +21,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'dim') ?>
 
-    <?= $form->field($model, 'version') ?>
-
     <?= $form->field($model, 'created_at') ?>
 
-    <?php // echo $form->field($model, 'created_by') ?>
+    <?= $form->field($model, 'created_by') ?>
 
     <?php // echo $form->field($model, 'updated_at') ?>
 

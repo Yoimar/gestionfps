@@ -20,8 +20,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'created_by')->textInput() ?>
 
-    <?= $form->field($model, 'version')->textInput() ?>
-
     <?= $form->field($model, 'updated_by')->textInput() ?>
 
     <?= $form->field($model, 'updated_at')->textInput() ?>

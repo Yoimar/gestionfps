@@ -18,7 +18,7 @@ class ProgramaeventoSearch extends Programaevento
     public function rules()
     {
         return [
-            [['id', 'origenid', 'nprograma', 'trabajadoracargo_id', 'referencia_id', 'parroquia_id', 'version', 'created_by', 'updated_by'], 'integer'],
+            [['id', 'origenid', 'nprograma', 'trabajadoracargo_id', 'referencia_id', 'parroquia_id', 'created_by', 'updated_by'], 'integer'],
             [['fechaprograma', 'descripcion', 'fecharecibido', 'created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -67,7 +67,6 @@ class ProgramaeventoSearch extends Programaevento
             'referencia_id' => $this->referencia_id,
             'parroquia_id' => $this->parroquia_id,
             'fecharecibido' => $this->fecharecibido,
-            'version' => $this->version,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,

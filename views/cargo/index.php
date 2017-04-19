@@ -27,9 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'nombredim',
             'nombrecompleto',
-            'version',
             'created_at',
-            // 'created_by',
+            'created_by',
             // 'updated_at',
             // 'updated_by',
 

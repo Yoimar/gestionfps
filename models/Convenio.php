@@ -11,7 +11,6 @@ use Yii;
  * @property string $nombre
  * @property string $dimnombre
  * @property integer $tipoconvenio_id
- * @property integer $version
  * @property string $created_at
  * @property integer $created_by
  * @property string $updated_at
@@ -38,7 +37,7 @@ class Convenio extends \yii\db\ActiveRecord
     {
         return [
             [['id'], 'required'],
-            [['id', 'tipoconvenio_id', 'version', 'created_by', 'updated_by'], 'integer'],
+            [['id', 'tipoconvenio_id', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['nombre'], 'string', 'max' => 50],
             [['dimnombre'], 'string', 'max' => 10],
@@ -56,7 +55,6 @@ class Convenio extends \yii\db\ActiveRecord
             'nombre' => 'Nombre',
             'dimnombre' => 'Dimnombre',
             'tipoconvenio_id' => 'Tipoconvenio ID',
-            'version' => 'Version',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',

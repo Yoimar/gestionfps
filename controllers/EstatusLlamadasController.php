@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\EstatusLlamadas;
-use app\models\EstatusLlamadasSearch;
+use app\models\Estatusllamadas;
+use app\models\EstatusllamadasSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * EstatusLlamadasController implements the CRUD actions for EstatusLlamadas model.
+ * EstatusllamadasController implements the CRUD actions for Estatusllamadas model.
  */
-class EstatusLlamadasController extends Controller
+class EstatusllamadasController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class EstatusLlamadasController extends Controller
     }
 
     /**
-     * Lists all EstatusLlamadas models.
+     * Lists all Estatusllamadas models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new EstatusLlamadasSearch();
+        $searchModel = new EstatusllamadasSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class EstatusLlamadasController extends Controller
     }
 
     /**
-     * Displays a single EstatusLlamadas model.
+     * Displays a single Estatusllamadas model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +57,13 @@ class EstatusLlamadasController extends Controller
     }
 
     /**
-     * Creates a new EstatusLlamadas model.
+     * Creates a new Estatusllamadas model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new EstatusLlamadas();
+        $model = new Estatusllamadas();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +75,7 @@ class EstatusLlamadasController extends Controller
     }
 
     /**
-     * Updates an existing EstatusLlamadas model.
+     * Updates an existing Estatusllamadas model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,7 +94,7 @@ class EstatusLlamadasController extends Controller
     }
 
     /**
-     * Deletes an existing EstatusLlamadas model.
+     * Deletes an existing Estatusllamadas model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +107,15 @@ class EstatusLlamadasController extends Controller
     }
 
     /**
-     * Finds the EstatusLlamadas model based on its primary key value.
+     * Finds the Estatusllamadas model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return EstatusLlamadas the loaded model
+     * @return Estatusllamadas the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = EstatusLlamadas::findOne($id)) !== null) {
+        if (($model = Estatusllamadas::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

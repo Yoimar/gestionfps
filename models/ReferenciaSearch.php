@@ -18,7 +18,7 @@ class ReferenciaSearch extends Referencia
     public function rules()
     {
         return [
-            [['id', 'autoridad_id', 'cargo_id', 'created_by', 'version', 'updated_by'], 'integer'],
+            [['id', 'autoridad_id', 'cargo_id', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -64,7 +64,6 @@ class ReferenciaSearch extends Referencia
             'cargo_id' => $this->cargo_id,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
-            'version' => $this->version,
             'updated_by' => $this->updated_by,
             'updated_at' => $this->updated_at,
         ]);

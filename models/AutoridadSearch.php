@@ -18,7 +18,7 @@ class AutoridadSearch extends Autoridad
     public function rules()
     {
         return [
-            [['id', 'created_by', 'version', 'updated_by'], 'integer'],
+            [['id', 'created_by', 'updated_by'], 'integer'],
             [['nombredim', 'nombrecompleto', 'created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -62,7 +62,6 @@ class AutoridadSearch extends Autoridad
             'id' => $this->id,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
-            'version' => $this->version,
             'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
         ]);

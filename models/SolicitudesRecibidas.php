@@ -12,7 +12,6 @@ use Yii;
  * @property integer $area_id
  * @property integer $cantidad
  * @property integer $created_by
- * @property integer $version
  * @property string $updated_at
  * @property string $created_at
  * @property integer $updated_by
@@ -36,7 +35,7 @@ class SolicitudesRecibidas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['programaevento_id', 'area_id', 'cantidad', 'created_by', 'version', 'updated_by'], 'integer'],
+            [['programaevento_id', 'area_id', 'cantidad', 'created_by', 'updated_by'], 'integer'],
             [['updated_at', 'created_at'], 'safe'],
             [['area_id'], 'exist', 'skipOnError' => true, 'targetClass' => Areas::className(), 'targetAttribute' => ['area_id' => 'id']],
             [['programaevento_id'], 'exist', 'skipOnError' => true, 'targetClass' => Programaevento::className(), 'targetAttribute' => ['programaevento_id' => 'id']],
@@ -54,7 +53,6 @@ class SolicitudesRecibidas extends \yii\db\ActiveRecord
             'area_id' => 'Area ID',
             'cantidad' => 'Cantidad',
             'created_by' => 'Created By',
-            'version' => 'Version',
             'updated_at' => 'Updated At',
             'created_at' => 'Created At',
             'updated_by' => 'Updated By',

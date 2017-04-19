@@ -21,7 +21,6 @@ use Yii;
  * @property string $telfcasa
  * @property string $dimprofesion
  * @property string $profesion
- * @property integer $version
  * @property string $created_at
  * @property integer $created_by
  * @property string $updated_at
@@ -49,7 +48,7 @@ class Trabajador extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'users_id', 'ci', 'version', 'created_by', 'updated_by'], 'integer'],
+            [['user_id', 'users_id', 'ci', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['primernombre', 'segundonombre', 'primerapellido', 'segundoapellido'], 'string', 'max' => 20],
             [['telfextension', 'telfpersonal', 'telfpersonal2', 'telfcasa'], 'string', 'max' => 12],
@@ -80,7 +79,6 @@ class Trabajador extends \yii\db\ActiveRecord
             'telfcasa' => 'Telfcasa',
             'dimprofesion' => 'Dimprofesion',
             'profesion' => 'Profesion',
-            'version' => 'Version',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',

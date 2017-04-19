@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use app\models\Estatus1;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Estatus2 */
@@ -33,7 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'nombre',
             'dim',
             'estatus1_id',
-            'version',
             'created_at',
             'created_by',
             'updated_at',

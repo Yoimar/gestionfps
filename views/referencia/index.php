@@ -29,7 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'cargo_id',
             'created_at',
             'created_by',
-            // 'version',
             // 'updated_by',
             // 'updated_at',
 

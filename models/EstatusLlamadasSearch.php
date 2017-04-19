@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\EstatusLlamadas;
+use app\models\Estatusllamadas;
 
 /**
- * EstatusLlamadasSearch represents the model behind the search form about `app\models\EstatusLlamadas`.
+ * EstatusllamadasSearch represents the model behind the search form about `app\models\Estatusllamadas`.
  */
-class EstatusLlamadasSearch extends EstatusLlamadas
+class EstatusllamadasSearch extends Estatusllamadas
 {
     /**
      * @inheritdoc
@@ -41,7 +41,7 @@ class EstatusLlamadasSearch extends EstatusLlamadas
      */
     public function search($params)
     {
-        $query = EstatusLlamadas::find();
+        $query = Estatusllamadas::find();
 
         // add conditions that should always apply here
 

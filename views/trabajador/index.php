@@ -38,7 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'telfcasa',
             // 'dimprofesion',
             // 'profesion',
-            // 'version',
             // 'created_at',
             // 'created_by',
             // 'updated_at',

@@ -18,7 +18,7 @@ class TrabajadorSearch extends Trabajador
     public function rules()
     {
         return [
-            [['id', 'user_id', 'users_id', 'ci', 'version', 'created_by', 'updated_by'], 'integer'],
+            [['id', 'user_id', 'users_id', 'ci', 'created_by', 'updated_by'], 'integer'],
             [['primernombre', 'segundonombre', 'primerapellido', 'segundoapellido', 'telfextension', 'telfpersonal', 'telfpersonal2', 'telfcasa', 'dimprofesion', 'profesion', 'created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -63,7 +63,6 @@ class TrabajadorSearch extends Trabajador
             'user_id' => $this->user_id,
             'users_id' => $this->users_id,
             'ci' => $this->ci,
-            'version' => $this->version,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,

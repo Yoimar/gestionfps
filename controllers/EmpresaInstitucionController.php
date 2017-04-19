@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Casascomerciales;
-use app\models\CasascomercialesSearch;
+use app\models\EmpresaInstitucion;
+use app\models\EmpresaInstitucionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * CasascomercialesController implements the CRUD actions for Casascomerciales model.
+ * EmpresaInstitucionController implements the CRUD actions for EmpresaInstitucion model.
  */
-class CasascomercialesController extends Controller
+class EmpresaInstitucionController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class CasascomercialesController extends Controller
     }
 
     /**
-     * Lists all Casascomerciales models.
+     * Lists all EmpresaInstitucion models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new CasascomercialesSearch();
+        $searchModel = new EmpresaInstitucionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class CasascomercialesController extends Controller
     }
 
     /**
-     * Displays a single Casascomerciales model.
+     * Displays a single EmpresaInstitucion model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +57,13 @@ class CasascomercialesController extends Controller
     }
 
     /**
-     * Creates a new Casascomerciales model.
+     * Creates a new EmpresaInstitucion model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Casascomerciales();
+        $model = new EmpresaInstitucion();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +75,7 @@ class CasascomercialesController extends Controller
     }
 
     /**
-     * Updates an existing Casascomerciales model.
+     * Updates an existing EmpresaInstitucion model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,7 +94,7 @@ class CasascomercialesController extends Controller
     }
 
     /**
-     * Deletes an existing Casascomerciales model.
+     * Deletes an existing EmpresaInstitucion model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +107,15 @@ class CasascomercialesController extends Controller
     }
 
     /**
-     * Finds the Casascomerciales model based on its primary key value.
+     * Finds the EmpresaInstitucion model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Casascomerciales the loaded model
+     * @return EmpresaInstitucion the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Casascomerciales::findOne($id)) !== null) {
+        if (($model = EmpresaInstitucion::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

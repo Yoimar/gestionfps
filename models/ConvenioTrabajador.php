@@ -10,6 +10,10 @@ use Yii;
  * @property integer $id
  * @property integer $convenio_id
  * @property integer $trabajador_id
+ * @property string $created_at
+ * @property integer $created_by
+ * @property string $updated_at
+ * @property integer $updated_by
  *
  * @property Convenio $convenio
  * @property Trabajador $trabajador
@@ -31,7 +35,8 @@ class ConvenioTrabajador extends \yii\db\ActiveRecord
     {
         return [
             [['id'], 'required'],
-            [['id', 'convenio_id', 'trabajador_id'], 'integer'],
+            [['id', 'convenio_id', 'trabajador_id', 'created_by', 'updated_by'], 'integer'],
+            [['created_at', 'updated_at'], 'safe'],
             [['convenio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Convenio::className(), 'targetAttribute' => ['convenio_id' => 'id']],
             [['trabajador_id'], 'exist', 'skipOnError' => true, 'targetClass' => Trabajador::className(), 'targetAttribute' => ['trabajador_id' => 'id']],
         ];
@@ -46,6 +51,10 @@ class ConvenioTrabajador extends \yii\db\ActiveRecord
             'id' => 'ID',
             'convenio_id' => 'Convenio ID',
             'trabajador_id' => 'Trabajador ID',
+            'created_at' => 'Created At',
+            'created_by' => 'Created By',
+            'updated_at' => 'Updated At',
+            'updated_by' => 'Updated By',
         ];
     }
 

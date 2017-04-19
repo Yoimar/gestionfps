@@ -11,7 +11,6 @@ use Yii;
  * @property string $nombre
  * @property string $dim
  * @property integer $estatus2_id
- * @property integer $version
  * @property string $created_at
  * @property integer $created_by
  * @property string $updated_at
@@ -37,7 +36,7 @@ class Estatus3 extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['estatus2_id', 'version', 'created_by', 'updated_by'], 'integer'],
+            [['estatus2_id', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['nombre'], 'string', 'max' => 60],
             [['dim'], 'string', 'max' => 5],
@@ -55,7 +54,6 @@ class Estatus3 extends \yii\db\ActiveRecord
             'nombre' => 'Nombre',
             'dim' => 'Dim',
             'estatus2_id' => 'Estatus2 ID',
-            'version' => 'Version',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',

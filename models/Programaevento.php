@@ -16,7 +16,6 @@ use Yii;
  * @property integer $parroquia_id
  * @property string $descripcion
  * @property string $fecharecibido
- * @property integer $version
  * @property string $created_at
  * @property integer $created_by
  * @property string $updated_at
@@ -45,7 +44,7 @@ class Programaevento extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['origenid', 'nprograma', 'trabajadoracargo_id', 'referencia_id', 'parroquia_id', 'version', 'created_by', 'updated_by'], 'integer'],
+            [['origenid', 'nprograma', 'trabajadoracargo_id', 'referencia_id', 'parroquia_id', 'created_by', 'updated_by'], 'integer'],
             [['fechaprograma', 'fecharecibido', 'created_at', 'updated_at'], 'safe'],
             [['descripcion'], 'string', 'max' => 255],
             [['origenid'], 'exist', 'skipOnError' => true, 'targetClass' => Origen::className(), 'targetAttribute' => ['origenid' => 'id']],
@@ -70,7 +69,6 @@ class Programaevento extends \yii\db\ActiveRecord
             'parroquia_id' => 'Parroquia ID',
             'descripcion' => 'Descripcion',
             'fecharecibido' => 'Fecharecibido',
-            'version' => 'Version',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',

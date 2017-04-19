@@ -29,7 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'area_id',
             'cantidad',
             'created_by',
-            // 'version',
             // 'updated_at',
             // 'created_at',
             // 'updated_by',

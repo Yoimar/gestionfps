@@ -12,7 +12,6 @@ use Yii;
  * @property integer $cargo_id
  * @property string $created_at
  * @property integer $created_by
- * @property integer $version
  * @property integer $updated_by
  * @property string $updated_at
  *
@@ -36,7 +35,7 @@ class Referencia extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['autoridad_id', 'cargo_id', 'created_by', 'version', 'updated_by'], 'integer'],
+            [['autoridad_id', 'cargo_id', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['autoridad_id'], 'exist', 'skipOnError' => true, 'targetClass' => Autoridad::className(), 'targetAttribute' => ['autoridad_id' => 'id']],
             [['cargo_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cargo::className(), 'targetAttribute' => ['cargo_id' => 'id']],
@@ -54,7 +53,6 @@ class Referencia extends \yii\db\ActiveRecord
             'cargo_id' => 'Cargo ID',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
-            'version' => 'Version',
             'updated_by' => 'Updated By',
             'updated_at' => 'Updated At',
         ];

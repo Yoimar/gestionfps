@@ -4,19 +4,19 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\EstatusLlamadasSearch */
+/* @var $searchModel app\models\EstatusllamadasSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Estatus Llamadas';
+$this->title = 'Estatusllamadas';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="estatus-llamadas-index">
+<div class="estatusllamadas-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Estatus Llamadas', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Estatusllamadas', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

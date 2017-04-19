@@ -18,7 +18,7 @@ class LlamadaSearch extends Llamada
     public function rules()
     {
         return [
-            [['id', 'estatusllamada_id', 'created_by', 'version', 'updated_by', 'solicitud_id'], 'integer'],
+            [['id', 'estatusllamada_id', 'created_by', 'updated_by', 'solicitud_id'], 'integer'],
             [['fechallamada', 'observacion', 'created_at', 'updated_at', 'numsolicitud_id'], 'safe'],
         ];
     }
@@ -64,7 +64,6 @@ class LlamadaSearch extends Llamada
             'fechallamada' => $this->fechallamada,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
-            'version' => $this->version,
             'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
             'solicitud_id' => $this->solicitud_id,

@@ -10,7 +10,6 @@ use Yii;
  * @property integer $id
  * @property string $nombredim
  * @property string $nombrecompleto
- * @property integer $version
  * @property string $created_at
  * @property integer $created_by
  * @property string $updated_at
@@ -34,8 +33,8 @@ class Cargo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['version', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
+            [['created_by', 'updated_by'], 'integer'],
             [['nombredim'], 'string', 'max' => 30],
             [['nombrecompleto'], 'string', 'max' => 250],
         ];
@@ -50,7 +49,6 @@ class Cargo extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nombredim' => 'Nombredim',
             'nombrecompleto' => 'Nombrecompleto',
-            'version' => 'Version',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',

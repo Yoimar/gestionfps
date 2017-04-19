@@ -1,11 +1,6 @@
 <?php
 
 namespace app\models;
-use yii\db\Expression;
-use yii\behaviors\TimestampBehavior;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\AttributeBehavior;
-use yii\db\ActiveRecord;
 
 use Yii;
 
@@ -38,8 +33,8 @@ class Estatus1 extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
+            [['created_by', 'updated_by'], 'integer'],
             [['nombre'], 'string', 'max' => 60],
             [['dim'], 'string', 'max' => 5],
         ];
@@ -68,30 +63,4 @@ class Estatus1 extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Estatus2::className(), ['estatus1_id' => 'id']);
     }
-    
-    public function behaviors()
-    {
-        return [
-            'timestamp' => [
-                'class' => 'yii\behaviors\TimestampBehavior',
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
-                ],
-                'value' => new Expression('NOW()'),
-            ],
-            'blameable' => [
-                'class' => BlameableBehavior::className(),
-                'createdByAttribute' => 'created_by',
-                'updatedByAttribute' => 'updated_by',
-            ],
-
-        ];
-    }
-    
-    
-    
-    
-    
-    
 }

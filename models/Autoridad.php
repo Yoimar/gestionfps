@@ -12,7 +12,6 @@ use Yii;
  * @property string $nombrecompleto
  * @property string $created_at
  * @property integer $created_by
- * @property integer $version
  * @property string $updated_at
  * @property integer $updated_by
  *
@@ -35,7 +34,7 @@ class Autoridad extends \yii\db\ActiveRecord
     {
         return [
             [['id'], 'required'],
-            [['id', 'created_by', 'version', 'updated_by'], 'integer'],
+            [['id', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['nombredim'], 'string', 'max' => 30],
             [['nombrecompleto'], 'string', 'max' => 100],
@@ -53,7 +52,6 @@ class Autoridad extends \yii\db\ActiveRecord
             'nombrecompleto' => 'Nombrecompleto',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
-            'version' => 'Version',
             'updated_at' => 'Updated At',
             'updated_by' => 'Updated By',
         ];

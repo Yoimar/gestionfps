@@ -2,9 +2,6 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\select2\Select2;
-use app\models\Estatus2;
-use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Estatus3 */
@@ -19,19 +16,7 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'dim')->textInput(['maxlength' => true]) ?>
 
-     <?= 
-        $form->field($model, 'estatus2_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Estatus2::find()->orderBy('nombre')->all(), 'id', 'nombre'),
-        'language' => 'es',
-        'options' => ['placeholder' => 'Seleccione el Estatus 2'],
-        'pluginOptions' => [
-        'allowClear' => true
-        ],
-    ]);
-    
-    ?>
-
-    <?= $form->field($model, 'version')->textInput() ?>
+    <?= $form->field($model, 'estatus2_id')->textInput() ?>
 
     <?= $form->field($model, 'created_at')->textInput() ?>
 

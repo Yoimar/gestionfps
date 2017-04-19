@@ -5,7 +5,7 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "casascomerciales".
+ * This is the model class for table "empresa_institucion".
  *
  * @property integer $id
  * @property string $nombrecompleto
@@ -16,14 +16,14 @@ use Yii;
  * @property string $updated_at
  * @property integer $updated_by
  */
-class Casascomerciales extends \yii\db\ActiveRecord
+class EmpresaInstitucion extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'casascomerciales';
+        return 'empresa_institucion';
     }
 
     /**

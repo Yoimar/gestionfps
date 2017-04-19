@@ -13,7 +13,6 @@ use Yii;
  * @property string $observacion
  * @property string $created_at
  * @property integer $created_by
- * @property integer $version
  * @property string $updated_at
  * @property integer $updated_by
  * @property integer $solicitud_id
@@ -38,7 +37,7 @@ class Llamada extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['estatusllamada_id', 'created_by', 'version', 'updated_by', 'solicitud_id'], 'integer'],
+            [['estatusllamada_id', 'created_by', 'updated_by', 'solicitud_id'], 'integer'],
             [['fechallamada', 'created_at', 'updated_at'], 'safe'],
             [['observacion'], 'string', 'max' => 1000],
             [['numsolicitud_id'], 'string', 'max' => 8],
@@ -59,7 +58,6 @@ class Llamada extends \yii\db\ActiveRecord
             'observacion' => 'Observacion',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
-            'version' => 'Version',
             'updated_at' => 'Updated At',
             'updated_by' => 'Updated By',
             'solicitud_id' => 'Solicitud ID',

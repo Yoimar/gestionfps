@@ -18,7 +18,7 @@ class Estatus3Search extends Estatus3
     public function rules()
     {
         return [
-            [['id', 'estatus2_id', 'version', 'created_by', 'updated_by'], 'integer'],
+            [['id', 'estatus2_id', 'created_by', 'updated_by'], 'integer'],
             [['nombre', 'dim', 'created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -61,7 +61,6 @@ class Estatus3Search extends Estatus3
         $query->andFilterWhere([
             'id' => $this->id,
             'estatus2_id' => $this->estatus2_id,
-            'version' => $this->version,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,

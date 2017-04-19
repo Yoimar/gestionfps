@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\EstatusLlamadas */
+/* @var $model app\models\Estatusllamadas */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="estatus-llamadas-form">
+<div class="estatusllamadas-form">
 
     <?php $form = ActiveForm::begin(); ?>
 

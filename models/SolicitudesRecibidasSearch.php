@@ -18,7 +18,7 @@ class SolicitudesRecibidasSearch extends SolicitudesRecibidas
     public function rules()
     {
         return [
-            [['id', 'programaevento_id', 'area_id', 'cantidad', 'created_by', 'version', 'updated_by'], 'integer'],
+            [['id', 'programaevento_id', 'area_id', 'cantidad', 'created_by', 'updated_by'], 'integer'],
             [['updated_at', 'created_at'], 'safe'],
         ];
     }
@@ -64,7 +64,6 @@ class SolicitudesRecibidasSearch extends SolicitudesRecibidas
             'area_id' => $this->area_id,
             'cantidad' => $this->cantidad,
             'created_by' => $this->created_by,
-            'version' => $this->version,
             'updated_at' => $this->updated_at,
             'created_at' => $this->created_at,
             'updated_by' => $this->updated_by,

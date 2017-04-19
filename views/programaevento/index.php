@@ -33,7 +33,6 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'parroquia_id',
             // 'descripcion',
             // 'fecharecibido',
-            // 'version',
             // 'created_at',
             // 'created_by',
             // 'updated_at',

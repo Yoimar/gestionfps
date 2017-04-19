@@ -33,8 +33,6 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'fecharecibido') ?>
 
-    <?php // echo $form->field($model, 'version') ?>
-
     <?php // echo $form->field($model, 'created_at') ?>
 
     <?php // echo $form->field($model, 'created_by') ?>

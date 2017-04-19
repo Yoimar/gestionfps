@@ -18,7 +18,7 @@ class ConvenioSearch extends Convenio
     public function rules()
     {
         return [
-            [['id', 'tipoconvenio_id', 'version', 'created_by', 'updated_by'], 'integer'],
+            [['id', 'tipoconvenio_id', 'created_by', 'updated_by'], 'integer'],
             [['nombre', 'dimnombre', 'created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -61,7 +61,6 @@ class ConvenioSearch extends Convenio
         $query->andFilterWhere([
             'id' => $this->id,
             'tipoconvenio_id' => $this->tipoconvenio_id,
-            'version' => $this->version,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,

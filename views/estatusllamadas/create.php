@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\EstatusLlamadas */
+/* @var $model app\models\Estatusllamadas */
 
-$this->title = 'Create Estatus Llamadas';
-$this->params['breadcrumbs'][] = ['label' => 'Estatus Llamadas', 'url' => ['index']];
+$this->title = 'Create Estatusllamadas';
+$this->params['breadcrumbs'][] = ['label' => 'Estatusllamadas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="estatus-llamadas-create">
+<div class="estatusllamadas-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

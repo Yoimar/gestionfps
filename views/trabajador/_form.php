@@ -38,8 +38,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'profesion')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'version')->textInput() ?>
-
     <?= $form->field($model, 'created_at')->textInput() ?>
 
     <?= $form->field($model, 'created_by')->textInput() ?>

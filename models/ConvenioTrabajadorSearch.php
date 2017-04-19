@@ -18,7 +18,8 @@ class ConvenioTrabajadorSearch extends ConvenioTrabajador
     public function rules()
     {
         return [
-            [['id', 'convenio_id', 'trabajador_id'], 'integer'],
+            [['id', 'convenio_id', 'trabajador_id', 'created_by', 'updated_by'], 'integer'],
+            [['created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -61,6 +62,10 @@ class ConvenioTrabajadorSearch extends ConvenioTrabajador
             'id' => $this->id,
             'convenio_id' => $this->convenio_id,
             'trabajador_id' => $this->trabajador_id,
+            'created_at' => $this->created_at,
+            'created_by' => $this->created_by,
+            'updated_at' => $this->updated_at,
+            'updated_by' => $this->updated_by,
         ]);
 
         return $dataProvider;

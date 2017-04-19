@@ -34,7 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'observacion',
             'created_at',
             'created_by',
-            'version',
             'updated_at',
             'updated_by',
             'solicitud_id',

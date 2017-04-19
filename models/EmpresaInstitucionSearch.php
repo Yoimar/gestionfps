@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Casascomerciales;
+use app\models\EmpresaInstitucion;
 
 /**
- * CasascomercialesSearch represents the model behind the search form about `app\models\Casascomerciales`.
+ * EmpresaInstitucionSearch represents the model behind the search form about `app\models\EmpresaInstitucion`.
  */
-class CasascomercialesSearch extends Casascomerciales
+class EmpresaInstitucionSearch extends EmpresaInstitucion
 {
     /**
      * @inheritdoc
@@ -41,7 +41,7 @@ class CasascomercialesSearch extends Casascomerciales
      */
     public function search($params)
     {
-        $query = Casascomerciales::find();
+        $query = EmpresaInstitucion::find();
 
         // add conditions that should always apply here
 

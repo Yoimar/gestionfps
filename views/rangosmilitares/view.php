@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Gestion */
+/* @var $model app\models\Rangosmilitares */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Gestions', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Rangosmilitares', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="gestion-view">
+<div class="rangosmilitares-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,23 +29,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'programaevento_id',
-            'solicitud_id',
-            'convenio_id',
-            'estatus3_id',
-            'militar_solicitante:boolean',
-            'rango_solicitante_id',
-            'militar_beneficiario:boolean',
-            'rango_beneficiario_id',
-            'afrodescendiente',
-            'indigena',
-            'sexodiversidad',
-            'trabajador_id',
+            'dim',
+            'nombre',
             'created_at',
             'created_by',
             'updated_at',
             'updated_by',
-            'tipodecontacto_id',
         ],
     ]) ?>
 

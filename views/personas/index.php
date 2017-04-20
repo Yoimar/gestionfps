@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'nombre',
             'apellido',
-            'tipo_nacionalidad_id',
+            //'tipo_nacionalidad_id',
             'ci',
             // 'sexo',
             // 'estado_civil_id',

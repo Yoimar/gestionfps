@@ -18,8 +18,9 @@ class GestionSearch extends Gestion
     public function rules()
     {
         return [
-            [['id', 'programaevento_id', 'solicitud_id', 'convenio_id', 'estatus3_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id'], 'integer'],
-            [['militar', 'afrodescendiente', 'indigena', 'sexodiversidad', 'created_at', 'updated_at'], 'safe'],
+            [['id', 'programaevento_id', 'solicitud_id', 'convenio_id', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id'], 'integer'],
+            [['militar_solicitante', 'militar_beneficiario'], 'boolean'],
+            [['afrodescendiente', 'indigena', 'sexodiversidad', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -64,6 +65,10 @@ class GestionSearch extends Gestion
             'solicitud_id' => $this->solicitud_id,
             'convenio_id' => $this->convenio_id,
             'estatus3_id' => $this->estatus3_id,
+            'militar_solicitante' => $this->militar_solicitante,
+            'rango_solicitante_id' => $this->rango_solicitante_id,
+            'militar_beneficiario' => $this->militar_beneficiario,
+            'rango_beneficiario_id' => $this->rango_beneficiario_id,
             'trabajador_id' => $this->trabajador_id,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
@@ -72,8 +77,7 @@ class GestionSearch extends Gestion
             'tipodecontacto_id' => $this->tipodecontacto_id,
         ]);
 
-        $query->andFilterWhere(['like', 'militar', $this->militar])
-            ->andFilterWhere(['like', 'afrodescendiente', $this->afrodescendiente])
+        $query->andFilterWhere(['like', 'afrodescendiente', $this->afrodescendiente])
             ->andFilterWhere(['like', 'indigena', $this->indigena])
             ->andFilterWhere(['like', 'sexodiversidad', $this->sexodiversidad]);
 

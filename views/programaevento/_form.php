@@ -7,6 +7,7 @@ use app\models\Origen;
 use app\models\Referencia;
 use yii\helpers\ArrayHelper;
 use kartik\datetime\DateTimePicker;
+use kartik\datetime\DateTimePickerAsset;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
 use kartik\depdrop\DepDrop;
@@ -40,14 +41,16 @@ use yii\helpers\Url;
 
     <?= $form->field($model, 'fechaprograma')->widget(DateTimePicker::classname(), [
 	'name' => 'datetime_18',
-        'value' => '08-04-2017 10:20 AM',
-        'type' => DateTimePicker::TYPE_COMPONENT_APPEND,
+        'options' => ['placeholder' => 'Ingrese la Fecha en que se realizo la Actividad'],
+        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
+        'value' => '23-04-2017 10:01:50',
         'pluginOptions' => [
-        'format' => 'dd/mm/yyyy hh:ii:ss',
-        'showMeridian' => true,
-        'autoclose' => true,
-        'todayBtn' => true
-    ]
+            'todayHighlight' => true,
+            'todayBtn' => true,
+            'autoclose'=>true,
+            'showMeridian' => true,
+            'format' => 'dd-mm-yyyy hh:ii:ss',
+        ]
         ]);
         ?>
     
@@ -111,27 +114,30 @@ use yii\helpers\Url;
     /* Parroquia con depdrop de kartik*/
     $form->field($model, 'parroquia_id')->widget(DepDrop::classname(), [
     'type'=>DepDrop::TYPE_SELECT2,
-    'options'=>['id'=>'parroquia_id', 'placeholder'=>'Seleccione el Municipio'],
+    'options'=>['id'=>'parroquia_id', 'placeholder'=>'Seleccione la Parroquia'],
     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
     'pluginOptions'=>[
-        'placeholder' => 'Seleccione el Municipio',
+        'placeholder' => 'Seleccione la parroquia',
         'depends'=>['municipio_id'],
         'url'=>Url::to(['/parroquias/municipan']),
     ]
     ]);
     ?>
 
-    <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'descripcion')->textarea(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'fecharecibido')->widget(DateTimePicker::classname(), [
-	'name' => 'datetime_18',
-        'value' => '02/01/2001 05:10:20',
-        'type' => DateTimePicker::TYPE_COMPONENT_APPEND,
+	'name' => 'datetime_20',
+        'options' => ['placeholder' => 'Ingrese la Fecha en que se recibio la relación en la Unidad y/o Dirección'],
+        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
         'pluginOptions' => [
-        'format' => 'dd/mm/yyyy hh:ii:ss',
-        'showMeridian' => true,
-        'autoclose' => true,
-        'todayBtn' => true
+            'orientation' => 'up right',
+            'todayHighlight' => true,
+            'todayBtn' => true,
+            'format' => 'dd-mm-yyyy hh:ii:ss',
+            'showMeridian' => true,
+            'autoclose' => true,
+            'language' => 'es',
     ]
         ]);
         ?>

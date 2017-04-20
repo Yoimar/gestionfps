@@ -1,7 +1,9 @@
 <?php
 
 namespace app\models;
-
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 use Yii;
 
 /**
@@ -52,6 +54,8 @@ use Yii;
  */
 class Personas extends \yii\db\ActiveRecord
 {
+    public $estado_id;
+    public $municipio_id;
     /**
      * @inheritdoc
      */
@@ -77,7 +81,7 @@ class Personas extends \yii\db\ActiveRecord
             [['lugar_nacimiento'], 'string', 'max' => 500],
             [['ciudad'], 'string', 'max' => 15],
             [['zona_sector', 'calle_avenida'], 'string', 'max' => 250],
-            [['telefono_fijo', 'telefono_celular', 'telefono_otro'], 'string', 'max' => 20],
+            [['telefono_fijo', 'telefono_celular', 'telefono_otro'], 'string', 'max' => 12],
             [['email', 'twitter', 'ocupacion'], 'string', 'max' => 100],
             [['observaciones'], 'string', 'max' => 1500],
             [['otro_apoyo'], 'string', 'max' => 200],
@@ -97,13 +101,15 @@ class Personas extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nombre' => 'Nombre',
             'apellido' => 'Apellido',
-            'tipo_nacionalidad_id' => 'Tipo Nacionalidad ID',
+            'tipo_nacionalidad_id' => 'Tipo de Nacionalidad',
             'ci' => 'Ci',
             'sexo' => 'Sexo',
-            'estado_civil_id' => 'Estado Civil ID',
-            'lugar_nacimiento' => 'Lugar Nacimiento',
-            'fecha_nacimiento' => 'Fecha Nacimiento',
-            'nivel_academico_id' => 'Nivel Academico ID',
+            'estado_civil_id' => 'Estado Civil',
+            'lugar_nacimiento' => 'Lugar de Nacimiento',
+            'fecha_nacimiento' => 'Fecha de Nacimiento',
+            'nivel_academico_id' => 'Nivel Academico',
+            'estado_id'=> 'Estado',
+            'municipio_id'=> 'Municipio',
             'parroquia_id' => 'Parroquia ID',
             'ciudad' => 'Ciudad',
             'zona_sector' => 'Zona Sector',
@@ -123,8 +129,8 @@ class Personas extends \yii\db\ActiveRecord
             'cobertura' => 'Cobertura',
             'otro_apoyo' => 'Otro Apoyo',
             'version' => 'Version',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'created_at' => 'Creado el Día',
+            'updated_at' => 'Actualizado el Día',
         ];
     }
 
@@ -207,4 +213,20 @@ class Personas extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Solicitudes::className(), ['persona_solicitante_id' => 'id']);
     }
+    
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+
+        ];
+    }
+    
 }

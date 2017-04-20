@@ -20,7 +20,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'estatus3_id')->textInput() ?>
 
-    <?= $form->field($model, 'militar')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'militar_solicitante')->checkbox() ?>
+
+    <?= $form->field($model, 'rango_solicitante_id')->textInput() ?>
+
+    <?= $form->field($model, 'militar_beneficiario')->checkbox() ?>
+
+    <?= $form->field($model, 'rango_beneficiario_id')->textInput() ?>
 
     <?= $form->field($model, 'afrodescendiente')->textInput(['maxlength' => true]) ?>
 

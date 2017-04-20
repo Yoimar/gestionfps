@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\TipodecontactoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Tipodecontactos';
+$this->title = 'Tipo de contacto ó recepcion del Caso';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tipodecontacto-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Tipodecontacto', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Tipo de Contacto', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -24,9 +24,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'nombre',
             'descripcion',
+            //'created_at',
+            //'created_by',
+            // 'updated_at',
+            // 'updated_by',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

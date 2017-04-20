@@ -1,6 +1,10 @@
 <?php
 
 namespace app\models;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 use Yii;
 
@@ -47,12 +51,12 @@ class Origen extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'nombre' => 'Nombre',
-            'descripcion' => 'Descripcion',
-            'created_at' => 'Created At',
-            'created_by' => 'Created By',
-            'updated_at' => 'Updated At',
-            'updated_by' => 'Updated By',
+            'nombre' => 'Origen del Caso',
+            'descripcion' => 'Descripción del Origen del Caso',
+            'created_at' => 'Creado el Día',
+            'created_by' => 'Creado Por',
+            'updated_at' => 'Actualizado el Día',
+            'updated_by' => 'Actualizado Por',
         ];
     }
 
@@ -63,4 +67,26 @@ class Origen extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Programaevento::className(), ['origenid' => 'id']);
     }
+    
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+            'blameable' => [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
+
+        ];
+    }
+
+    
 }

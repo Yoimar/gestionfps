@@ -3,23 +3,23 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use kartik\select2\Select2;
-use app\models\Estatus1;
+use app\models\Users;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\Estatus2Search */
+/* @var $searchModel app\models\DepartamentosSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Estatus Nivel 2';
+$this->title = 'Departamentos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="estatus2-index">
+<div class="departamentos-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Crear Estatus Nivel 2', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Departamento', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -29,25 +29,23 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'id',
             'nombre',
-            'dim',
+            //'supervisor_id',
             [
-            'attribute' => 'estatus1_id',
-            'value' => 'estatus1.nombre',
+            'attribute' => 'supervisor_id',
+            'value' => 'users.nombre',
             'format' => 'text',
             'filter' => Select2::widget([
                         'model' => $searchModel,
-                        'attribute' => 'estatus1_id',
-                        'data' => ArrayHelper::map(Estatus1::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+                        'attribute' => 'supervisor_id',
+                        'data' => ArrayHelper::map(Users::find()->where(['activated' => 'TRUE'])->orderBy('nombre')->all(), 'id', 'nombre'),
                         'options' => 
-                            ['placeholder' => 'Seleccione el Estatus 1'],
+                            ['placeholder' => 'Seleccione el Supervisor'],
                         'pluginOptions' => [ 'allowClear' => true ],
                 ]),
             ],
-            //'estatus1_id',
+            //'version',
             //'created_at',
-            // 'created_by',
             // 'updated_at',
-            // 'updated_by',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -8,6 +8,8 @@ use app\models\Estatus3Search;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
+use yii\helpers\Json;
 
 /**
  * Estatus3Controller implements the CRUD actions for Estatus3 model.
@@ -121,4 +123,21 @@ class Estatus3Controller extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+    public function actionEstatus1() {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        
+        if ($parents != null) {
+        $estatus1_id = $parents[0];
+         
+        $out = \app\models\Estatus3::getEstatusn1($estatus1_id); 
+            
+        echo Json::encode(['output'=>$out, 'selected'=>'']);
+            return;
+        }
+    }
+    echo Json::encode(['output'=>'', 'selected'=>'']);
+}
 }

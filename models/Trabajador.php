@@ -1,6 +1,10 @@
 <?php
 
 namespace app\models;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 use Yii;
 
@@ -34,6 +38,7 @@ use Yii;
  */
 class Trabajador extends \yii\db\ActiveRecord
 {
+    public $trabajadorfps;
     /**
      * @inheritdoc
      */
@@ -53,7 +58,7 @@ class Trabajador extends \yii\db\ActiveRecord
             [['primernombre', 'segundonombre', 'primerapellido', 'segundoapellido'], 'string', 'max' => 20],
             [['telfextension', 'telfpersonal', 'telfpersonal2', 'telfcasa'], 'string', 'max' => 12],
             [['dimprofesion'], 'string', 'max' => 8],
-            [['profesion'], 'string', 'max' => 100],
+            [['profesion', 'TrabajadorFPS',], 'string', 'max' => 100],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
             [['users_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['users_id' => 'id']],
         ];
@@ -66,23 +71,24 @@ class Trabajador extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'user_id' => 'User ID',
-            'users_id' => 'Users ID',
-            'primernombre' => 'Primernombre',
-            'segundonombre' => 'Segundonombre',
-            'primerapellido' => 'Primerapellido',
-            'segundoapellido' => 'Segundoapellido',
-            'ci' => 'Ci',
-            'telfextension' => 'Telfextension',
-            'telfpersonal' => 'Telfpersonal',
-            'telfpersonal2' => 'Telfpersonal2',
-            'telfcasa' => 'Telfcasa',
-            'dimprofesion' => 'Dimprofesion',
-            'profesion' => 'Profesion',
-            'created_at' => 'Created At',
-            'created_by' => 'Created By',
-            'updated_at' => 'Updated At',
-            'updated_by' => 'Updated By',
+            'user_id' => 'Usuario Gestión FPS',
+            'users_id' => 'Usuario SASYC',
+            'primernombre' => 'Primer Nombre',
+            'segundonombre' => 'Segundo Nombre',
+            'primerapellido' => 'Primer Apellido',
+            'segundoapellido' => 'Segundo Apellido',
+            'TrabajadorFPS'=>'TrabajadorFPS',
+            'ci' => 'C.I.',
+            'telfextension' => 'Teléfono Oficina Extensión',
+            'telfpersonal' => 'Teléfono Personal',
+            'telfpersonal2' => 'Teléfono Personal Alternativo',
+            'telfcasa' => 'Teléfono Casa',
+            'dimprofesion' => 'Abreviatura de Profesión',
+            'profesion' => 'Profesión',
+            'created_at' => 'Creado el Día',
+            'created_by' => 'Creado Por',
+            'updated_at' => 'Actualizado el Día',
+            'updated_by' => 'Actualizado Por',
         ];
     }
 
@@ -125,4 +131,30 @@ class Trabajador extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::className(), ['id' => 'users_id']);
     }
+    
+    public function getTrabajadorfps() 
+    {
+        return $this->dimprofesion." ".$this->primernombre." ".$this->primerapellido;
+    }
+    
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+            'blameable' => [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
+
+        ];
+    }
+    
 }

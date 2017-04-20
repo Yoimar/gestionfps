@@ -1,6 +1,10 @@
 <?php
 
 namespace app\models;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 use Yii;
 
@@ -22,6 +26,7 @@ use Yii;
  */
 class Estatus3 extends \yii\db\ActiveRecord
 {
+    public $estatus1_id;
     /**
      * @inheritdoc
      */
@@ -51,13 +56,14 @@ class Estatus3 extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'nombre' => 'Nombre',
-            'dim' => 'Dim',
-            'estatus2_id' => 'Estatus2 ID',
-            'created_at' => 'Created At',
-            'created_by' => 'Created By',
-            'updated_at' => 'Updated At',
-            'updated_by' => 'Updated By',
+            'nombre' => 'Estatus Nivel 3',
+            'dim' => 'Version Abreviada para Reporte',
+            'estatus1_id' => 'Estatus Nivel 1',
+            'estatus2_id' => 'Estatus Nivel 2',
+            'created_at' => 'Creado el Día',
+            'created_by' => 'Creado Por',
+            'updated_at' => 'Actualizado el Día',
+            'updated_by' => 'Actualizado Por',
         ];
     }
 
@@ -84,4 +90,33 @@ class Estatus3 extends \yii\db\ActiveRecord
     {
         return $this->hasMany(HistorialSolicitudes::className(), ['estatus3_id' => 'id']);
     }
+    
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+            'blameable' => [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
+
+        ];
+    }
+    
+    public static function getEstatusn1($estatus1_id) {
+        $data=\app\models\Estatus2::find()
+       ->where(['estatus1_id'=>$estatus1_id])
+       ->select(['id','nombre as name'])->asArray()->all();
+
+            return $data;
+        }
+    
 }

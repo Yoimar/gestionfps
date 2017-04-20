@@ -1,6 +1,10 @@
 <?php
 
 namespace app\models;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 use Yii;
 
@@ -30,6 +34,9 @@ use Yii;
  */
 class Programaevento extends \yii\db\ActiveRecord
 {
+    public $estado_id;
+    public $municipio_id;
+    
     /**
      * @inheritdoc
      */
@@ -61,18 +68,20 @@ class Programaevento extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'origenid' => 'Origenid',
-            'nprograma' => 'Nprograma',
-            'fechaprograma' => 'Fechaprograma',
-            'trabajadoracargo_id' => 'Trabajadoracargo ID',
-            'referencia_id' => 'Referencia ID',
-            'parroquia_id' => 'Parroquia ID',
-            'descripcion' => 'Descripcion',
-            'fecharecibido' => 'Fecharecibido',
-            'created_at' => 'Created At',
-            'created_by' => 'Created By',
-            'updated_at' => 'Updated At',
-            'updated_by' => 'Updated By',
+            'origenid' => 'Origen',
+            'nprograma' => 'Nro de Programa / Oficio',
+            'fechaprograma' => 'Fecha de la Actividad',
+            'trabajadoracargo_id' => 'Trabajador a Cargo',
+            'referencia_id' => 'Referencia - Autoridad y Cargo',
+            'parroquia_id' => 'Parroquia',
+            'descripcion' => 'Descripción de la Actividad o Programa',
+            'fecharecibido' => 'Fecha de Recepción de la Relación y/o Oficio',
+            'estado_id'=>'Estado',
+            'municipio_id'=>'Municipio',
+            'created_at' => 'Creado el Día',
+            'created_by' => 'Creado Por',
+            'updated_at' => 'Actualizado el Día',
+            'updated_by' => 'Actualizado Por',
         ];
     }
 
@@ -111,7 +120,7 @@ class Programaevento extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTrabajadoracargo()
+    public function getTrabajador()
     {
         return $this->hasOne(Trabajador::className(), ['id' => 'trabajadoracargo_id']);
     }
@@ -123,4 +132,25 @@ class Programaevento extends \yii\db\ActiveRecord
     {
         return $this->hasMany(SolicitudesRecibidas::className(), ['programaevento_id' => 'id']);
     }
+    
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+            'blameable' => [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
+
+        ];
+    }
+    
 }

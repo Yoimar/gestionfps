@@ -62,8 +62,8 @@ class AutoridadSearch extends Autoridad
             'id' => $this->id,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
-            'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
+            'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'nombredim', $this->nombredim])

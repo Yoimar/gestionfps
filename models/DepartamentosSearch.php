@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Tipodecontacto;
+use app\models\Departamentos;
 
 /**
- * TipodecontactoSearch represents the model behind the search form about `app\models\Tipodecontacto`.
+ * DepartamentosSearch represents the model behind the search form about `app\models\Departamentos`.
  */
-class TipodecontactoSearch extends Tipodecontacto
+class DepartamentosSearch extends Departamentos
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class TipodecontactoSearch extends Tipodecontacto
     public function rules()
     {
         return [
-            [['id', 'created_by', 'updated_by'], 'integer'],
-            [['nombre', 'descripcion', 'created_at', 'updated_at'], 'safe'],
+            [['id', 'supervisor_id', 'version'], 'integer'],
+            [['nombre', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class TipodecontactoSearch extends Tipodecontacto
      */
     public function search($params)
     {
-        $query = Tipodecontacto::find();
+        $query = Departamentos::find();
 
         // add conditions that should always apply here
 
@@ -60,14 +60,13 @@ class TipodecontactoSearch extends Tipodecontacto
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'supervisor_id' => $this->supervisor_id,
+            'version' => $this->version,
             'created_at' => $this->created_at,
-            'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
-            'updated_by' => $this->updated_by,
         ]);
 
-        $query->andFilterWhere(['like', 'nombre', $this->nombre])
-            ->andFilterWhere(['like', 'descripcion', $this->descripcion]);
+        $query->andFilterWhere(['like', 'nombre', $this->nombre]);
 
         return $dataProvider;
     }

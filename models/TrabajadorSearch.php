@@ -12,6 +12,7 @@ use app\models\Trabajador;
  */
 class TrabajadorSearch extends Trabajador
 {
+    
     /**
      * @inheritdoc
      */
@@ -19,7 +20,7 @@ class TrabajadorSearch extends Trabajador
     {
         return [
             [['id', 'user_id', 'users_id', 'ci', 'created_by', 'updated_by'], 'integer'],
-            [['primernombre', 'segundonombre', 'primerapellido', 'segundoapellido', 'telfextension', 'telfpersonal', 'telfpersonal2', 'telfcasa', 'dimprofesion', 'profesion', 'created_at', 'updated_at'], 'safe'],
+            [['primernombre', 'Trabajadorfps', 'segundonombre', 'primerapellido', 'segundoapellido', 'telfextension', 'telfpersonal', 'telfpersonal2', 'telfcasa', 'dimprofesion', 'profesion', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -70,6 +71,7 @@ class TrabajadorSearch extends Trabajador
         ]);
 
         $query->andFilterWhere(['like', 'primernombre', $this->primernombre])
+            ->andFilterWhere(['like', "concat(trabajador.dimprofesion,'',trabajador.primernombre,'',trabajador.primerapellido)", $this->TrabajadorFPS])
             ->andFilterWhere(['like', 'segundonombre', $this->segundonombre])
             ->andFilterWhere(['like', 'primerapellido', $this->primerapellido])
             ->andFilterWhere(['like', 'segundoapellido', $this->segundoapellido])

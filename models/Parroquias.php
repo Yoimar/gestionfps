@@ -1,6 +1,9 @@
 <?php
 
 namespace app\models;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 use Yii;
 
@@ -20,6 +23,7 @@ use Yii;
  */
 class Parroquias extends \yii\db\ActiveRecord
 {
+    public $estado_id;
     /**
      * @inheritdoc
      */
@@ -50,6 +54,7 @@ class Parroquias extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'municipio_id' => 'Municipio ID',
+            'estado_id' => 'Estado ID',
             'nombre' => 'Nombre',
             'version' => 'Version',
             'created_at' => 'Created At',
@@ -80,4 +85,35 @@ class Parroquias extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Programaevento::className(), ['parroquia_id' => 'id']);
     }
+    
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+
+        ];
+    }
+    
+    public static function getEstadon($estado_id) {
+        $data=\app\models\Municipios::find()
+       ->where(['estado_id'=>$estado_id])
+       ->select(['id','nombre as name'])->asArray()->all();
+
+            return $data;
+        }
+        
+    public static function getMunicipon($municipio_id) {
+        $data=  \app\models\Parroquias::find()
+       ->where(['municipio_id'=>$municipio_id])
+       ->select(['id','nombre as name'])->asArray()->all();
+
+            return $data;
+        }
 }

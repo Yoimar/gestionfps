@@ -1,6 +1,10 @@
 <?php
 
 namespace app\models;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 use Yii;
 
@@ -12,8 +16,8 @@ use Yii;
  * @property string $nombrecompleto
  * @property string $created_at
  * @property integer $created_by
- * @property string $updated_at
  * @property integer $updated_by
+ * @property string $updated_at
  *
  * @property Referencia[] $referencias
  */
@@ -33,9 +37,8 @@ class Autoridad extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['id', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
+            [['created_by', 'updated_by'], 'integer'],
             [['nombredim'], 'string', 'max' => 30],
             [['nombrecompleto'], 'string', 'max' => 100],
         ];
@@ -48,12 +51,12 @@ class Autoridad extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'nombredim' => 'Nombredim',
-            'nombrecompleto' => 'Nombrecompleto',
-            'created_at' => 'Created At',
-            'created_by' => 'Created By',
-            'updated_at' => 'Updated At',
-            'updated_by' => 'Updated By',
+            'nombredim' => 'Nombre Abreviado',
+            'nombrecompleto' => 'Nombre Completo de la Autoridad o Personalidad',
+            'created_at' => 'Creado el Día',
+            'created_by' => 'Creado Por',
+            'updated_at' => 'Actualizado el Día',
+            'updated_by' => 'Actualizado Por',
         ];
     }
 
@@ -63,5 +66,25 @@ class Autoridad extends \yii\db\ActiveRecord
     public function getReferencias()
     {
         return $this->hasMany(Referencia::className(), ['autoridad_id' => 'id']);
+    }
+    
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+            'blameable' => [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
+
+        ];
     }
 }

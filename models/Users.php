@@ -2,6 +2,10 @@
 
 namespace app\models;
 
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
+
 use Yii;
 
 /**
@@ -142,5 +146,25 @@ class Users extends \yii\db\ActiveRecord
     public function getGroups()
     {
         return $this->hasMany(Groups::className(), ['id' => 'group_id'])->viaTable('users_groups', ['user_id' => 'id']);
+    }
+    
+    public function getDepartamentos()
+    {
+        return $this->hasOne(Departamentos::className(), ['id' => 'departamento_id']);
+    }
+    
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+
+        ];
     }
 }

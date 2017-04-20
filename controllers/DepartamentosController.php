@@ -3,18 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Parroquias;
-use app\models\ParroquiasSearch;
+use app\models\Departamentos;
+use app\models\DepartamentosSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\helpers\Url;
-use yii\helpers\Json;
 
 /**
- * ParroquiasController implements the CRUD actions for Parroquias model.
+ * DepartamentosController implements the CRUD actions for Departamentos model.
  */
-class ParroquiasController extends Controller
+class DepartamentosController extends Controller
 {
     /**
      * @inheritdoc
@@ -32,12 +30,12 @@ class ParroquiasController extends Controller
     }
 
     /**
-     * Lists all Parroquias models.
+     * Lists all Departamentos models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ParroquiasSearch();
+        $searchModel = new DepartamentosSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -47,7 +45,7 @@ class ParroquiasController extends Controller
     }
 
     /**
-     * Displays a single Parroquias model.
+     * Displays a single Departamentos model.
      * @param integer $id
      * @return mixed
      */
@@ -59,13 +57,13 @@ class ParroquiasController extends Controller
     }
 
     /**
-     * Creates a new Parroquias model.
+     * Creates a new Departamentos model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Parroquias();
+        $model = new Departamentos();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -77,7 +75,7 @@ class ParroquiasController extends Controller
     }
 
     /**
-     * Updates an existing Parroquias model.
+     * Updates an existing Departamentos model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -96,7 +94,7 @@ class ParroquiasController extends Controller
     }
 
     /**
-     * Deletes an existing Parroquias model.
+     * Deletes an existing Departamentos model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -109,52 +107,18 @@ class ParroquiasController extends Controller
     }
 
     /**
-     * Finds the Parroquias model based on its primary key value.
+     * Finds the Departamentos model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Parroquias the loaded model
+     * @return Departamentos the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Parroquias::findOne($id)) !== null) {
+        if (($model = Departamentos::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
-    }
-    
-    public function actionEstadan() {
-    $out = [];
-    if (isset($_POST['depdrop_parents'])) {
-        $parents = $_POST['depdrop_parents'];
-        
-        if ($parents != null) {
-        $estado_id = $parents[0];
-         
-        $out = \app\models\Parroquias::getEstadon($estado_id); 
-            
-        echo Json::encode(['output'=>$out, 'selected'=>'']);
-            return;
-        }
-    }
-    echo Json::encode(['output'=>'', 'selected'=>'']);
-    }
-    
-    public function actionMunicipan() {
-    $out = [];
-    if (isset($_POST['depdrop_parents'])) {
-        $parents = $_POST['depdrop_parents'];
-        
-        if ($parents != null) {
-        $municipio_id = $parents[0];
-         
-        $out = \app\models\Parroquias::getMunicipon($municipio_id); 
-            
-        echo Json::encode(['output'=>$out, 'selected'=>'']);
-            return;
-        }
-    }
-    echo Json::encode(['output'=>'', 'selected'=>'']);
     }
 }

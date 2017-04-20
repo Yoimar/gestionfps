@@ -2,33 +2,29 @@
 
 namespace app\models;
 use yii\behaviors\TimestampBehavior;
-use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
 
 use Yii;
 
 /**
- * This is the model class for table "estatus1".
+ * This is the model class for table "departamentos".
  *
  * @property integer $id
+ * @property integer $supervisor_id
  * @property string $nombre
- * @property string $dim
+ * @property integer $version
  * @property string $created_at
- * @property integer $created_by
  * @property string $updated_at
- * @property integer $updated_by
- *
- * @property Estatus2[] $estatus2s
  */
-class Estatus1 extends \yii\db\ActiveRecord
+class Departamentos extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'estatus1';
+        return 'departamentos';
     }
 
     /**
@@ -37,10 +33,10 @@ class Estatus1 extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['supervisor_id', 'nombre', 'created_at', 'updated_at'], 'required'],
+            [['supervisor_id', 'version'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['created_by', 'updated_by'], 'integer'],
-            [['nombre'], 'string', 'max' => 60],
-            [['dim'], 'string', 'max' => 5],
+            [['nombre'], 'string', 'max' => 100],
         ];
     }
 
@@ -51,23 +47,13 @@ class Estatus1 extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'nombre' => 'Estatus Nivel 1',
-            'dim' => 'Version Abreviada para Reporte',
-            'created_at' => 'Creado el Día',
-            'created_by' => 'Creado Por',
+            'supervisor_id' => 'Supervisor ID',
+            'nombre' => 'Nombre',
+            'version' => 'Version',
+            'created_at' => 'Creado el Día:',
             'updated_at' => 'Actualizado el Día',
-            'updated_by' => 'Actualizado Por',
         ];
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getEstatus2s()
-    {
-        return $this->hasMany(Estatus2::className(), ['estatus1_id' => 'id']);
-    }
-    
     public function behaviors()
     {
         return [
@@ -79,13 +65,16 @@ class Estatus1 extends \yii\db\ActiveRecord
                 ],
                 'value' => new Expression('NOW()'),
             ],
-            'blameable' => [
-                'class' => BlameableBehavior::className(),
-                'createdByAttribute' => 'created_by',
-                'updatedByAttribute' => 'updated_by',
-            ],
 
         ];
     }
+    /*public function getUsers()
+    {
+        return $this->hasMany(Users::className(), ['departamento_id' => 'id']);
+    }*/
     
+    public function getUsers()
+    {
+        return $this->hasOne(Users::className(), ['id' => 'supervisor_id']);
+    }
 }

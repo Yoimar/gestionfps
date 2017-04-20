@@ -2,12 +2,16 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use kartik\select2\Select2;
+use app\models\Departamentos;
+use yii\helpers\ArrayHelper;
+use yii\grid\DataColumn;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\UsersSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Users';
+$this->title = 'Usuarios del Sasyc';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="users-index">
@@ -16,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Users', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Usuario', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -24,11 +28,26 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'email:email',
-            'password',
+            //'password',
             'nombre',
-            'activated:boolean',
+            //'activated:boolean',
+            [
+             'attribute' => 'activated',
+             'label'=>'Activo',
+             'format'=>'boolean',
+             'value' => function($model, $key, $index, $column) { return $model->activated == 0 ? 'No' : 'Sí';},
+             'filter' => Select2::widget([
+                        'model' => $searchModel,
+                        'attribute' => 'activated',
+                        'data' => [0 => 'No', 1=>'Si'],
+                        'options' => 
+                            ['placeholder' => '¿Activo?'],
+                        'pluginOptions' => [ 'allowClear' => true ],
+                ]),
+            ],
+            
             // 'activation_code',
             // 'activated_at',
             // 'last_login',
@@ -37,7 +56,21 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'version',
             // 'created_at',
             // 'updated_at',
-            // 'departamento_id',
+            //'departamento_id',
+            [
+            'attribute' => 'departamento_id',
+            'value' => 'departamentos.nombre',
+            'format' => 'text',
+            'filter' => Select2::widget([
+                        'model' => $searchModel,
+                        'attribute' => 'departamento_id',
+                        'data' => ArrayHelper::map(Departamentos::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+                        'options' => 
+                            ['placeholder' => 'Seleccione el Departamento'],
+                        'pluginOptions' => [ 'allowClear' => true ],
+                ]),
+            ],
+
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -2,6 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
+use app\models\User;
+use app\models\Users;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Trabajador */
@@ -11,10 +15,30 @@ use yii\widgets\ActiveForm;
 <div class="trabajador-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'user_id')->textInput() ?>
-
-    <?= $form->field($model, 'users_id')->textInput() ?>
+    
+    <?= 
+        $form->field($model, 'user_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(User::find()->orderBy('username')->all(), 'id', 'username'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Usuario Gestion FPS'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+    
+    ?>
+    
+    <?= 
+        $form->field($model, 'users_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Users::find()->where(['activated' => 'TRUE'])->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Usuario del SASYC'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+    
+    ?>
 
     <?= $form->field($model, 'primernombre')->textInput(['maxlength' => true]) ?>
 
@@ -38,16 +62,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'profesion')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_by')->textInput() ?>
-
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Registrar' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

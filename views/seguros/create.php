@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Rangosmilitares */
+/* @var $model app\models\Seguros */
 
-$this->title = 'Registrar Rango Militar';
-$this->params['breadcrumbs'][] = ['label' => 'Rangos Militares', 'url' => ['index']];
+$this->title = 'Create Seguros';
+$this->params['breadcrumbs'][] = ['label' => 'Seguros', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="rangosmilitares-create">
+<div class="seguros-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

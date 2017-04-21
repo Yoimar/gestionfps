@@ -1,6 +1,10 @@
 <?php
 
 namespace app\models;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 use Yii;
 
@@ -45,12 +49,31 @@ class Rangosmilitares extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'dim' => 'Dim',
-            'nombre' => 'Nombre',
-            'created_at' => 'Created At',
-            'created_by' => 'Created By',
-            'updated_at' => 'Updated At',
-            'updated_by' => 'Updated By',
+            'dim' => 'Abreviatura del Cargo',
+            'nombre' => 'Rango Militar',
+            'created_at' => 'Creado el día',
+            'created_by' => 'Creado Por:',
+            'updated_at' => 'Actualizado el día',
+            'updated_by' => 'Actualizado Por:',
+        ];
+    }
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+            'blameable' => [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
+
         ];
     }
 }

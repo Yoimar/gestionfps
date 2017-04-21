@@ -218,7 +218,7 @@ class Solicitudes extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPersonaBeneficiario()
+    public function getPersonabeneficiario()
     {
         return $this->hasOne(Personas::className(), ['id' => 'persona_beneficiario_id']);
     }
@@ -226,7 +226,7 @@ class Solicitudes extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPersonaSolicitante()
+    public function getPersonasolicitante()
     {
         return $this->hasOne(Personas::className(), ['id' => 'persona_solicitante_id']);
     }
@@ -261,5 +261,10 @@ class Solicitudes extends \yii\db\ActiveRecord
     public function getUsuarioAutorizacion()
     {
         return $this->hasOne(Users::className(), ['id' => 'usuario_autorizacion_id']);
+    }
+    
+    public function getEstatussasyc()
+    {
+        return $this->hasOne(Estatussasyc::className(), ['id' => 'estatus']);
     }
 }

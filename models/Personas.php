@@ -177,7 +177,7 @@ class Personas extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getNivelAcademico()
+    public function getNivelesAcademicos()
     {
         return $this->hasOne(NivelesAcademicos::className(), ['id' => 'nivel_academico_id']);
     }
@@ -193,7 +193,7 @@ class Personas extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTipoNacionalidad()
+    public function getTipoNacionalidades()
     {
         return $this->hasOne(TipoNacionalidades::className(), ['id' => 'tipo_nacionalidad_id']);
     }
@@ -214,6 +214,10 @@ class Personas extends \yii\db\ActiveRecord
         return $this->hasMany(Solicitudes::className(), ['persona_solicitante_id' => 'id']);
     }
     
+    public function getNombrecompleto() 
+    {
+        return $this->nombre." ".$this->apellido;
+    }
     public function behaviors()
     {
         return [

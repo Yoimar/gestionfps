@@ -13,6 +13,7 @@ use kartik\depdrop\DepDrop;
 use app\models\Estados;
 use app\models\Parroquias;
 use app\models\Municipios;
+use app\models\Seguros;
 use yii\helpers\Url;
 use yii\widgets\MaskedInput;
 
@@ -162,9 +163,19 @@ use yii\widgets\MaskedInput;
     ]);
     ?>
 
-    <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'email')->widget(MaskedInput::classname(), [ 
+        'name' => 'input-36',
+        'clientOptions' => [
+            'alias' =>  'email'
+        ],
+    ]); 
+    ?>
 
-    <?= $form->field($model, 'twitter')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'twitter')->widget(MaskedInput::classname(), [ 
+        'name' => 'input-2',
+        'mask' => '@*{1,50}'
+        ]
+    ); ?>
 
     <?= $form->field($model, 'ind_trabaja')->checkbox() ?>
 
@@ -175,8 +186,18 @@ use yii\widgets\MaskedInput;
     <?= $form->field($model, 'observaciones')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'ind_asegurado')->checkbox() ?>
-
-    <?= $form->field($model, 'seguro_id')->textInput() ?>
+    
+    <?= 
+        $form->field($model, 'seguro_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Seguros::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione el Seguro'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+    
+    ?>
 
     <?= $form->field($model, 'cobertura')->textInput() ?>
 

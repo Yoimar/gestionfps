@@ -18,7 +18,7 @@ class SolicitudesSearch extends Solicitudes
     public function rules()
     {
         return [
-            [['id', 'persona_beneficiario_id', 'persona_solicitante_id', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'num_proc', 'usuario_asignacion_id', 'usuario_autorizacion_id', 'tipo_vivienda_id', 'tenencia_id', 'departamento_id', 'memo_id', 'version'], 'integer'],
+            [['id', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'num_proc', 'usuario_asignacion_id', 'usuario_autorizacion_id', 'tipo_vivienda_id', 'tenencia_id', 'departamento_id', 'memo_id', 'version'], 'integer'],
             [['descripcion', 'actividad', 'referencia', 'referencia_externa', 'accion_tomada', 'necesidad', 'tipo_proc', 'facturas', 'observaciones', 'moneda', 'estatus', 'fecha_asignacion', 'fecha_aceptacion', 'fecha_aprobacion', 'fecha_cierre', 'informe_social', 'beneficiario_json', 'solicitante_json', 'num_solicitud', 'created_at', 'updated_at'], 'safe'],
             [['ind_mismo_benef', 'ind_inmediata', 'ind_beneficiario_menor'], 'boolean'],
             [['total_ingresos'], 'number'],

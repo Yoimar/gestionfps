@@ -34,8 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'layout' => "{summary}\n{items}\n<div align='center'>{pager}</div>",
-        'tableOptions' => ['class' => 'table  table-bordered table-hover'],
-        
+        'tableOptions' => ['class' => 'table  table-bordered table-hover', 'style'=>'max-width: 80px;'],    
 
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -109,7 +108,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'estatus',
                         'data' => ArrayHelper::map(app\models\Estatussasyc::find()->orderBy('estatus')->all(), 'id', 'estatus'),
                         'options' => 
-                            ['placeholder' => 'Seleccione El Estatus'],
+                            ['placeholder' => '¿Estatus?'],
                         'pluginOptions' => [ 'allowClear' => true ],
                 ]),
             ],
@@ -123,7 +122,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'usuario_asignacion_id',
                         'data' => ArrayHelper::map(Users::find()->where(['activated' => 'TRUE'])->orderBy('nombre')->all(), 'id', 'nombre'),
                         'options' => 
-                            ['placeholder' => 'Seleccione el Trabajador Asignado'],
+                            ['placeholder' => '¿Trabajador Asignado?'],
                         'pluginOptions' => [ 'allowClear' => true ],
                 ]),
             ],

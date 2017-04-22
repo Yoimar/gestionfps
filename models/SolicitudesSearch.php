@@ -6,20 +6,22 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Solicitudes;
+use yii\db\Query;
 
 /**
  * SolicitudesSearch represents the model behind the search form about `app\models\Solicitudes`.
  */
 class SolicitudesSearch extends Solicitudes
 {
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'num_proc', 'usuario_asignacion_id', 'usuario_autorizacion_id', 'tipo_vivienda_id', 'tenencia_id', 'departamento_id', 'memo_id', 'version'], 'integer'],
-            [['descripcion', 'actividad', 'referencia', 'referencia_externa', 'accion_tomada', 'necesidad', 'tipo_proc', 'facturas', 'observaciones', 'moneda', 'estatus', 'fecha_asignacion', 'fecha_aceptacion', 'fecha_aprobacion', 'fecha_cierre', 'informe_social', 'beneficiario_json', 'solicitante_json', 'num_solicitud', 'created_at', 'updated_at'], 'safe'],
+            [['id', 'persona_beneficiario_ci', 'persona_solicitante_ci', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'num_proc', 'usuario_asignacion_id', 'usuario_autorizacion_id', 'tipo_vivienda_id', 'tenencia_id', 'departamento_id', 'memo_id', 'version'], 'integer'],
+            [['descripcion', 'persona_beneficiario_nombre', 'persona_beneficiario_apellido', 'persona_solicitante_nombre', 'persona_solicitante_apellido', 'actividad', 'referencia', 'referencia_externa', 'accion_tomada', 'necesidad', 'tipo_proc', 'facturas', 'observaciones', 'moneda', 'estatus', 'fecha_asignacion', 'fecha_aceptacion', 'fecha_aprobacion', 'fecha_cierre', 'informe_social', 'beneficiario_json', 'solicitante_json', 'num_solicitud', 'created_at', 'updated_at'], 'safe'],
             [['ind_mismo_benef', 'ind_inmediata', 'ind_beneficiario_menor'], 'boolean'],
             [['total_ingresos'], 'number'],
         ];
@@ -46,9 +48,55 @@ class SolicitudesSearch extends Solicitudes
         $query = Solicitudes::find();
 
         // add conditions that should always apply here
+        
+        $query->joinWith('personas')->joinWith('estatussasyc')->joinWith('users');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'num_solicitud' => SORT_DESC,
+                ],
+                'attributes' => [
+                    'num_solicitud',
+                    'persona_beneficiario_nombre' => [
+                        'asc' => ['personas.nombre' => SORT_ASC],
+                        'desc' => ['personas.nombre' => SORT_DESC],
+                    ],
+                    'persona_beneficiario_apellido' => [
+                        'asc' => ['personas.apellido' => SORT_ASC],
+                        'desc' => ['personas.apellido' => SORT_DESC],
+                    ],
+                    'persona_beneficiario_ci' => [
+                        'asc' => ['personas.ci' => SORT_ASC],
+                        'desc' => ['personas.ci' => SORT_DESC],
+                    ],
+                    'persona_solicitante_nombre' => [
+                        'asc' => ['personas.nombre' => SORT_ASC],
+                        'desc' => ['personas.nombre' => SORT_DESC],
+                    ],
+                    'persona_solicitante_apellido' => [
+                        'asc' => ['personas.apellido' => SORT_ASC],
+                        'desc' => ['personas.apellido' => SORT_DESC],
+                    ],
+                    'persona_solicitante_ci' => [
+                        'asc' => ['personas.ci' => SORT_ASC],
+                        'desc' => ['personas.ci' => SORT_DESC],
+                    ],
+                    'estatus' => [
+                        'asc' => ['estatussasyc.estatus' => SORT_ASC],
+                        'desc' => ['estatussasyc.estatus' => SORT_DESC],
+                    ],
+                    'usuario_asignacion_id' => [
+                        'asc' => ['users.nombre' => SORT_ASC],
+                        'desc' => ['users.nombre' => SORT_DESC],
+                    ],
+    
+                ],
+            ]
         ]);
 
         $this->load($params);
@@ -62,8 +110,6 @@ class SolicitudesSearch extends Solicitudes
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'persona_beneficiario_id' => $this->persona_beneficiario_id,
-            'persona_solicitante_id' => $this->persona_solicitante_id,
             'area_id' => $this->area_id,
             'referente_id' => $this->referente_id,
             'recepcion_id' => $this->recepcion_id,
@@ -85,7 +131,7 @@ class SolicitudesSearch extends Solicitudes
             'total_ingresos' => $this->total_ingresos,
             'version' => $this->version,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'updated_at' => $this->updated_at,           
         ]);
 
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
@@ -102,7 +148,13 @@ class SolicitudesSearch extends Solicitudes
             ->andFilterWhere(['like', 'informe_social', $this->informe_social])
             ->andFilterWhere(['like', 'beneficiario_json', $this->beneficiario_json])
             ->andFilterWhere(['like', 'solicitante_json', $this->solicitante_json])
-            ->andFilterWhere(['like', 'num_solicitud', $this->num_solicitud]);
+            ->andFilterWhere(['like', 'num_solicitud', $this->num_solicitud])
+            ->andFilterWhere(['like', 'personas.nombre', $this->persona_beneficiario_nombre])
+            ->andFilterWhere(['like', 'personas.apellido', $this->persona_beneficiario_apellido])
+            ->andFilterWhere(['like', 'personas.nombre', $this->persona_solicitante_nombre])
+            ->andFilterWhere(['like', 'personas.apellido', $this->persona_solicitante_apellido])
+            ->andFilterWhere(['personas.ci' => $this->persona_beneficiario_ci])
+            ->andFilterWhere(['personas.ci' => $this->persona_solicitante_ci,]);
 
         return $dataProvider;
     }

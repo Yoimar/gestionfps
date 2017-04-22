@@ -29,12 +29,12 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     </div>
-    <div class="container-fluid">
+    <div class="container-fluid" style="text-align: center;">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'layout' => "{summary}\n{items}\n<div align='center'>{pager}</div>",
-        'tableOptions' => ['class' => 'table  table-bordered table-hover', 'style'=>'max-width: 80px;'],    
+        'tableOptions' => ['class' => 'table table-bordered table-hover', 'style'=>'max-width: 80px; margin-left: auto; margin-right: auto;'],    
 
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -44,38 +44,37 @@ $this->params['breadcrumbs'][] = $this->title;
             'num_solicitud',
             //'persona_beneficiario_id',
             [
-            'attribute' => 'persona_beneficiario_id',
-            'value' => 'personabeneficiario.nombre',
+            'attribute' => 'persona_beneficiario_nombre',
+            'value' => 'personas.nombre',
             'format' => 'text',
             'label' => 'Nombre Beneficiario'
             ],
             [
-            'attribute' => 'persona_beneficiario_id',
-            'value' => 'personabeneficiario.apellido',
+            'attribute' => 'persona_beneficiario_apellido',
+            'value' => 'personas.apellido',
             'format' => 'text',
             'label' => 'Apellido Beneficiario'
             ],
             [
-            'attribute' => 'persona_beneficiario_id',
-            'value' => 'personabeneficiario.ci',
-            'format' => 'text',
+            'attribute' => 'persona_beneficiario_ci',
+            'value' => 'personas.ci',
             'label' => 'CI Beneficiario'
             ],
             [
-            'attribute' => 'persona_solicitante_id',
-            'value' => 'personasolicitante.nombre',
+            'attribute' => 'persona_solicitante_nombre',
+            'value' => 'personas.nombre',
             'format' => 'text',
             'label' => 'Nombre Solicitante'
             ],
             [
-            'attribute' => 'persona_solicitante_id',
-            'value' => 'personasolicitante.apellido',
+            'attribute' => 'persona_solicitante_apellido',
+            'value' => 'personas.apellido',
             'format' => 'text',
             'label' => 'Apellido Solicitante'
             ],
             [
-            'attribute' => 'persona_solicitante_id',
-            'value' => 'personasolicitante.ci',
+            'attribute' => 'persona_solicitante_ci',
+            'value' => 'personas.ci',
             'format' => 'text',
             'label' => 'CI Solicitante'
             ],
@@ -115,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
             
             [
             'attribute' => 'usuario_asignacion_id',
-            'value' => 'usuarioAsignacion.nombre',
+            'value' => 'users.nombre',
             'format' => 'text',
             'filter' => Select2::widget([
                         'model' => $searchModel,
@@ -148,5 +147,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+    </div>
     </div>
 </div>

@@ -6,17 +6,18 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Solicitudes */
 
-$this->title = $model->id;
+$this->title = $model->num_solicitud;
 $this->params['breadcrumbs'][] = ['label' => 'Solicitudes', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<div class="container">
 <div class="solicitudes-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Actualizar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Eliminar', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
@@ -27,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= DetailView::widget([
         'model' => $model,
+        'options' => ['class' => 'table table-bordered table-hover', 'style'=>'margin-left: auto; margin-right: auto;'],
         'attributes' => [
             'id',
             'descripcion',
@@ -62,13 +64,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'memo_id',
             'informe_social:ntext',
             'total_ingresos',
-            'beneficiario_json:ntext',
-            'solicitante_json:ntext',
+            //'beneficiario_json:ntext',
+            //'solicitante_json:ntext',
             'num_solicitud',
             'version',
             'created_at',
             'updated_at',
         ],
     ]) ?>
-
+</div>
 </div>

@@ -1,6 +1,9 @@
 <?php
 
 namespace app\models;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 use Yii;
 
@@ -65,6 +68,12 @@ use Yii;
  */
 class Solicitudes extends \yii\db\ActiveRecord
 {
+    public $persona_beneficiario_ci;
+    public $persona_solicitante_ci;
+    public $persona_beneficiario_nombre;
+    public $persona_beneficiario_apellido;
+    public $persona_solicitante_nombre;
+    public $persona_solicitante_apellido;
     /**
      * @inheritdoc
      */
@@ -80,9 +89,9 @@ class Solicitudes extends \yii\db\ActiveRecord
     {
         return [
             [['descripcion', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'necesidad', 'moneda', 'estatus', 'created_at', 'updated_at'], 'required'],
-            [['persona_beneficiario_id', 'persona_solicitante_id', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'num_proc', 'usuario_asignacion_id', 'usuario_autorizacion_id', 'tipo_vivienda_id', 'tenencia_id', 'departamento_id', 'memo_id', 'version'], 'integer'],
+            [['persona_beneficiario_id', 'persona_beneficiario_ci', 'persona_solicitante_ci', 'persona_solicitante_id', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'num_proc', 'usuario_asignacion_id', 'usuario_autorizacion_id', 'tipo_vivienda_id', 'tenencia_id', 'departamento_id', 'memo_id', 'version'], 'integer'],
             [['ind_mismo_benef', 'ind_inmediata', 'ind_beneficiario_menor'], 'boolean'],
-            [['fecha_asignacion', 'fecha_aceptacion', 'fecha_aprobacion', 'fecha_cierre', 'created_at', 'updated_at'], 'safe'],
+            [['fecha_asignacion', 'persona_beneficiario_nombre', 'persona_beneficiario_apellido', 'persona_solicitante_nombre', 'persona_solicitante_apellido', 'fecha_aceptacion', 'fecha_aprobacion', 'fecha_cierre', 'created_at', 'updated_at'], 'safe'],
             [['informe_social', 'beneficiario_json', 'solicitante_json'], 'string'],
             [['total_ingresos'], 'number'],
             [['descripcion', 'actividad', 'referencia', 'accion_tomada'], 'string', 'max' => 2000],
@@ -218,19 +227,11 @@ class Solicitudes extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPersonabeneficiario()
+    public function getPersonas()
     {
-        return $this->hasOne(Personas::className(), ['id' => 'persona_beneficiario_id']);
+        return $this->hasOne(Personas::className(), ['id' => 'persona_beneficiario_id','id' => 'persona_solicitante_id']);
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPersonasolicitante()
-    {
-        return $this->hasOne(Personas::className(), ['id' => 'persona_solicitante_id']);
-    }
-
+    
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -250,7 +251,7 @@ class Solicitudes extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUsuarioAsignacion()
+    public function getUsers()
     {
         return $this->hasOne(Users::className(), ['id' => 'usuario_asignacion_id']);
     }
@@ -267,4 +268,20 @@ class Solicitudes extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Estatussasyc::className(), ['id' => 'estatus']);
     }
+    
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+
+        ];
+    }
+    
 }

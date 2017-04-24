@@ -70,11 +70,12 @@ class Personas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombre', 'apellido', 'ind_asegurado', 'created_at', 'updated_at'], 'required'],
+            [['nombre', 'apellido', 'ind_asegurado',], 'required'],
             [['tipo_nacionalidad_id', 'ci', 'estado_civil_id', 'nivel_academico_id', 'parroquia_id', 'seguro_id', 'version'], 'integer'],
             [['fecha_nacimiento', 'created_at', 'updated_at'], 'safe'],
             [['ind_trabaja', 'ind_asegurado'], 'boolean'],
             [['ingreso_mensual', 'cobertura'], 'number'],
+            [['tipo_nacionalidad_id'], 'default', 'value' => 1],
             [['nombre', 'apto_casa'], 'string', 'max' => 50],
             [['apellido'], 'string', 'max' => 30],
             [['sexo'], 'string', 'max' => 1],
@@ -217,6 +218,11 @@ class Personas extends \yii\db\ActiveRecord
     public function getNombrecompleto() 
     {
         return $this->nombre." ".$this->apellido;
+    }
+    
+    public function getPersonacompleta() 
+    {
+        return "C.I.: ".$this->ci." // ".$this->nombre." ".$this->apellido;
     }
     public function behaviors()
     {

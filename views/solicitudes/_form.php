@@ -19,22 +19,18 @@ use yii\bootstrap\Modal;
 <div class="solicitudes-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    
+    <?php echo $form->field($model, 'num_solicitud')->textInput(['maxlength' => true, 'readonly' => true]) ?>
 
     <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
     
-    <?= $form->field($model, 'ind_mismo_benef')->checkboxList([
-    true => 'Beneficiarios Iguales', 
-    false => 'Beneficiario Y Solicitante Diferentes',
-    ]);    
-    ?>
+    <?= $form->field($model, 'ind_mismo_benef')->checkbox(); ?>
 
-    <?= $form->field($model, 'ind_beneficiario_menor')->checkboxList([
-    true => 'Beneficiario Menor de Edad', 
-    ]); ?>
+    <?= $form->field($model, 'ind_beneficiario_menor')->checkbox(); ?>
     
     <?= 
         $form->field($model, 'persona_beneficiario_id')->widget(Select2::classname(), [
-        'initValueText' => empty($model->persona_beneficiario_id) ? '' : Personas::findOne($model->persona_beneficiario_id)->nombre, // set the initial display text
+        'initValueText' => empty($model->persona_beneficiario_id) ? '' : Personas::findOne($model->persona_beneficiario_id)->Personacompleta, // set the initial display text
         'options' => ['placeholder' => 'Ingrese el Beneficiario ...'],
         'pluginOptions' => [
         'allowClear' => true,
@@ -57,7 +53,7 @@ use yii\bootstrap\Modal;
     
     <?= 
         $form->field($model, 'persona_solicitante_id')->widget(Select2::classname(), [
-        'initValueText' => empty($model->persona_solicitante_id) ? '' : Personas::findOne($model->persona_solicitante_id)->nombre, // set the initial display text
+        'initValueText' => empty($model->persona_solicitante_id) ? '' : Personas::findOne($model->persona_solicitante_id)->Personacompleta, // set the initial display text
         'options' => ['placeholder' => 'Ingrese el Solicitante ...'],
         'pluginOptions' => [
         'allowClear' => true,
@@ -138,7 +134,7 @@ use yii\bootstrap\Modal;
 
     <?= $form->field($model, 'observaciones')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'moneda')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'moneda')->textInput(['maxlength' => true, 'readonly' => true]) ?>
     
     <?= 
         $form->field($model, 'estatus')->widget(Select2::classname(), [
@@ -178,7 +174,7 @@ use yii\bootstrap\Modal;
     
     <?= $form->field($model, 'fecha_asignacion')->widget(DateTimePicker::classname(), [
 	'name' => 'datetime_18',
-        'options' => ['placeholder' => 'Ingrese la Fecha en que se realizo la Actividad'],
+        'options' => ['placeholder' => 'Ingrese la Fecha en que se asigno al Trabajador Social'],
         'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
         'value' => '23-04-2017 10:01:50',
         'pluginOptions' => [
@@ -193,7 +189,7 @@ use yii\bootstrap\Modal;
     
     <?= $form->field($model, 'fecha_aceptacion')->widget(DateTimePicker::classname(), [
 	'name' => 'datetime_18',
-        'options' => ['placeholder' => 'Ingrese la Fecha en que se realizo la Actividad'],
+        'options' => ['placeholder' => 'Ingrese la Fecha en que El Trabajador Social Acepto el Caso'],
         'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
         'value' => '23-04-2017 10:01:50',
         'pluginOptions' => [
@@ -208,7 +204,7 @@ use yii\bootstrap\Modal;
     
     <?= $form->field($model, 'fecha_aprobacion')->widget(DateTimePicker::classname(), [
 	'name' => 'datetime_18',
-        'options' => ['placeholder' => 'Ingrese la Fecha en que se realizo la Actividad'],
+        'options' => ['placeholder' => 'Ingrese la Fecha en que se aprobo el caso'],
         'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
         'value' => '23-04-2017 10:01:50',
         'pluginOptions' => [
@@ -223,7 +219,7 @@ use yii\bootstrap\Modal;
     
     <?= $form->field($model, 'fecha_cierre')->widget(DateTimePicker::classname(), [
 	'name' => 'datetime_18',
-        'options' => ['placeholder' => 'Ingrese la Fecha en que se realizo la Actividad'],
+        'options' => ['placeholder' => 'Ingrese la Fecha en que se Cerro el Caso'],
         'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
         'value' => '23-04-2017 10:01:50',
         'pluginOptions' => [
@@ -284,15 +280,13 @@ use yii\bootstrap\Modal;
     
     ?>
 
-    <?= $form->field($model, 'informe_social')->textarea(['rows' => 6]) ?>
+    <?php //echo $form->field($model, 'informe_social')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'total_ingresos')->textInput() ?>
+    <?php //echo $form->field($model, 'total_ingresos')->textInput() ?>
 
-    <?= $form->field($model, 'beneficiario_json')->textarea(['rows' => 6]) ?>
+    <?php //echo $form->field($model, 'beneficiario_json')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'solicitante_json')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'num_solicitud')->textInput(['maxlength' => true]) ?>
+    <?php //echo $form->field($model, 'solicitante_json')->textarea(['rows' => 6]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

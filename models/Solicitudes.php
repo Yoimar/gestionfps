@@ -90,7 +90,7 @@ class Solicitudes extends \yii\db\ActiveRecord
         return [
             [['descripcion', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'necesidad', 'moneda', 'estatus'], 'required'],
             [['persona_beneficiario_id', 'persona_beneficiario_ci', 'persona_solicitante_ci', 'persona_solicitante_id', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'num_proc', 'usuario_asignacion_id', 'usuario_autorizacion_id', 'tipo_vivienda_id', 'tenencia_id', 'departamento_id', 'memo_id', 'version'], 'integer'],
-            [['ind_mismo_benef', 'ind_inmediata', 'ind_beneficiario_menor'], 'boolean'],
+            [['moneda',], 'default', 'value' => 'VEF'],
             [['fecha_asignacion', 'persona_beneficiario_nombre', 'persona_beneficiario_apellido', 'persona_solicitante_nombre', 'persona_solicitante_apellido', 'fecha_aceptacion', 'fecha_aprobacion', 'fecha_cierre', 'created_at', 'updated_at'], 'safe'],
             [['informe_social', 'beneficiario_json', 'solicitante_json'], 'string'],
             [['total_ingresos'], 'number'],
@@ -287,9 +287,14 @@ class Solicitudes extends \yii\db\ActiveRecord
     }
     
     public function beforeSave($insert) {
-        parent::beforeSave($insert);
-        $this->version = ($this->version +1);
-        
+       
+        if (parent::beforeSave($insert)) {
+            $this->version = ($this->version +1);
+            return true;
+        } else {
+            return false;
+        }
+            
     }
     
 }

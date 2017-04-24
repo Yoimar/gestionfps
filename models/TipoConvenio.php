@@ -11,6 +11,7 @@ use Yii;
  * @property string $nombre
  *
  * @property Convenio[] $convenios
+ * @property ConvenioTrabajador[] $convenioTrabajadors
  */
 class TipoConvenio extends \yii\db\ActiveRecord
 {
@@ -49,5 +50,13 @@ class TipoConvenio extends \yii\db\ActiveRecord
     public function getConvenios()
     {
         return $this->hasMany(Convenio::className(), ['tipoconvenio_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getConvenioTrabajadors()
+    {
+        return $this->hasMany(ConvenioTrabajador::className(), ['convenio_id' => 'id']);
     }
 }

@@ -17,7 +17,6 @@ use Yii;
  * @property integer $updated_by
  *
  * @property TipoConvenio $tipoconvenio
- * @property ConvenioTrabajador[] $convenioTrabajadors
  * @property Gestion[] $gestions
  */
 class Convenio extends \yii\db\ActiveRecord
@@ -36,8 +35,7 @@ class Convenio extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required'],
-            [['id', 'tipoconvenio_id', 'created_by', 'updated_by'], 'integer'],
+            [['tipoconvenio_id', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['nombre'], 'string', 'max' => 50],
             [['dimnombre'], 'string', 'max' => 10],
@@ -68,14 +66,6 @@ class Convenio extends \yii\db\ActiveRecord
     public function getTipoconvenio()
     {
         return $this->hasOne(TipoConvenio::className(), ['id' => 'tipoconvenio_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getConvenioTrabajadors()
-    {
-        return $this->hasMany(ConvenioTrabajador::className(), ['convenio_id' => 'id']);
     }
 
     /**

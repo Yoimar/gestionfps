@@ -49,7 +49,7 @@ class SolicitudesSearch extends Solicitudes
 
         // add conditions that should always apply here
         
-        $query->joinWith('personas')->joinWith('estatussasyc')->joinWith('users');
+        $query->joinWith('personas', true, 'LEFT JOIN')->joinWith('estatussasyc', true, 'LEFT JOIN')->joinWith('users', true, 'LEFT JOIN');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -144,7 +144,7 @@ class SolicitudesSearch extends Solicitudes
             ->andFilterWhere(['like', 'facturas', $this->facturas])
             ->andFilterWhere(['like', 'observaciones', $this->observaciones])
             ->andFilterWhere(['like', 'moneda', $this->moneda])
-            ->andFilterWhere(['like', 'estatus', $this->estatus])
+            ->andFilterWhere(['like', 'estatussasyc.id', $this->estatus])
             ->andFilterWhere(['like', 'informe_social', $this->informe_social])
             ->andFilterWhere(['like', 'beneficiario_json', $this->beneficiario_json])
             ->andFilterWhere(['like', 'solicitante_json', $this->solicitante_json])

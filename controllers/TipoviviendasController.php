@@ -3,19 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Solicitudes;
-use app\models\SolicitudesSearch;
+use app\models\TipoViviendas;
+use app\models\TipoViviendasSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\Personas;
-use yii\db\Query;
-use yii\db\ActiveQuery;
 
 /**
- * SolicitudesController implements the CRUD actions for Solicitudes model.
+ * TipoViviendasController implements the CRUD actions for TipoViviendas model.
  */
-class SolicitudesController extends Controller
+class TipoViviendasController extends Controller
 {
     /**
      * @inheritdoc
@@ -33,12 +30,12 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Lists all Solicitudes models.
+     * Lists all TipoViviendas models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new SolicitudesSearch();
+        $searchModel = new TipoViviendasSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +45,7 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Displays a single Solicitudes model.
+     * Displays a single TipoViviendas model.
      * @param integer $id
      * @return mixed
      */
@@ -60,13 +57,13 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Creates a new Solicitudes model.
+     * Creates a new TipoViviendas model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Solicitudes();
+        $model = new TipoViviendas();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -78,7 +75,7 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Updates an existing Solicitudes model.
+     * Updates an existing TipoViviendas model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -97,7 +94,7 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Deletes an existing Solicitudes model.
+     * Deletes an existing TipoViviendas model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -110,37 +107,18 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Finds the Solicitudes model based on its primary key value.
+     * Finds the TipoViviendas model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Solicitudes the loaded model
+     * @return TipoViviendas the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Solicitudes::findOne($id)) !== null) {
+        if (($model = TipoViviendas::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
-    public function actionListapersonas($q = null, $id = null) {
-    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    $out = ['results' => ['id' => '', 'text' => '']];
-    if (!is_null($q)) {
-        $query = new Query;
-        $query->addSelect(["id", "concat('C.I.: ',ci,' // ','NOMBRE: ',nombre,' // ','APELLIDO: ',apellido) as text"])
-            ->from('personas')
-            ->andFilterWhere(['like', "concat(ci,'',nombre,'',apellido)", $q])
-            ->limit(20);
-        $command = $query->createCommand();
-        $data = $command->queryAll();
-        $out['results'] = array_values($data);
-    }
-    elseif ($id > 0) {
-        $out['results'] = ['id' => $id, 'text' => Personas::find($id)->nombre];
-    }
-    return $out;
-}
 }

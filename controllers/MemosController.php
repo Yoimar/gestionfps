@@ -3,19 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Solicitudes;
-use app\models\SolicitudesSearch;
+use app\models\Memos;
+use app\models\MemosSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\Personas;
-use yii\db\Query;
-use yii\db\ActiveQuery;
 
 /**
- * SolicitudesController implements the CRUD actions for Solicitudes model.
+ * MemosController implements the CRUD actions for Memos model.
  */
-class SolicitudesController extends Controller
+class MemosController extends Controller
 {
     /**
      * @inheritdoc
@@ -33,12 +30,12 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Lists all Solicitudes models.
+     * Lists all Memos models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new SolicitudesSearch();
+        $searchModel = new MemosSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -48,7 +45,7 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Displays a single Solicitudes model.
+     * Displays a single Memos model.
      * @param integer $id
      * @return mixed
      */
@@ -60,13 +57,13 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Creates a new Solicitudes model.
+     * Creates a new Memos model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Solicitudes();
+        $model = new Memos();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -78,7 +75,7 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Updates an existing Solicitudes model.
+     * Updates an existing Memos model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -97,7 +94,7 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Deletes an existing Solicitudes model.
+     * Deletes an existing Memos model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -110,37 +107,18 @@ class SolicitudesController extends Controller
     }
 
     /**
-     * Finds the Solicitudes model based on its primary key value.
+     * Finds the Memos model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Solicitudes the loaded model
+     * @return Memos the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Solicitudes::findOne($id)) !== null) {
+        if (($model = Memos::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
-    public function actionListapersonas($q = null, $id = null) {
-    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-    $out = ['results' => ['id' => '', 'text' => '']];
-    if (!is_null($q)) {
-        $query = new Query;
-        $query->addSelect(["id", "concat('C.I.: ',ci,' // ','NOMBRE: ',nombre,' // ','APELLIDO: ',apellido) as text"])
-            ->from('personas')
-            ->andFilterWhere(['like', "concat(ci,'',nombre,'',apellido)", $q])
-            ->limit(20);
-        $command = $query->createCommand();
-        $data = $command->queryAll();
-        $out['results'] = array_values($data);
-    }
-    elseif ($id > 0) {
-        $out['results'] = ['id' => $id, 'text' => Personas::find($id)->nombre];
-    }
-    return $out;
-}
 }

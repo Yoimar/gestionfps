@@ -7,7 +7,6 @@ use app\models\Origen;
 use app\models\Referencia;
 use yii\helpers\ArrayHelper;
 use kartik\datetime\DateTimePicker;
-use kartik\datetime\DateTimePickerAsset;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
 use kartik\depdrop\DepDrop;
@@ -52,7 +51,7 @@ use yii\helpers\Url;
             'format' => 'dd-mm-yyyy hh:ii:ss',
         ]
         ]);
-        ?>
+    ?>
     
     <?= 
         $form->field($model, 'trabajadoracargo_id')->widget(Select2::classname(), [

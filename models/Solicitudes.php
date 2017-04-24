@@ -88,13 +88,15 @@ class Solicitudes extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['descripcion', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'necesidad', 'moneda', 'estatus', 'created_at', 'updated_at'], 'required'],
+            [['descripcion', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'necesidad', 'moneda', 'estatus'], 'required'],
             [['persona_beneficiario_id', 'persona_beneficiario_ci', 'persona_solicitante_ci', 'persona_solicitante_id', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'num_proc', 'usuario_asignacion_id', 'usuario_autorizacion_id', 'tipo_vivienda_id', 'tenencia_id', 'departamento_id', 'memo_id', 'version'], 'integer'],
             [['ind_mismo_benef', 'ind_inmediata', 'ind_beneficiario_menor'], 'boolean'],
             [['fecha_asignacion', 'persona_beneficiario_nombre', 'persona_beneficiario_apellido', 'persona_solicitante_nombre', 'persona_solicitante_apellido', 'fecha_aceptacion', 'fecha_aprobacion', 'fecha_cierre', 'created_at', 'updated_at'], 'safe'],
             [['informe_social', 'beneficiario_json', 'solicitante_json'], 'string'],
             [['total_ingresos'], 'number'],
+            [['ind_mismo_benef', 'ind_inmediata', 'ind_beneficiario_menor'], 'boolean', 'trueValue' => TRUE, 'falseValue' => FALSE],
             [['descripcion', 'actividad', 'referencia', 'accion_tomada'], 'string', 'max' => 2000],
+            [['ind_mismo_benef', 'ind_inmediata', 'ind_beneficiario_menor'], 'default', 'value' => FALSE],
             [['referencia_externa', 'facturas'], 'string', 'max' => 100],
             [['necesidad', 'observaciones'], 'string', 'max' => 1500],
             [['tipo_proc'], 'string', 'max' => 5],
@@ -125,9 +127,9 @@ class Solicitudes extends \yii\db\ActiveRecord
             'referente_id' => 'Referente ID',
             'recepcion_id' => 'Recepcion ID',
             'organismo_id' => 'Organismo ID',
-            'ind_mismo_benef' => 'Ind Mismo Benef',
+            'ind_mismo_benef' => 'Indique si es el Mismo Beneficiario',
             'ind_inmediata' => 'Ind Inmediata',
-            'ind_beneficiario_menor' => 'Ind Beneficiario Menor',
+            'ind_beneficiario_menor' => 'Indique si el Beneficiario es Menor de Edad',
             'actividad' => 'Actividad',
             'referencia' => 'Referencia',
             'referencia_externa' => 'Referencia Externa',
@@ -282,6 +284,12 @@ class Solicitudes extends \yii\db\ActiveRecord
             ],
 
         ];
+    }
+    
+    public function beforeSave($insert) {
+        parent::beforeSave($insert);
+        $this->version = ($this->version +1);
+        
     }
     
 }

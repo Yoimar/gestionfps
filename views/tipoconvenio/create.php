@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\TipoConvenio */
+/* @var $model app\models\Tipoconvenio */
 
-$this->title = 'Create Tipo Convenio';
-$this->params['breadcrumbs'][] = ['label' => 'Tipo Convenios', 'url' => ['index']];
+$this->title = 'Crear Tipo de Convenio';
+$this->params['breadcrumbs'][] = ['label' => 'Tipo de Convenios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="tipo-convenio-create">
+<div class="tipoconvenio-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

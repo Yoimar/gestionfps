@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\TipoConvenio */
+/* @var $model app\models\Tipoconvenio */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="tipo-convenio-form">
+<div class="tipoconvenio-form">
 
     <?php $form = ActiveForm::begin(); ?>
 

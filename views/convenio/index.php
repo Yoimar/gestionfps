@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use kartik\select2\Select2;
+use app\models\Tipoconvenio;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ConvenioSearch */
@@ -16,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Convenio', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Convenio', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -24,11 +27,24 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'nombre',
             'dimnombre',
-            'tipoconvenio_id',
-            'created_at',
+            //'tipoconvenio_id',
+            [
+            'attribute' => 'tipoconvenio_id',
+            'value' => 'tipoconvenio.nombre',
+            'format' => 'text',
+            'filter' => Select2::widget([
+                        'model' => $searchModel,
+                        'attribute' => 'tipoconvenio_id',
+                        'data' => ArrayHelper::map(Tipoconvenio::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+                        'options' => 
+                            ['placeholder' => 'Seleccione el Tipo de Convenio'],
+                        'pluginOptions' => [ 'allowClear' => true ],
+                ]),
+            ],
+            //'created_at',
             // 'created_by',
             // 'updated_at',
             // 'updated_by',

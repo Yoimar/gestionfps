@@ -4,19 +4,19 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\TipoConvenioSearch */
+/* @var $searchModel app\models\TipoconvenioSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Tipo Convenios';
+$this->title = 'Tipo de Convenio';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="tipo-convenio-index">
+<div class="tipoconvenio-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Tipo Convenio', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Tipo de Convenio', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

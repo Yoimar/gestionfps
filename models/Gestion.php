@@ -1,6 +1,10 @@
 <?php
 
 namespace app\models;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 use Yii;
 
@@ -37,6 +41,9 @@ use Yii;
  */
 class Gestion extends \yii\db\ActiveRecord
 {
+    public $estatus1_id;
+    public $estatus2_id;
+    
     /**
      * @inheritdoc
      */
@@ -51,7 +58,7 @@ class Gestion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['programaevento_id', 'solicitud_id', 'convenio_id', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id'], 'integer'],
+            [['programaevento_id', 'solicitud_id', 'convenio_id', 'estatus1_id', 'estatus2_id', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id'], 'integer'],
             [['militar_solicitante', 'militar_beneficiario'], 'boolean'],
             [['created_at', 'updated_at'], 'safe'],
             [['afrodescendiente', 'indigena', 'sexodiversidad'], 'string', 'max' => 2],
@@ -76,7 +83,9 @@ class Gestion extends \yii\db\ActiveRecord
             'programaevento_id' => 'Programaevento ID',
             'solicitud_id' => 'Solicitud ID',
             'convenio_id' => 'Convenio ID',
-            'estatus3_id' => 'Estatus3 ID',
+            'estatus1_id' => 'Estatus Nivel 1',
+            'estatus2_id' => 'Estatus Nivel 2',
+            'estatus3_id' => 'Estatus Nivel 3',
             'militar_solicitante' => 'Militar Solicitante',
             'rango_solicitante_id' => 'Rango Solicitante ID',
             'militar_beneficiario' => 'Militar Beneficiario',
@@ -90,6 +99,26 @@ class Gestion extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
             'updated_by' => 'Updated By',
             'tipodecontacto_id' => 'Tipodecontacto ID',
+        ];
+    }
+    
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => new Expression('NOW()'),
+            ],
+            'blameable' => [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
+
         ];
     }
 

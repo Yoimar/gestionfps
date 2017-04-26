@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use app\models\Tipoconvenio;
+use app\models\Estados;
 use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
@@ -23,6 +24,16 @@ use yii\helpers\ArrayHelper;
         'data' => ArrayHelper::map(Tipoconvenio::find()->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
         'options' => ['placeholder' => 'Seleccione el Tipo de Convenio'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]); 
+    ?>
+    
+    <?= $form->field($model, 'estado_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Estados::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione el Estado de Convenio'],
         'pluginOptions' => [
         'allowClear' => true
         ],

@@ -22,8 +22,10 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'dimnombre') ?>
 
     <?= $form->field($model, 'tipoconvenio_id') ?>
+    
+    <?= $form->field($model, 'estado_id') ?>
 
-    <?= $form->field($model, 'created_at') ?>
+    <?php //$form->field($model, 'created_at') ?>
 
     <?php // echo $form->field($model, 'created_by') ?>
 

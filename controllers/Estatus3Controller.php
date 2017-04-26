@@ -139,5 +139,22 @@ class Estatus3Controller extends Controller
         }
     }
     echo Json::encode(['output'=>'', 'selected'=>'']);
-}
+    }
+    
+    public function actionEstatus2() {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+        
+        if ($parents != null) {
+        $estatus2_id = $parents[0];
+         
+        $out = \app\models\Estatus3::getEstatusn2($estatus2_id); 
+            
+        echo Json::encode(['output'=>$out, 'selected'=>'']);
+            return;
+        }
+    }
+    echo Json::encode(['output'=>'', 'selected'=>'']);
+    }
 }

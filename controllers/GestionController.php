@@ -8,6 +8,9 @@ use app\models\GestionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Solicitudes;
+use yii\db\Query;
+use yii\db\ActiveQuery;
 
 /**
  * GestionController implements the CRUD actions for Gestion model.
@@ -121,4 +124,23 @@ class GestionController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+    public function actionNumsolicitud($q = null, $id = null) {
+    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    $out = ['results' => ['id' => '', 'text' => '']];
+    if (!is_null($q)) {
+        $query = new Query;
+        $query->addSelect(["id", "num_solicitud as text"])
+            ->from('solicitudes')
+            ->andFilterWhere(['like', "num_solicitud", $q])
+            ->limit(20);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        $out['results'] = array_values($data);
+    }
+    elseif ($id > 0) {
+        $out['results'] = ['id' => $id, 'text' => Solicitudes::find($id)->num_solicitud];
+    }
+    return $out;
+}
 }

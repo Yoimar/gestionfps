@@ -119,4 +119,11 @@ class Estatus3 extends \yii\db\ActiveRecord
             return $data;
         }
     
+        public static function getEstatusn2($estatus2_id) {
+        $data=\app\models\Estatus3::find()
+       ->where(['estatus2_id'=>$estatus2_id])
+       ->select(['id','nombre as name'])->asArray()->all();
+
+            return $data;
+        }
 }

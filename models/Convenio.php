@@ -39,11 +39,12 @@ class Convenio extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tipoconvenio_id', 'created_by', 'updated_by'], 'integer'],
+            [['tipoconvenio_id', 'created_by', 'updated_by', 'estado_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['nombre'], 'string', 'max' => 50],
             [['dimnombre'], 'string', 'max' => 10],
             [['tipoconvenio_id'], 'exist', 'skipOnError' => true, 'targetClass' => TipoConvenio::className(), 'targetAttribute' => ['tipoconvenio_id' => 'id']],
+            [['estado_id'], 'exist', 'skipOnError' => true, 'targetClass' => Estados::className(), 'targetAttribute' => ['estado_id' => 'id']],
         ];
     }
 
@@ -56,7 +57,8 @@ class Convenio extends \yii\db\ActiveRecord
             'id' => 'ID',
             'nombre' => 'Nombre del Convenio',
             'dimnombre' => 'Abreviatura para el Reporte',
-            'tipoconvenio_id' => 'Tipoconvenio ID',
+            'tipoconvenio_id' => 'Tipo de Convenio',
+            'estado_id' => 'Estado del Convenio',
             'created_at' => 'Creado el Día: ',
             'created_by' => 'Created Por:',
             'updated_at' => 'Actualizado el Día:',
@@ -98,5 +100,13 @@ class Convenio extends \yii\db\ActiveRecord
     public function getGestions()
     {
         return $this->hasMany(Gestion::className(), ['convenio_id' => 'id']);
+    }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEstados()
+    {
+        return $this->hasOne(Estados::className(), ['id' => 'tipoconvenio_id']);
     }
 }

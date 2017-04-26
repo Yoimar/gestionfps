@@ -5,6 +5,7 @@ use yii\grid\GridView;
 use kartik\select2\Select2;
 use app\models\Tipoconvenio;
 use yii\helpers\ArrayHelper;
+use app\models\Estados;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ConvenioSearch */
@@ -41,6 +42,19 @@ $this->params['breadcrumbs'][] = $this->title;
                         'data' => ArrayHelper::map(Tipoconvenio::find()->orderBy('nombre')->all(), 'id', 'nombre'),
                         'options' => 
                             ['placeholder' => 'Seleccione el Tipo de Convenio'],
+                        'pluginOptions' => [ 'allowClear' => true ],
+                ]),
+            ],
+            [
+            'attribute' => 'estado_id',
+            'value' => 'estados.nombre',
+            'format' => 'text',
+            'filter' => Select2::widget([
+                        'model' => $searchModel,
+                        'attribute' => 'estado_id',
+                        'data' => ArrayHelper::map(Estados::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+                        'options' => 
+                            ['placeholder' => 'Seleccione el Estado de Convenio'],
                         'pluginOptions' => [ 'allowClear' => true ],
                 ]),
             ],

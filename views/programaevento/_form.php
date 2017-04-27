@@ -18,6 +18,11 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model app\models\Programaevento */
 /* @var $form yii\widgets\ActiveForm */
+
+$data = Trabajador::find()
+        ->select(["id", "CONCAT(dimprofesion, ' ',primernombre,' ', primerapellido) as nombre"])
+        ->asArray()
+        ->all();
 ?>
 
 <div class="programaevento-form">
@@ -55,8 +60,7 @@ use yii\helpers\Url;
     
     <?= 
         $form->field($model, 'trabajadoracargo_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Trabajador::find()->asArray()->all(),'id', function($model, $defaultValue) {
-        return $model['dimprofesion'].' '.$model['primernombre'].' '.$model['primerapellido'];}),
+        'data' => ArrayHelper::map($data,'id', 'nombre'),
         'language' => 'es',
         'options' => ['placeholder' => 'Trabajador FPS'],
         'pluginOptions' => [

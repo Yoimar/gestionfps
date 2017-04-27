@@ -88,7 +88,7 @@ class Solicitudes extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['descripcion', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'necesidad', 'moneda', 'estatus'], 'required'],
+            [['descripcion', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'necesidad', 'estatus'], 'required'],
             [['persona_beneficiario_id', 'persona_beneficiario_ci', 'persona_solicitante_ci', 'persona_solicitante_id', 'area_id', 'referente_id', 'recepcion_id', 'organismo_id', 'num_proc', 'usuario_asignacion_id', 'usuario_autorizacion_id', 'tipo_vivienda_id', 'tenencia_id', 'departamento_id', 'memo_id', 'version'], 'integer'],
             [['moneda',], 'default', 'value' => 'VEF'],
             [['fecha_asignacion', 'persona_beneficiario_nombre', 'persona_beneficiario_apellido', 'persona_solicitante_nombre', 'persona_solicitante_apellido', 'fecha_aceptacion', 'fecha_aprobacion', 'fecha_cierre', 'created_at', 'updated_at'], 'safe'],
@@ -290,11 +290,39 @@ class Solicitudes extends \yii\db\ActiveRecord
        
         if (parent::beforeSave($insert)) {
             $this->version = ($this->version +1);
+            if ($this->isNewRecord) {
+                $numero = $this->calcularnumsolicitud();
+                $numero = date('y') . '-' . $this->formatonumsolicitud($numero);
+                $this->num_solicitud = $numero;
+            }
             return true;
         } else {
             return false;
-        }
-            
+        }           
     }
+    /* Para contar el numero de solicitudes e insertar un nuevo registro*/
+    public function calcularnumsolicitud() {
+        $consulta = Solicitudes::find()
+            ->andFilterWhere(['=',"extract(year from created_at)", date('Y')])
+            ->count();
+        
+        return $consulta + 1;
+    }
+    
+    /* Para colocar el numero de solicitud con cinco Números */ 
+    public function formatonumsolicitud($numero) {
+        if ($numero <= 9) {
+            $numero = "0000" . $numero;
+        } else if ($numero <= 99) {
+            $numero = "000" . $numero;
+        } else if ($numero <= 999) {
+            $numero = "00" . $numero;
+        } else if ($numero <= 9999) {
+            $numero = "0" . $numero;
+        }
+        return $numero;
+    }
+    
+    
     
 }

@@ -1,19 +1,20 @@
 <?php
 
+use kartik\widgets\ActiveForm;
 use yii\helpers\Html;
 use kartik\select2\Select2;
 use app\models\Trabajador;
 use app\models\Origen;
 use app\models\Referencia;
 use yii\helpers\ArrayHelper;
-use kartik\datetime\DateTimePicker;
 use yii\bootstrap\Modal;
-use yii\widgets\ActiveForm;
 use kartik\depdrop\DepDrop;
 use app\models\Estados;
 use app\models\Parroquias;
 use app\models\Municipios;
 use yii\helpers\Url;
+use kartik\widgets\DateTimePicker;
+
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Programaevento */
@@ -29,34 +30,9 @@ $data = Trabajador::find()
 
     <?php $form = ActiveForm::begin(); ?>
     
-    <?= 
-        $form->field($model, 'origenid')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Origen::find()->orderBy('nombre')->all(), 'id', 'nombre'),
-        'language' => 'es',
-        'options' => ['placeholder' => 'Seleccione el Origen'],
-        'pluginOptions' => [
-        'allowClear' => true
-        ],
-    ]);
+    <?= $form->field($model, 'descripcion')->textarea(['maxlength' => true]) ?>
     
-    ?>
-
     <?= $form->field($model, 'nprograma')->textInput() ?>
-
-    <?= $form->field($model, 'fechaprograma')->widget(DateTimePicker::classname(), [
-	'name' => 'datetime_18',
-        'options' => ['placeholder' => 'Ingrese la Fecha en que se realizo la Actividad'],
-        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-        'value' => '23-04-2017 10:01:50',
-        'pluginOptions' => [
-            'todayHighlight' => true,
-            'todayBtn' => true,
-            'autoclose'=>true,
-            'showMeridian' => true,
-            'format' => 'dd-mm-yyyy hh:ii:ss',
-        ]
-        ]);
-    ?>
     
     <?= 
         $form->field($model, 'trabajadoracargo_id')->widget(Select2::classname(), [
@@ -85,7 +61,6 @@ $data = Trabajador::find()
     ]);
     
     ?>
-    
     <?=
     /* Estado con Select2 de kartik*/
         $form->field($model, 'estado_id')->widget(Select2::classname(), [
@@ -107,7 +82,7 @@ $data = Trabajador::find()
     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
     'pluginOptions'=>[
         'placeholder' => 'Seleccione el Municipio',
-        'depends'=>['programaevento-estado_id'],
+        'depends'=>["programaevento-estado_id"],
         'url'=>Url::to(['/parroquias/estadan']),
     ]
     ]);
@@ -127,7 +102,33 @@ $data = Trabajador::find()
     ]);
     ?>
 
-    <?= $form->field($model, 'descripcion')->textarea(['maxlength' => true]) ?>
+    <?= 
+        $form->field($model, 'origenid')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Origen::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione el Origen'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+    
+    ?>
+
+    <?= $form->field($model, 'fechaprograma')->widget(DateTimePicker::classname(), [
+	'name' => 'datetime_20',
+        'options' => ['placeholder' => 'Ingrese la Fecha en que se realizo el Programa'],
+        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
+        'pluginOptions' => [
+            'orientation' => 'up right',
+            'todayHighlight' => true,
+            'todayBtn' => true,
+            'format' => 'dd-mm-yyyy hh:ii:ss',
+            'showMeridian' => true,
+            'autoclose' => true,
+            'language' => 'es',
+	]
+]);
+    ?>
 
     <?= $form->field($model, 'fecharecibido')->widget(DateTimePicker::classname(), [
 	'name' => 'datetime_20',

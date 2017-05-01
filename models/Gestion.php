@@ -93,11 +93,11 @@ class Gestion extends \yii\db\ActiveRecord
             'afrodescendiente' => 'Afrodescendiente',
             'indigena' => 'Indigena',
             'sexodiversidad' => 'Sexodiversidad',
-            'trabajador_id' => 'Trabajador ID',
-            'created_at' => 'Created At',
-            'created_by' => 'Created By',
-            'updated_at' => 'Updated At',
-            'updated_by' => 'Updated By',
+            'trabajador_id' => 'Trabajador a cargo Gestión',
+            'created_at' => 'Creado el día',
+            'created_by' => 'Creado Por',
+            'updated_at' => 'Actualizado el día',
+            'updated_by' => 'Actualizado Por',
             'tipodecontacto_id' => 'Tipodecontacto ID',
         ];
     }
@@ -136,6 +136,14 @@ class Gestion extends \yii\db\ActiveRecord
     public function getEstatus3()
     {
         return $this->hasOne(Estatus3::className(), ['id' => 'estatus3_id']);
+    }
+    public function getEstatus2()
+    {
+        return $this->hasOne(Estatus2::className(), ['id' => 'estatus2_id']);
+    }
+    public function getEstatus1()
+    {
+        return $this->hasOne(Estatus1::className(), ['id' => 'estatus1_id']);
     }
 
     /**

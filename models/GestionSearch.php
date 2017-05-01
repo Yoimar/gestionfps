@@ -18,7 +18,7 @@ class GestionSearch extends Gestion
     public function rules()
     {
         return [
-            [['id', 'programaevento_id', 'solicitud_id', 'convenio_id', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id'], 'integer'],
+            [['id', 'programaevento_id', 'solicitud_id', 'convenio_id', 'estatus1_id', 'estatus2_id', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id'], 'integer'],
             [['militar_solicitante', 'militar_beneficiario'], 'boolean'],
             [['afrodescendiente', 'indigena', 'sexodiversidad', 'created_at', 'updated_at'], 'safe'],
         ];
@@ -45,6 +45,25 @@ class GestionSearch extends Gestion
         $query = Gestion::find();
 
         // add conditions that should always apply here
+        
+        $query->join('LEFT JOIN','programaevento', 'gestion.programaevento_id = programaevento.id')
+                ->join('LEFT JOIN', 'solicitudes','gestion.solicitud_id = solicitudes.id')
+                ->join('LEFT JOIN', 'users','solicitudes.usuario_asignacion_id = users.id')
+                ->join('LEFT JOIN','estatussasyc','solicitudes.estatus = estatussasyc.estatus')
+                ->join('LEFT JOIN', 'recepciones', 'solicitudes.recepcion_id = recepciones.id')
+                ->join('LEFT JOIN', 'presupuestos', 'presupuestos.solicitud_id = solicitudes.id')
+                ->join('LEFT JOIN', 'requerimientos', 'presupuestos.requerimiento_id = requerimientos.id')
+                ->join('LEFT JOIN', 'convenio', 'gestion.convenio_id = convenio.id')
+                ->join('LEFT JOIN', 'procesos', 'presupuestos.proceso_id = procesos.id')
+                ->join('LEFT JOIN', 'estatus3', 'gestion.estatus3_id = estatus3.id')
+                ->join('LEFT JOIN', 'estatus2', 'estatus3.estatus2_id = estatus2.id')
+                ->join('LEFT JOIN', 'estatus1', 'estatus2.estatus1_id = estatus1.id')
+                ->join('LEFT JOIN', 'tipo_requerimientos', 'requerimientos.tipo_requerimiento_id = tipo_requerimientos.id')
+                ->join('LEFT JOIN', 'areas', 'solicitudes.area_id = areas.id')
+                ->join('LEFT JOIN', 'tipo_ayudas', 'areas.tipo_ayuda_id = tipo_ayudas.id')
+                ->join('LEFT JOIN', 'empresa_institucion', 'presupuestos.beneficiario_id = empresa_institucion.id')
+                ->join('LEFT JOIN', 'tipodecontacto', 'gestion.tipodecontacto_id = tipodecontacto.id');
+        
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

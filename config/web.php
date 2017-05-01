@@ -53,6 +53,15 @@ $config = [
         
     ],
     'params' => $params,
+    
+    'modules'=>[
+        'dynagrid'=> [
+            'class'=>'\kartik\dynagrid\Module',
+        ],
+        'gridview'=> [
+            'class'=>'\kartik\grid\Module',
+        ],
+    ],
 ];
 
 if (YII_ENV_DEV) {

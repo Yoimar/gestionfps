@@ -67,6 +67,31 @@ class GestionSearch extends Gestion
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 50,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'solicitud_id' => SORT_DESC,
+                ],
+                'attributes' => [
+                    'solicitud_id',
+                    'estatus1_id' => [
+                        'asc' => ['estatus1.nombre' => SORT_ASC],
+                        'desc' => ['estatus1.nombre' => SORT_DESC],
+                    ],
+                    'estatus2_id' => [
+                        'asc' => ['estatus2.nombre' => SORT_ASC],
+                        'desc' => ['estatus2.nombre' => SORT_DESC],
+                    ],
+                    'estatus3_id' => [
+                        'asc' => ['estatus3.nombre' => SORT_ASC],
+                        'desc' => ['estatus3.nombre' => SORT_DESC],
+                    ],
+    
+                ],
+            ],
+        
         ]);
 
         $this->load($params);

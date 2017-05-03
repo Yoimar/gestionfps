@@ -104,6 +104,7 @@ use kartik\depdrop\DepDrop;
     'options'=>['id'=>'estatus2_id', 'placeholder'=>'Seleccione el Estatus Nivel 2'],
     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
     'pluginOptions'=>[
+        'initialize' => true,
         'placeholder' => 'Seleccione el Estatus Nivel 2',
         'depends'=>['gestion-estatus1_id'],
         'url'=>Url::to(['/estatus3/estatus1']),
@@ -113,11 +114,12 @@ use kartik\depdrop\DepDrop;
 
     <?=
     /* Estatus 3 con depdrop de kartik*/
-    $form->field($model, 'estatus3_id')->widget(DepDrop::classname(), [
+    $form->field($model, 'estatus3_id')->widget(DepDrop::classname(), [   
     'type'=>DepDrop::TYPE_SELECT2,
     'options'=>['id'=>'estatus3_id', 'placeholder'=>'Seleccione el Estatus Nivel 3'],
     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
     'pluginOptions'=>[
+        'initialize' => true,
         'placeholder' => 'Seleccione el Estatus Nivel 3',
         'depends'=>['estatus2_id'],
         'url'=>Url::to(['/estatus3/estatus2']),

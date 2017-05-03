@@ -135,15 +135,15 @@ class Gestion extends \yii\db\ActiveRecord
      */
     public function getEstatus3()
     {
-        return $this->hasOne(Estatus3::className(), ['id' => 'estatus3_id'])->from(Estatus3::tableName());
+        return $this->hasOne(Estatus3::className(), ['id' => 'estatus3_id']);
     }
     public function getEstatus2()
     {
-        return Estatus2::find()->join('LEFT JOIN', 'estatus3', 'estatus3.estatus2_id = estatus2.id')->join('LEFT JOIN', 'gestion', 'estatus3.id = gestion.estatus3_id')->where('estatus3.id = gestion.estatus3_id');
+        return Estatus2::find()->join('LEFT JOIN', 'estatus3', 'estatus3.estatus2_id = estatus2.id')->where(['estatus3.id' => $this->estatus3_id]);
     }
     public function getEstatus1()
     {
-        return Estatus1::find()->join('LEFT JOIN', 'estatus2', 'estatus2.estatus1_id = estatus1.id')->join('LEFT JOIN', 'estatus3', 'estatus3.estatus2_id = estatus2.id')->join('LEFT JOIN', 'gestion', 'estatus3.id = gestion.estatus3_id')->where('estatus3.id = gestion.estatus3_id');
+        return Estatus1::find()->join('LEFT JOIN', 'estatus2', 'estatus2.estatus1_id = estatus1.id')->join('LEFT JOIN', 'estatus3', 'estatus3.estatus2_id = estatus2.id')->where(['estatus3.id' => $this->estatus3_id]);
     }
 
     /**

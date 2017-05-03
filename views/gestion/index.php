@@ -69,7 +69,7 @@ $defaultExportConfig = [
         'showPageSummary' => true,
         'showFooter' => true,
         'showCaption' => true,
-        'filename' => 'grid-export',
+        'filename' => 'Gestiones',
         'alertMsg' => 'The EXCEL export file will be generated for download.',
         'options' => ['title' => 'Microsoft Excel 95+'],
         'mime' => 'application/vnd.ms-excel',
@@ -205,7 +205,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'afrodescendiente',
             'indigena',
             'sexodiversidad',
-            'trabajador_id',
+            //'trabajador_id',
             [
             'attribute' => 'trabajador_id',
             'value' => 'trabajador.Trabajadorfps',
@@ -216,6 +216,10 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updated_at',
             // 'updated_by',
             // 'tipodecontacto_id',
+        
+            [
+            'class'=>'kartik\grid\ActionColumn',
+            ],
 
             ['class'=>'kartik\grid\CheckboxColumn', 'order'=>DynaGrid::ORDER_FIX_RIGHT],
         ];

@@ -131,8 +131,8 @@ class Estatus3Controller extends Controller
         
         if ($parents != null) {
         $estatus1_id = $parents[0];
-         
-        $out = \app\models\Estatus3::getEstatusn1($estatus1_id); 
+             
+        $out = \app\models\Estatus3::getEstatusn1($estatus1_id);
             
         echo Json::encode(['output'=>$out, 'selected'=>'']);
             return;
@@ -149,7 +149,7 @@ class Estatus3Controller extends Controller
         if ($parents != null) {
         $estatus2_id = $parents[0];
          
-        $out = \app\models\Estatus3::getEstatusn2($estatus2_id); 
+        $out = \app\models\Estatus3::getEstatusn2($estatus2_id);
             
         echo Json::encode(['output'=>$out, 'selected'=>'']);
             return;

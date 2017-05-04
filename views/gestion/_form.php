@@ -84,6 +84,24 @@ use kartik\depdrop\DepDrop;
     
     ?>
     
+    
+    <?php
+        echo $form->field($model, 'estatus3_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map((new \yii\db\Query())->select(["CONCAT(estatus1.nombre, ' // ', estatus2.nombre, ' // ', estatus3.nombre) as nombre", "estatus3.id as id"])
+                ->from('estatus3')
+                ->join('join', 'estatus2', 'estatus3.estatus2_id = estatus2.id')
+                ->join('join', 'estatus1', 'estatus2.estatus1_id = estatus1.id')
+                ->all(),'id','nombre'),
+        'disabled' => true,
+        'language' => 'es',
+        'options' => ['placeholder' => 'Estatus Actual'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ])->label('Estatus Actual');
+    
+    ?>
+    
     <?=
     /* Estatus 1 con Select2 de kartik*/
         $form->field($model, 'estatus1_id')->widget(Select2::classname(), [
@@ -104,7 +122,6 @@ use kartik\depdrop\DepDrop;
     'options'=>['id'=>'estatus2_id', 'placeholder'=>'Seleccione el Estatus Nivel 2'],
     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
     'pluginOptions'=>[
-        'initialize' => true,
         'placeholder' => 'Seleccione el Estatus Nivel 2',
         'depends'=>['gestion-estatus1_id'],
         'url'=>Url::to(['/estatus3/estatus1']),
@@ -119,7 +136,6 @@ use kartik\depdrop\DepDrop;
     'options'=>['id'=>'estatus3_id', 'placeholder'=>'Seleccione el Estatus Nivel 3'],
     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
     'pluginOptions'=>[
-        'initialize' => true,
         'placeholder' => 'Seleccione el Estatus Nivel 3',
         'depends'=>['estatus2_id'],
         'url'=>Url::to(['/estatus3/estatus2']),

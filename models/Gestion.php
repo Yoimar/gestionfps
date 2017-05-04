@@ -5,6 +5,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
+use yii\db\ActiveQuery;
 
 use Yii;
 
@@ -43,6 +44,39 @@ class Gestion extends \yii\db\ActiveRecord
 {
     public $estatus1_id;
     public $estatus2_id;
+    public $mes_actividad;
+    public $solicitante;
+    public $cisolicitante;
+    public $beneficiario;
+    public $cibeneficiario;
+    public $tratamiento;
+    public $nino;
+    public $trabajadorsocial;
+    public $especialidad;
+    public $recepciones;
+    public $necesidad;
+    public $monto;
+    public $trabajadoracargoactividad;
+    public $mesingreso;
+    public $estado_actividad;
+    public $tipodeayuda;
+    public $estatussasyc;
+    public $empresaoinstitucion;
+    public $proceso;
+    public $cantidad;
+    public $descripcion;
+    public $diasdeultimamodificacion;
+    public $diasdesolicitud;
+    public $diasdesdeactividad;
+    public $cheque;
+    public $fechadelcheque;
+    public $anodelasolicitud;
+    public $direccion;
+    public $fechaactividad;
+    public $fechaingreso;
+    public $estadodireccion;
+    public $fechaultimamodificacion;   
+    
     
     /**
      * @inheritdoc
@@ -58,10 +92,11 @@ class Gestion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['programaevento_id', 'solicitud_id', 'convenio_id', 'estatus1_id', 'estatus2_id', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id'], 'integer'],
+            [['programaevento_id', 'solicitud_id', 'convenio_id', 'estatus1_id', 'estatus2_id', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'cisolicitante', 'cibeneficiario', 'mes_actividad', 'trabajadorsocial', 'trabajadoracargoactividad', 'estado_actividad', 'especialidad', 'recepciones', 'mesingreso', 'tipodeayuda', 'estatussasyc', 'empresaoinstitucion', 'proceso', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'cheque', 'estadodireccion', 'nino'], 'integer'],
             [['militar_solicitante', 'militar_beneficiario'], 'boolean'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['solicitante', 'beneficiario', 'necesidad', 'descripcion', 'fechadelcheque', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'created_at', 'updated_at'], 'safe'],
             [['afrodescendiente', 'indigena', 'sexodiversidad'], 'string', 'max' => 2],
+            [['monto', 'cantidad',], 'number'],
             [['convenio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Convenio::className(), 'targetAttribute' => ['convenio_id' => 'id']],
             [['estatus3_id'], 'exist', 'skipOnError' => true, 'targetClass' => Estatus3::className(), 'targetAttribute' => ['estatus3_id' => 'id']],
             [['programaevento_id'], 'exist', 'skipOnError' => true, 'targetClass' => Programaevento::className(), 'targetAttribute' => ['programaevento_id' => 'id']],

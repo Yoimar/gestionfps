@@ -196,7 +196,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'filterWidgetOptions'=>[
                 'pluginOptions'=>['allowClear'=>true],
             ],
-            'filterInputOptions'=>['placeholder'=>'Seleccione el Tipo de Contacto'],
+            'filterInputOptions'=>['placeholder'=>'¿Contacto?'],
             ],
             'militar_solicitante:boolean',
             'rango_solicitante_id',
@@ -215,7 +215,167 @@ $this->params['breadcrumbs'][] = $this->title;
             //'created_by',
             // 'updated_at',
             // 'updated_by',
-            // 'tipodecontacto_id',
+            [ 
+            'attribute' => 'mes_actividad', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'solicitante', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'cisolicitante', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'beneficiario', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'cibeneficiario', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'tratamiento', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'nino', 						
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'trabajadorsocial', 			
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'especialidad', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'recepciones', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'necesidad', 					
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'monto', 						
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'trabajadoracargoactividad', 	
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'mesingreso', 					
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'estado_actividad', 			
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'tipodeayuda', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'estatussasyc', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'empresaoinstitucion', 		
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'proceso', 					
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'cantidad', 					
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'descripcion', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'diasdeultimamodificacion', 	
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'diasdesolicitud', 			
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'diasdesdeactividad',
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'cheque', 						
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'fechadelcheque', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'anodelasolicitud', 			
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'direccion', 					
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'fechaactividad', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'fechaingreso', 				
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'estadodireccion', 			
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+            [ 
+            'attribute' => 'fechaultimamodificacion', 	
+            'value' => 'estatus1.nombre', 
+            'format' => 'text', 
+            ],
+
         
             [
             'class'=>'kartik\grid\ActionColumn',

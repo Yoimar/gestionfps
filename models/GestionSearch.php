@@ -20,7 +20,8 @@ class GestionSearch extends Gestion
         return [
             [['id', 'programaevento_id', 'solicitud_id', 'convenio_id', 'estatus1_id', 'estatus2_id', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id'], 'integer'],
             [['militar_solicitante', 'militar_beneficiario'], 'boolean'],
-            [['afrodescendiente', 'indigena', 'sexodiversidad', 'created_at', 'updated_at'], 'safe'],
+            [['solicitante', 'beneficiario', 'necesidad', 'descripcion', 'fechadelcheque', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'mes_actividad', 'afrodescendiente', 'indigena', 'sexodiversidad', 'created_at', 'updated_at'], 'safe'],
+            [['monto', 'cantidad',], 'number'],
         ];
     }
 
@@ -108,6 +109,8 @@ class GestionSearch extends Gestion
             'programaevento_id' => $this->programaevento_id,
             'solicitud_id' => $this->solicitud_id,
             'convenio_id' => $this->convenio_id,
+            'estatus1_id' => $this->estatus1_id,
+            'estatus2_id' => $this->estatus2_id,
             'estatus3_id' => $this->estatus3_id,
             'militar_solicitante' => $this->militar_solicitante,
             'rango_solicitante_id' => $this->rango_solicitante_id,

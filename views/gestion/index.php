@@ -6,6 +6,8 @@ use yii\helpers\ArrayHelper;
 use app\models\Programaevento;
 use app\models\Solicitudes;
 use app\models\Convenio;
+use app\models\Estatus1;
+use app\models\Estatus2;
 use app\models\Estatus3;
 use app\models\Tipodecontacto;
 use app\models\Trabajador;
@@ -13,6 +15,21 @@ use kartik\dynagrid\DynaGrid;
 use kartik\grid\GridView;
 use kartik\dynagrid\Module;
 use kartik\mpdf\Pdf;
+
+$mesespanish = ArrayHelper::map([
+    ['id' => '01', 'Mesactividad' => 'Enero'],
+    ['id' => '02', 'Mesactividad' => 'Febrero'],
+    ['id' => '03', 'Mesactividad' => 'Marzo'],
+    ['id' => '04', 'Mesactividad' => 'Abril'],
+    ['id' => '05', 'Mesactividad' => 'Mayo'],
+    ['id' => '06', 'Mesactividad' => 'Junio'],
+    ['id' => '07', 'Mesactividad' => 'Julio'],
+    ['id' => '08', 'Mesactividad' => 'Agosto'],
+    ['id' => '09', 'Mesactividad' => 'Septiembre'],
+    ['id' => '10', 'Mesactividad' => 'Octubre'],
+    ['id' => '11', 'Mesactividad' => 'Noviembre'],
+    ['id' => '12', 'Mesactividad' => 'Diciembre']
+    ], 'id', 'Mesactividad');
 
 $defaultExportConfig = [
     GridView::HTML => [
@@ -108,7 +125,7 @@ $defaultExportConfig = [
                 '.kv-table-footer{border-top:4px double #ddd;font-weight: bold;}' .
                 '.kv-table-caption{font-size:0.5em;padding:8px;border:1px solid #ddd;border-bottom:none;}',
             'methods' => [
-                'SetHeader'=>['Reporte de Gestiones'], 
+                'SetHeader'=>['<h1>Reporte de Gestiones</h1>'], 
                 'SetFooter'=>['{PAGENO}'],
             ],
             'options' => [
@@ -175,16 +192,34 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'estatus1_id',
             'value' => 'estatus1.nombre',
             'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(Estatus1::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Estatus 1?'],
             ],
             [
             'attribute' => 'estatus2_id',
             'value' => 'estatus2.nombre',
             'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(Estatus2::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Estatus 2?'],
             ],
             [
             'attribute' => 'estatus3_id',
             'value' => 'estatus3.nombre',
             'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(Estatus3::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Estatus 3?'],
             ],
             //'tipodecontacto_id',
             [
@@ -217,8 +252,14 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updated_by',
             [ 
             'attribute' => 'mes_actividad', 				
-            'value' => 'estatus1.nombre', 
-            'format' => 'text', 
+            'value' => 'programaevento.Mesactividad',
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => $mesespanish,
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Mes Programa?'],
             ],
             [ 
             'attribute' => 'solicitante', 				

@@ -124,16 +124,6 @@ class Programaevento extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Trabajador::className(), ['id' => 'trabajadoracargo_id']);
     }
-    
-    public function getMesactividad()
-    {
-        Yii::$app->formatter->locale = 'es-VE';
-        $mes = Yii::$app->formatter->asDate($this->fechaprograma, 'M');
-        $messpanish = array('Cero', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
-        
-        
-        return $messpanish[$mes];
-    }
 
     /**
      * @return \yii\db\ActiveQuery

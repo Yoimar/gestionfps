@@ -15,17 +15,18 @@ use kartik\dynagrid\DynaGrid;
 use kartik\grid\GridView;
 use kartik\dynagrid\Module;
 use kartik\mpdf\Pdf;
+use Punic\Calendar;
 
 $mesespanish = ArrayHelper::map([
-    ['id' => '01', 'Mesactividad' => 'Enero'],
-    ['id' => '02', 'Mesactividad' => 'Febrero'],
-    ['id' => '03', 'Mesactividad' => 'Marzo'],
-    ['id' => '04', 'Mesactividad' => 'Abril'],
-    ['id' => '05', 'Mesactividad' => 'Mayo'],
-    ['id' => '06', 'Mesactividad' => 'Junio'],
-    ['id' => '07', 'Mesactividad' => 'Julio'],
-    ['id' => '08', 'Mesactividad' => 'Agosto'],
-    ['id' => '09', 'Mesactividad' => 'Septiembre'],
+    ['id' => '1', 'Mesactividad' => 'Enero'],
+    ['id' => '2', 'Mesactividad' => 'Febrero'],
+    ['id' => '3', 'Mesactividad' => 'Marzo'],
+    ['id' => '4', 'Mesactividad' => 'Abril'],
+    ['id' => '5', 'Mesactividad' => 'Mayo'],
+    ['id' => '6', 'Mesactividad' => 'Junio'],
+    ['id' => '7', 'Mesactividad' => 'Julio'],
+    ['id' => '8', 'Mesactividad' => 'Agosto'],
+    ['id' => '9', 'Mesactividad' => 'Septiembre'],
     ['id' => '10', 'Mesactividad' => 'Octubre'],
     ['id' => '11', 'Mesactividad' => 'Noviembre'],
     ['id' => '12', 'Mesactividad' => 'Diciembre']
@@ -173,27 +174,33 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             'attribute' => 'programaevento_id',
             'value' => 'programaevento.descripcion',
-            'format' => 'raw',
+            'format' => 'text',
             ],
             // 'solicitud_id',
             [
             'attribute' => 'solicitud_id',
             'value' => 'solicitud.num_solicitud',
-            'format' => 'raw',
+            'format' => 'text',
             ],
             //'convenio_id',
             [
             'attribute' => 'convenio_id',
             'value' => 'convenio.nombre',
-            'format' => 'raw',
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(Convenio::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Convenio?'],
             ],
             //'estatus3_id',
             [
             'attribute' => 'estatus1_id',
-            'value' => 'estatus1.nombre',
+            'value' => 'estatus1_id',
             'format' => 'text',
             'filterType'=>GridView::FILTER_SELECT2,
-            'filter' => ArrayHelper::map(Estatus1::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+            'filter' => ArrayHelper::map(Estatus1::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
             'filterWidgetOptions'=>[
                 'pluginOptions'=>['allowClear'=>true],
             ],
@@ -201,7 +208,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
             'attribute' => 'estatus2_id',
-            'value' => 'estatus2.nombre',
+            'value' => 'estatus2_id',
             'format' => 'text',
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(Estatus2::find()->orderBy('nombre')->all(), 'id', 'nombre'),
@@ -233,18 +240,91 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Contacto?'],
             ],
-            'militar_solicitante:boolean',
-            'rango_solicitante_id',
-            'militar_beneficiario:boolean',
-            'rango_beneficiario_id',
-            'afrodescendiente',
-            'indigena',
-            'sexodiversidad',
+            
+            [
+            'class'=>'kartik\grid\BooleanColumn',
+            'attribute'=>'militar_solicitante', 
+            'vAlign'=>'middle',
+            ],
+            [
+            'attribute' => 'rango_solicitante_id',
+            'value' => 'rangosolicitante.nombre',
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(app\models\Rangosmilitares::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Rango Solicitante?'],
+            ],
+        
+            
+            [
+            'class'=>'kartik\grid\BooleanColumn',
+            'attribute'=>'militar_beneficiario',
+            'vAlign'=>'middle',
+            ],
+        
+            [
+            'attribute' => 'rango_beneficiario_id',
+            'value' => 'rangobeneficiario.nombre',
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(app\models\Rangosmilitares::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Rango Beneficiario?'],
+            ],
+        
+            [
+            'attribute' => 'afrodescendiente',
+            'value' => 'afrodescendiente',
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map([['id' => 'Si', 'nombre' => 'Si'],['id' => 'No', 'nombre' => 'No']], 'id', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Afrodescendiente?'],
+            ],
+        
+            [
+            'attribute' => 'indigena',
+            'value' => 'indigena',
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map([['id' => 'Si', 'nombre' => 'Si'],['id' => 'No', 'nombre' => 'No']], 'id', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Indigena?'],
+            ],
+        
+            [
+            'attribute' => 'sexodiversidad',
+            'value' => 'sexodiversidad',
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map([['id' => 'Si', 'nombre' => 'Si'],['id' => 'No', 'nombre' => 'No']], 'id', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Sexodiversidad?'],
+            ],
+        
             //'trabajador_id',
             [
             'attribute' => 'trabajador_id',
             'value' => 'trabajador.Trabajadorfps',
             'format' => 'raw',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(Trabajador::find()->asArray()->all(),'id', function($model, $defaultValue) {
+                        return $model['dimprofesion'].' '.$model['primernombre'].' '.$model['primerapellido'];}),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Trabajador?'],
             ],
             //'created_at',
             //'created_by',
@@ -252,7 +332,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updated_by',
             [ 
             'attribute' => 'mes_actividad', 				
-            'value' => 'programaevento.Mesactividad',
+            'value' => 'mes_actividad',
             'format' => 'text',
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => $mesespanish,
@@ -263,157 +343,157 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [ 
             'attribute' => 'solicitante', 				
-            'value' => 'estatus1.nombre', 
-            'format' => 'text', 
+            'value' => 'solicitante', 
+            'format' => 'text',
             ],
             [ 
             'attribute' => 'cisolicitante', 				
-            'value' => 'estatus1.nombre', 
-            'format' => 'text', 
+            'value' => 'cisolicitante', 
+            'format' => 'text',
             ],
             [ 
             'attribute' => 'beneficiario', 				
-            'value' => 'estatus1.nombre', 
+            'value' => 'beneficiario', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'cibeneficiario', 				
-            'value' => 'estatus1.nombre', 
+            'value' => 'cibeneficiario', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'tratamiento', 				
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'nino', 						
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'trabajadorsocial', 			
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'especialidad', 				
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'recepciones', 				
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'necesidad', 					
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'monto', 						
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'trabajadoracargoactividad', 	
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'mesingreso', 					
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'estado_actividad', 			
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'tipodeayuda', 				
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'estatussasyc', 				
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'empresaoinstitucion', 		
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'proceso', 					
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'cantidad', 					
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'descripcion', 				
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'diasdeultimamodificacion', 	
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'diasdesolicitud', 			
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'diasdesdeactividad',
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'cheque', 						
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'fechadelcheque', 				
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'anodelasolicitud', 			
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'direccion', 					
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'fechaactividad', 				
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'fechaingreso', 				
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'estadodireccion', 			
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'fechaultimamodificacion', 	
-            'value' => 'estatus1.nombre', 
+            'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],
 

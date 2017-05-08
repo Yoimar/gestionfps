@@ -92,9 +92,9 @@ class Gestion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['programaevento_id', 'solicitud_id', 'convenio_id', 'estatus1_id', 'estatus2_id', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'cisolicitante', 'cibeneficiario', 'mes_actividad', 'trabajadorsocial', 'trabajadoracargoactividad', 'estado_actividad', 'especialidad', 'recepciones', 'mesingreso', 'tipodeayuda', 'estatussasyc', 'empresaoinstitucion', 'proceso', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'cheque', 'estadodireccion', 'nino'], 'integer'],
+            [['programaevento_id', 'solicitud_id', 'convenio_id', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'cisolicitante', 'cibeneficiario', 'mes_actividad', 'trabajadorsocial', 'trabajadoracargoactividad', 'estado_actividad', 'especialidad', 'recepciones', 'mesingreso', 'tipodeayuda', 'estatussasyc', 'empresaoinstitucion', 'proceso', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'cheque', 'estadodireccion', 'nino'], 'integer'],
             [['militar_solicitante', 'militar_beneficiario'], 'boolean'],
-            [['solicitante', 'beneficiario', 'necesidad', 'descripcion', 'fechadelcheque', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'created_at', 'updated_at'], 'safe'],
+            [['solicitante', 'estatus1_id', 'estatus2_id', 'beneficiario', 'necesidad', 'descripcion', 'fechadelcheque', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'created_at', 'updated_at'], 'safe'],
             [['afrodescendiente', 'indigena', 'sexodiversidad'], 'string', 'max' => 2],
             [['monto', 'cantidad',], 'number'],
             [['convenio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Convenio::className(), 'targetAttribute' => ['convenio_id' => 'id']],
@@ -115,16 +115,16 @@ class Gestion extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'programaevento_id' => 'Programaevento ID',
-            'solicitud_id' => 'Solicitud ID',
-            'convenio_id' => 'Convenio ID',
+            'programaevento_id' => 'Programa, Evento o Act. Presidencial',
+            'solicitud_id' => 'N° Solicitud',
+            'convenio_id' => 'Convenio',
             'estatus1_id' => 'Estatus Nivel 1',
             'estatus2_id' => 'Estatus Nivel 2',
             'estatus3_id' => 'Estatus Nivel 3',
             'militar_solicitante' => 'Militar Solicitante',
-            'rango_solicitante_id' => 'Rango Solicitante ID',
+            'rango_solicitante_id' => 'Rango Solicitante',
             'militar_beneficiario' => 'Militar Beneficiario',
-            'rango_beneficiario_id' => 'Rango Beneficiario ID',
+            'rango_beneficiario_id' => 'Rango Beneficiario',
             'afrodescendiente' => 'Afrodescendiente',
             'indigena' => 'Indigena',
             'sexodiversidad' => 'Sexodiversidad',
@@ -133,7 +133,39 @@ class Gestion extends \yii\db\ActiveRecord
             'created_by' => 'Creado Por',
             'updated_at' => 'Actualizado el día',
             'updated_by' => 'Actualizado Por',
-            'tipodecontacto_id' => 'Tipodecontacto ID',
+            'tipodecontacto_id' => 'Tipo de Contacto',
+            'mes_actividad' => 'Mes de la Actividad',
+            'solicitante' => 'Solicitante',
+            'cisolicitante' => 'C.I. Solicitante',
+            'beneficiario' => 'Beneficiario',
+            'cibeneficiario' => 'C.I. Beneficiario',
+            'tratamiento' => 'Tratamiento',
+            'nino' => 'Niño',
+            'trabajadorsocial' => 'Trabajador Social',
+            'especialidad' => 'Especialidad',
+            'recepciones' => 'Recepciones',
+            'necesidad' => 'Necesidad',
+            'monto' => 'Monto del Presupuesto',
+            'trabajadoracargoactividad' => 'Trabajador a Cargo de la Actividad',
+            'mesingreso' => 'Mes de Ingreso',
+            'estado_actividad' => 'Estado de la Actividad',
+            'tipodeayuda' => 'Tipo de Ayuda',
+            'estatussasyc' => 'Estatus SASYC',
+            'empresaoinstitucion' => 'Empresa Institucion o Casa Comercial',
+            'proceso' => 'Proceso',
+            'cantidad' => 'Cantidad',
+            'descripcion' => 'Descripción',
+            'diasdeultimamodificacion' => 'Dias desde la Última modificación',
+            'diasdesolicitud' => 'Dias desde el Ingreso de la Solicitud',
+            'diasdesdeactividad' => 'Dias desde la Actividad',
+            'cheque' => 'Numero de Cheque',
+            'fechadelcheque' => 'Fecha del Cheque',
+            'anodelasolicitud' => 'Año de la Solicitud',
+            'direccion' => 'Dirección',
+            'fechaactividad' => 'Fecha de la Actividad',
+            'fechaingreso' => 'Fecha del ingreso',
+            'estadodireccion' => 'Estado del Beneficiario',
+            'fechaultimamodificacion' => 'Fecha de la ultima modificación',
         ];
     }
     
@@ -172,15 +204,7 @@ class Gestion extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Estatus3::className(), ['id' => 'estatus3_id']);
     }
-    public function getEstatus2()
-    {
-        return Estatus2::find()->join('LEFT JOIN', 'estatus3', 'estatus3.estatus2_id = estatus2.id')->where(['estatus3.id' => $this->estatus3_id]);
-    }
-    public function getEstatus1()
-    {
-        return Estatus1::find()->join('LEFT JOIN', 'estatus2', 'estatus2.estatus1_id = estatus1.id')->join('LEFT JOIN', 'estatus3', 'estatus3.estatus2_id = estatus2.id')->where(['estatus3.id' => $this->estatus3_id]);
-    }
-
+    
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -192,7 +216,7 @@ class Gestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getRangoSolicitante()
+    public function getRangosolicitante()
     {
         return $this->hasOne(Rangosmilitares::className(), ['id' => 'rango_solicitante_id']);
     }
@@ -200,7 +224,7 @@ class Gestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getRangoBeneficiario()
+    public function getRangobeneficiario()
     {
         return $this->hasOne(Rangosmilitares::className(), ['id' => 'rango_beneficiario_id']);
     }
@@ -228,4 +252,5 @@ class Gestion extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Trabajador::className(), ['id' => 'trabajador_id']);
     }
+
 }

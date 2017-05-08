@@ -75,7 +75,8 @@ class Gestion extends \yii\db\ActiveRecord
     public $fechaactividad;
     public $fechaingreso;
     public $estadodireccion;
-    public $fechaultimamodificacion;   
+    public $fechaultimamodificacion;
+    public $edadbeneficiario;
     
     
     /**
@@ -92,7 +93,7 @@ class Gestion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['programaevento_id', 'solicitud_id', 'convenio_id', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'cisolicitante', 'cibeneficiario', 'mes_actividad', 'trabajadorsocial', 'trabajadoracargoactividad', 'estado_actividad', 'especialidad', 'recepciones', 'mesingreso', 'tipodeayuda', 'estatussasyc', 'empresaoinstitucion', 'proceso', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'cheque', 'estadodireccion', 'nino'], 'integer'],
+            [['programaevento_id', 'solicitud_id', 'convenio_id', 'edadbeneficiario', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'cisolicitante', 'cibeneficiario', 'mes_actividad', 'trabajadorsocial', 'trabajadoracargoactividad', 'estado_actividad', 'especialidad', 'recepciones', 'mesingreso', 'tipodeayuda', 'estatussasyc', 'empresaoinstitucion', 'proceso', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'cheque', 'estadodireccion', 'nino'], 'integer'],
             [['militar_solicitante', 'militar_beneficiario'], 'boolean'],
             [['solicitante', 'estatus1_id', 'estatus2_id', 'beneficiario', 'necesidad', 'descripcion', 'fechadelcheque', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'created_at', 'updated_at'], 'safe'],
             [['afrodescendiente', 'indigena', 'sexodiversidad'], 'string', 'max' => 2],

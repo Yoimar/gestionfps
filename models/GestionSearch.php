@@ -316,10 +316,9 @@ class GestionSearch extends Gestion
             ->andFilterWhere(['like', 'estatus1.nombre', $this->estatus1_id])
             ->andFilterWhere(['like', "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido)", $this->beneficiario])
             ->andFilterWhere(['like', "CONCAT(personasolicitante.nombre || ' ' || personasolicitante.apellido)", $this->solicitante])
+            ->andFilterWhere(['like', "TRIM(TO_CHAR(personasolicitante.ci, '99999999'))", $this->cisolicitante])
             ->andFilterWhere(['=', 'extract(month from programaevento.fechaprograma)', $this->mes_actividad])
-            ->andFilterWhere(['personabeneficiario.ci' => $this->cibeneficiario])
-            ->andFilterWhere(['personasolicitante.ci' => $this->cisolicitante])
-                ;
+            ->andFilterWhere(['like', "TRIM(TO_CHAR(personabeneficiario.ci, '99999999'))", $this->cibeneficiario]);
 
         return $dataProvider;
     }

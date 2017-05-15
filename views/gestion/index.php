@@ -16,6 +16,9 @@ use kartik\grid\GridView;
 use kartik\dynagrid\Module;
 use kartik\mpdf\Pdf;
 use Punic\Calendar;
+use app\models\Users;
+use app\models\Areas;
+use app\models\Recepciones;
 
 $mesespanish = ArrayHelper::map([
     ['id' => '1', 'Mesactividad' => 'Enero'],
@@ -363,23 +366,41 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [ 
             'attribute' => 'tratamiento', 				
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'tratamiento', 
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(app\models\Requerimientos::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Tratamiento?'],
             ],
             [ 
-            'attribute' => 'nino', 						
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'class'=>'kartik\grid\BooleanColumn',
+            'attribute' => 'nino', 
+            'vAlign'=>'middle', 
             ],
             [ 
             'attribute' => 'trabajadorsocial', 			
-            'value' => 'estatus3.nombre', 
+            'value' => 'trabajadorsocial', 
             'format' => 'text', 
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(app\models\Users::find()->where(['activated' => 'TRUE'])->orderBy('nombre')->all(), 'nombre', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Trabajador Social?'],
             ],
             [ 
             'attribute' => 'especialidad', 				
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'especialidad', 
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(app\models\Areas::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Especialidad?'],    
             ],
             [ 
             'attribute' => 'recepciones', 				

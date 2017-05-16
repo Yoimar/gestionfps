@@ -20,7 +20,7 @@ class GestionSearch extends Gestion
         return [
             [['id', 'programaevento_id', 'solicitud_id', 'convenio_id',  'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id'], 'integer'],
             [['militar_solicitante', 'militar_beneficiario', 'nino', ], 'boolean'],
-            [['solicitante', 'estatus1_id', 'estatus2_id', 'cisolicitante', 'cibeneficiario', 'beneficiario', 'necesidad', 'descripcion', 'fechadelcheque', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'mes_actividad', 'afrodescendiente', 'indigena', 'sexodiversidad', 'trabajadorsocial', 'especialidad', 'created_at', 'updated_at'], 'safe'],
+            [['solicitante', 'estatus1_id', 'estatus2_id', 'cisolicitante', 'cibeneficiario', 'recepcion', 'beneficiario', 'necesidad', 'descripcion', 'fechadelcheque', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'mes_actividad', 'afrodescendiente', 'indigena', 'sexodiversidad', 'trabajadorsocial', 'trabajadoracargoactividad', 'especialidad', 'mesingreso', 'estado_actividad', 'tipodeayuda', 'estatussa', 'created_at', 'updated_at'], 'safe'],
             [['monto', 'cantidad',], 'number'],
         ];
     }
@@ -51,7 +51,10 @@ class GestionSearch extends Gestion
                 'gestion.sexodiversidad', 'gestion.trabajador_id', "personasolicitante.ci as cisolicitante", "personabeneficiario.ci as cibeneficiario", 
                 "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario", 'solicitudes.ind_beneficiario_menor as nino',
                 "CONCAT(personasolicitante.nombre || ' ' || personasolicitante.apellido) AS solicitante", 'requerimientos.nombre as tratamiento', 'presupuestos.proceso_id', 
-                    'users.nombre as trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'areas.nombre as especialidad', 'solicitudes.area_id', ]);
+                'users.nombre as trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'areas.nombre as especialidad', 'solicitudes.area_id', 
+                'solicitudes.recepcion_id', 'recepciones.nombre as recepcion', 'presupuestos.monto', "CONCAT(trabajadoracargo.dimprofesion || ' ' || trabajadoracargo.primernombre || ' ' || trabajadoracargo.primerapellido) AS trabajadoracargoactividad",
+                "extract(month from solicitudes.created_at) as mesingreso", 'estadoactividad.nombre as estado_actividad', 'tipo_ayudas.nombre as tipodeayuda', 'estatussasyc.estatus as estatussa',
+                'solicitudes.estatus']);
 
         // add conditions that should always apply here
         
@@ -59,8 +62,8 @@ class GestionSearch extends Gestion
                 ->join('LEFT JOIN', 'solicitudes','gestion.solicitud_id = solicitudes.id')
                 ->join('LEFT JOIN', 'programaevento', 'gestion.programaevento_id = programaevento.id')
                 ->join('LEFT JOIN', 'tipodecontacto', 'gestion.tipodecontacto_id = tipodecontacto.id')               
-                ->join('LEFT JOIN', 'users','solicitudes.usuario_asignacion_id = users.id')
-                ->join('LEFT JOIN', 'estatussasyc','solicitudes.estatus = estatussasyc.estatus')
+                ->join('LEFT JOIN', 'users', 'solicitudes.usuario_asignacion_id = users.id')
+                ->join('LEFT JOIN', 'estatussasyc', 'solicitudes.estatus = estatussasyc.id')
                 ->join('LEFT JOIN', 'recepciones', 'solicitudes.recepcion_id = recepciones.id')
                 ->join('LEFT JOIN', 'presupuestos', 'presupuestos.solicitud_id = solicitudes.id')
                 ->join('LEFT JOIN', 'requerimientos', 'presupuestos.requerimiento_id = requerimientos.id')
@@ -76,7 +79,10 @@ class GestionSearch extends Gestion
                 ->join('LEFT JOIN', 'empresa_institucion', 'presupuestos.beneficiario_id = empresa_institucion.id')
                 ->join('LEFT JOIN', 'rangosmilitares as rangosolicitante', 'gestion.rango_solicitante_id = rangosolicitante.id')
                 ->join('LEFT JOIN', 'rangosmilitares as rangobeneficiario', 'gestion.rango_beneficiario_id = rangobeneficiario.id')
-                ;
+                ->join('LEFT JOIN', 'trabajador as trabajadoracargo', 'programaevento.trabajadoracargo_id = trabajadoracargo.id')
+                ->join('LEFT JOIN', 'parroquias as parroquiaactividad', 'programaevento.parroquia_id = parroquiaactividad.id')
+                ->join('LEFT JOIN', 'municipios as municipioactividad', 'parroquiaactividad.municipio_id = municipioactividad.id')
+                ->join('LEFT JOIN', 'estados as estadoactividad', 'municipioactividad.estado_id = estadoactividad.id');
         
 
         $dataProvider = new ActiveDataProvider([
@@ -190,32 +196,32 @@ class GestionSearch extends Gestion
                         'desc' => ['recepcion' => \SORT_DESC],
                     ],
                     'necesidad' => [ 
-                        'asc' => ['convenio.nombre' => \SORT_ASC],
-                        'desc' => ['convenio.nombre' => \SORT_DESC],
+                        'asc' => ['solicitudes.necesidad' => \SORT_ASC],
+                        'desc' => ['solicitudes.necesidad' => \SORT_DESC],
                     ],
                     'monto' => [ 
-                        'asc' => ['convenio.nombre' => \SORT_ASC],
-                        'desc' => ['convenio.nombre' => \SORT_DESC],
+                        'asc' => ['presupuestos.monto' => \SORT_ASC],
+                        'desc' => ['presupuestos.monto' => \SORT_DESC],
                     ],
                     'trabajadoracargoactividad' => [ 
-                        'asc' => ['convenio.nombre' => \SORT_ASC],
-                        'desc' => ['convenio.nombre' => \SORT_DESC],
+                        'asc' => ['trabajadoracargoactividad' => \SORT_ASC],
+                        'desc' => ['trabajadoracargoactividad' => \SORT_DESC],
                     ],
                     'mesingreso' => [ 
-                        'asc' => ['convenio.nombre' => \SORT_ASC],
-                        'desc' => ['convenio.nombre' => \SORT_DESC],
+                        'asc' => ['mesingreso' => \SORT_ASC],
+                        'desc' => ['mesingreso' => \SORT_DESC],
                     ],
                     'estado_actividad' => [ 
-                        'asc' => ['convenio.nombre' => \SORT_ASC],
-                        'desc' => ['convenio.nombre' => \SORT_DESC],
+                        'asc' => ['estado_actividad' => \SORT_ASC],
+                        'desc' => ['estado_actividad' => \SORT_DESC],
                     ],
                     'tipodeayuda' => [ 
-                        'asc' => ['convenio.nombre' => \SORT_ASC],
-                        'desc' => ['convenio.nombre' => \SORT_DESC],
+                        'asc' => ['tipodeayuda' => \SORT_ASC],
+                        'desc' => ['tipodeayuda' => \SORT_DESC],
                     ],
-                    'estatussasyc' => [ 
-                        'asc' => ['convenio.nombre' => \SORT_ASC],
-                        'desc' => ['convenio.nombre' => \SORT_DESC],
+                    'estatussa' => [ 
+                        'asc' => ['estatussa' => \SORT_ASC],
+                        'desc' => ['estatussa' => \SORT_DESC],
                     ],
                     'empresaoinstitucion' => [ 
                         'asc' => ['convenio.nombre' => \SORT_ASC],
@@ -320,10 +326,18 @@ class GestionSearch extends Gestion
             ->andFilterWhere(['like', "CONCAT(personasolicitante.nombre || ' ' || personasolicitante.apellido)", $this->solicitante])
             ->andFilterWhere(['like', "TRIM(TO_CHAR(personasolicitante.ci, '99999999'))", $this->cisolicitante])
             ->andFilterWhere(['=', 'extract(month from programaevento.fechaprograma)', $this->mes_actividad])
+            ->andFilterWhere(['=', 'extract(month from solicitudes.created_at)', $this->mesingreso])
             ->andFilterWhere(['like', "TRIM(TO_CHAR(personabeneficiario.ci, '99999999'))", $this->cibeneficiario])
             ->andFilterWhere(['like', 'requerimientos.nombre', $this->tratamiento])
             ->andFilterWhere(['like', 'users.nombre', $this->trabajadorsocial])
-            ->andFilterWhere(['like', 'areas.nombre', $this->especialidad]);
+            ->andFilterWhere(['like', 'areas.nombre', $this->especialidad])
+            ->andFilterWhere(['like', 'recepciones.nombre', $this->recepcion])
+            ->andFilterWhere(['like', 'solicitudes.necesidad', $this->necesidad])
+            ->andFilterWhere(['like', "TRIM(TO_CHAR(presupuestos.monto, '9999999999999'))", $this->monto])
+            ->andFilterWhere(['like', 'estadoactividad.nombre', $this->estado_actividad])
+            ->andFilterWhere(['like', 'tipo_ayudas.nombre', $this->tipodeayuda])
+            ->andFilterWhere(['like', 'estatussasyc.estatus', $this->estatussa])
+            ->andFilterWhere(['like', "CONCAT(trabajadoracargo.dimprofesion || ' ' || trabajadoracargo.primernombre || ' ' || trabajadoracargo.primerapellido)", $this->trabajadoracargoactividad]);
 
         return $dataProvider;
     }

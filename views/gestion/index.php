@@ -19,6 +19,7 @@ use Punic\Calendar;
 use app\models\Users;
 use app\models\Areas;
 use app\models\Recepciones;
+use app\models\Presupuestos;
 
 $mesespanish = ArrayHelper::map([
     ['id' => '1', 'Mesactividad' => 'Enero'],
@@ -403,44 +404,84 @@ $this->params['breadcrumbs'][] = $this->title;
             'filterInputOptions'=>['placeholder'=>'¿Especialidad?'],    
             ],
             [ 
-            'attribute' => 'recepciones', 				
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'attribute' => 'recepcion', 				
+            'value' => 'recepcion', 
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(app\models\Recepciones::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Recepción?'],
             ],
             [ 
             'attribute' => 'necesidad', 					
-            'value' => 'estatus3.nombre', 
+            'value' => 'solicitud.necesidad', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'monto', 						
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'monto', 
+            'hAlign'=>'right', 
+            'vAlign'=>'middle',
+            'width'=>'100px',
+            'format'=>['decimal', 2],
+            'pageSummary'=>true
             ],
             [ 
             'attribute' => 'trabajadoracargoactividad', 	
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'trabajadoracargoactividad', 
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(Trabajador::find()->select(["CONCAT(dimprofesion, ' ',primernombre,' ', primerapellido) as nombre"])->asArray()->all(), 'nombre', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Trabajador a Cargo?'], 
             ],
             [ 
             'attribute' => 'mesingreso', 					
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'mesingreso', 
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => $mesespanish,
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Mes Programa?'],
             ],
             [ 
             'attribute' => 'estado_actividad', 			
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'estado_actividad', 
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(app\models\Estados::find()->orderBy('nombre')->all(), 'nombre','nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Estado Actividad?'],
             ],
             [ 
             'attribute' => 'tipodeayuda', 				
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'tipodeayuda', 
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(app\models\TipoAyudas::find()->orderBy('nombre')->all(), 'nombre','nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Tipo Ayuda?'],
             ],
             [ 
-            'attribute' => 'estatussasyc', 				
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'attribute' => 'estatussa', 				
+            'value' => 'estatussa', 
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(app\models\Estatussasyc::find()->orderBy('estatus')->all(), 'estatus', 'estatus'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Estatus SASYC?'],
             ],
             [ 
             'attribute' => 'empresaoinstitucion', 		

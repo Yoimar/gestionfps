@@ -60,7 +60,7 @@ class Gestion extends \yii\db\ActiveRecord
     public $mesingreso;
     public $estado_actividad;
     public $tipodeayuda;
-    public $estatussasyc;
+    public $estatussa;
     public $empresaoinstitucion;
     public $proceso;
     public $cantidad;
@@ -93,9 +93,9 @@ class Gestion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['programaevento_id', 'solicitud_id', 'convenio_id', 'edadbeneficiario', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'cisolicitante', 'cibeneficiario', 'mes_actividad', 'trabajadoracargoactividad', 'estado_actividad', 'especialidad', 'recepcion', 'mesingreso', 'tipodeayuda', 'estatussasyc', 'empresaoinstitucion', 'proceso', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'cheque', 'estadodireccion'], 'integer'],
+            [['programaevento_id', 'solicitud_id', 'convenio_id', 'edadbeneficiario', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'cisolicitante', 'cibeneficiario', 'mes_actividad', 'trabajadoracargoactividad', 'estado_actividad', 'especialidad', 'mesingreso', 'tipodeayuda', 'empresaoinstitucion', 'proceso', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'cheque', 'estadodireccion'], 'integer'],
             [['militar_solicitante', 'militar_beneficiario', 'nino'], 'boolean'],
-            [['solicitante', 'estatus1_id', 'estatus2_id', 'beneficiario', 'necesidad', 'descripcion', 'fechadelcheque', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'trabajadorsocial', 'created_at', 'updated_at'], 'safe'],
+            [['solicitante', 'estatus1_id', 'estatus2_id', 'beneficiario', 'necesidad', 'descripcion', 'fechadelcheque', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'trabajadorsocial', 'recepcion', 'estatussa', 'created_at', 'updated_at'], 'safe'],
             [['afrodescendiente', 'indigena', 'sexodiversidad'], 'string', 'max' => 2],
             [['monto', 'cantidad',], 'number'],
             [['convenio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Convenio::className(), 'targetAttribute' => ['convenio_id' => 'id']],
@@ -151,7 +151,7 @@ class Gestion extends \yii\db\ActiveRecord
             'mesingreso' => 'Mes de Ingreso',
             'estado_actividad' => 'Estado de la Actividad',
             'tipodeayuda' => 'Tipo de Ayuda',
-            'estatussasyc' => 'Estatus SASYC',
+            'estatussa' => 'Estatus SASYC',
             'empresaoinstitucion' => 'Empresa Institucion o Casa Comercial',
             'proceso' => 'Proceso',
             'cantidad' => 'Cantidad',

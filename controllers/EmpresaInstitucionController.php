@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\EmpresaInstitucion;
-use app\models\EmpresaInstitucionSearch;
+use app\models\Empresainstitucion;
+use app\models\EmpresainstitucionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * EmpresaInstitucionController implements the CRUD actions for EmpresaInstitucion model.
+ * EmpresainstitucionController implements the CRUD actions for Empresainstitucion model.
  */
-class EmpresaInstitucionController extends Controller
+class EmpresainstitucionController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class EmpresaInstitucionController extends Controller
     }
 
     /**
-     * Lists all EmpresaInstitucion models.
+     * Lists all Empresainstitucion models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new EmpresaInstitucionSearch();
+        $searchModel = new EmpresainstitucionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class EmpresaInstitucionController extends Controller
     }
 
     /**
-     * Displays a single EmpresaInstitucion model.
+     * Displays a single Empresainstitucion model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +57,13 @@ class EmpresaInstitucionController extends Controller
     }
 
     /**
-     * Creates a new EmpresaInstitucion model.
+     * Creates a new Empresainstitucion model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new EmpresaInstitucion();
+        $model = new Empresainstitucion();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +75,7 @@ class EmpresaInstitucionController extends Controller
     }
 
     /**
-     * Updates an existing EmpresaInstitucion model.
+     * Updates an existing Empresainstitucion model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,7 +94,7 @@ class EmpresaInstitucionController extends Controller
     }
 
     /**
-     * Deletes an existing EmpresaInstitucion model.
+     * Deletes an existing Empresainstitucion model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +107,15 @@ class EmpresaInstitucionController extends Controller
     }
 
     /**
-     * Finds the EmpresaInstitucion model based on its primary key value.
+     * Finds the Empresainstitucion model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return EmpresaInstitucion the loaded model
+     * @return Empresainstitucion the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = EmpresaInstitucion::findOne($id)) !== null) {
+        if (($model = Empresainstitucion::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

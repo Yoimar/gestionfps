@@ -16,7 +16,7 @@ use Yii;
  * @property string $updated_at
  * @property integer $updated_by
  */
-class EmpresaInstitucion extends \yii\db\ActiveRecord
+class Empresainstitucion extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc

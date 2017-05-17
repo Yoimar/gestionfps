@@ -20,7 +20,7 @@ class GestionSearch extends Gestion
         return [
             [['id', 'programaevento_id', 'solicitud_id', 'convenio_id',  'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id'], 'integer'],
             [['militar_solicitante', 'militar_beneficiario', 'nino', ], 'boolean'],
-            [['solicitante', 'estatus1_id', 'estatus2_id', 'cisolicitante', 'cibeneficiario', 'recepcion', 'beneficiario', 'necesidad', 'descripcion', 'fechadelcheque', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'mes_actividad', 'afrodescendiente', 'indigena', 'sexodiversidad', 'trabajadorsocial', 'trabajadoracargoactividad', 'especialidad', 'mesingreso', 'estado_actividad', 'tipodeayuda', 'estatussa', 'created_at', 'updated_at'], 'safe'],
+            [['solicitante', 'estatus1_id', 'estatus2_id', 'cisolicitante', 'cibeneficiario', 'recepcion', 'beneficiario', 'necesidad', 'descripcion', 'fechadelcheque', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'mes_actividad', 'afrodescendiente', 'indigena', 'sexodiversidad', 'trabajadorsocial', 'trabajadoracargoactividad', 'especialidad', 'mesingreso', 'estado_actividad', 'tipodeayuda', 'estatussa', 'empresaoinstitucion', 'proceso', 'created_at', 'updated_at'], 'safe'],
             [['monto', 'cantidad',], 'number'],
         ];
     }
@@ -44,7 +44,7 @@ class GestionSearch extends Gestion
     public function search($params)
     {
         $query = Gestion::find()
-                ->select(['gestion.id', "extract(month from programaevento.fechaprograma) as mes_actividad", 'programaevento.descripcion', 'solicitudes.num_solicitud', 'gestion.programaevento_id', 
+                ->select(['gestion.id', "extract(month from programaevento.fechaprograma)::int as mes_actividad", 'programaevento.descripcion', 'solicitudes.num_solicitud', 'gestion.programaevento_id', 
                 'programaevento.id', 'solicitudes.id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', "estatus1.nombre as estatus1_id", 
                 "estatus2.nombre as estatus2_id", 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante',
                 'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id', 'gestion.afrodescendiente', 'gestion.indigena', 
@@ -52,9 +52,9 @@ class GestionSearch extends Gestion
                 "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario", 'solicitudes.ind_beneficiario_menor as nino',
                 "CONCAT(personasolicitante.nombre || ' ' || personasolicitante.apellido) AS solicitante", 'requerimientos.nombre as tratamiento', 'presupuestos.proceso_id', 
                 'users.nombre as trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'areas.nombre as especialidad', 'solicitudes.area_id', 
-                'solicitudes.recepcion_id', 'recepciones.nombre as recepcion', 'presupuestos.monto', "CONCAT(trabajadoracargo.dimprofesion || ' ' || trabajadoracargo.primernombre || ' ' || trabajadoracargo.primerapellido) AS trabajadoracargoactividad",
-                "extract(month from solicitudes.created_at) as mesingreso", 'estadoactividad.nombre as estado_actividad', 'tipo_ayudas.nombre as tipodeayuda', 'estatussasyc.estatus as estatussa',
-                'solicitudes.estatus']);
+                'solicitudes.recepcion_id', 'recepciones.nombre as recepcion', 'presupuestos.montoapr as monto', "CONCAT(trabajadoracargo.dimprofesion || ' ' || trabajadoracargo.primernombre || ' ' || trabajadoracargo.primerapellido) AS trabajadoracargoactividad",
+                "extract(month from solicitudes.created_at)::int as mesingreso", 'estadoactividad.nombre as estado_actividad', 'tipo_ayudas.nombre as tipodeayuda', 'estatussasyc.estatus as estatussa',
+                'solicitudes.estatus', 'empresa_institucion.nombrecompleto as empresaoinstitucion', 'presupuestos.beneficiario_id', 'procesos.nombre as proceso', 'presupuestos.cantidad as cantidad']);
 
         // add conditions that should always apply here
         
@@ -200,8 +200,8 @@ class GestionSearch extends Gestion
                         'desc' => ['solicitudes.necesidad' => \SORT_DESC],
                     ],
                     'monto' => [ 
-                        'asc' => ['presupuestos.monto' => \SORT_ASC],
-                        'desc' => ['presupuestos.monto' => \SORT_DESC],
+                        'asc' => ['presupuestos.montoapr' => \SORT_ASC],
+                        'desc' => ['presupuestos.montoapr' => \SORT_DESC],
                     ],
                     'trabajadoracargoactividad' => [ 
                         'asc' => ['trabajadoracargoactividad' => \SORT_ASC],
@@ -224,16 +224,16 @@ class GestionSearch extends Gestion
                         'desc' => ['estatussa' => \SORT_DESC],
                     ],
                     'empresaoinstitucion' => [ 
-                        'asc' => ['convenio.nombre' => \SORT_ASC],
-                        'desc' => ['convenio.nombre' => \SORT_DESC],
+                        'asc' => ['empresaoinstitucion' => \SORT_ASC],
+                        'desc' => ['empresaoinstitucion' => \SORT_DESC],
                     ],
                     'proceso' => [ 
-                        'asc' => ['convenio.nombre' => \SORT_ASC],
-                        'desc' => ['convenio.nombre' => \SORT_DESC],
+                        'asc' => ['proceso' => \SORT_ASC],
+                        'desc' => ['proceso' => \SORT_DESC],
                     ],
                     'cantidad' => [ 
-                        'asc' => ['convenio.nombre' => \SORT_ASC],
-                        'desc' => ['convenio.nombre' => \SORT_DESC],
+                        'asc' => ['cantidad' => \SORT_ASC],
+                        'desc' => ['cantidad' => \SORT_DESC],
                     ],
                     'descripcion' => [ 
                         'asc' => ['convenio.nombre' => \SORT_ASC],
@@ -337,6 +337,8 @@ class GestionSearch extends Gestion
             ->andFilterWhere(['like', 'estadoactividad.nombre', $this->estado_actividad])
             ->andFilterWhere(['like', 'tipo_ayudas.nombre', $this->tipodeayuda])
             ->andFilterWhere(['like', 'estatussasyc.estatus', $this->estatussa])
+            ->andFilterWhere(['like', 'empresa_institucion.nombrecompleto', $this->empresaoinstitucion])
+            ->andFilterWhere(['like', 'procesos.nombre', $this->proceso])
             ->andFilterWhere(['like', "CONCAT(trabajadoracargo.dimprofesion || ' ' || trabajadoracargo.primernombre || ' ' || trabajadoracargo.primerapellido)", $this->trabajadoracargoactividad]);
 
         return $dataProvider;

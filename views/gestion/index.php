@@ -441,7 +441,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [ 
             'attribute' => 'mesingreso', 					
-            'value' => 'mesingreso', 
+            'value' => 'mesingreso',
             'format' => 'text',
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => $mesespanish,
@@ -485,18 +485,28 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [ 
             'attribute' => 'empresaoinstitucion', 		
-            'value' => 'estatus3.nombre', 
+            'value' => 'empresaoinstitucion', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'proceso', 					
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'proceso', 
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(app\models\Procesos::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Proceso?'],
             ],
             [ 
             'attribute' => 'cantidad', 					
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'cantidad', 
+            'hAlign'=>'right', 
+            'vAlign'=>'middle',
+            'width'=>'100px',
+            'format'=>['decimal', 0],
+            'pageSummary'=>true
             ],
             [ 
             'attribute' => 'descripcion', 				

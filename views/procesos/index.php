@@ -4,19 +4,19 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\EmpresaInstitucionSearch */
+/* @var $searchModel app\models\ProcesosSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Casa Comercial - Empresa - Institución';
+$this->title = 'Procesos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="empresa-institucion-index">
+<div class="procesos-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Empresa Institucion', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Procesos', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -25,13 +25,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'nombrecompleto',
-            'rif',
-            'nrif',
+            'nombre',
+            'defeventosasyc_id',
+            'ind_cantidad:boolean',
+            'ind_monto:boolean',
+            // 'ind_beneficiario:boolean',
+            // 'version',
             // 'created_at',
-            // 'created_by',
             // 'updated_at',
-            // 'updated_by',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -510,31 +510,26 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [ 
             'attribute' => 'descripcion', 				
-            'value' => 'estatus3.nombre', 
+            'value' => 'descripcion', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'diasdeultimamodificacion', 	
-            'value' => 'estatus3.nombre', 
+            'value' => 'diasdeultimamodificacion', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'diasdesolicitud', 			
-            'value' => 'estatus3.nombre', 
+            'value' => 'diasdesolicitud', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'diasdesdeactividad',
-            'value' => 'estatus3.nombre', 
+            'value' => 'diasdesdeactividad', 
             'format' => 'text', 
             ],
             [ 
             'attribute' => 'cheque', 						
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
-            ],
-            [ 
-            'attribute' => 'fechadelcheque', 				
             'value' => 'estatus3.nombre', 
             'format' => 'text', 
             ],

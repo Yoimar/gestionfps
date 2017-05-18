@@ -160,11 +160,12 @@ class Gestion extends \yii\db\ActiveRecord
             'diasdesdeactividad' => 'Dias desde la Actividad',
             'cheque' => 'Numero de Cheque',
             'anodelasolicitud' => 'Año de la Solicitud',
-            'direccion' => 'Dirección',
+            'direccion' => 'Dirección del Beneficiario',
             'fechaactividad' => 'Fecha de la Actividad',
             'fechaingreso' => 'Fecha del ingreso',
-            'estadodireccion' => 'Estado del Beneficiario',
             'fechaultimamodificacion' => 'Fecha de la ultima modificación',
+            'estadodireccion' => 'Estado del Beneficiario',
+            'edadbeneficiario' => 'Edad del Beneficiario',
         ];
     }
     

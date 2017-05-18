@@ -179,6 +179,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'programaevento_id',
             'value' => 'programaevento.descripcion',
             'format' => 'text',
+            'visible'=> false,
             ],
             // 'solicitud_id',
             [
@@ -191,6 +192,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'convenio_id',
             'value' => 'convenio.nombre',
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(Convenio::find()->orderBy('nombre')->all(), 'id', 'nombre'),
             'filterWidgetOptions'=>[
@@ -237,6 +239,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'tipodecontacto_id',
             'value' => 'tipodecontacto.nombre',
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(Tipodecontacto::find()->orderBy('nombre')->all(), 'id', 'nombre'),
             'filterWidgetOptions'=>[
@@ -249,11 +252,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'class'=>'kartik\grid\BooleanColumn',
             'attribute'=>'militar_solicitante', 
             'vAlign'=>'middle',
+            'visible'=> false,
             ],
             [
             'attribute' => 'rango_solicitante_id',
             'value' => 'rangosolicitante.nombre',
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(app\models\Rangosmilitares::find()->orderBy('nombre')->all(), 'id', 'nombre'),
             'filterWidgetOptions'=>[
@@ -267,12 +272,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'class'=>'kartik\grid\BooleanColumn',
             'attribute'=>'militar_beneficiario',
             'vAlign'=>'middle',
+            'visible'=> false,
             ],
         
             [
             'attribute' => 'rango_beneficiario_id',
             'value' => 'rangobeneficiario.nombre',
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(app\models\Rangosmilitares::find()->orderBy('nombre')->all(), 'id', 'nombre'),
             'filterWidgetOptions'=>[
@@ -285,6 +292,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'afrodescendiente',
             'value' => 'afrodescendiente',
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map([['id' => 'Si', 'nombre' => 'Si'],['id' => 'No', 'nombre' => 'No']], 'id', 'nombre'),
             'filterWidgetOptions'=>[
@@ -297,6 +305,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'indigena',
             'value' => 'indigena',
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map([['id' => 'Si', 'nombre' => 'Si'],['id' => 'No', 'nombre' => 'No']], 'id', 'nombre'),
             'filterWidgetOptions'=>[
@@ -309,6 +318,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'sexodiversidad',
             'value' => 'sexodiversidad',
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map([['id' => 'Si', 'nombre' => 'Si'],['id' => 'No', 'nombre' => 'No']], 'id', 'nombre'),
             'filterWidgetOptions'=>[
@@ -338,6 +348,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'mes_actividad', 				
             'value' => 'mes_actividad',
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => $mesespanish,
             'filterWidgetOptions'=>[
@@ -349,11 +360,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'solicitante', 				
             'value' => 'solicitante', 
             'format' => 'text',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'cisolicitante', 				
             'value' => 'cisolicitante', 
             'format' => 'text',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'beneficiario', 				
@@ -369,6 +382,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'tratamiento', 				
             'value' => 'tratamiento', 
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(app\models\Requerimientos::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
             'filterWidgetOptions'=>[
@@ -379,12 +393,14 @@ $this->params['breadcrumbs'][] = $this->title;
             [ 
             'class'=>'kartik\grid\BooleanColumn',
             'attribute' => 'nino', 
-            'vAlign'=>'middle', 
+            'vAlign'=>'middle',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'trabajadorsocial', 			
             'value' => 'trabajadorsocial', 
-            'format' => 'text', 
+            'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(app\models\Users::find()->where(['activated' => 'TRUE'])->orderBy('nombre')->all(), 'nombre', 'nombre'),
             'filterWidgetOptions'=>[
@@ -396,17 +412,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'especialidad', 				
             'value' => 'especialidad', 
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(app\models\Areas::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
             'filterWidgetOptions'=>[
                 'pluginOptions'=>['allowClear'=>true],
             ],
-            'filterInputOptions'=>['placeholder'=>'¿Especialidad?'],    
+            'filterInputOptions'=>['placeholder'=>'¿Especialidad?'],
             ],
             [ 
             'attribute' => 'recepcion', 				
             'value' => 'recepcion', 
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(app\models\Recepciones::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
             'filterWidgetOptions'=>[
@@ -417,7 +435,8 @@ $this->params['breadcrumbs'][] = $this->title;
             [ 
             'attribute' => 'necesidad', 					
             'value' => 'solicitud.necesidad', 
-            'format' => 'text', 
+            'format' => 'text',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'monto', 						
@@ -426,12 +445,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'vAlign'=>'middle',
             'width'=>'100px',
             'format'=>['decimal', 2],
-            'pageSummary'=>true
+            'pageSummary'=>true,
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'trabajadoracargoactividad', 	
             'value' => 'trabajadoracargoactividad', 
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(Trabajador::find()->select(["CONCAT(dimprofesion, ' ',primernombre,' ', primerapellido) as nombre"])->asArray()->all(), 'nombre', 'nombre'),
             'filterWidgetOptions'=>[
@@ -443,6 +464,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'mesingreso', 					
             'value' => 'mesingreso',
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => $mesespanish,
             'filterWidgetOptions'=>[
@@ -454,6 +476,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'estado_actividad', 			
             'value' => 'estado_actividad', 
             'format' => 'text',
+            'visible' => false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(app\models\Estados::find()->orderBy('nombre')->all(), 'nombre','nombre'),
             'filterWidgetOptions'=>[
@@ -465,6 +488,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'tipodeayuda', 				
             'value' => 'tipodeayuda', 
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(app\models\TipoAyudas::find()->orderBy('nombre')->all(), 'nombre','nombre'),
             'filterWidgetOptions'=>[
@@ -476,6 +500,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'estatussa', 				
             'value' => 'estatussa', 
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(app\models\Estatussasyc::find()->orderBy('estatus')->all(), 'estatus', 'estatus'),
             'filterWidgetOptions'=>[
@@ -486,12 +511,14 @@ $this->params['breadcrumbs'][] = $this->title;
             [ 
             'attribute' => 'empresaoinstitucion', 		
             'value' => 'empresaoinstitucion', 
-            'format' => 'text', 
+            'format' => 'text',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'proceso', 					
             'value' => 'proceso', 
             'format' => 'text',
+            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(app\models\Procesos::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
             'filterWidgetOptions'=>[
@@ -506,63 +533,88 @@ $this->params['breadcrumbs'][] = $this->title;
             'vAlign'=>'middle',
             'width'=>'100px',
             'format'=>['decimal', 0],
-            'pageSummary'=>true
+            'pageSummary'=>true,
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'descripcion', 				
             'value' => 'descripcion', 
-            'format' => 'text', 
+            'format' => 'text',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'diasdeultimamodificacion', 	
             'value' => 'diasdeultimamodificacion', 
-            'format' => 'text', 
+            'format' => 'text',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'diasdesolicitud', 			
             'value' => 'diasdesolicitud', 
-            'format' => 'text', 
+            'format' => 'text',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'diasdesdeactividad',
             'value' => 'diasdesdeactividad', 
-            'format' => 'text', 
+            'format' => 'text',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'cheque', 						
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'cheque', 
+            'format' => 'text',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'anodelasolicitud', 			
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'anodelasolicitud', 
+            'format' => 'text',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'direccion', 					
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'direccion', 
+            'format' => 'text',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'fechaactividad', 				
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'fechaactividad', 
+            'format' => 'text',
+            'visible'=> false,    
             ],
             [ 
             'attribute' => 'fechaingreso', 				
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
-            ],
-            [ 
-            'attribute' => 'estadodireccion', 			
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'fechaingreso', 
+            'format' => 'text',
+            'visible'=> false,
             ],
             [ 
             'attribute' => 'fechaultimamodificacion', 	
-            'value' => 'estatus3.nombre', 
-            'format' => 'text', 
+            'value' => 'fechaultimamodificacion', 
+            'format' => 'text',
+            'visible'=> false,
             ],
+            [ 
+            'attribute' => 'estadodireccion', 			
+            'value' => 'estadodireccion', 
+            'format' => 'text',
+            'visible'=> false,
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(app\models\Estados::find()->orderBy('nombre')->all(), 'nombre','nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Estado Beneficiario?'],
+            ],
+            [                     
+            'attribute' => 'edadbeneficiario', 			
+            'value' => 'edadbeneficiario', 
+            'format' => 'text',
+            'visible'=> false,
+            ],
+            
 
         
             [
@@ -683,7 +735,7 @@ $dynagrid = DynaGrid::begin([
         'filterModel'=>$searchModel,
         'exportConfig' => $defaultExportConfig,
         'showPageSummary'=>true,
-        'floatHeader'=>true,
+        'floatHeader'=>false,
         'pjax'=>true,
         'panel'=>[
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-heart"></i><i class="glyphicon glyphicon-ok"></i>  Gestiones Fundación Pueblo Soberano</h3>',
@@ -699,7 +751,7 @@ $dynagrid = DynaGrid::begin([
             '{export}',
         ]
     ],
-    'options'=>['id'=>'dynagrid-1'] // a unique identifier is important
+    'options'=>['id'=>'dynagrid-1', 'class' => 'container'] // a unique identifier is important
 ]);
 if (substr($dynagrid->theme, 0, 6) == 'simple') {
     $dynagrid->gridOptions['panel'] = false;

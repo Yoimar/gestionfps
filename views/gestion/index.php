@@ -620,6 +620,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             'class'=>'kartik\grid\ActionColumn',
             ],
+        
 
             ['class'=>'kartik\grid\CheckboxColumn', 'order'=>DynaGrid::ORDER_FIX_RIGHT],
         ];
@@ -725,6 +726,13 @@ $this->params['breadcrumbs'][] = $this->title;
     ],
     ['class'=>'kartik\grid\CheckboxColumn', 'order'=>DynaGrid::ORDER_FIX_RIGHT],
 ];*/
+?>
+
+<!-- Aqui termina el div, y empieza el container -->
+</div>                      
+
+<?php
+
 $dynagrid = DynaGrid::begin([
     'columns'=>$columns,
     'theme'=>'panel-info',
@@ -751,7 +759,7 @@ $dynagrid = DynaGrid::begin([
             '{export}',
         ]
     ],
-    'options'=>['id'=>'dynagrid-1', 'class' => 'container'] // a unique identifier is important
+    'options'=>['id'=>'dynagrid-1', 'class' => 'container-fluid'] // a unique identifier is important
 ]);
 if (substr($dynagrid->theme, 0, 6) == 'simple') {
     $dynagrid->gridOptions['panel'] = false;

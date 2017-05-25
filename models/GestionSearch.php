@@ -50,15 +50,16 @@ class GestionSearch extends Gestion
                 'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id', 'gestion.afrodescendiente', 'gestion.indigena', 
                 'gestion.sexodiversidad', 'gestion.trabajador_id', "personasolicitante.ci as cisolicitante", "personabeneficiario.ci as cibeneficiario", 
                 "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario", 'solicitudes.ind_beneficiario_menor as nino',
-                "CONCAT(personasolicitante.nombre || ' ' || personasolicitante.apellido) AS solicitante", 'requerimientos.nombre as tratamiento', 'presupuestos.proceso_id', 
+                "CONCAT(personasolicitante.nombre || ' ' || personasolicitante.apellido) AS solicitante",  
                 'users.nombre as trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'areas.nombre as especialidad', 'solicitudes.area_id', 
-                'solicitudes.recepcion_id', 'recepciones.nombre as recepcion', 'presupuestos.montoapr as monto', "CONCAT(trabajadoracargo.dimprofesion || ' ' || trabajadoracargo.primernombre || ' ' || trabajadoracargo.primerapellido) AS trabajadoracargoactividad",
+                'solicitudes.recepcion_id', 'recepciones.nombre as recepcion', "CONCAT(trabajadoracargo.dimprofesion || ' ' || trabajadoracargo.primernombre || ' ' || trabajadoracargo.primerapellido) AS trabajadoracargoactividad",
                 "extract(month from solicitudes.created_at)::int as mesingreso", 'estadoactividad.nombre as estado_actividad', 'tipo_ayudas.nombre as tipodeayuda', 'estatussasyc.estatus as estatussa',
-                'solicitudes.estatus', 'empresa_institucion.nombrecompleto as empresaoinstitucion', 'presupuestos.beneficiario_id', 'procesos.nombre as proceso', 'presupuestos.cantidad as cantidad', 
+                'solicitudes.estatus', 'procesos.nombre as proceso', 
                 'solicitudes.descripcion', "date_part('day' ,now()-gestion.updated_at) as diasdeultimamodificacion", "date_part('day' ,now()-solicitudes.created_at) as diasdesolicitud", "date_part('day' ,now()-programaevento.fechaprograma) as diasdesdeactividad",
-                'presupuestos.cheque as cheque', "extract(year from solicitudes.created_at) as anodelasolicitud", "CONCAT(personabeneficiario.zona_sector || ' ' || personabeneficiario.calle_avenida || ' ' || personabeneficiario.apto_casa) as direccion",
+                "extract(year from solicitudes.created_at) as anodelasolicitud", "CONCAT(personabeneficiario.zona_sector || ' ' || personabeneficiario.calle_avenida || ' ' || personabeneficiario.apto_casa) as direccion",
                 "to_char(programaevento.fechaprograma, 'DD/MM/YYYY') as fechaactividad", "to_char(solicitudes.created_at, 'DD/MM/YYYY') as fechaingreso", 'estadobeneficiario.nombre as estadodireccion', "TO_CHAR(gestion.updated_at, 'DD/MM/YYYY') as fechaultimamodificacion",
-                "extract(YEAR FROM age(now(),personabeneficiario.fecha_nacimiento)) as edadbeneficiario"]);
+                "extract(YEAR FROM age(now(),personabeneficiario.fecha_nacimiento)) as edadbeneficiario", "string_agg(empresa_institucion.nombrecompleto, ', ') as empresaoinstitucion",
+                "string_agg(to_char(presupuestos.cantidad,'9999'), ', ') as cantidad", "string_agg(presupuestos.cheque, ', ') as cheque", "string_agg(to_char(presupuestos.beneficiario_id,'99999'), ', ')", "string_agg(to_char(presupuestos.proceso_id,'99999'), ', ')", "string_agg(requerimientos.nombre, ', ') as tratamiento", "sum(presupuestos.montoapr) as monto"]);
 
         // add conditions that should always apply here
         
@@ -89,7 +90,9 @@ class GestionSearch extends Gestion
                 ->join('LEFT JOIN', 'estados as estadoactividad', 'municipioactividad.estado_id = estadoactividad.id')
                 ->join('LEFT JOIN', 'parroquias as parroquiabeneficiario', 'personabeneficiario.parroquia_id = parroquiabeneficiario.id')
                 ->join('LEFT JOIN', 'municipios as municipiobeneficiario', 'parroquiabeneficiario.municipio_id = municipiobeneficiario.id')
-                ->join('LEFT JOIN', 'estados as estadobeneficiario', 'municipiobeneficiario.estado_id = estadobeneficiario.id');
+                ->join('LEFT JOIN', 'estados as estadobeneficiario', 'municipiobeneficiario.estado_id = estadobeneficiario.id')
+                ->groupBy(['mes_actividad', 'programaevento.descripcion', 'solicitudes.num_solicitud', 'gestion.programaevento_id', 'programaevento.id', 'solicitudes.id', 'gestion.id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', 'estatus1.nombre', 'estatus2.nombre', 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante', 'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id', 'gestion.afrodescendiente', 'gestion.indigena', 'gestion.sexodiversidad', 'gestion.trabajador_id',
+                'cisolicitante', 'cibeneficiario', 'beneficiario', 'nino', 'solicitante', 'trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'especialidad', 'solicitudes.area_id', 'solicitudes.recepcion_id', 'recepcion', 'trabajadoracargoactividad', 'estado_actividad', 'tipodeayuda', 'estatussa', 'solicitudes.estatus', 'proceso', 'solicitudes.descripcion', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'estadodireccion', 'fechaultimamodificacion', 'edadbeneficiario']);
         
 
         $dataProvider = new ActiveDataProvider([

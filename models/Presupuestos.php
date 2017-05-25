@@ -26,6 +26,46 @@ use Yii;
  */
 class Presupuestos extends \yii\db\ActiveRecord
 {
+    public $estatus1_id;
+    public $estatus2_id;
+    public $estatus3_id;
+    public $mes_actividad;
+    public $solicitante;
+    public $cisolicitante;
+    public $beneficiario;
+    public $cibeneficiario;
+    public $tratamiento;
+    public $nino;
+    public $trabajadorsocial;
+    public $especialidad;
+    public $recepcion;
+    public $necesidad;
+    public $monto;
+    public $trabajadoracargoactividad;
+    public $mesingreso;
+    public $estado_actividad;
+    public $tipodeayuda;
+    public $estatussa;
+    public $empresaoinstitucion;
+    public $proceso;
+    public $cantidad;
+    public $descripcion;
+    public $diasdeultimamodificacion;
+    public $diasdesolicitud;
+    public $diasdesdeactividad;
+    public $cheque;
+    public $anodelasolicitud;
+    public $direccion;
+    public $fechaactividad;
+    public $fechaingreso;
+    public $estadodireccion;
+    public $fechaultimamodificacion;
+    public $edadbeneficiario;
+    public $militar_solicitante;
+    public $militar_beneficiario;
+    public $num_solicitud;
+    public $trabajadorgestion;
+    
     /**
      * @inheritdoc
      */
@@ -43,6 +83,7 @@ class Presupuestos extends \yii\db\ActiveRecord
             [['solicitud_id', 'requerimiento_id', 'proceso_id', 'created_at', 'updated_at'], 'required'],
             [['solicitud_id', 'requerimiento_id', 'proceso_id', 'documento_id', 'beneficiario_id', 'cantidad', 'version', 'numop'], 'integer'],
             [['monto', 'montoapr'], 'number'],
+            [['militar_solicitante', 'militar_beneficiario', 'nino'], 'boolean'],
             [['created_at', 'updated_at'], 'safe'],
             [['moneda', 'estatus_doc'], 'string', 'max' => 3],
             [['cheque'], 'string', 'max' => 100],

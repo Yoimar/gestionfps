@@ -27,8 +27,10 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => Html::img('@web/img/logo_fps2.jpg', ['alt' => 'Logo Fundación', 'height' => '25 px', 'style' => 'margin: 0 auto; border: 0;' ]),
+        //'brandLabel' => 'Fundación Pueblo Soberano Gestión',
         'brandUrl' => Yii::$app->homeUrl,
+        'brandOptions' => ['style' => 'margin: 0 auto; border: 0;'],
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
@@ -36,12 +38,24 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
+            ['label' => 'Gestión', 'url' => ['/gestion']],
+            [
+            'label' => 'Reportes',
+            'items' => [
+                 '<li class="dropdown-header">Reporte Individuales</li>',
+                 ['label' => 'Atención al Soberano', 'url' => '#'],
+                 ['label' => 'Atención Institucional', 'url' => '#'],
+                 ['label' => 'Actividad Presidencial', 'url' => '#'],
+                 '<li class="divider"></li>',
+                 '<li class="dropdown-header">Reporte Totales</li>',
+                 ['label' => 'Total Nivel 1', 'url' => '#'],
+                 ['label' => 'Total Nivel 2', 'url' => '#'],
+                 ['label' => 'Total Nivel 3', 'url' => '#'],
+            ],
+            ],
             ['label' => 'Registrarse', 'url' => ['/site/signup']],
             Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
+                ['label' => 'Ingresar', 'url' => ['/site/login']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
@@ -67,9 +81,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-left">&copy; Fundación Pueblo Soberano <?= date('Y') ?></p>
     </div>
 </footer>
 

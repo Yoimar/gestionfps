@@ -29,7 +29,8 @@
         "kartik-v/yii2-dynagrid": "@dev",
         "kartik-v/yii2-grid": "@dev",
         "kartik-v/yii2-mpdf": "*",
-        "punic/punic": "1.*"
+        "punic/punic": "1.*",
+        "unclead/yii2-multiple-input": "~2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

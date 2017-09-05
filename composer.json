@@ -30,7 +30,11 @@
         "kartik-v/yii2-grid": "@dev",
         "kartik-v/yii2-mpdf": "*",
         "punic/punic": "1.*",
-        "unclead/yii2-multiple-input": "~2.0"
+        "unclead/yii2-multiple-input": "~2.0",
+        "wbraganca/yii2-dynamicform": "*",
+        "philippfrenzel/yii2fullcalendar": "*",
+        "edofre/yii2-fullcalendar": "V1.0.9",
+        "miloschuman/yii2-highcharts-widget": "^5.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

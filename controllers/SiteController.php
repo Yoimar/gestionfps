@@ -144,4 +144,40 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+    
+    public function actionAtencionsoberano()
+    {
+        return $this->render('atencionsoberano');
+    }
+    
+    public function actionAtencioninstitucional()
+    {
+        return $this->render('atencioninstitucional');
+    }
+    
+    public function actionInstruccionpresidencial()
+    {
+        return $this->render('instruccionpresidencial');
+    }
+    
+    public function actionReportegeneral()
+    {
+        return $this->render('reportegeneral');
+    }
+    
+    public function actionAtencionsoberano1()
+    {
+        return $this->render('atencionsoberano1');
+    }
+    
+    public function actionPruebas()
+    {
+        return $this->render('pruebas');
+    }
+    
+    public function actionTablasoberano()
+    {
+        return $this->render('Tablasoberano');
+    }
+    
 }

@@ -43,9 +43,10 @@ AppAsset::register($this);
             'label' => 'Reportes',
             'items' => [
                  '<li class="dropdown-header">Reporte Individuales</li>',
-                 ['label' => 'Atención al Soberano', 'url' => '#'],
-                 ['label' => 'Atención Institucional', 'url' => '#'],
-                 ['label' => 'Actividad Presidencial', 'url' => '#'],
+                 ['label' => 'Atención al Soberano', 'url' => '@web/site/atencionsoberano'],
+                 ['label' => 'Atención Institucional', 'url' => '@web/site/atencioninstitucional'],
+                 ['label' => 'Instruccion Presidencial', 'url' => '@web/site/instruccionpresidencial'],
+                 ['label' => 'Reporte General', 'url' => '@web/site/reportegeneral'],
                  '<li class="divider"></li>',
                  '<li class="dropdown-header">Reporte Totales</li>',
                  ['label' => 'Total Nivel 1', 'url' => '#'],

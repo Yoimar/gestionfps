@@ -180,4 +180,19 @@ class SiteController extends Controller
         return $this->render('Tablasoberano');
     }
     
+    public function actionTotalnivel3()
+    {
+        return $this->render('Totalnivel3');
+    }
+    
+    public function actionTotalnivel2()
+    {
+        return $this->render('Totalnivel2');
+    }
+    
+    public function actionTotalnivel1()
+    {
+        return $this->render('Totalnivel1');
+    }
+    
 }

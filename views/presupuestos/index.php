@@ -746,12 +746,13 @@ $dynagrid = DynaGrid::begin([
         'panel'=>[
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-heart"></i><i class="glyphicon glyphicon-ok"></i>  Gestiones Fundación Pueblo Soberano</h3>',
             'before' =>  '<div style="padding-top: 7px;"><em>Aqui encontraras todas las gestiones hechas a los casos de la Fundación Pueblo Soberano</em></div>',
-            'after' => false
+            'after' => false,
         ],        
         'toolbar' =>  [
             ['content'=>
-                Html::a('Crear Gestión', ['create'], ['class' => 'btn btn-success']). ' '.
-                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax'=>0, 'class' => 'btn btn-default', 'title'=>'Reset Grid'])
+                Html::a('Crear Presupuesto', ['create'], ['class' => 'btn btn-success']). ' '.
+                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax'=>0, 'class' => 'btn btn-default', 'title'=>'Reset Grid']). ' '.
+                Html::a('Borrar Presupuesto', ['delete'], ['class' => 'btn btn-warning'])
             ],
             ['content'=>'{dynagridFilter}{dynagridSort}{dynagrid}'],
             '{export}',

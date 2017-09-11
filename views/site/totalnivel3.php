@@ -389,11 +389,3 @@ for ($i = 0; $i < count($trabajadorescolumnas); $i++)
 
 
 ?>
-
-
-
-<pre>
-<?php// print_r($coso); ?>
-<?php//print_r($valoresdata2); ?>
-<?php // print_r($pruebancha); ?>
-</pre>

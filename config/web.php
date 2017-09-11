@@ -50,6 +50,13 @@ $config = [
             'rules' => [
             ],
         ],
+        'formatter' => [
+            'dateFormat' => 'dd.MM.yyyy',
+            'decimalSeparator' => ',',
+            'thousandSeparator' => '.',
+            'currencyCode' => 'Bs. ',
+            'nullDisplay' => ' ',
+        ],
         
     ],
     'params' => $params,

@@ -175,24 +175,64 @@ class SiteController extends Controller
         return $this->render('pruebas');
     }
     
-    public function actionTablasoberano()
-    {
-        return $this->render('Tablasoberano');
-    }
-    
     public function actionTotalnivel3()
     {
-        return $this->render('Totalnivel3');
+        return $this->render('totalnivel3');
     }
     
     public function actionTotalnivel2()
     {
-        return $this->render('Totalnivel2');
+        return $this->render('totalnivel2');
     }
     
     public function actionTotalnivel1()
     {
-        return $this->render('Totalnivel1');
+        return $this->render('totalnivel1');
+    }
+    
+    public function actionTablareportegeneral()
+    {
+        return $this->render('tablareportegeneral');
+    }
+    
+    public function actionTablaatencionsoberano()
+    {
+        return $this->render('tablaatencionsoberano');
+    }
+    
+    public function actionTablaatencioninstitucional()
+    {
+        return $this->render('tablaatencioninstitucional');
+    }
+    
+    public function actionTablainstruccionpresidencial()
+    {
+        return $this->render('tablainstruccionpresidencial');
+    }
+    
+    public function actionParteportrabajador()
+    {
+        return $this->render('parteportrabajador');
+    }
+    
+    public function actionParteindividual()
+    {
+        $model = new \app\models\Parteindividual;
+        
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            // Valida los datos recibidos en $model
+            $partetrabajador = Yii::$app->db->createCommand("select u1.nombre, e1.estatus, count(*), string_agg(s1.num_solicitud, ', ')  from solicitudes s1 join users u1 on s1.usuario_asignacion_id = u1.id join estatussasyc e1 on s1.estatus = e1.id where s1.usuario_asignacion_id =". $model->trabajador ." and extract(year from s1.created_at)= ". $model->anho ." group by u1.nombre, e1.estatus order by u1.nombre, e1.estatus")->queryAll();
+            $partegestion = Yii::$app->db->createCommand("select e1.nombre as estatus1, e2.nombre as estatus2, e3.nombre as estatus3, count(*), string_agg(s1.num_solicitud, ', ') from gestion g1 join solicitudes s1 on s1.id = g1.solicitud_id join users u1 on s1.usuario_asignacion_id = u1.id join estatus3 e3 on g1.estatus3_id = e3.id join estatus2 e2 on e3.estatus2_id = e2.id join estatus1 e1 on e2.estatus1_id = e1.id where s1.usuario_asignacion_id = ". $model->trabajador ." and extract(year from s1.created_at) = ". $model->anho ." group by e1.nombre, e2.nombre, e3.nombre order by e1.nombre, e2.nombre, e3.nombre")->queryAll();
+            $counttrabajador = Yii::$app->db->createCommand("select count(*) from solicitudes s1 join users u1 on s1.usuario_asignacion_id = u1.id join estatussasyc e1 on s1.estatus = e1.id where s1.usuario_asignacion_id =". $model->trabajador ." and extract(year from s1.created_at)= ". $model->anho)->queryScalar();
+            $countgestion = Yii::$app->db->createCommand("select count(*) from gestion g1 join solicitudes s1 on s1.id = g1.solicitud_id join users u1 on s1.usuario_asignacion_id = u1.id join estatus3 e3 on g1.estatus3_id = e3.id join estatus2 e2 on e3.estatus2_id = e2.id join estatus1 e1 on e2.estatus1_id = e1.id where s1.usuario_asignacion_id = ". $model->trabajador ." and extract(year from s1.created_at) = ". $model->anho)->queryScalar();
+
+            // Se puede manipular los datos de $model
+
+        return $this->render('parteindividual', ['model' => $model, 'partetrabajador' => $partetrabajador, 'partegestion' => $partegestion, 'counttrabajador' => $counttrabajador, 'countgestion' => $countgestion ]);
+        } else {
+            // Se despliega la pagina inicial o si hay un error de validacion
+         return $this->render('parteindividual', ['model' => $model]);
+        }
     }
     
 }

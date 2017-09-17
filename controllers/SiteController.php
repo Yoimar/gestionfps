@@ -20,12 +20,74 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => [
+                    'logout', 
+                    'atencionsoberano', 
+                    'reportegeneral', 
+                    'atencioninstitucional',
+                    'instruccionpresidencial',
+                    'totalnivel1',
+                    'totalnivel2',
+                    'totalnivel3',
+                    'tablaatencionsoberano', 
+                    'tablareportegeneral', 
+                    'tablaatencioninstitucional',
+                    'tablainstruccionpresidencial',
+                    'parteportrabajador',
+                    'parteindividual',
+                    'pruebas',
+                    'contact',
+                    'about',
+                    'rbac',
+                    ],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
+                        'actions' => [
+                            'logout',
+                            'contact',
+                            'pruebas',
+                            'about',
+                            'rbac',
+                        ],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => [
+                            'atencionsoberano', 
+                            'reportegeneral', 
+                            'atencioninstitucional',
+                            'instruccionpresidencial',
+                        ],
+                        'allow' => true,
+                        'roles' => ['ver-reporteunidad'],
+                    ],
+                    [
+                        'actions' => [
+                            'tablaatencionsoberano', 
+                            'tablareportegeneral', 
+                            'tablaatencioninstitucional',
+                            'tablainstruccionpresidencial',
+                        ],
+                        'allow' => true,
+                        'roles' => ['ver-tablas'],
+                    ],
+                    [
+                        'actions' => [
+                            'totalnivel1',
+                            'totalnivel2',
+                            'totalnivel3',
+                        ],
+                        'allow' => true,
+                        'roles' => ['ver-graficas'],
+                    ],
+                    [
+                        'actions' => [
+                            'parteportrabajador',
+                            'parteindividual',
+                        ],
+                        'allow' => true,
+                        'roles' => ['ver-reportetrabajador'],
                     ],
                 ],
             ],
@@ -147,6 +209,11 @@ class SiteController extends Controller
     
     public function actionAtencionsoberano()
     {
+//Asi valido con rbac en la vista
+//        if(!Yii::$app->user->can('ver-tablas') ){
+//            throw new \yii\web\ForbiddenHttpException('No tiene permiso para ver este contenido');
+//        }
+            
         return $this->render('atencionsoberano');
     }
     
@@ -163,11 +230,6 @@ class SiteController extends Controller
     public function actionReportegeneral()
     {
         return $this->render('reportegeneral');
-    }
-    
-    public function actionAtencionsoberano1()
-    {
-        return $this->render('atencionsoberano1');
     }
     
     public function actionPruebas()
@@ -233,6 +295,104 @@ class SiteController extends Controller
             // Se despliega la pagina inicial o si hay un error de validacion
          return $this->render('parteindividual', ['model' => $model]);
         }
+    }
+    
+    public function actionRbac()
+    {
+        $auth = Yii::$app->authManager;
+        $auth->removeAll();
+        
+        $vertablas = $auth->createPermission('ver-tablas');
+        $vertablas->description = 'Permite ver las tablas generales';
+        $auth->add($vertablas);
+        
+        $verreporteunidad = $auth->createPermission('ver-reporteunidad');
+        $verreporteunidad->description = 'Permite ver los reportes por unidad';
+        $auth->add($verreporteunidad);
+        
+        $verreportetrabajador = $auth->createPermission('ver-reportetrabajador');
+        $verreportetrabajador->description = 'Permite ver los reportes por trabajador';
+        $auth->add($verreportetrabajador);
+        
+        $vergraficas = $auth->createPermission('ver-graficas');
+        $vergraficas->description = 'Permite ver las graficas de la unidad';
+        $auth->add($vergraficas);
+      
+        $creargestion = $auth->createPermission('gestion-crear');
+        $creargestion->description = 'Permite insertar el registro de una gestion';
+        $auth->add($creargestion);
+        
+        $actualizargestion = $auth->createPermission('gestion-actualizar');
+        $actualizargestion->description = 'Permite actualizar el registro de una gestion';
+        $auth->add($actualizargestion);
+        
+        $listargestion = $auth->createPermission('gestion-listar');
+        $listargestion->description = 'Permite listar todos los registros de gestion';
+        $auth->add($listargestion);
+        
+        $eliminargestion = $auth->createPermission('gestion-eliminar');
+        $eliminargestion->description = 'Permite eliminar el registro de una gestion';
+        $auth->add($eliminargestion);
+       
+        $roladministrador = $auth->createRole('administrador');
+        $auth->add($roladministrador);        
+       
+        $rolpresidente = $auth->createRole('presidente');
+        $auth->add($rolpresidente);
+        
+        $roltrabajador = $auth->createRole('trabajador');
+        $auth->add($roltrabajador);
+        
+        $rolingreso = $auth->createRole('ingreso');
+        $auth->add($rolingreso);
+        
+        $rolconsulta = $auth->createRole('consulta');
+        $auth->add($rolconsulta);
+        
+        
+        $auth->addChild($rolpresidente, $vertablas);
+        $auth->addChild($rolpresidente, $verreporteunidad);
+        $auth->addChild($rolpresidente, $verreportetrabajador);
+        $auth->addChild($rolpresidente, $vergraficas);          
+        $auth->addChild($roladministrador, $creargestion);
+        $auth->addChild($roladministrador, $actualizargestion);
+        $auth->addChild($roladministrador, $listargestion);
+        $auth->addChild($roladministrador, $eliminargestion);
+        $auth->addChild($roladministrador, $vertablas);
+        $auth->addChild($roladministrador, $verreporteunidad);
+        $auth->addChild($roladministrador, $verreportetrabajador);
+        $auth->addChild($roladministrador, $vergraficas);
+        $auth->addChild($rolpresidente, $listargestion);
+        
+        $auth->addChild($roltrabajador, $vertablas);
+        $auth->addChild($roltrabajador, $verreporteunidad);
+        $auth->addChild($roltrabajador, $verreportetrabajador);
+        $auth->addChild($roltrabajador, $vergraficas);          
+        $auth->addChild($roltrabajador, $creargestion);
+        $auth->addChild($roltrabajador, $actualizargestion);
+        $auth->addChild($roltrabajador, $listargestion);
+        
+        
+        $auth->addChild($rolingreso, $creargestion);
+        $auth->addChild($rolingreso, $listargestion);
+        
+        
+        $auth->addChild($rolconsulta, $listargestion);
+        
+        
+        
+        
+        
+        
+        
+        $auth->assign($roladministrador, 2);
+        $auth->assign($rolpresidente, 1);
+        $auth->assign($roltrabajador, 3);
+        $auth->assign($rolingreso, 4);
+        $auth->assign($rolconsulta, 5);
+        
+        
+        echo "ok";
     }
     
 }

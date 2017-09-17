@@ -11,6 +11,9 @@ use yii\filters\VerbFilter;
 use app\models\Solicitudes;
 use yii\db\Query;
 use yii\db\ActiveQuery;
+use yii\filters\AccessControl;
+
+
 
 /**
  * GestionController implements the CRUD actions for Gestion model.
@@ -23,6 +26,44 @@ class GestionController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => [
+                    'index',
+                    'create',
+                    'update',
+                    'delete',
+                    'view',
+                    ],
+                'rules' => [
+                    [
+                        'actions' => [
+                            'index',
+                            'view',
+                        ],
+                        'allow' => true,
+                        'roles' => ['gestion-listar'],
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['gestion-crear'],
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['gestion-actualizar'],
+                    ],
+                    [
+                        'actions' => ['delete' ],
+                        'allow' => true,
+                        'roles' => ['gestion-delete'],
+                    ],
+                ],
+            ],
+            
+            
+            
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -124,6 +165,10 @@ class GestionController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+    /*
+     * Esto de abajo es un select2 con Ajax
+     */
     
     public function actionNumsolicitud($q = null, $id = null) {
     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

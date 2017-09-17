@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\AuthassignmentSearch */
@@ -30,6 +32,15 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'user_id',
             'value' => 'user.username',
             'format' => 'text',
+            'filter' => Select2::widget([
+                        'model' => $searchModel,
+                        'attribute' => 'user_id',
+                        'data' => ArrayHelper::map(\app\models\User::find()->orderBy('id')->all(), 'id', 'username'),
+                        'options' => 
+                            ['placeholder' => 'Seleccione el Usuario'],
+                        'pluginOptions' => [ 'allowClear' => true ],
+                ]),    
+                
             ],
             
             

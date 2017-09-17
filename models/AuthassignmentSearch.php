@@ -41,7 +41,7 @@ class AuthassignmentSearch extends Authassignment
      */
     public function search($params)
     {
-        $query = Authassignment::find()->join('JOIN', 'user', 'auth_assignment.user_id = user.id::INT');
+        $query = Authassignment::find();
 
         // add conditions that should always apply here
 
@@ -63,7 +63,7 @@ class AuthassignmentSearch extends Authassignment
         ]);
 
         $query->andFilterWhere(['like', 'item_name', $this->item_name])
-            ->andFilterWhere(['like', 'user.username', $this->user_id]);
+            ->andFilterWhere(['like', 'user_id', $this->user_id]);
 
         return $dataProvider;
     }

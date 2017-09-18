@@ -180,6 +180,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'value' => 'programaevento.descripcion',
             'format' => 'text',
             'visible'=> false,
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(Programaevento::find()->orderBy('descripcion')->all(), 'id', 'descripcion'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Actividad?'],
             ],
             // 'solicitud_id',
             [
@@ -346,7 +352,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updated_by',
             [ 
             'attribute' => 'mes_actividad', 				
-            'value' => 'mes_actividad',
+            'value' => 'Mesnombreactividad',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -444,7 +450,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'hAlign'=>'right', 
             'vAlign'=>'middle',
             'width'=>'100px',
-            'format'=>['decimal', 2],
+            'format'=>'currency',
             'pageSummary'=>true,
             'visible'=> false,
             ],
@@ -462,7 +468,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [ 
             'attribute' => 'mesingreso', 					
-            'value' => 'mesingreso',
+            'value' => 'mesnombreingreso',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -470,7 +476,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'filterWidgetOptions'=>[
                 'pluginOptions'=>['allowClear'=>true],
             ],
-            'filterInputOptions'=>['placeholder'=>'¿Mes Programa?'],
+            'filterInputOptions'=>['placeholder'=>'¿Mes Ingreso?'],
             ],
             [ 
             'attribute' => 'estado_actividad', 			

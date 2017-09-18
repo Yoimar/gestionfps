@@ -365,4 +365,5 @@ class GestionSearch extends Gestion
 
         return $dataProvider;
     }
+    
 }

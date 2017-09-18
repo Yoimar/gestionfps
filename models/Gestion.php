@@ -6,6 +6,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\db\ActiveQuery;
+use yii\helpers\ArrayHelper;
 
 use Yii;
 
@@ -251,6 +252,48 @@ class Gestion extends \yii\db\ActiveRecord
     public function getTrabajador()
     {
         return $this->hasOne(Trabajador::className(), ['id' => 'trabajador_id']);
+    }
+    
+    public function getMesnombreactividad()
+    {
+        $mesespanish = ArrayHelper::map([
+            ['id' => '1', 'Mesactividad' => 'Enero'],
+            ['id' => '2', 'Mesactividad' => 'Febrero'],
+            ['id' => '3', 'Mesactividad' => 'Marzo'],
+            ['id' => '4', 'Mesactividad' => 'Abril'],
+            ['id' => '5', 'Mesactividad' => 'Mayo'],
+            ['id' => '6', 'Mesactividad' => 'Junio'],
+            ['id' => '7', 'Mesactividad' => 'Julio'],
+            ['id' => '8', 'Mesactividad' => 'Agosto'],
+            ['id' => '9', 'Mesactividad' => 'Septiembre'],
+            ['id' => '10', 'Mesactividad' => 'Octubre'],
+            ['id' => '11', 'Mesactividad' => 'Noviembre'],
+            ['id' => '12', 'Mesactividad' => 'Diciembre']
+            ], 'id', 'Mesactividad');
+        
+        return $mesespanish[$this->mes_actividad];
+        
+    }
+    
+    public function getMesnombreingreso()
+    {
+        $mesespanish = ArrayHelper::map([
+            ['id' => '1', 'Mesactividad' => 'Enero'],
+            ['id' => '2', 'Mesactividad' => 'Febrero'],
+            ['id' => '3', 'Mesactividad' => 'Marzo'],
+            ['id' => '4', 'Mesactividad' => 'Abril'],
+            ['id' => '5', 'Mesactividad' => 'Mayo'],
+            ['id' => '6', 'Mesactividad' => 'Junio'],
+            ['id' => '7', 'Mesactividad' => 'Julio'],
+            ['id' => '8', 'Mesactividad' => 'Agosto'],
+            ['id' => '9', 'Mesactividad' => 'Septiembre'],
+            ['id' => '10', 'Mesactividad' => 'Octubre'],
+            ['id' => '11', 'Mesactividad' => 'Noviembre'],
+            ['id' => '12', 'Mesactividad' => 'Diciembre']
+            ], 'id', 'Mesactividad');
+        
+        return $mesespanish[$this->mesingreso];
+        
     }
 
 }

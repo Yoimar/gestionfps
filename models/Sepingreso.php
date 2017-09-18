@@ -4,21 +4,28 @@ namespace app\models;
 use yii\base\Model;
 
 /**
- * Para el ingreso de sigesp desde gestion
+ * This is the model class for table "memos".
  *
- * 
+ * @property integer $id
+ * @property string $fecha
+ * @property string $numero
+ * @property string $asunto
+ * @property integer $origen_id
+ * @property integer $destino_id
+ * @property integer $usuario_id
+ * @property integer $version
+ * @property string $created_at
+ * @property string $updated_at
+ *
+ * @property Users $usuario
  */
-class Sepingreso extends Model
+class Parteindividual extends Model
 {
     /**
      * @inheritdoc
      */
-    public $solicitud_id;
-    public $fecha;
-    public $sepconcepto_id;
-    public $rpcbeneficiario_id;
-    public $spgdtunidadadministrativa;
-    
+    public $trabajador;
+    public $anho;
     
     public function rules()
     {

@@ -43,6 +43,7 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
+        'dbsigesp' => require(__DIR__ . '/dbsigesp.php'),
         
         'urlManager' => [
             'enablePrettyUrl' => true,

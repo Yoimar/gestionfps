@@ -3,8 +3,8 @@
 return [
     'class' => 'yii\db\Connection',
     'dsn' => 'pgsql:host=localhost;dbname=db_pueblosoberano_2017',
-    'username' => 'pueblosoberano',
-    'password' => 'pueblosoberano',
+    'username' => 'postgres',
+    'password' => 'r00TFpS123',
     'charset' => 'utf8',
     'schemaMap' => [
     'pgsql'=> [

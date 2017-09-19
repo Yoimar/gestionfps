@@ -18,7 +18,8 @@ $this->title = $name;
     </div>
 
     <p>
-        Ha ocurrido un error, Por favor dirijase a la unidad de Sistemas de La Fundación Pueblo Soberano para recibir la Asesoria necesaria
+        Ha ocurrido un error, Por favor dirijase a la Unidad de Sistemas de La Fundación Pueblo Soberano
     </p>
-
+    
+    <h3> !Lo sentimos¡ Estamos trabajando para solucionar todos los errores! </h3>
 </div>

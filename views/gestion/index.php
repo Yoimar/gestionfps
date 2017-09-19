@@ -193,6 +193,17 @@ $this->params['breadcrumbs'][] = $this->title;
             'value' => 'solicitud.num_solicitud',
             'format' => 'text',
             ],
+            [
+            'attribute' => 'instruccion_id',
+            'value' => 'instruccion.instruccion',
+            'format' => 'text',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(app\models\Instruccion::find()->orderBy('id')->all(), 'id', 'instruccion'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Instrucción?'],
+            ],
             //'convenio_id',
             [
             'attribute' => 'convenio_id',
@@ -345,6 +356,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'pluginOptions'=>['allowClear'=>true],
             ],
             'filterInputOptions'=>['placeholder'=>'¿Trabajador?'],
+            'visible'=> false,
             ],
             //'created_at',
             //'created_by',
@@ -406,7 +418,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'trabajadorsocial', 			
             'value' => 'trabajadorsocial', 
             'format' => 'text',
-            'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(app\models\Users::find()->where(['activated' => 'TRUE'])->orderBy('nombre')->all(), 'nombre', 'nombre'),
             'filterWidgetOptions'=>[
@@ -538,8 +549,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'hAlign'=>'right', 
             'vAlign'=>'middle',
             'width'=>'100px',
-            'format'=>['decimal', 0],
-            'pageSummary'=>true,
+            'format'=>'text',
             'visible'=> false,
             ],
             [ 
@@ -617,6 +627,12 @@ $this->params['breadcrumbs'][] = $this->title;
             [                     
             'attribute' => 'edadbeneficiario', 			
             'value' => 'edadbeneficiario', 
+            'format' => 'text',
+            'visible'=> false,
+            ],
+            [                     
+            'attribute' => 'telefono', 			
+            'value' => 'telefono', 
             'format' => 'text',
             'visible'=> false,
             ],

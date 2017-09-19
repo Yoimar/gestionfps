@@ -4,21 +4,17 @@ namespace app\models;
 use yii\base\Model;
 
 /**
- * Para el ingreso de sigesp desde gestion
+ * This is the model para la verificacion de los casos de los Usuarios.
  *
- * 
+ * @property Users $usuario
  */
-class Sepingreso extends Model
+class Parteindividual extends Model
 {
     /**
      * @inheritdoc
      */
-    public $solicitud_id;
-    public $fecha;
-    public $sepconcepto_id;
-    public $rpcbeneficiario_id;
-    public $spgdtunidadadministrativa;
-    
+    public $trabajador;
+    public $anho;
     
     public function rules()
     {

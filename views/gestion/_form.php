@@ -26,18 +26,6 @@ use kartik\depdrop\DepDrop;
     <?php $form = ActiveForm::begin(); ?>
     
     <?= 
-        $form->field($model, 'programaevento_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Programaevento::find()->orderBy('descripcion')->all(), 'id', 'descripcion'),
-        'language' => 'es',
-        'options' => ['placeholder' => 'Seleccione el Programa Evento o Actividad'],
-        'pluginOptions' => [
-        'allowClear' => true
-        ],
-    ]);
-    
-    ?>
-    
-    <?= 
         $form->field($model, 'solicitud_id')->widget(Select2::classname(), [
         'initValueText' => empty($model->solicitud_id) ? '' : Solicitudes::findOne($model->solicitud_id)->num_solicitud, // set the initial display text
         'options' => ['placeholder' => 'Ingrese el Numero de Solicitud'],
@@ -60,30 +48,17 @@ use kartik\depdrop\DepDrop;
     
     ?>
     
-    <?= 
-        $form->field($model, 'tipodecontacto_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(app\models\Tipodecontacto::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+     <?= 
+        $form->field($model, 'instruccion_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(app\models\Instruccion::find()->orderBy('id')->all(), 'id', 'instruccion'),
         'language' => 'es',
-        'options' => ['placeholder' => 'Seleccione como fue recibido el caso'],
-        'pluginOptions' => [
-        'allowClear' => true
-        ],
-    ]);
-    
-    ?>  
-    
-    <?= 
-        $form->field($model, 'convenio_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(\app\models\Convenio::find()->orderBy('nombre')->all(), 'id', 'nombre'),
-        'language' => 'es',
-        'options' => ['placeholder' => 'Seleccione el Convenio'],
+        'options' => ['placeholder' => 'Seleccione la Instrucción'],
         'pluginOptions' => [
         'allowClear' => true
         ],
     ]);
     
     ?>
-    
     
     <?php
         echo $form->field($model, 'estatus3_id')->widget(Select2::classname(), [
@@ -143,6 +118,42 @@ use kartik\depdrop\DepDrop;
     ]);
     ?>
     
+    <?= 
+        $form->field($model, 'programaevento_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Programaevento::find()->orderBy('descripcion')->all(), 'id', 'descripcion'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione el Programa Evento o Actividad'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+    
+    ?>
+       
+    <?= 
+        $form->field($model, 'tipodecontacto_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(app\models\Tipodecontacto::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione como fue recibido el caso'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+    
+    ?>  
+    
+    <?= 
+        $form->field($model, 'convenio_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(\app\models\Convenio::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione el Convenio'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+    
+    ?>
+       
     <?= 
         $form->field($model, 'trabajador_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Trabajador::find()->asArray()->all(),'id', function($model, $defaultValue) {

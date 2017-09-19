@@ -77,6 +77,7 @@ class Gestion extends \yii\db\ActiveRecord
     public $estadodireccion;
     public $fechaultimamodificacion;
     public $edadbeneficiario;
+    public $telefono;
     
     
     /**
@@ -93,9 +94,9 @@ class Gestion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['programaevento_id', 'solicitud_id', 'convenio_id', 'edadbeneficiario', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'cisolicitante', 'cibeneficiario', 'mes_actividad', 'trabajadoracargoactividad', 'estado_actividad', 'especialidad', 'mesingreso', 'tipodeayuda', 'empresaoinstitucion', 'proceso', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'cheque', 'estadodireccion'], 'integer'],
+            [['programaevento_id', 'solicitud_id', 'convenio_id', 'edadbeneficiario', 'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'cisolicitante', 'cibeneficiario', 'mes_actividad', 'trabajadoracargoactividad', 'estado_actividad', 'especialidad', 'mesingreso', 'tipodeayuda', 'empresaoinstitucion', 'proceso', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'cheque', 'estadodireccion', 'instruccion_id'], 'integer'],
             [['militar_solicitante', 'militar_beneficiario', 'nino'], 'boolean'],
-            [['solicitante', 'estatus1_id', 'estatus2_id', 'beneficiario', 'necesidad', 'descripcion', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'trabajadorsocial', 'recepcion', 'estatussa', 'created_at', 'updated_at'], 'safe'],
+            [['solicitante', 'estatus1_id', 'estatus2_id', 'beneficiario', 'necesidad', 'descripcion', 'anodelasolicitud', 'direccion', 'telefono', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'trabajadorsocial', 'recepcion', 'estatussa', 'created_at', 'updated_at'], 'safe'],
             [['afrodescendiente', 'indigena', 'sexodiversidad'], 'string', 'max' => 2],
             [['monto', 'cantidad',], 'number'],
             [['convenio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Convenio::className(), 'targetAttribute' => ['convenio_id' => 'id']],
@@ -167,6 +168,8 @@ class Gestion extends \yii\db\ActiveRecord
             'fechaultimamodificacion' => 'Fecha de la ultima modificación',
             'estadodireccion' => 'Estado del Beneficiario',
             'edadbeneficiario' => 'Edad del Beneficiario',
+            'instruccion_id' => 'Instruccion',
+            'telefono'=> 'Telefonos',
         ];
     }
     
@@ -252,6 +255,11 @@ class Gestion extends \yii\db\ActiveRecord
     public function getTrabajador()
     {
         return $this->hasOne(Trabajador::className(), ['id' => 'trabajador_id']);
+    }
+    
+    public function getInstruccion()
+    {
+        return $this->hasOne(Instruccion::className(), ['id' => 'instruccion_id']);
     }
     
     public function getMesnombreactividad()

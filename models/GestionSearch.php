@@ -18,9 +18,9 @@ class GestionSearch extends Gestion
     public function rules()
     {
         return [
-            [['id', 'programaevento_id', 'solicitud_id', 'convenio_id',  'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'edadbeneficiario',], 'integer'],
+            [['id', 'programaevento_id', 'convenio_id',  'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'edadbeneficiario','instruccion_id'], 'integer'],
             [['militar_solicitante', 'militar_beneficiario', 'nino', ], 'boolean'],
-            [['solicitante', 'estatus1_id', 'estatus2_id', 'cisolicitante', 'cibeneficiario', 'recepcion', 'beneficiario', 'necesidad', 'descripcion', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'mes_actividad', 'afrodescendiente', 'indigena', 'sexodiversidad', 'trabajadorsocial', 'trabajadoracargoactividad', 'especialidad', 'mesingreso', 'estado_actividad', 'tipodeayuda', 'estatussa', 'empresaoinstitucion', 'proceso', 'cheque', 'direccion', 'estadodireccion','created_at', 'updated_at'], 'safe'],
+            [['solicitante', 'solicitud_id', 'estatus1_id', 'estatus2_id', 'cisolicitante', 'cibeneficiario', 'recepcion', 'beneficiario', 'necesidad', 'descripcion', 'anodelasolicitud', 'telefono', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'mes_actividad', 'afrodescendiente', 'indigena', 'sexodiversidad', 'trabajadorsocial', 'trabajadoracargoactividad', 'especialidad', 'mesingreso', 'estado_actividad', 'tipodeayuda', 'estatussa', 'empresaoinstitucion', 'proceso', 'cheque', 'direccion', 'estadodireccion','created_at', 'updated_at'], 'safe'],
             [['monto', 'cantidad',], 'number'],
         ];
     }
@@ -56,8 +56,9 @@ class GestionSearch extends Gestion
                 "extract(month from solicitudes.created_at)::int as mesingreso", 'estadoactividad.nombre as estado_actividad', 'tipo_ayudas.nombre as tipodeayuda', 'estatussasyc.estatus as estatussa',
                 'solicitudes.estatus', 'procesos.nombre as proceso', 
                 'solicitudes.descripcion', "date_part('day' ,now()-gestion.updated_at) as diasdeultimamodificacion", "date_part('day' ,now()-solicitudes.created_at) as diasdesolicitud", "date_part('day' ,now()-programaevento.fechaprograma) as diasdesdeactividad",
-                "extract(year from solicitudes.created_at) as anodelasolicitud", "CONCAT(personabeneficiario.zona_sector || ' ' || personabeneficiario.calle_avenida || ' ' || personabeneficiario.apto_casa) as direccion",
+                "extract(year from solicitudes.created_at) as anodelasolicitud", "CONCAT(estadobeneficiario.nombre || ' ' || municipiobeneficiario.nombre || ' ' || parroquiabeneficiario.nombre || ' ' || personabeneficiario.zona_sector || ' ' || personabeneficiario.calle_avenida || ' ' || personabeneficiario.apto_casa) as direccion",
                 "to_char(programaevento.fechaprograma, 'DD/MM/YYYY') as fechaactividad", "to_char(solicitudes.created_at, 'DD/MM/YYYY') as fechaingreso", 'estadobeneficiario.nombre as estadodireccion', "TO_CHAR(gestion.updated_at, 'DD/MM/YYYY') as fechaultimamodificacion",
+                "gestion.instruccion_id", "CONCAT(personabeneficiario.telefono_fijo || ' / ' || personabeneficiario.telefono_celular || ' / ' || personabeneficiario.telefono_otro) as telefono",
                 "extract(YEAR FROM age(now(),personabeneficiario.fecha_nacimiento)) as edadbeneficiario", "string_agg(empresa_institucion.nombrecompleto, ', ') as empresaoinstitucion",
                 "string_agg(to_char(presupuestos.cantidad,'9999'), ', ') as cantidad", "string_agg(presupuestos.cheque, ', ') as cheque", "string_agg(to_char(presupuestos.beneficiario_id,'99999'), ', ')", "string_agg(to_char(presupuestos.proceso_id,'99999'), ', ')", "string_agg(requerimientos.nombre, ', ') as tratamiento", "sum(presupuestos.montoapr) as monto"]);
 
@@ -91,8 +92,9 @@ class GestionSearch extends Gestion
                 ->join('LEFT JOIN', 'parroquias as parroquiabeneficiario', 'personabeneficiario.parroquia_id = parroquiabeneficiario.id')
                 ->join('LEFT JOIN', 'municipios as municipiobeneficiario', 'parroquiabeneficiario.municipio_id = municipiobeneficiario.id')
                 ->join('LEFT JOIN', 'estados as estadobeneficiario', 'municipiobeneficiario.estado_id = estadobeneficiario.id')
+                ->join('LEFT JOIN', 'instruccion', 'gestion.instruccion_id = instruccion.id')
                 ->groupBy(['mes_actividad', 'programaevento.descripcion', 'solicitudes.num_solicitud', 'gestion.programaevento_id', 'programaevento.id', 'solicitudes.id', 'gestion.id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', 'estatus1.nombre', 'estatus2.nombre', 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante', 'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id', 'gestion.afrodescendiente', 'gestion.indigena', 'gestion.sexodiversidad', 'gestion.trabajador_id',
-                'cisolicitante', 'cibeneficiario', 'beneficiario', 'nino', 'solicitante', 'trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'especialidad', 'solicitudes.area_id', 'solicitudes.recepcion_id', 'recepcion', 'trabajadoracargoactividad', 'estado_actividad', 'tipodeayuda', 'estatussa', 'solicitudes.estatus', 'proceso', 'solicitudes.descripcion', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'estadodireccion', 'fechaultimamodificacion', 'edadbeneficiario']);
+                'cisolicitante', 'cibeneficiario', 'beneficiario', 'nino', 'solicitante', 'trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'especialidad', 'solicitudes.area_id', 'solicitudes.recepcion_id', 'recepcion', 'trabajadoracargoactividad', 'estado_actividad', 'tipodeayuda', 'estatussa', 'solicitudes.estatus', 'proceso', 'solicitudes.descripcion', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'estadodireccion', 'fechaultimamodificacion', 'gestion.instruccion_id', 'telefono', 'edadbeneficiario']);
         
 
         $dataProvider = new ActiveDataProvider([
@@ -290,8 +292,16 @@ class GestionSearch extends Gestion
                         'desc' => ['fechaultimamodificacion' => \SORT_DESC],
                     ],
                     'edadbeneficiario' => [ 
-                        'asc' => ['convenio.nombre' => \SORT_ASC],
-                        'desc' => ['convenio.nombre' => \SORT_DESC],
+                        'asc' => ['edadbeneficiario' => \SORT_ASC],
+                        'desc' => ['edadbeneficiario' => \SORT_DESC],
+                    ],
+                    'instruccion_id' => [ 
+                        'asc' => ['gestion.instrucion_id' => \SORT_ASC],
+                        'desc' => ['gestion.intruccion_id' => \SORT_DESC],
+                    ],
+                    'telefono' => [ 
+                        'asc' => ['telefono' => \SORT_ASC],
+                        'desc' => ['telefono' => \SORT_DESC],
                     ],
     
                 ],
@@ -311,7 +321,7 @@ class GestionSearch extends Gestion
         $query->andFilterWhere([
             'id' => $this->id,
             'programaevento_id' => $this->programaevento_id,
-            'solicitud_id' => $this->solicitud_id,
+            'gestion.instruccion_id' => $this->instruccion_id,
             'convenio_id' => $this->convenio_id,
             'estatus2_id' => $this->estatus2_id,
             'estatus3_id' => $this->estatus3_id,
@@ -338,6 +348,7 @@ class GestionSearch extends Gestion
             ->andFilterWhere(['=', 'extract(month from programaevento.fechaprograma)', $this->mes_actividad])
             ->andFilterWhere(['=', 'extract(month from solicitudes.created_at)', $this->mesingreso])
             ->andFilterWhere(['like', "TRIM(TO_CHAR(personabeneficiario.ci, '99999999'))", $this->cibeneficiario])
+            ->andFilterWhere(['like', 'solicitudes.num_solicitud', $this->solicitud_id])
             ->andFilterWhere(['like', 'requerimientos.nombre', $this->tratamiento])
             ->andFilterWhere(['like', 'users.nombre', $this->trabajadorsocial])
             ->andFilterWhere(['like', 'areas.nombre', $this->especialidad])
@@ -361,7 +372,8 @@ class GestionSearch extends Gestion
             ->andFilterWhere(['like', "to_char(solicitudes.created_at, 'DD/MM/YYYY')", $this->fechaingreso])
             ->andFilterWhere(['like', "to_char(gestion.updated_at, 'DD/MM/YYYY')", $this->fechaultimamodificacion])
             ->andFilterWhere(['like', "CONCAT(trabajadoracargo.dimprofesion || ' ' || trabajadoracargo.primernombre || ' ' || trabajadoracargo.primerapellido)", $this->trabajadoracargoactividad])
-            ->andFilterWhere(['like', "CONCAT(personabeneficiario.zona_sector || ' ' || personabeneficiario.calle_avenida || ' ' || personabeneficiario.apto_casa)", $this->direccion]);
+            ->andFilterWhere(['like', "CONCAT(estadobeneficiario.nombre || ' ' || municipiobeneficiario.nombre || ' ' || parroquiabeneficiario.nombre || ' ' || personabeneficiario.zona_sector || ' ' || personabeneficiario.calle_avenida || ' ' || personabeneficiario.apto_casa)", $this->direccion])
+            ->andFilterWhere(['like', "CONCAT(personabeneficiario.telefono_fijo || ' / ' || personabeneficiario.telefono_celular || ' / ' || personabeneficiario.telefono_otro)", $this->telefono]);
 
         return $dataProvider;
     }

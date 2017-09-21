@@ -15,7 +15,7 @@ if(Yii::$app->request->post()){
     $counttrabajador = 0;
     $countgestion = 0;
     $partenogestion = 0;
-    $countnogestion =0;
+    $countnogestion = 0;
 }
 /* @var $this yii\web\View */
 /* @var $model app\models\Procesos */
@@ -128,37 +128,37 @@ if(Yii::$app->request->post()){
 						</div>
 					</div>
 </div>    
+</div>
 <div class="container">
-        <center><h3 class="display-3">Parte de Casos que no estan en Gestión <button type="button" class="btn btn-primary display-3"><?= $countnogestion;?></button></h3></center>
+        <center><h3 class="display-3">Parte que no tienen gestión <button type="button" class="btn btn-primary display-3"><?= $countnogestion;?></button></h3></center>
           
     </div>
 
     
 <div class="row">
-					<div class="col-xs-12">
-						<div>
-							<table class="table table-bordered table-hover table-striped table-condensed">
-								<thead>
-									<tr>
+                    <div class="col-xs-12">
+                        <div>
+                            <table class="table table-bordered table-hover table-striped table-condensed">
+                                <thead>
+                                    <tr>
                                                                             <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;" width="200" nowrap>Estatus</th>
                                                                             <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;">Total</th>
-                                                                            <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;">Casos Sin Gestión</th>    
-									</tr>
-								</thead>
+                                                                            <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;">Casos Asignados</th>    
+                                    </tr>
+                                </thead>
 
-								<tbody>
-									<?php for ($i = 0; $i < count($partenogestion); $i ++) : ?>
-										<tr>
-											<td><?= $partenogestion[$i]['estatus'];?></td>
-											<td style="text-align:center" class="info"><p  style="margin: 0;"><?= $partenogestion[$i]['count'];?></p></td>
-											<td style="text-align:center"><p style="margin: 0;"><?= $partenogestion[$i]['string_agg'];?></p></td>
-									
-										</tr>
-									<?php endfor; ?>
+                                <tbody>
+                                    <?php for ($i = 0; $i < count($partenogestion); $i ++) : ?>
+                                        <tr>
+                                            <td><?= $partenogestion[$i]['estatus'];?></td>
+                                            <td style="text-align:center" class="info"><p  style="margin: 0;"><?= $partenogestion[$i]['count'];?></p></td>
+                                            <td style="text-align:center"><p style="margin: 0;"><?= $partenogestion[$i]['string_agg'];?></p></td>
+                                    
+                                        </tr>
+                                    <?php endfor; ?>
                                                                                 
-								</tbody>
-							</table>
-						</div>
-					</div>
-</div>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 </div>

@@ -4,34 +4,31 @@ namespace app\models;
 use yii\base\Model;
 
 /**
- * This is the model class for table "memos".
+ * Esto es para la conexion con la base de datos del SIGESP
  *
- * @property integer $id
- * @property string $fecha
- * @property string $numero
- * @property string $asunto
- * @property integer $origen_id
- * @property integer $destino_id
- * @property integer $usuario_id
- * @property integer $version
- * @property string $created_at
- * @property string $updated_at
- *
- * @property Users $usuario
  */
-class Parteindividual extends Model
+class Sepingreso extends Model
 {
     /**
      * @inheritdoc
      */
-    public $trabajador;
-    public $anho;
+    public $caso;
+//    public $beneficiarios = [];
+//    public $beneficiario;
+//    public $estructura;
+//    public $fecha;
+//    public $monto; 
+//    public $ids_presupuesto = [];
+//    public $id_presupuesto; 
+
     
     public function rules()
     {
         return [
-            [['trabajador', 'anho'], 'integer'],
-            [['trabajador'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['trabajador' => 'id']],
+//            [['beneficiario', 'monto', 'id_presupuesto'], 'integer'],
+//            [['fecha', 'estructura', 'beneficiarios', 'beneficiario', 'caso',], 'safe'],
+            [['caso'], 'integer'],
+//            [['monto'],'number'],
         ];
     }
 
@@ -41,18 +38,22 @@ class Parteindividual extends Model
     public function attributeLabels()
     {
         return [
-            'trabajador' => 'Trabajador Social',
-            'anho' => 'Año',
+            'caso' => 'N° Caso Sasyc',
+//            'beneficiario' => 'Casa Comercial',
+//            'monto' => 'Monto',
+//            'id_presupuesto' => 'Presupuesto',
+//            'fecha' => 'Fecha',
+//            'estructura' => 'Estructura',
+//            'beneficiarios' => 'Beneficiarios',
+//            'beneficiario' => 'Beneficiario',
         ];
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUsuario()
+    
+    public function getSolicitud()
     {
-        return $this->hasOne(Users::className(), ['id' => 'trabajador']);
+        return $this->hasOne(Solicitudes::className(), ['id' => 'caso']);
     }
+        
 }
 /* 
  * To change this license header, choose License Headers in Project Properties.

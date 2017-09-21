@@ -57,7 +57,7 @@ class GestionController extends Controller
                     [
                         'actions' => ['delete' ],
                         'allow' => true,
-                        'roles' => ['gestion-delete'],
+                        'roles' => ['gestion-eliminar'],
                     ],
                 ],
             ],
@@ -187,5 +187,5 @@ class GestionController extends Controller
         $out['results'] = ['id' => $id, 'text' => Solicitudes::find($id)->num_solicitud];
     }
     return $out;
-}
+    }
 }

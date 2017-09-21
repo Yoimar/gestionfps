@@ -372,7 +372,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'filterWidgetOptions'=>[
                 'pluginOptions'=>['allowClear'=>true],
             ],
-            'filterInputOptions'=>['placeholder'=>'¿Mes Programa?'],
+            'filterInputOptions'=>['placeholder'=>'¿Mes Actividad?'],
             ],
             [ 
             'attribute' => 'solicitante', 				
@@ -479,7 +479,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [ 
             'attribute' => 'mesingreso', 					
-            'value' => 'mesnombreingreso',
+            'value' => 'Mesnombreingreso',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,

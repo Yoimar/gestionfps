@@ -8,6 +8,10 @@ use app\models\SepsolicitudSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use app\models\Sepingreso;
+use app\models\Solicitudes;
+use yii\db\Query;
 
 /**
  * SepsolicitudController implements the CRUD actions for Sepsolicitud model.
@@ -20,6 +24,46 @@ class SepsolicitudController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => [
+                    'index',
+                    'create',
+                    'update',
+                    'delete',
+                    'view',
+                    'ubica',
+                    'muestra',
+                    ],
+                'rules' => [
+                    [
+                        'actions' => [
+                            'index',
+                            'view',
+                        ],
+                        'allow' => true,
+                        'roles' => ['gestion-listar'],
+                    ],
+                    [
+                        'actions' => ['create', 'ubica', 'muestra'],
+                        'allow' => true,
+                        'roles' => ['gestion-crear'],
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['gestion-actualizar'],
+                    ],
+                    [
+                        'actions' => ['delete' ],
+                        'allow' => true,
+                        'roles' => ['gestion-eliminar'],
+                    ],
+                ],
+            ],
+            
+            
+            
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -74,7 +118,35 @@ class SepsolicitudController extends Controller
             ]);
         }
     }
+    
+    public function actionUbica()
+    {
+        $model = new \app\models\Sepingreso;
 
+        if ($model->load(Yii::$app->request->post())) {
+            $numero = $model->caso;
+             $prueba = new Query;
+             $prueba->addSelect(["id", "num_solicitud as text"])
+             ->from('solicitudes')
+             ->andFilterWhere(['like', "id", $numero]);
+            return $this->redirect(
+                    ['muestra', 
+                        [   
+                            'numero' => $numero,
+                            'prueba' => $prueba,
+                        ]
+                    ]);
+        } else {
+            return $this->render('ubica', [
+                'model' => $model,
+            ]);
+        }
+    }
+    
+    public function actionMuestra()
+    {       
+        return $this->render('muestra');
+    }
     /**
      * Updates an existing Sepsolicitud model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -117,6 +189,26 @@ class SepsolicitudController extends Controller
      * @return Sepsolicitud the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
+    
+    public function actionNumsolicitud($q = null, $id = null) {
+    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    $out = ['results' => ['id' => '', 'text' => '']];
+    if (!is_null($q)) {
+        $query = new Query;
+        $query->addSelect(["id", "num_solicitud as text"])
+            ->from('solicitudes')
+            ->andFilterWhere(['like', "num_solicitud", $q])
+            ->limit(20);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        $out['results'] = array_values($data);
+    }
+    elseif ($id > 0) {
+        $out['results'] = ['id' => $id, 'text' => Solicitudes::find($id)->num_solicitud];
+    }
+    return $out;
+    }
+    
     protected function findModel($codemp, $numsol)
     {
         if (($model = Sepsolicitud::findOne(['codemp' => $codemp, 'numsol' => $numsol])) !== null) {

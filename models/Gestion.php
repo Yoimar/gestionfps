@@ -265,6 +265,7 @@ class Gestion extends \yii\db\ActiveRecord
     public function getMesnombreactividad()
     {
         $mesespanish = ArrayHelper::map([
+            ['id' => '', 'Mesactividad' => ''],
             ['id' => '1', 'Mesactividad' => 'Enero'],
             ['id' => '2', 'Mesactividad' => 'Febrero'],
             ['id' => '3', 'Mesactividad' => 'Marzo'],
@@ -280,12 +281,14 @@ class Gestion extends \yii\db\ActiveRecord
             ], 'id', 'Mesactividad');
         
         return $mesespanish[$this->mes_actividad];
+//        return $this->mes_actividad;
         
     }
     
     public function getMesnombreingreso()
     {
         $mesespanish = ArrayHelper::map([
+            ['id' => '', 'Mesactividad' => ''],
             ['id' => '1', 'Mesactividad' => 'Enero'],
             ['id' => '2', 'Mesactividad' => 'Febrero'],
             ['id' => '3', 'Mesactividad' => 'Marzo'],

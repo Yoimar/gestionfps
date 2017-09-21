@@ -124,16 +124,19 @@ class SepsolicitudController extends Controller
         $model = new \app\models\Sepingreso;
 
         if ($model->load(Yii::$app->request->post())) {
+            
             $numero = $model->caso;
-             $prueba = new Query;
-             $prueba->addSelect(["id", "num_solicitud as text"])
-             ->from('solicitudes')
-             ->andFilterWhere(['like', "id", $numero]);
+            
+            $searchModel = new \app\models\ConexionsigespSearch();
+            
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            
             return $this->redirect(
                     ['muestra', 
                         [   
                             'numero' => $numero,
-                            'prueba' => $prueba,
+                            'searchModel' => $searchModel,
+                            'dataProvider' => $dataProvider,
                         ]
                     ]);
         } else {
@@ -145,7 +148,17 @@ class SepsolicitudController extends Controller
     
     public function actionMuestra()
     {       
-        return $this->render('muestra');
+        if(Yii::$app->request->post()){
+            $numero = $model->caso;
+        }else {
+        $numero =0;
+        $searchModel = new \app\models\ConexionsigespSearch();    
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        }
+        return $this->render('muestra', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
     /**
      * Updates an existing Sepsolicitud model.

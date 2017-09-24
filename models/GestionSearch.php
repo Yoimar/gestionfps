@@ -212,8 +212,8 @@ class GestionSearch extends Gestion
                         'desc' => ['solicitudes.necesidad' => \SORT_DESC],
                     ],
                     'monto' => [ 
-                        'asc' => ['presupuestos.montoapr' => \SORT_ASC],
-                        'desc' => ['presupuestos.montoapr' => \SORT_DESC],
+                        'asc' => ['monto' => \SORT_ASC],
+                        'desc' => ['monto' => \SORT_DESC],
                     ],
                     'trabajadoracargoactividad' => [ 
                         'asc' => ['trabajadoracargoactividad' => \SORT_ASC],

@@ -13,6 +13,7 @@ use app\models\Sepingreso;
 use app\models\Solicitudes;
 use yii\db\Query;
 use yii\data\ActiveDataProvider;
+use kartik\mpdf\Pdf;
 
 /**
  * SepsolicitudController implements the CRUD actions for Sepsolicitud model.
@@ -122,7 +123,7 @@ class SepsolicitudController extends Controller
     
     public function actionUbica()
     {
-        $model = new \app\models\Sepingreso;
+        $model = new Sepingreso;
 
         if ($model->load(Yii::$app->request->post())) {
             
@@ -451,5 +452,87 @@ class SepsolicitudController extends Controller
         }
         
         return $this->redirect('muestra?numero='.$numero);
+    }
+    
+    public function actionImprimir($numero){
+            
+            $query = \app\models\PresupuestosSearch::find()
+                    ->andFilterWhere([
+                    'solicitud_id' => $numero]);
+
+            $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            ]);
+            
+            $consulta = Yii::$app->db->createCommand("SELECT CONCAT('Caso N°: ' || s1.num_solicitud) AS solicitud, "
+            ."CONCAT('Solicitante: ' ||ps.nombre || ' ' || ps.apellido || ' C.I.: ' ||ps.ci ) AS solicitante, "
+            ."CONCAT('Beneficiario: ' ||pb.nombre || ' ' || pb.apellido || ' C.I.: ' ||pb.ci ) AS beneficiario, "
+            ."CONCAT('Requerimiento: ' || r1.nombre) AS requerimiento, "
+            ."CONCAT('Unidad: ' || r2.nombre) AS unidad, "
+            ."CONCAT('Tipo de Ayuda: ' || ta.nombre) AS tipoayuda, "
+            ."CONCAT('Area: ' || a1.nombre) AS area, "
+            ."CONCAT('Necesidad: ' || s1.necesidad) AS necesidad, "
+            ."CONCAT('Descripcion: ' || s1.descripcion) AS descripcion, "
+            ."pr1.montoapr as monto, "
+            ."CONCAT('Casa Comercial: ' || ei1.nombrecompleto) AS casacomercial, "
+            ."ei1.nombrecompleto AS nombrecasacomercial, "
+            ."ei1.nrif AS rif, "
+            ."s1.fecha_aprobacion as fecha, "
+            ."ta.cod_acc_int as codestpre, "
+            ."s1.num_solicitud as ndonacion ,"
+            ."CONCAT('Telefonos: ' || pb.telefono_otro || ' ' || pb.telefono_fijo || ' ' || pb.telefono_otro) as telefonos "
+            ."FROM solicitudes s1 FULL OUTER JOIN presupuestos pr1 ON pr1.solicitud_id=s1.id "
+            ."JOIN personas pb ON s1.persona_beneficiario_id=pb.id "
+            ."JOIN personas ps ON s1.persona_solicitante_id=ps.id "
+            ."JOIN areas a1 ON a1.id=s1.area_id "
+            ."JOIN tipo_ayudas ta ON a1.tipo_ayuda_id= ta.id "
+            ."JOIN requerimientos r1 ON pr1.requerimiento_id=r1.id "
+            ."JOIN recepciones r2 ON s1.recepcion_id=r2.id "
+            ."JOIN empresa_institucion ei1 ON pr1.beneficiario_id = ei1.id "
+            ."WHERE pr1.solicitud_id = ".$numero)->queryAll();    
+
+
+    // get your HTML raw content without any layouts or scripts
+    $content = $this->renderPartial('muestra', [
+//            'searchModel' => $searchModel,
+            'numero' => $numero,
+            'dataProvider' => $dataProvider,
+            'consulta' => $consulta
+        ]);
+    
+    // setup kartik\mpdf\Pdf component
+    $pdf = new Pdf([
+        // set to use core fonts only
+        'mode' => Pdf::MODE_BLANK, 
+        // A4 paper format
+        'format' => Pdf::FORMAT_A4, 
+        // portrait orientation
+        'orientation' => Pdf::ORIENT_PORTRAIT, 
+        // stream to browser inline
+        'destination' => Pdf::DEST_BROWSER, 
+        // your html content input
+        'content' => $content,  
+        // format content from your own css file if needed or use the
+        // enhanced bootstrap css built by Krajee for mPDF formatting 
+        'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+        // any css to be embedded if required
+        'cssInline' => '.kv-heading-1{font-size:18px}', 
+         // set mPDF properties on the fly
+        'options' => ['title' => 'Krajee Report Title'],
+         // call mPDF methods on the fly
+        'methods' => [ 
+            'SetHeader'=>['Krajee Report Header'], 
+            'SetFooter'=>['{PAGENO}'],
+        ],
+
+    ]);
+    
+    // return the pdf output as per the destination setting
+    return $pdf->render(); 
+
+        
     }
 }

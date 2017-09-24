@@ -76,5 +76,6 @@ Pjax::begin(); ?>    <?= GridView::widget([
 <?php Pjax::end(); ?>
 <center>
 <?= Html::a('<span class="glyphicon glyphicon-ok-sign"></span>SIGESP', ['sepsolicitud/inserta', 'numero' => $numero], ['class' => 'btn btn-primary']) ?>
+<?= Html::a('Imprimir', ['sepsolicitud/imprimir', 'numero' => $numero], ['class' => 'btn btn-success']) ?>
 </center>
 </div>

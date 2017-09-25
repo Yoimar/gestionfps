@@ -65,6 +65,7 @@ class Presupuestos extends \yii\db\ActiveRecord
     public $militar_beneficiario;
     public $num_solicitud;
     public $trabajadorgestion;
+    public $montopre;
     
     /**
      * @inheritdoc
@@ -112,6 +113,7 @@ class Presupuestos extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'numop' => 'Numop',
+            'montopre' => 'Monto'
         ];
     }
 }

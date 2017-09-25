@@ -12,6 +12,11 @@ use app\models\Presupuestos;
  */
 class PresupuestosSearch extends Presupuestos
 {
+    public $documento;
+    public $nombre;
+    public $rif;
+    
+    
     /**
      * @inheritdoc
      */

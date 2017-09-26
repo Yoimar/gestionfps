@@ -1,53 +1,125 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\widgets\Pjax;
 
 ?>
 
 
 <div class="row">
-    <?= Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "80 px", "class" => "pull-left"]) ?>
-    <?= Html::img("@web/img/despacho.png", ["alt" => "Logo Fundación", "width" => "350 px", "class" => "pull-right"]) ?>
+    <?= Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "160 px", "class" => "pull-left"]) ?>
+    <?= Html::img("@web/img/despacho.png", ["alt" => "Logo Fundación", "width" => "500 px", "class" => "pull-right"]) ?>
 </div>
-<h1 class="display-3">
-    <?= "La solicitud con el numero  ".$consulta[0]['ndonacion']." del Sistema de la Fundación Pueblo Soberano tiene los Siguientes Presupuestos:<br>"; ?>
-</h1>
+
+<div class="panel panel-primary">
+<div class="panel-heading">
+    <h3 class="panel-title text-center"><?= "Caso N° -".$consulta[0]['ndonacion']?></h3>
+  </div>
+   <ul class="list-group">
+    <li class="list-group-item"><?= $consulta[0]['solicitante']?></li>
+    <li class="list-group-item"><?= $consulta[0]['beneficiario']?></li>
+    <li class="list-group-item"><?= $consulta[0]['requerimiento']?></li>
+    <li class="list-group-item"><?= $consulta[0]['tipoayuda']?></li>
+    <li class="list-group-item"><?= $consulta[0]['area']?></li>
+    <li class="list-group-item"><?= $consulta[0]['necesidad']?></li>
+    <li class="list-group-item"><?= $consulta[0]['descripcion']?></li>
+  </ul>
+</div>
 
 
-<?php 
-
-echo $consulta[0]['solicitud'];
-echo "<br>";
-echo $consulta[0]['solicitante'];
-echo "<br>";
-echo $consulta[0]['beneficiario'];
-echo "<br>";
-echo $consulta[0]['requerimiento'];
-echo "<br>";
-echo $consulta[0]['tipoayuda'];
-echo "<br>";
-echo $consulta[0]['area'];
-echo "<br>";
-echo $consulta[0]['necesidad'];
-echo "<br>";
-echo $consulta[0]['descripcion'];
 
 
+<?php if ($consulta[0]['codestpre'] == 0201){
+    $estructuraparaimprimir= "407010201";
+} else {
+    $estructuraparaimprimir= "407010401";
+}
+if (count($consulta)<=1){
+    $titulotablacheques= "El cheque esta emitido a favor de: ";
+} else {
+    $titulotablacheques= "Los cheques serán emitidos a favor de: ";
+}
 ?>
 
 
-<?php 
-$index = $numero;
-Pjax::begin(); ?>    <?= GridView::widget([
+
+
+
+<?= GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'montoapr',
+        'showPageSummary' => true,
+        'tableOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
+        'layout' => "{items}\n{pager}",
+        
+        'options' => ['class' => 'text-center primary', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
+        'headerRowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF; '],
+        'captionOptions' => ['class' => 'text-center', 'style' => 'color: black; margin: 0px; padding: 2px; font-size:16px;'],
+        'footerRowOptions'=> ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],
+        'rowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
+        'caption' => $titulotablacheques,
+    
+        'columns' => [
+            [
+                'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
+                'class'=>'kartik\grid\SerialColumn',
+                'width'=>'10px',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
+            ],
+            
+            [
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
+             'attribute'=>'documento',
+             'hAlign'=>'center',
+             'vAlign'=>'middle',
+             'pageSummary'=>'Cuenta Presupuestaria',
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
+            ],       
+            
+            [
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
+             'attribute'=>'nombre',
+             'width'=>'500px',
+             'hAlign'=>'center',
+             'vAlign'=>'middle',
+             'pageSummary'=> $estructuraparaimprimir,
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
+            ],
+            
+            [
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
+             'attribute'=>'rif',
+             'pageSummary'=>'Total',
+             'hAlign'=>'center',
+             'vAlign'=>'middle',
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
+            ],
+            
+            
+            //'',
+            [
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; text-align:center;  font-size:16px;'],
+            'attribute'=>'montopre',
+            'width'=>'150px',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'format'=>'currency',
+            'pageSummary'=>true,
+            'pageSummaryFunc'=>GridView::F_AVG,
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
+            ]
+            
+                 
+
+            
 //           'rif',
 //            'req',
 //            'codestpre',
@@ -60,67 +132,21 @@ Pjax::begin(); ?>    <?= GridView::widget([
 
 //            [
 //                'class' => 'yii\grid\ActionColumn',
-//                'template' => '{inserta}',
-//                'buttons' => [
-//                    'inserta' => function($url, $model) {
-//                        return Html::a(
-//                                '<span class="glyphicon glyphicon-ok-sign"></span>SIGESP', 
-//                                $url, 
-//                                [
-//                                    'title' => 'Enviar A SIGESP',
-//                                ]
-//                        );
-//                    },    
-//                ], 
-//                'urlCreator' => function($action, $model, $key, $index){
-//                        if ($action == 'inserta') {
-//                            return \yii\helpers\Url::to(['sepsolicitud/inserta', 'id' => $key, 'numero' => $model->solicitud_id]);
-//                        }
-//                }
+
 //            ],
         ],
+        'responsive'=>true,
+        'condensed'=>true,
+        'bordered'=>true,
+
+        
+        
     ]); ?>
-<?php Pjax::end(); ?>
+
+<br><br>
+
 <center>
 <?= Html::a('<span class="glyphicon glyphicon-ok-sign"></span>SIGESP', ['sepsolicitud/inserta', 'numero' => $numero], ['class' => 'btn btn-primary']) ?>
-<?= Html::a('Imprimir', ['sepsolicitud/imprimir', 'numero' => $numero], ['class' => 'btn btn-success']) ?>
 </center>
-<div class="row"><table class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">
-<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px; background:#d8d8d8;">
-<strong>6- Presentado por: Dirección de Bienestar Social</strong></td>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px; background:#d8d8d8;">
-<strong>7- Revisado por: Unidad de Presupuesto</strong></td>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px; background:#d8d8d8;">
-<strong>8- Aprobado por: Unidad de Contabilidad</strong></td></tr><tr>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px;">
-<br><br>________________________________<br>Cap. Rafael Ramón Tesorero Rodriguez</td>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px;">
-<br><br>________________________________<br>Lic. Lourdes Freites</td>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px;">
-<br><br>________________________________<br>Lic. Miley Carrillo</td></tr><tr>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">
-<strong>Fecha:</strong></td>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">
-<strong>Fecha:</strong></td>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">
-<strong>Fecha:</strong></td></tr></table></div><div class="row">
-<table class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">
-<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px; background:#d8d8d8;">
-<strong>9- Aprobado por: Director de Administración y Finanzas</strong>
-</td><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px; background:#d8d8d8;">
-<strong>10- Revisado por: Coordinador General</strong>
-</td><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px; background:#d8d8d8;">
-<strong>11- Aprobado por: Presidente</strong></td></tr><tr>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px;">
-<br><br>________________________________<br>1er.TTe Miguel S. Castillo Pérez</td>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px;">
-<br><br>________________________________<br>Cap. Rafael Ramón Tesorero Rodriguez</td>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px;">
-<br><br>________________________________<br>My. José Holberg Zambrano González</td></tr><tr>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">
-<strong>Fecha:</strong></td>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">
-<strong>Fecha:</strong></td>
-<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">
-<strong>Fecha:</strong></td></tr></table></div>
+
 

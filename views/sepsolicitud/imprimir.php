@@ -84,9 +84,14 @@ use kartik\grid\GridView;
     </table>
 
 <?php if ($consulta[0]['codestpre'] == 0201){
-    $estructuraparaimprimir= "AE01-3701-0201";
+    $estructuraparaimprimir= "407010201";
 } else {
-    $estructuraparaimprimir= "AE01-3701-0202";
+    $estructuraparaimprimir= "407010401";
+}
+if (count($consulta)<=1){
+    $titulotablacheques= "El cheque esta emitido a favor de: ";
+} else {
+    $titulotablacheques= "Los cheques serán emitidos a favor de: ";
 }
 ?>
 
@@ -102,41 +107,42 @@ use kartik\grid\GridView;
         'captionOptions' => ['class' => 'text-center', 'style' => 'color: black; margin: 0px; padding: 2px; font-size:12px;'],
         'footerRowOptions'=> ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;'],
         'rowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;'],
-        'caption' => 'El cheque esta emitido a favor de: ',
+        'caption' => $titulotablacheques,
     
         'columns' => [
             [
-                'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px;'],
+                'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px; background: #FFFFFF;'],
                 'class'=>'kartik\grid\SerialColumn',
                 'width'=>'10px',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
+                'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; #FFFFFF;'],  
             ],
             
             [
              'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; '],
-             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px;'],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px; background: #FFFFFF;'],
              'attribute'=>'documento',
              'hAlign'=>'center',
              'vAlign'=>'middle',
-             'pageSummary'=>'Estructura Presupuestaria',
-             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;'],  
+             'pageSummary'=>'Cuenta Presupuestaria',
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; background: #FFFFFF;'],  
             ],       
             
             [
              'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; '],
-             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px;'],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px; background: #FFFFFF;'],
              'attribute'=>'nombre',
              'width'=>'300px',
              'hAlign'=>'center',
              'vAlign'=>'middle',
              'pageSummary'=> $estructuraparaimprimir,
-             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;'],  
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; background: #FFFFFF;'],  
             ],
             
             [
              'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; '],
-             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px;'],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px; background: #FFFFFF;'],
              'attribute'=>'rif',
              'pageSummary'=>'Total',
              'hAlign'=>'center',
@@ -147,6 +153,7 @@ use kartik\grid\GridView;
             
             //'',
             [
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; '],
             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; text-align:center; border: solid 2px black!important; font-size:12px;'],
             'attribute'=>'montopre',
             'width'=>'150px',
@@ -155,7 +162,7 @@ use kartik\grid\GridView;
             'format'=>'currency',
             'pageSummary'=>true,
             'pageSummaryFunc'=>GridView::F_AVG,
-            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;'],  
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; #FFFFFF;'],  
             ]
             
                  

@@ -157,8 +157,10 @@ class SepsolicitudController extends Controller
     {       
 
             $query = \app\models\PresupuestosSearch::find()
-                    ->andFilterWhere([
-                    'solicitud_id' => $numero]);
+                    ->select(["CONCAT(conexionsigesp.req || ' // ' || presupuestos.documento_id) as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as rif" ])
+                    ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
+                    ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
+                    ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
 
             $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -494,7 +496,7 @@ class SepsolicitudController extends Controller
         
         
         
-        return $this->redirect('muestra?numero='.$numero);
+        return $this->redirect('imprimir?numero='.$numero);
     }
     
     public function actionImprimir($numero){
@@ -577,41 +579,41 @@ class SepsolicitudController extends Controller
         .'</td></tr></table></div>';
         
         $footerHtml = '<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:12px;">'
-.'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px; background:#d8d8d8;">'
+.'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
 .'<strong>6- Presentado por: Dirección de Bienestar Social</strong></td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px; background:#d8d8d8;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
 .'<strong>7- Revisado por: Unidad de Presupuesto</strong></td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px; background:#d8d8d8;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
 .'<strong>8- Aprobado por: Unidad de Contabilidad</strong></td></tr><tr>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
 .'<br><br>________________________________<br>Cap. Rafael Ramón Tesorero Rodriguez</td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
 .'<br><br>________________________________<br>Lic. Lourdes Freites</td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
 .'<br><br>________________________________<br>Lic. Miley Carrillo</td></tr><tr>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
 .'<strong>Fecha:</strong></td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
 .'<strong>Fecha:</strong></td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
 .'<strong>Fecha:</strong></td></tr>'
-.'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px; background:#d8d8d8;">'
+.'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
 .'<strong>9- Aprobado por: Director de Administración y Finanzas</strong>'
-.'</td><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px; background:#d8d8d8;">'
+.'</td><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
 .'<strong>10- Revisado por: Coordinador General</strong>'
-.'</td><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px; background:#d8d8d8;">'
+.'</td><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
 .'<strong>11- Aprobado por: Presidente</strong></td></tr><tr>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
 .'<br><br>________________________________<br>1er.TTe Miguel S. Castillo Pérez</td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
 .'<br><br>________________________________<br>Cap. Rafael Ramón Tesorero Rodriguez</td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 2px; font-size:12px;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
 .'<br><br>________________________________<br>My. José Holberg Zambrano González</td></tr><tr>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
 .'<strong>Fecha:</strong></td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
 .'<strong>Fecha:</strong></td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 2px; font-size:12px;">'
+.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
 .'<strong>Fecha:</strong></td></tr></table></div> <p style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></p>';
         
     // get your HTML raw content without any layouts or scripts

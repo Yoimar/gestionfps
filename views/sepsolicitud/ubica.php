@@ -27,8 +27,8 @@ use yii\helpers\Url;
 </div>
 <center>
 <div class="container center-block">
-	<div class="col-lg-12">
-                        <div class="sepingresa-form col-lg-4 col-md-offset-4">
+	<div class="col-lg-12 col-md-12">
+                        <div class="sepingresa-form col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4">
 
         <?php $form = ActiveForm::begin(); ?>
 
@@ -54,7 +54,7 @@ use yii\helpers\Url;
             ],
             ]); 
         ?>
-  <div class="col-lg-4 col-md-offset-4">
+  <div class="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4">
                         <?= Html::submitButton('Muestra', ['class' => 'btn btn-success']) ?>
     </div>
 

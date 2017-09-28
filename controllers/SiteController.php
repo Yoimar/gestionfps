@@ -307,8 +307,7 @@ class SiteController extends Controller
         }
     }
     
-    public function actionRbac()
-    {
+    public function actionRbac(){
         $auth = Yii::$app->authManager;
         $auth->removeAll();
         
@@ -406,4 +405,22 @@ class SiteController extends Controller
         echo "ok";
     }
     
+    public function actionBulk(){
+    $action = Yii::$app->request->post('action');
+    $selection=(array)Yii::$app->request->post('selection');
+    for ($i = 0; $i<count($selection); $i++) {
+        $mensaje = implode($selection);
+        
+    }
+    Yii::$app->session->setFlash("success", $mensaje);
+        
+        ////typecasting
+        //foreach($selection as $id){
+        //$e=Evento::findOne((int)$id);//make a typecasting
+        //do your stuff
+        //$e->save();
+        //}
+    
+     return $this->render('pruebas', ['seleccion'=>$selection]);
+    }
 }

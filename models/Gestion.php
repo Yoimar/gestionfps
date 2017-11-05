@@ -78,6 +78,12 @@ class Gestion extends \yii\db\ActiveRecord
     public $fechaultimamodificacion;
     public $edadbeneficiario;
     public $telefono;
+    public $presupuestos_id;
+    public $num_solicitud;
+    public $requerimiento;
+    public $iddoc;
+    public $rif;
+    public $orpa;
     
     
     /**
@@ -99,6 +105,7 @@ class Gestion extends \yii\db\ActiveRecord
             [['solicitante', 'estatus1_id', 'estatus2_id', 'beneficiario', 'necesidad', 'descripcion', 'anodelasolicitud', 'direccion', 'telefono', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'trabajadorsocial', 'recepcion', 'estatussa', 'created_at', 'updated_at'], 'safe'],
             [['afrodescendiente', 'indigena', 'sexodiversidad'], 'string', 'max' => 2],
             [['monto', 'cantidad',], 'number'],
+            [['num_solicitud','solicitud_id',], 'unique', 'message' => 'Este número de caso ya posee una gestión'],
             [['convenio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Convenio::className(), 'targetAttribute' => ['convenio_id' => 'id']],
             [['estatus3_id'], 'exist', 'skipOnError' => true, 'targetClass' => Estatus3::className(), 'targetAttribute' => ['estatus3_id' => 'id']],
             [['programaevento_id'], 'exist', 'skipOnError' => true, 'targetClass' => Programaevento::className(), 'targetAttribute' => ['programaevento_id' => 'id']],
@@ -170,6 +177,7 @@ class Gestion extends \yii\db\ActiveRecord
             'edadbeneficiario' => 'Edad del Beneficiario',
             'instruccion_id' => 'Instruccion',
             'telefono'=> 'Telefonos',
+            'num_solicitud'=> 'Num Solicitud',
         ];
     }
     

@@ -191,7 +191,7 @@ class GestionController extends Controller
     
     public function actionGestiona()
     {
-        $searchModel = new GestionSearch();
+        $searchModel = new \app\models\GestionSearchGestionalo();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('gestiona', [

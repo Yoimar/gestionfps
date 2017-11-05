@@ -95,6 +95,8 @@ $defaultExportConfig = [
 
 ?>
 
+</div>
+
 <?php     
     $columns = [
             [
@@ -109,25 +111,48 @@ $defaultExportConfig = [
             'header'=>'',
             'headerOptions'=>['class'=>'kartik-sheet-style']
             ],
+        
+            [
+            'class'=>'kartik\grid\ExpandRowColumn',
+            'width'=>'50px',
+            'value'=>function ($model, $key, $index, $column) {
+                return GridView::ROW_COLLAPSED;
+            },
+            'detail'=>function ($model, $key, $index, $column) {
+                return Yii::$app->controller->renderPartial('_form', ['model'=>$model]);
+            },
+            'headerOptions'=>['class'=>'kartik-sheet-style'],
+            'expandOneOnly'=>true,
+            ],
 
             [
             'attribute' => 'solicitud_id',
-            'value' => 'solicitud.num_solicitud',
+            'value' => 'num_solicitud',
+            'format' => 'text',
+            ],
+                    
+            [
+            'attribute' => 'requerimiento',
+            'value' => 'requerimiento',
+            'format' => 'text',
+            ],
+                    
+            [
+            'attribute' => 'iddoc',
+            'value' => 'iddoc',
             'format' => 'text',
             ],
             
-            [ 
-            'attribute' => 'solicitante', 				
-            'value' => 'solicitante', 
+            [
+            'attribute' => 'fechaingreso',
+            'value' => 'fechaingreso',
             'format' => 'text',
-            'visible'=> false,
             ],
-        
-            [ 
-            'attribute' => 'cisolicitante', 				
-            'value' => 'cisolicitante', 
+            
+            [
+            'attribute' => 'fechaultimamodificacion',
+            'value' => 'fechaultimamodificacion',
             'format' => 'text',
-            'visible'=> false,
             ],
         
             [ 
@@ -149,11 +174,48 @@ $defaultExportConfig = [
             'visible'=> false,
             ],
         
+            [                     
+            'attribute' => 'telefono', 			
+            'value' => 'telefono', 
+            'format' => 'text',
+            //'visible'=> false,
+            ],
+                   
             [ 
             'attribute' => 'empresaoinstitucion', 		
             'value' => 'empresaoinstitucion', 
             'format' => 'text',
             ],
+            
+            [ 
+            'attribute' => 'rif', 		
+            'value' => 'rif', 
+            'format' => 'text',
+            ],
+     
+            [ 
+            'attribute' => 'cantidad', 						
+            'value' => 'cantidad', 
+            'format' => 'text',
+            //'visible'=> false,
+            ],
+            
+            [ 
+            'attribute' => 'orpa', 						
+            'value' => 'orpa', 
+            'format' => 'text',
+            //'visible'=> false,
+            ],
+
+                    
+            [ 
+            'attribute' => 'cheque', 						
+            'value' => 'cheque', 
+            'format' => 'text',
+            //'visible'=> false,
+            ],
+                    
+                       
         
             [ 
             'attribute' => 'monto', 						
@@ -163,20 +225,6 @@ $defaultExportConfig = [
             'width'=>'100px',
             'format'=>'currency',
             'pageSummary'=>true,
-            ],
-     
-            [ 
-            'attribute' => 'cheque', 						
-            'value' => 'cheque', 
-            'format' => 'text',
-            'visible'=> false,
-            ],
-            
-            [                     
-            'attribute' => 'telefono', 			
-            'value' => 'telefono', 
-            'format' => 'text',
-            'visible'=> false,
             ],
             
             [
@@ -222,7 +270,7 @@ $defaultExportConfig = [
         'showPageSummary'=>true,
         'panel'=>[
             'type'=>GridView::TYPE_INFO,
-            'heading'=>'<center><i class="glyphicon glyphicon-eye-open"></i>  Ubicalo  <i class="glyphicon glyphicon-eye-open"></i></center>',
+            'heading'=>'<center><i class="glyphicon glyphicon-eye-open"></i>  Cambio de Estatus Gestión  <i class="glyphicon glyphicon-eye-open"></i></center>',
         ],
         'persistResize'=>false,
         'toggleDataOptions'=>['minCount'=>10],

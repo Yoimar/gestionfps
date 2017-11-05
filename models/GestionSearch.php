@@ -25,6 +25,7 @@ class GestionSearch extends Gestion
         ];
     }
 
+
     /**
      * @inheritdoc
      */
@@ -59,13 +60,13 @@ class GestionSearch extends Gestion
                 "extract(year from solicitudes.created_at) as anodelasolicitud", "CONCAT(estadobeneficiario.nombre || ' ' || municipiobeneficiario.nombre || ' ' || parroquiabeneficiario.nombre || ' ' || personabeneficiario.zona_sector || ' ' || personabeneficiario.calle_avenida || ' ' || personabeneficiario.apto_casa) as direccion",
                 "to_char(programaevento.fechaprograma, 'DD/MM/YYYY') as fechaactividad", "to_char(solicitudes.created_at, 'DD/MM/YYYY') as fechaingreso", 'estadobeneficiario.nombre as estadodireccion', "TO_CHAR(gestion.updated_at, 'DD/MM/YYYY') as fechaultimamodificacion",
                 "gestion.instruccion_id", "CONCAT(personabeneficiario.telefono_fijo || ' / ' || personabeneficiario.telefono_celular || ' / ' || personabeneficiario.telefono_otro) as telefono",
-                "extract(YEAR FROM age(now(),personabeneficiario.fecha_nacimiento)) as edadbeneficiario", "string_agg(empresa_institucion.nombrecompleto, ', ') as empresaoinstitucion",
-                "string_agg(to_char(presupuestos.cantidad,'9999'), ', ') as cantidad", "string_agg(presupuestos.cheque, ', ') as cheque", "string_agg(to_char(presupuestos.beneficiario_id,'99999'), ', ')", "string_agg(to_char(presupuestos.proceso_id,'99999'), ', ')", "string_agg(requerimientos.nombre, ', ') as tratamiento", "sum(presupuestos.montoapr) as monto"]);
+                "extract(YEAR FROM age(now(),personabeneficiario.fecha_nacimiento)) as edadbeneficiario", "string_agg(empresa_institucion.nombrecompleto, '  //  ') as empresaoinstitucion",
+                "count(presupuestos.cantidad) as cantidad", "string_agg(presupuestos.cheque, ' / ') as cheque", "string_agg(to_char(presupuestos.beneficiario_id,'99999'), ', ')", "string_agg(to_char(presupuestos.proceso_id,'99999'), ', ')", "string_agg(requerimientos.nombre, ', ') as tratamiento", "sum(presupuestos.montoapr) as monto"]);
 
         // add conditions that should always apply here
         
         $query->join('LEFT JOIN', 'convenio', 'gestion.convenio_id = convenio.id')
-                ->join('LEFT JOIN', 'solicitudes','gestion.solicitud_id = solicitudes.id')
+                ->join('JOIN', 'solicitudes','gestion.solicitud_id = solicitudes.id')
                 ->join('LEFT JOIN', 'programaevento', 'gestion.programaevento_id = programaevento.id')
                 ->join('LEFT JOIN', 'tipodecontacto', 'gestion.tipodecontacto_id = tipodecontacto.id')               
                 ->join('LEFT JOIN', 'users', 'solicitudes.usuario_asignacion_id = users.id')
@@ -74,7 +75,7 @@ class GestionSearch extends Gestion
                 ->join('LEFT JOIN', 'presupuestos', 'presupuestos.solicitud_id = solicitudes.id')
                 ->join('LEFT JOIN', 'requerimientos', 'presupuestos.requerimiento_id = requerimientos.id')
                 ->join('LEFT JOIN', 'procesos', 'presupuestos.proceso_id = procesos.id')
-                ->join('LEFT JOIN', 'estatus3', 'gestion.estatus3_id = estatus3.id')
+                ->join('JOIN', 'estatus3', 'gestion.estatus3_id = estatus3.id')
                 ->join('LEFT JOIN', 'estatus2', 'estatus3.estatus2_id = estatus2.id')
                 ->join('LEFT JOIN', 'estatus1', 'estatus2.estatus1_id = estatus1.id')
                 ->join('LEFT JOIN', 'tipo_requerimientos', 'requerimientos.tipo_requerimiento_id = tipo_requerimientos.id')
@@ -353,8 +354,7 @@ class GestionSearch extends Gestion
             ->andFilterWhere(['like', 'users.nombre', $this->trabajadorsocial])
             ->andFilterWhere(['like', 'areas.nombre', $this->especialidad])
             ->andFilterWhere(['like', 'recepciones.nombre', $this->recepcion])
-            ->andFilterWhere(['like', 'solicitudes.necesidad', $this->necesidad])
-            ->andFilterWhere(['like', "TRIM(TO_CHAR(presupuestos.monto, '9999999999999'))", $this->monto])
+            ->andFilterWhere(['like', 'solicitudes.necesidad', $this->necesidad])  
             ->andFilterWhere(['like', 'estadoactividad.nombre', $this->estado_actividad])
             ->andFilterWhere(['like', 'estadobeneficiario.nombre', $this->estadodireccion])
             ->andFilterWhere(['like', 'tipo_ayudas.nombre', $this->tipodeayuda])

@@ -78,7 +78,7 @@ $defaultExportConfig = [
                 '.kv-table-footer{border-top:4px double #ddd;font-weight: bold;}' .
                 '.kv-table-caption{font-size:0.5em;padding:8px;border:1px solid #ddd;border-bottom:none;}',
             'methods' => [
-                'SetHeader'=>['<h1>Reporte de Gestiones</h1>'], 
+                'SetHeader'=>['<center><h1>Envio</h1></center>'], 
                 'SetFooter'=>['{PAGENO}'],
             ],
             'options' => [
@@ -95,7 +95,7 @@ $defaultExportConfig = [
 
 ?>
 
-</div>
+
 
 <?php     
     $columns = [
@@ -128,6 +128,8 @@ $defaultExportConfig = [
             [
             'attribute' => 'solicitud_id',
             'value' => 'num_solicitud',
+            'label' => 'N°<br>Solicitud',
+            'encodeLabel' => false,
             'format' => 'text',
             ],
                     
@@ -147,12 +149,17 @@ $defaultExportConfig = [
             'attribute' => 'fechaingreso',
             'value' => 'fechaingreso',
             'format' => 'text',
+            'label' => 'Fecha<br>Ingreso',
+            'format' => 'text',
+            'encodeLabel' => false,
             ],
             
             [
             'attribute' => 'fechaultimamodificacion',
             'value' => 'fechaultimamodificacion',
+            'label' => 'Fecha<br>Modificación',
             'format' => 'text',
+            'encodeLabel' => false,
             ],
         
             [ 
@@ -178,13 +185,15 @@ $defaultExportConfig = [
             'attribute' => 'telefono', 			
             'value' => 'telefono', 
             'format' => 'text',
-            //'visible'=> false,
+            'visible'=> false,
             ],
                    
             [ 
             'attribute' => 'empresaoinstitucion', 		
-            'value' => 'empresaoinstitucion', 
+            'value' => 'empresaoinstitucion',
+            'label' => 'Empresa<br>Casa Comercial',
             'format' => 'text',
+            'encodeLabel' => false,
             ],
             
             [ 
@@ -195,7 +204,8 @@ $defaultExportConfig = [
      
             [ 
             'attribute' => 'cantidad', 						
-            'value' => 'cantidad', 
+            'value' => 'cantidad',
+            'label' => 'N°',
             'format' => 'text',
             //'visible'=> false,
             ],
@@ -204,7 +214,7 @@ $defaultExportConfig = [
             'attribute' => 'orpa', 						
             'value' => 'orpa', 
             'format' => 'text',
-            //'visible'=> false,
+            'visible'=> false,
             ],
 
                     
@@ -212,7 +222,7 @@ $defaultExportConfig = [
             'attribute' => 'cheque', 						
             'value' => 'cheque', 
             'format' => 'text',
-            //'visible'=> false,
+            'visible'=> false,
             ],
                     
                        
@@ -227,9 +237,9 @@ $defaultExportConfig = [
             'pageSummary'=>true,
             ],
             
-            [
-            'class'=>'kartik\grid\ActionColumn',
-            ],
+            //[
+            //'class'=>'kartik\grid\ActionColumn',
+            //],
             
         ];
 

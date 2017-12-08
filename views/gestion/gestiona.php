@@ -12,9 +12,16 @@ use kartik\grid\GridView;
 use kartik\mpdf\Pdf;
 use app\models\Users;
 use app\models\Areas;
-use app\models\Recepciones;
 use app\models\Presupuestos;
 use app\models\Gestion;
+use app\models\Departamentos;
+use app\models\Recepciones;
+use yii\widgets\ActiveForm;
+use yii\web\JsExpression;
+use yii\helpers\Url;
+use kartik\depdrop\DepDrop;
+
+
 
 $defaultExportConfig = [
     GridView::TEXT => [
@@ -96,7 +103,113 @@ $defaultExportConfig = [
 
 ?>
 
+<!-- Aqui empieza el Div del Form de la Busqueda -->
 
+<div class="jumbotron" style="font-size: 1em;" >
+    <div class="container">
+	<div class="col-lg-12">
+		<div class="box">
+			<div class="box-header">
+                            <h3 class="display-3">
+					Origen Memo					
+                            </h3>
+			</div>
+
+                </div>
+        </div>
+    </div>
+</div>
+<center>
+<div class="container center-block">
+	<div class="col-lg-12 col-md-12">
+                        <div class="sepingresa-form col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4">
+
+    <?php $form = ActiveForm::begin(); ?>
+                            
+    <?= $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Departamentos::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione el Departamento'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+            
+    ?>
+
+    <?= $form->field($modelorigenmemo, 'unidad')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Recepciones::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione la Unidad'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]); 
+            
+    ?>
+
+     <?=
+    /* Estatus 1 con Select2 de kartik*/
+        $form->field($modelorigenmemo, 'estatus1')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Estatus1::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione el Estatus Nivel 1'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+    
+    ?>
+    
+    
+    <?php
+    /* Estatus 2 con depdrop de kartik*/
+    echo $form->field($modelorigenmemo, 'estatus2')->widget(DepDrop::classname(), [
+    'data' => ArrayHelper::map(Estatus2::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+    'type'=>DepDrop::TYPE_SELECT2,
+    'options'=>['id'=>'estatus2_id', 'placeholder'=>'Seleccione el Estatus Nivel 2'],
+    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+    'pluginOptions'=>[
+        'placeholder' => 'Seleccione el Estatus Nivel 2',
+        'depends'=>['origenmemo-estatus1'],
+        'url'=>Url::to(['/estatus3/estatus1']),
+    ]
+    ]);
+        
+    ?>
+
+    <?=
+    /* Estatus 3 con depdrop de kartik*/
+    $form->field($modelorigenmemo, 'estatus3')->widget(DepDrop::classname(), [
+    'data' => ArrayHelper::map(Estatus3::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+    'type'=>DepDrop::TYPE_SELECT2,
+    'options'=>['id'=>'estatus3_id', 'placeholder'=>'Seleccione el Estatus Nivel 3'],
+    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+    'pluginOptions'=>[
+        'placeholder' => 'Seleccione el Estatus Nivel 3',
+        'depends'=>['estatus2_id'],
+        'url'=>Url::to(['/estatus3/estatus2']),
+    ]
+    ]);
+    ?>      
+    
+    
+
+   
+    <div class="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4">
+                        <?= Html::submitButton('Cargar', ['class' => 'btn btn-success']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+
+    </div>
+                        
+    </div>
+    
+</div>
+</center>
+
+<!-- Termina el Formulario de la Busqueda -->
 
 <?php     
     $columns = [
@@ -247,14 +360,13 @@ $defaultExportConfig = [
 ?>
 
 <!-- Aqui termina el div, y empieza el container -->
-                <br>
                 <center>
-                <h1>Gestión</h1>
+                <h1>Gestión de Casos</h1>
                 </center>
                 <br>
             
-<?=Html::dropDownList('action','',['Holassss'=>'Mark selected as: ','Hello'=>'Confirmed','Hi'=>'No Confirmed'],['class'=>'dropdown',])?>
-<?=Html::submitButton('Send', ['class' => 'btn btn-info',]);?>               
+<?php //Html::dropDownList('action','',['Holassss'=>'Mark selected as: ','Hello'=>'Confirmed','Hi'=>'No Confirmed'],['class'=>'dropdown',])?>
+<?php //Html::submitButton('Send', ['class' => 'btn btn-info',]);?>               
 
 <?php
     echo GridView::widget([

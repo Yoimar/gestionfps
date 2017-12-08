@@ -12,6 +12,7 @@ use app\models\Solicitudes;
 use yii\db\Query;
 use yii\db\ActiveQuery;
 use yii\filters\AccessControl;
+use app\models\Origenmemo;
 
 
 
@@ -189,14 +190,83 @@ class GestionController extends Controller
     return $out;
     }
     
-    public function actionGestiona()
+    public function actionGestiona($trabajador=null, $departamento=null)
     {
+        $modelorigenmemo = new Origenmemo;
         $searchModel = new \app\models\GestionSearchGestionalo();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        if ($modelorigenmemo->load(Yii::$app->request->post())) {
+            
+            //Recibo los datos de la Busqueda
+            
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            $dataProvider->query->andWhere(
+                    [
+                        'estatus1_id'=>$modelorigenmemo->estatus1,
+                        'estatus2_id'=>$modelorigenmemo->estatus2,
+                        'estatus3_id'=>$modelorigenmemo->estatus3,
+                        'departamento_id'=>$modelorigenmemo->departamento,
+                        'recepcion_id'=>$modelorigenmemo->unidad,
+                    ]);
+            
+            
+            // Deberia Enviar al Controlador con los datos
+            
+            
+        
+        
+            return $this->render('gestiona', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'modelorigenmemo' => $modelorigenmemo,
+      
+        ]);
+            
+            
+            
+        } else {
+        
+        
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['trabajador_id'=>$trabajador]);
+        
+        
         return $this->render('gestiona', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'modelorigenmemo' => $modelorigenmemo,
         ]);
+    
     }
+    }
+    
+    /**
+     * Para realizar la Vista Parcial que me permitira filtrar los casos del Origen  
+     */
+    
+    public function actionOrigenmemo()
+    {
+        $model = new Origenmemo;
+
+        if ($model->load(Yii::$app->request->post())) {
+            
+            //Recibo los datos de la Busqueda
+            
+            $departamento = $model->departamento;
+            $unidad = $model->unidad;
+            $usuario = $model->usuario;
+            $estatus1 = $model->estatus1;
+            $estatus2 = $model->estatus2;
+            $estatus3 = $model->estatus3;
+
+            // Deberia Enviar al Controlador con los datos
+            
+            return $this->redirect('gestiona?departamento='.$departamento);
+        } else {
+            return $this->render('origenmemo', [
+                'model' => $model,
+            ]);
+        }
+    }
+    
 }

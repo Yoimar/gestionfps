@@ -136,14 +136,9 @@ class SepsolicitudController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             
+            //Se hace el Modelo Personalizado lo recibe el mismo caso y lo reenvia a la siguiente Vista
+            
             $numero = $model->caso; 
-//            $query = \app\models\Presupuestos::find()
-//                    ->andFilterWhere([
-//                    'solicitud_id' => $numero,]);
-//
-//            $dataProvider = new ActiveDataProvider([
-//            'query' => $query,
-//            ]);
             
             return $this->redirect('muestra?numero='.$numero);
         } else {
@@ -586,11 +581,11 @@ class SepsolicitudController extends Controller
 .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
 .'<strong>8- Aprobado por: Unidad de Contabilidad</strong></td></tr><tr>'
 .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
-.'<br><br>________________________________<br>Cap. Rafael Ramón Tesorero Rodriguez</td>'
+.'<br><br>________________________________<br>Firma</td>'
 .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
-.'<br><br>________________________________<br>Lic. Lourdes Freites</td>'
+.'<br><br>________________________________<br>Firma</td>'
 .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
-.'<br><br>________________________________<br>Lic. Miley Carrillo</td></tr><tr>'
+.'<br><br>________________________________<br>Firma</td></tr><tr>'
 .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
 .'<strong>Fecha:</strong></td>'
 .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
@@ -604,11 +599,11 @@ class SepsolicitudController extends Controller
 .'</td><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
 .'<strong>11- Aprobado por: Presidente</strong></td></tr><tr>'
 .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
-.'<br><br>________________________________<br>1er.TTe Miguel S. Castillo Pérez</td>'
+.'<br><br>________________________________<br>Firma</td>'
 .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
-.'<br><br>________________________________<br>Cap. Rafael Ramón Tesorero Rodriguez</td>'
+.'<br><br>________________________________<br>Firma</td>'
 .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
-.'<br><br>________________________________<br>My. José Holberg Zambrano González</td></tr><tr>'
+.'<br><br>________________________________<br>Firma</td></tr><tr>'
 .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
 .'<strong>Fecha:</strong></td>'
 .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'

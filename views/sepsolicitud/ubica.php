@@ -3,7 +3,6 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
-use app\models\Solicitudes;
 use yii\web\JsExpression;
 use yii\helpers\Url;
 

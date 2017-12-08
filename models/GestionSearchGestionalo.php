@@ -18,7 +18,7 @@ class GestionSearchGestionalo extends Gestion
     public function rules()
     {
         return [
-            [['id', 'estatus1_id', 'estatus2_id', 'estatus3_id', 'trabajador_id', 'updated_by',], 'integer'],
+            [['id', 'estatus1_id', 'estatus2_id', 'estatus3_id', 'departamento', 'trabajador_id', 'updated_by',], 'integer'],
             [['solicitud_id', 'num_solicitud', 'cibeneficiario', 'beneficiario', 'telefono', 'fechaingreso', 'fechaingreso_hasta', 'trabajadorsocial', 'empresaoinstitucion', 'cheque', 'updated_at', 'updated_hasta', 'iddoc', 'rif', 'orpa', 'requerimiento'  ], 'safe'],
             [['monto'], 'number'],
         ];
@@ -46,8 +46,8 @@ class GestionSearchGestionalo extends Gestion
         $query = Gestion::find()
                 ->select(['solicitudes.num_solicitud as num_solicitud', 
                 'gestion.id as id', 
-                "estatus1.nombre as estatus1_id", 
-                "estatus2.nombre as estatus2_id", 
+                "estatus1.id as estatus1_id", 
+                "estatus2.id as estatus2_id", 
                 'gestion.estatus3_id',
                 'gestion.trabajador_id', 
                 "personabeneficiario.ci as cibeneficiario", 
@@ -81,8 +81,8 @@ class GestionSearchGestionalo extends Gestion
                 ->join('LEFT JOIN', 'conexionsigesp', 'presupuestos.id = conexionsigesp.id_presupuesto')
                 ->groupBy(['num_solicitud', 
                     'gestion.id', 
-                    'estatus1.nombre', 
-                    'estatus2.nombre', 
+                    'estatus1.id', 
+                    'estatus2.id', 
                     'gestion.estatus3_id', 
                     'gestion.trabajador_id', 
                     'cibeneficiario', 
@@ -242,6 +242,7 @@ class GestionSearchGestionalo extends Gestion
             'gestion.instruccion_id' => $this->instruccion_id,
             'estatus2_id' => $this->estatus2_id,
             'estatus3_id' => $this->estatus3_id,
+            'estatus1_id' => $this->estatus1_id,
             'trabajador_id' => $this->trabajador_id,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
@@ -253,7 +254,6 @@ class GestionSearchGestionalo extends Gestion
         $query->andFilterWhere(['like', 'afrodescendiente', $this->afrodescendiente])
             ->andFilterWhere(['like', 'indigena', $this->indigena])
             ->andFilterWhere(['like', 'sexodiversidad', $this->sexodiversidad])
-            ->andFilterWhere(['like', 'estatus1.nombre', $this->estatus1_id])
             ->andFilterWhere(['like', "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido)", $this->beneficiario])
             ->andFilterWhere(['=', 'extract(month from solicitudes.created_at)', $this->mesingreso])
             ->andFilterWhere(['like', "TRIM(TO_CHAR(personabeneficiario.ci, '99999999'))", $this->cibeneficiario])

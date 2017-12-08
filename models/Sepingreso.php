@@ -13,22 +13,14 @@ class Sepingreso extends Model
      * @inheritdoc
      */
     public $caso;
-//    public $beneficiarios = [];
-//    public $beneficiario;
-//    public $estructura;
-//    public $fecha;
-//    public $monto; 
-//    public $ids_presupuesto = [];
-//    public $id_presupuesto; 
 
     
     public function rules()
     {
         return [
-//            [['beneficiario', 'monto', 'id_presupuesto'], 'integer'],
-//            [['fecha', 'estructura', 'beneficiarios', 'beneficiario', 'caso',], 'safe'],
+
             [['caso'], 'integer'],
-//            [['monto'],'number'],
+
         ];
     }
 
@@ -38,14 +30,7 @@ class Sepingreso extends Model
     public function attributeLabels()
     {
         return [
-            'caso' => 'N° Caso Sasyc',
-//            'beneficiario' => 'Casa Comercial',
-//            'monto' => 'Monto',
-//            'id_presupuesto' => 'Presupuesto',
-//            'fecha' => 'Fecha',
-//            'estructura' => 'Estructura',
-//            'beneficiarios' => 'Beneficiarios',
-//            'beneficiario' => 'Beneficiario',
+            'caso' => 'N° Caso Sasyc'
         ];
     }
     
@@ -55,9 +40,5 @@ class Sepingreso extends Model
     }
         
 }
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 

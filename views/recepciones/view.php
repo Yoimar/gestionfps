@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'version',
             'created_at',
             'updated_at',
+            'departamento_id',
         ],
     ]) ?>
 

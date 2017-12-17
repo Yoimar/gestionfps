@@ -24,7 +24,7 @@ class Origenmemo extends Model
     {
         return [
 
-            [['departamento', 'unidad', 'estatus1', 'estatus2', 'estatus3', ], 'integer'],
+            [['departamento', 'unidad', 'estatus1', 'estatus2', 'estatus3', 'usuario' ], 'integer'],
 
         ];
     }
@@ -40,6 +40,7 @@ class Origenmemo extends Model
             'estatus2' => 'Estatus 2',
             'estatus3' => 'Estatus 3',
             'unidad' => 'Unidad',
+            'usuario' => 'Trabajador Final',
         ];
     }
     
@@ -67,5 +68,10 @@ class Origenmemo extends Model
     {
         return $this->hasOne(Estatus2::className(), ['id' => 'estatus2']);
     }
-        
+    
+    public function getUsuario()
+    {
+        return $this->hasOne(Trabajador::className(), ['id' => 'usuario']);
+    }
+    
 }

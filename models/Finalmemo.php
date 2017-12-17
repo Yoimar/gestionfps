@@ -24,7 +24,7 @@ class Finalmemo extends Model
     {
         return [
 
-            [['departamento', 'unidad', 'estatus1', 'estatus2', 'estatus3', ], 'integer'],
+            [['departamentofinal', 'unidadfinal', 'estatus1final', 'estatus2final', 'estatus3final', 'usuariofinal'], 'integer'],
 
         ];
     }

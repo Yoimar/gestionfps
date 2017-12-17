@@ -18,7 +18,7 @@ class GestionSearchGestionalo extends Gestion
     public function rules()
     {
         return [
-            [['id', 'estatus1_id', 'estatus2_id', 'estatus3_id', 'departamento', 'trabajador_id', 'updated_by',], 'integer'],
+            [['id', 'estatus1_id', 'estatus2_id', 'estatus3_id', 'departamento', 'trabajador_id', 'updated_by', 'recepcion_id', 'departamento_id'], 'integer'],
             [['solicitud_id', 'num_solicitud', 'cibeneficiario', 'beneficiario', 'telefono', 'fechaingreso', 'fechaingreso_hasta', 'trabajadorsocial', 'empresaoinstitucion', 'cheque', 'updated_at', 'updated_hasta', 'iddoc', 'rif', 'orpa', 'requerimiento'  ], 'safe'],
             [['monto'], 'number'],
         ];
@@ -49,7 +49,9 @@ class GestionSearchGestionalo extends Gestion
                 "estatus1.id as estatus1_id", 
                 "estatus2.id as estatus2_id", 
                 'gestion.estatus3_id',
-                'gestion.trabajador_id', 
+                'gestion.trabajador_id',
+                'gestion.recepcion_id', 
+                'departamentos.id as departamento_id', 
                 "personabeneficiario.ci as cibeneficiario", 
                 "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario", 
                 'users.nombre as trabajadorsocial', 
@@ -79,12 +81,16 @@ class GestionSearchGestionalo extends Gestion
                 ->join('LEFT JOIN', 'personas as personabeneficiario', 'solicitudes.persona_beneficiario_id  = personabeneficiario.id')
                 ->join('LEFT JOIN', 'empresa_institucion', 'presupuestos.beneficiario_id = empresa_institucion.id')
                 ->join('LEFT JOIN', 'conexionsigesp', 'presupuestos.id = conexionsigesp.id_presupuesto')
+                ->join('LEFT JOIN', 'recepciones', 'recepciones.id = gestion.recepcion_id')
+                ->join('LEFT JOIN', 'departamentos', 'recepciones.departamento_id = departamentos.id')
                 ->groupBy(['num_solicitud', 
                     'gestion.id', 
                     'estatus1.id', 
                     'estatus2.id', 
                     'gestion.estatus3_id', 
-                    'gestion.trabajador_id', 
+                    'gestion.trabajador_id',
+                    'gestion.recepcion_id',
+                    'departamentos.id',
                     'cibeneficiario', 
                     'beneficiario', 
                     'trabajadorsocial', 
@@ -248,6 +254,8 @@ class GestionSearchGestionalo extends Gestion
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
+            'gestion.recepcion_id' => $this->recepcion_id,
+            'departamentos.id' => $this->departamento_id,
             'solicitudes.ind_beneficiario_menor' => $this->nino,
         ]);
 

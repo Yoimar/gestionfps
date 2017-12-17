@@ -202,15 +202,25 @@ class GestionController extends Controller
             //Recibo los datos de la Busqueda
             
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-            $dataProvider->query->andWhere(
-                    [
-                        'estatus1_id'=>$modelorigenmemo->estatus1,
-                        'estatus2_id'=>$modelorigenmemo->estatus2,
-                        'estatus3_id'=>$modelorigenmemo->estatus3,
-                        'departamento_id'=>$modelorigenmemo->departamento,
-                        'recepcion_id'=>$modelorigenmemo->unidad,
-                    ]);
             
+            if($modelorigenmemo->estatus1!=''){
+                $dataProvider->query->andWhere(['estatus1_id'=>$modelorigenmemo->estatus1]);
+            }
+            if($modelorigenmemo->estatus2!=''){
+                $dataProvider->query->andWhere(['estatus2_id'=>$modelorigenmemo->estatus2]);
+            }
+            if($modelorigenmemo->estatus3!=''){
+                $dataProvider->query->andWhere(['estatus3_id'=>$modelorigenmemo->estatus3]);
+            }
+            if($modelorigenmemo->departamento!=''){
+                $dataProvider->query->andWhere(['departamento_id'=>$modelorigenmemo->departamento]);
+            }
+            if($modelorigenmemo->unidad!=''){
+                $dataProvider->query->andWhere(['recepcion_id'=>$modelorigenmemo->unidad]);
+            }
+            if($modelorigenmemo->usuario!=''){
+                $dataProvider->query->andWhere(['trabajador_id'=>$modelorigenmemo->usuario]);
+            }
             
             // Deberia Enviar al Controlador con los datos
             
@@ -230,9 +240,7 @@ class GestionController extends Controller
         } else {
         
         
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->query->andWhere(['trabajador_id'=>$trabajador]);
-        
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);      
         
         return $this->render('gestiona', [
             'searchModel' => $searchModel,
@@ -248,17 +256,37 @@ class GestionController extends Controller
      * Para realizar la Vista Parcial que me permitira filtrar los casos del Origen  
      */
     
-    public function actionCambioestatusgeneromemo() {
+    public function actionCambioestatus() {
     
-    $selectiona = (array)Yii::$app->request->post('selection'); //typecasting
-
+    $modelfinalmemo = new Finalmemo;
+    
+    if ($modelfinalmemo->load(Yii::$app->request->post())) {
+        $estatus3id=$modelfinalmemo->estatus3final;
+        $estatus2id=$modelfinalmemo->estatus2final;
+        $estatus1id=$modelfinalmemo->estatus1final;
+        $departamentoid=$modelfinalmemo->departamentofinal;
+        $unidadid=$modelfinalmemo->unidadfinal;
+        $trabajadorid=$modelfinalmemo->usuariofinal;
+        
+    }
+    $selection=(array)Yii::$app->request->post('selection');
+//    for ($i = 0; $i<count($selection); $i++) {
+//        $mensaje = implode($selection);
+//        
+//    }
     
 
 //    foreach ($selection as $id) {
 //        
 //    }
     return $this->render('memorandum', [
-                'selectionas' => $selectiona,
+                'estatus3id' => $estatus3id,
+                'estatus2id' => $estatus2id,
+                'estatus1id' => $estatus1id,
+                'departamentoid' => $departamentoid,
+                'unidadid' => $unidadid,
+                'trabajadorid' => $trabajadorid,
+                'selection' => $selection,
     ]);
 }
     

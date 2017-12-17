@@ -18,7 +18,7 @@ class RecepcionesSearch extends Recepciones
     public function rules()
     {
         return [
-            [['id', 'version'], 'integer'],
+            [['id', 'version', 'departamento_id'], 'integer'],
             [['nombre', 'created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -63,6 +63,7 @@ class RecepcionesSearch extends Recepciones
             'version' => $this->version,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'departamento_id' => $this->departamento_id,
         ]);
 
         $query->andFilterWhere(['like', 'nombre', $this->nombre]);

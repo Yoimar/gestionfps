@@ -115,7 +115,7 @@ echo GridView::widget([
 //            
                  
 
-            
+           'id',
            'rif',
 //            'req',
 //            'codestpre',
@@ -129,7 +129,7 @@ echo GridView::widget([
             [
             'class' => '\kartik\grid\CheckboxColumn',
             'checkboxOptions' => function($model, $key, $index, $column) {
-                    return ['value' => $model->rif];
+                    return ['value' => $model->id];
                 },
 
             ],

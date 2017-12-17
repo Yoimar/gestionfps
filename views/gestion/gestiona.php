@@ -104,25 +104,23 @@ $defaultExportConfig = [
 ?>
 
 <!-- Aqui empieza el Div del Form de la Busqueda -->
-
-<div class="jumbotron" style="font-size: 1em;" >
-    <div class="container">
+<center>
+    <div class="container center-block">
 	<div class="col-lg-12">
-		<div class="box">
-			<div class="box-header">
-                            <h3 class="display-3">
-					Origen Memo					
+			<div class="box-header center-block">
+                            <h3 class="display-3 center-block">
+					Cambio de Estatus y Envio de MEMO					
                             </h3>
 			</div>
-
-                </div>
         </div>
     </div>
-</div>
-<center>
+
+
+<!--Para el Origen de los Memos -->    
+    
 <div class="container center-block">
-	<div class="col-lg-12 col-md-12">
-                        <div class="sepingresa-form col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4">
+	<div class="col-lg-6 col-md-6">
+                        <div class="sepingresa-form col-lg-8 col-md-8 col-md-offset-2 col-lg-offset-2">
 
     <?php $form = ActiveForm::begin(); ?>
                             
@@ -206,6 +204,99 @@ $defaultExportConfig = [
                         
     </div>
     
+    <!--Para el Envio de los Memos -->    
+    
+<div class="container center-block">
+	<div class="col-lg-6 col-md-6">
+                        <div class="final-form col-lg-8 col-md-8 col-md-offset-2 col-lg-offset-2">
+<!-- Formulario para cambio de Estatus de Varias Items a la Vez-->
+<?=Html::beginForm(['cambioestatusgeneromemo'],'post');?>
+    
+<!-- Formulario del Form modelfinalmemo-->     
+    <?php// $form = ActiveForm::begin(); ?>
+                            
+    <?= $form->field($modelfinalmemo, 'departamentofinal')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Departamentos::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione el Departamento'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+            
+    ?>
+
+    <?= $form->field($modelfinalmemo, 'unidadfinal')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Recepciones::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione la Unidad'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]); 
+            
+    ?>
+
+     <?=
+    /* Estatus 1 con Select2 de kartik*/
+        $form->field($modelfinalmemo, 'estatus1final')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Estatus1::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione el Estatus Nivel 1'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+    
+    ?>
+    
+    
+    <?php
+    /* Estatus 2 con depdrop de kartik*/
+    echo $form->field($modelfinalmemo, 'estatus2final')->widget(DepDrop::classname(), [
+    'data' => ArrayHelper::map(Estatus2::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+    'type'=>DepDrop::TYPE_SELECT2,
+    'options'=>['id'=>'estatus2_idfinal', 'placeholder'=>'Seleccione el Estatus Nivel 2'],
+    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+    'pluginOptions'=>[
+        'placeholder' => 'Seleccione el Estatus Nivel 2',
+        'depends'=>['finalmemo-estatus1final'],
+        'url'=>Url::to(['/estatus3/estatus1']),
+    ]
+    ]);
+        
+    ?>
+
+    <?=
+    /* Estatus 3 con depdrop de kartik*/
+    $form->field($modelfinalmemo, 'estatus3final')->widget(DepDrop::classname(), [
+    'data' => ArrayHelper::map(Estatus3::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+    'type'=>DepDrop::TYPE_SELECT2,
+    'options'=>['id'=>'estatus3_idfinal', 'placeholder'=>'Seleccione el Estatus Nivel 3'],
+    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+    'pluginOptions'=>[
+        'placeholder' => 'Seleccione el Estatus Nivel 3',
+        'depends'=>['estatus2_idfinal'],
+        'url'=>Url::to(['/estatus3/estatus2']),
+    ]
+    ]);
+    ?>      
+    
+    
+
+   
+    <div class="col-lg-8 col-md-8 col-lg-offset-2 col-md-offset-2">
+                        <?php //echo Html::submitButton('Enviar Memorandum', ['class' => 'btn btn-info']) ?>
+    </div>
+<!-- Formulario del Modelo -->
+    <?php //ActiveForm::end(); ?>
+
+                            
+<?= Html::submitButton('<span class="glyphicon glyphicon-floppy-saved"></span> Enviar Memorandum', ['class' => 'btn btn-primary btn-lg']) ?>                            
+    </div>
+                        
+    </div>
+    
 </div>
 </center>
 
@@ -216,16 +307,21 @@ $defaultExportConfig = [
             [
             'class'=>'kartik\grid\CheckboxColumn',
             'headerOptions'=>['class'=>'kartik-sheet-style'],
+            'rowSelectedClass' => GridView::TYPE_INFO,
+            'checkboxOptions' => function($model) {
+                return ['value' => $model->id];
+            },
             ],
+            'id',
         
             [
             'class'=>'kartik\grid\SerialColumn',
             'contentOptions'=>['class'=>'kartik-sheet-style'],
             'width'=>'36px',
             'header'=>'',
-            'headerOptions'=>['class'=>'kartik-sheet-style']
+            'headerOptions'=>['class'=>'kartik-sheet-style'],
             ],
-        
+          
             [
             'class'=>'kartik\grid\ExpandRowColumn',
             'width'=>'50px',
@@ -359,18 +455,9 @@ $defaultExportConfig = [
 
 ?>
 
-<!-- Aqui termina el div, y empieza el container -->
-                <center>
-                <h1>Gestión de Casos</h1>
-                </center>
-                <br>
-            
-<?php //Html::dropDownList('action','',['Holassss'=>'Mark selected as: ','Hello'=>'Confirmed','Hi'=>'No Confirmed'],['class'=>'dropdown',])?>
-<?php //Html::submitButton('Send', ['class' => 'btn btn-info',]);?>               
-
 <?php
     echo GridView::widget([
-        'id'=>'kv-grid-gestion',
+        'id'=>'kv-grid-gestiona',
         'dataProvider'=>$dataProvider,
         'filterModel'=>$searchModel,
         'columns'=>$columns,
@@ -379,13 +466,13 @@ $defaultExportConfig = [
         'filterRowOptions'=>['class'=>'kartik-sheet-style'],
         'pjax'=>true, // pjax is set to always true for this demo
         // set your toolbar
-        'toolbar'=> [
-            ['content'=>
-                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['grid-gestion'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'Reset Grid'])
-            ],
-            '{export}',
-            '{toggleData}'
-        ],
+//        'toolbar'=> [
+//            ['content'=>
+//                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['grid-gestion'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'Reset Grid'])
+//            ],
+//            '{export}',
+//            '{toggleData}'
+//        ],
         // set export properties
         'export'=>[
             'fontAwesome'=>true
@@ -397,20 +484,22 @@ $defaultExportConfig = [
         'responsive'=>true,
         'hover'=>true,
         'showPageSummary'=>true,
-        'panel'=>[
-            'type'=>GridView::TYPE_INFO,
-            'heading'=>'<center><i class="glyphicon glyphicon-eye-open"></i>Cambio de Estatus<i class="glyphicon glyphicon-eye-open"></i>'
-            . '</center>',
-        ],
+//        'panel'=>[
+//            'type'=>GridView::TYPE_INFO,
+//            'heading'=>'<center><i class="glyphicon glyphicon-eye-open"></i>Cambio de Estatus<i class="glyphicon glyphicon-eye-open"></i>'
+//            . '</center>',
+//        ],
         'persistResize'=>false,
         'toggleDataOptions'=>['minCount'=>10],
         'exportConfig'=>$defaultExportConfig,
     ]);
 
 ?>
-                
-?>
+<!-- Termina el GridView empieza el Envio de Información -->
 
+<?= Html::endForm();?> 
+
+<!-- Fin del Formulario -->
 
 
 </div>

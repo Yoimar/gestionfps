@@ -13,6 +13,7 @@ use yii\db\Query;
 use yii\db\ActiveQuery;
 use yii\filters\AccessControl;
 use app\models\Origenmemo;
+use app\models\Finalmemo;
 
 
 
@@ -193,6 +194,7 @@ class GestionController extends Controller
     public function actionGestiona($trabajador=null, $departamento=null)
     {
         $modelorigenmemo = new Origenmemo;
+        $modelfinalmemo = new Finalmemo;
         $searchModel = new \app\models\GestionSearchGestionalo();
 
         if ($modelorigenmemo->load(Yii::$app->request->post())) {
@@ -219,6 +221,7 @@ class GestionController extends Controller
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
                 'modelorigenmemo' => $modelorigenmemo,
+                'modelfinalmemo' => $modelfinalmemo,
       
         ]);
             
@@ -235,6 +238,7 @@ class GestionController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'modelorigenmemo' => $modelorigenmemo,
+            'modelfinalmemo' => $modelfinalmemo,
         ]);
     
     }
@@ -244,29 +248,18 @@ class GestionController extends Controller
      * Para realizar la Vista Parcial que me permitira filtrar los casos del Origen  
      */
     
-    public function actionOrigenmemo()
-    {
-        $model = new Origenmemo;
+    public function actionCambioestatusgeneromemo() {
+    
+    $selectiona = (array)Yii::$app->request->post('selection'); //typecasting
 
-        if ($model->load(Yii::$app->request->post())) {
-            
-            //Recibo los datos de la Busqueda
-            
-            $departamento = $model->departamento;
-            $unidad = $model->unidad;
-            $usuario = $model->usuario;
-            $estatus1 = $model->estatus1;
-            $estatus2 = $model->estatus2;
-            $estatus3 = $model->estatus3;
+    
 
-            // Deberia Enviar al Controlador con los datos
-            
-            return $this->redirect('gestiona?departamento='.$departamento);
-        } else {
-            return $this->render('origenmemo', [
-                'model' => $model,
-            ]);
-        }
-    }
+//    foreach ($selection as $id) {
+//        
+//    }
+    return $this->render('memorandum', [
+                'selectionas' => $selectiona,
+    ]);
+}
     
 }

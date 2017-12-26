@@ -20,6 +20,7 @@ use yii\bootstrap\ActiveForm;
 use yii\web\JsExpression;
 use yii\helpers\Url;
 use kartik\depdrop\DepDrop;
+use kartik\export\ExportMenu;
 
 ?>
 <!-- Aqui empieza el Div del Form de la Busqueda -->
@@ -33,17 +34,19 @@ use kartik\depdrop\DepDrop;
 			</div>
         </div>
     </div>
+<!-- Formulario para cambio de Estatus de Varias Items a la Vez-->
+<?php $form = ActiveForm::begin(); ?>
+<?php ActiveForm::end(); ?>
 
 
-<!--Para el Origen de los Memos -->    
+<?=Html::beginForm(['gestion/cambioestatus'],'post');?>
     
 <div class="container center-block">
 	<div class="col-lg-6 col-md-6">
-    <div class="modelorigenmemo-form col-lg-8 col-md-8 col-md-offset-2 col-lg-offset-2">
-
-    <?php $form = ActiveForm::begin(); ?>
-                            
-    <?= $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname(), [
+            <div class="modelorigenmemo-form col-lg-8 col-md-8 col-md-offset-2 col-lg-offset-2">
+ <!-- Formulario del Origen Memos -->
+<?php 
+echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Departamentos::find()->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
         'options' => ['placeholder' => 'Seleccione el Departamento'],
@@ -52,7 +55,7 @@ use kartik\depdrop\DepDrop;
         ],
     ]);
             
-    ?>
+?>
 
     <?= $form->field($modelorigenmemo, 'unidad')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Recepciones::find()->orderBy('nombre')->all(), 'id', 'nombre'),
@@ -122,26 +125,15 @@ use kartik\depdrop\DepDrop;
         'url'=>Url::to(['/estatus3/estatus2']),
     ]
     ]);
-    ?>      
-    
-    
 
-   
-    <div class="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4">
-                        <?= Html::submitButton('Cargar', ['class' => 'btn btn-success']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
-
+    ?>  
 </div>
+            
 </div>
 
 <div class="col-lg-6 col-md-6">
 <div class="modelorigenmemo-form col-lg-8 col-md-8 col-md-offset-2 col-lg-offset-2">
-<!-- Formulario para cambio de Estatus de Varias Items a la Vez-->
-<?=Html::beginForm(['gestion/cambioestatus'],'post');?>
-<!-- Formulario del Form modelfinalmemo-->     
-    <?php// $form = ActiveForm::begin(); ?>
+
                             
     <?= $form->field($modelfinalmemo, 'departamentofinal')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Departamentos::find()->orderBy('nombre')->all(), 'id', 'nombre'),
@@ -222,28 +214,29 @@ use kartik\depdrop\DepDrop;
         'url'=>Url::to(['/estatus3/estatus2']),
     ]
     ]);
-    ?>
+    ?>   
 
-   
-                                                  
-<?= Html::submitButton('<span class="glyphicon glyphicon-floppy-saved"></span> Enviar Memorandum', ['class' => 'btn btn-primary btn-lg']) ?>                            
-    </div>
+   </div>
+    </div>                                                  
+<?= Html::submitButton('<span class="glyphicon glyphicon-floppy-saved"></span> Enviar e Imprimir Memorandum', ['class' => 'btn btn-primary btn-lg']) ?>                            
+    
                         
-    </div>
+
     
 </div>
 </center>
 
 <!-- Termina el Formulario de la Busqueda -->
 
-<?php     
+<?php 
+
     $columns = [
             [
             'class'=>'kartik\grid\CheckboxColumn',
             'headerOptions'=>['class'=>'kartik-sheet-style'],
             'rowSelectedClass' => GridView::TYPE_INFO,
             'checkboxOptions' => function($model, $key, $index, $column) {
-                    return ['value' => $model->num_solicitud];
+                    return ['value' => $model->id];
                 },
 
             ],
@@ -377,43 +370,37 @@ use kartik\depdrop\DepDrop;
 ?>
 
 <?php
-    echo GridView::widget([
-//        'id'=>'kv-grid-gestiona',
-        'dataProvider'=>$dataProvider,
-//        'filterModel'=>$searchModel,
-        'columns'=>$columns,
-        'containerOptions'=>['style'=>'overflow: auto'], // only set when $responsive = false
-        'headerRowOptions'=>['class'=>'kartik-sheet-style'],
-        'filterRowOptions'=>['class'=>'kartik-sheet-style'],
-//        'pjax'=>true, // pjax is set to always true for this demo
-        // set your toolbar
-//        'toolbar'=> [
-//            ['content'=>
-//                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['grid-gestion'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>'Reset Grid'])
-//            ],
-//            '{export}',
-//            '{toggleData}'
-//        ],
-        // set export properties
-        'export'=>[
-            'fontAwesome'=>true
+echo   GridView::widget([
+//        'id' => 'kv-grid-gestiona',
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => $columns, // check the configuration for grid columns by clicking button above
+        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'filterRowOptions' => ['class' => 'kartik-sheet-style'],
+        'pjax' => true, // pjax is set to always true for this demo
+//         parameters from the demo form
+        'bordered' => true,
+        'striped' => true,
+        'condensed' => true,
+        'responsive' => true,
+        'hover' => true,
+        'showPageSummary' => true,
+        'panel' => [
+            'type' => GridView::TYPE_DEFAULT,
+            'heading' => 'Localizador',
         ],
-        // parameters from the demo form
-        'bordered'=>true,
-        'striped'=>true,
-        'condensed'=>true,
-        'responsive'=>true,
-        'hover'=>true,
-        'showPageSummary'=>true,
-//        'panel'=>[
-//            'type'=>GridView::TYPE_INFO,
-//            'heading'=>'<center><i class="glyphicon glyphicon-eye-open"></i>Cambio de Estatus<i class="glyphicon glyphicon-eye-open"></i>'
-//            . '</center>',
-//        ],
-//        'persistResize'=>false,
-//        'toggleDataOptions'=>['minCount'=>10],
-//        'exportConfig'=>$defaultExportConfig,
+        'toolbar' =>  [ 
+//            '{export}',
+//            ExportMenu::widget([
+//    'dataProvider' => $dataProvider,
+//    'columns' => $columns,
+//    'fontAwesome' => true,
+//    ]),
+        ],
+        'itemLabelSingle' => 'gestion',
+        'itemLabelPlural' => 'gestiones'
     ]);
+
 
 ?>
 <!-- Termina el GridView empieza el Envio de Información -->
@@ -421,6 +408,5 @@ use kartik\depdrop\DepDrop;
 <?= Html::endForm();?> 
 
 <!-- Fin del Formulario -->
-
 
 </div>

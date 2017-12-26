@@ -113,27 +113,11 @@ if (count($consulta)<=1){
             'vAlign'=>'middle',
             'format'=>'currency',
             'pageSummary'=>true,
-            'pageSummaryFunc'=>GridView::F_AVG,
+            'pageSummaryFunc'=>GridView::F_SUM,
             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
             ]
             
                  
-
-            
-//           'rif',
-//            'req',
-//            'codestpre',
-            // 'cuenta',
-            // 'date',
-            // 'created_at',
-            // 'created_by',
-            // 'updated_at',
-            // 'updated_by',
-
-//            [
-//                'class' => 'yii\grid\ActionColumn',
-
-//            ],
         ],
         'responsive'=>true,
         'condensed'=>true,
@@ -146,7 +130,7 @@ if (count($consulta)<=1){
 <br><br>
 
 <center>
-<?= Html::a('<span class="glyphicon glyphicon-ok-sign"></span>SIGESP', ['sepsolicitud/inserta', 'numero' => $numero], ['class' => 'btn btn-primary']) ?>
+<?= Html::a('<span class="glyphicon glyphicon-ok-sign"></span>Enviar a SIGESP', ['sepsolicitud/inserta', 'numero' => $numero], ['class' => 'btn btn-primary']) ?>
 </center>
 
 

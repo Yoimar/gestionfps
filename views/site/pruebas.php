@@ -17,8 +17,14 @@ if(Yii::$app->request->post()){
 }else {
     $seleccion =0;
 }
-
-print_r($seleccion);
+echo Yii::$app->formatter->asCurrency("80");
+$fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
+echo "<br>".$fechahoy."<br>";
+$consultaestatus = Yii::$app->db->createCommand("SELECT estatus "
+                    ."FROM solicitudes "
+                    ."WHERE id = 90034")->queryOne();
+print_r($consultaestatus);
+echo $consultaestatus['estatus'];
 ?>
 
 <?=Html::beginForm(['site/bulk'],'post');?>

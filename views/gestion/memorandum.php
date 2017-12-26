@@ -2,7 +2,7 @@
 if(Yii::$app->request->post()){
     
 }else {
-    $seleccion =0;
+    $selection =0;
     $mensaje = 0;
 }
 echo $estatus3id."<br>";
@@ -11,6 +11,7 @@ echo $estatus1id."<br>";
 echo $departamentoid."<br>";
 echo $unidadid."<br>";
 echo $trabajadorid."<br>";
+
 print_r($selection);
 
 ?>

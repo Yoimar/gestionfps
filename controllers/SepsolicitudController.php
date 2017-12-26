@@ -16,6 +16,7 @@ use yii\data\ActiveDataProvider;
 use kartik\mpdf\Pdf;
 use yii\helpers\Html;
 use yii\i18n\Formatter;
+
 /**
  * SepsolicitudController implements the CRUD actions for Sepsolicitud model.
  */
@@ -138,9 +139,35 @@ class SepsolicitudController extends Controller
             
             //Se hace el Modelo Personalizado lo recibe el mismo caso y lo reenvia a la siguiente Vista
             
-            $numero = $model->caso; 
+            $numero = $model->caso;
+            $haypresupuesto = \app\models\PresupuestosSearch::find()
+                    ->select(["count(*)"])
+                    ->andFilterWhere(['presupuestos.solicitud_id' => $numero])
+                    ->scalar();
             
-            return $this->redirect('muestra?numero='.$numero);
+        if($haypresupuesto==0){
+                Yii::$app->session->setFlash("error", "El caso no posee Presupuesto asociado<br>Intente de Nuevo");
+                return $this->render('ubica', [
+                'model' => $model,
+                ]);
+            }else{
+                $consultaestatus = Yii::$app->db->createCommand("SELECT estatus "
+                    ."FROM solicitudes "
+                    ."WHERE id = ".$numero)->queryOne();
+                if (($consultaestatus['estatus']=="APR" or $consultaestatus['estatus']=="PPA")){
+                            
+                return $this->redirect('muestra?numero='.$numero);
+                }else{
+                
+                Yii::$app->session->setFlash("error", "El caso no tiene estatus de aprobado<br>Por favor apruebe el caso e intente de Nuevo");
+                return $this->render('ubica', [
+                'model' => $model,
+                ]);    
+                    
+                }
+                 
+                
+            }
         } else {
             return $this->render('ubica', [
                 'model' => $model,
@@ -298,6 +325,8 @@ class SepsolicitudController extends Controller
             ."JOIN recepciones r2 ON s1.recepcion_id=r2.id "
             ."JOIN empresa_institucion ei1 ON pr1.beneficiario_id = ei1.id "
             ."WHERE pr1.solicitud_id = ".$numero)->queryAll();
+        $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
+        
         
         for ($i=0 ; $i<count($consulta); $i++){
             $hayrif = Yii::$app->dbsigesp->createCommand("select count(*) from rpc_beneficiario where ced_bene = '"
@@ -305,7 +334,6 @@ class SepsolicitudController extends Controller
                 ."';")->queryScalar();
         
         if ($hayrif == 0){
-            $fechahoy = Yii::$app->formatter->asDate($consulta[$i]['fecha'],'php:Y-m-d 0:0:0');
             Yii::$app->dbsigesp->createCommand("INSERT INTO rpc_beneficiario (codemp, ced_bene, "
                     . "codpai, codest, codmun, codpar, codtipcta, rifben, nombene, apebene, dirbene, "
                     . "telbene, celbene, email, sc_cuenta, codbansig, codban, ctaban, foto, "
@@ -317,7 +345,7 @@ class SepsolicitudController extends Controller
                     . "', '"
                     . substr($consulta[$i]['nombrecasacomercial'],0,50)
                     . "', 'CARACAS', NULL, NULL, NULL, '21104990001', '---', NULL, NULL, NULL, '"
-                    . $consulta[$i]['fecha']
+                    . $fechahoy
                     . "', 'V', NULL, 'F', "
                     . "NULL, NULL);")->execute();
         }
@@ -345,23 +373,15 @@ class SepsolicitudController extends Controller
                 . "', "
                 . "'03', '--', "
                 . "'"
-                . $consulta[$i]['fecha']
+                . $fechahoy
                 . "', "
                 . "'E', "
                 . "'"
                 .$consulta[$i]['solicitud']. ' '
-                .$consulta[$i]['solicitante']. ' '
                 .$consulta[$i]['beneficiario']. ' '
-                .$consulta[$i]['unidad']. ' '
-                .$consulta[$i]['tipoayuda']. ' '
-                .$consulta[$i]['area'] . ' '
                 .$consulta[$i]['requerimiento']. ' '
                 .$consulta[$i]['necesidad']. ' '
                 .$consulta[$i]['descripcion']. ' '
-                .$consulta[$i]['rif']. ' '
-                .$consulta[$i]['casacomercial']. ' '
-                .$consulta[$i]['monto']. ' '
-                ." Bs."
                 .$consulta[$i]['telefonos']. ' '
                 . "', "
                 . ""
@@ -382,9 +402,42 @@ class SepsolicitudController extends Controller
                 . "', '0000000000000000000000000', "
                 . "'0000000000000000000000000', 'P', "
                 . "1, '"
-                . $consulta[$i]['fecha']
+                . $fechahoy
                 . "', 'ADMINISTRADOR', 0, '1900-1-1', "
                 . "'1900-1-1', '', '-', 'ADMINISTRADOR', '', '', '1900-1-1', '---');")->execute();
+        } else { if ((Yii::$app->dbsigesp->createCommand("select estsol from sep_solicitud where numsol = '"
+                ."DON- "
+                . $consulta[$i]['ndonacion']."-"
+                . ($i+1)
+                ."';")->queryScalar())=='E')
+                
+                {
+                Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud"
+                        . " SET "
+                . "fecregsol='".$fechahoy. "', "
+                
+                . "consol ='"
+                .$consulta[$i]['solicitud']. ' '
+                .$consulta[$i]['beneficiario']. ' '
+                .$consulta[$i]['requerimiento']. ' '
+                .$consulta[$i]['necesidad']. ' '
+                .$consulta[$i]['descripcion']. ' '
+                .$consulta[$i]['telefonos']. ' '
+                . "', "
+                . "monto = "
+                . $consulta[$i]['monto']
+                . ", "
+                . "monbasinm = "
+                . $consulta[$i]['monto']
+                . ", "
+                . "ced_bene ='"
+                . $consulta[$i]['rif']
+                . "', "
+                . "fecaprsep = '"
+                . $fechahoy
+                . "' WHERE numsol = 'DON- ".$consulta[$i]['ndonacion']."-".($i+1)."';")->execute();
+        }
+                
         }
         
         $hayconcepto = Yii::$app->dbsigesp->createCommand("select count(*) from sep_dt_concepto where numsol = '"
@@ -415,6 +468,19 @@ class SepsolicitudController extends Controller
                 . ", "
                 . $consulta[$i]['monto']
                 . ", 1);")->execute();
+        }else { if ((Yii::$app->dbsigesp->createCommand("select estsol from sep_solicitud where numsol = '"
+                ."DON- "
+                . $consulta[$i]['ndonacion']."-"
+                . ($i+1)
+                ."';")->queryScalar())=='E'){
+                Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto "
+                ." SET "
+                ." monpre = ". $consulta[$i]['monto'].  ","
+                ." moncon = ". $consulta[$i]['monto'] 
+                        
+                . " WHERE numsol = 'DON- ".$consulta[$i]['ndonacion']."-".($i+1)."';")->execute();
+                }
+            
         }
         
         $hayasiento = Yii::$app->dbsigesp->createCommand("select count(*) from sep_cuentagasto where numsol = '"
@@ -439,6 +505,17 @@ class SepsolicitudController extends Controller
                 . "', '--', '---', "
                 . $consulta[$i]['monto']
                 . ");")->execute();
+        }else { if ((Yii::$app->dbsigesp->createCommand("select estsol from sep_solicitud where numsol = '"
+                ."DON- "
+                . $consulta[$i]['ndonacion']."-"
+                . ($i+1)
+                ."';")->queryScalar())=='E'){
+                Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto "
+                ." SET "
+                ." monto =  ". $consulta[$i]['monto']  
+                . " WHERE numsol = 'DON- ".$consulta[$i]['ndonacion']."-".($i+1)."';")->execute();
+                }
+            
         }    
         
         $hayconexionsigesp = Yii::$app->db->createCommand("select count(*) from conexionsigesp where id_presupuesto = "
@@ -459,7 +536,7 @@ class SepsolicitudController extends Controller
                 ."', '"
                 . $cuenta
                 . "', '"
-                . $consulta[$i]['fecha'] . "');")->execute();     
+                . $fechahoy . "');")->execute();     
         }else{
         Yii::$app->db->createCommand("UPDATE conexionsigesp "
                 . "SET "
@@ -468,7 +545,7 @@ class SepsolicitudController extends Controller
                 . "', req = 'DON- ".$consulta[$i]['ndonacion']."-".($i+1)
                 . "', codestpre = 'AE01". $estructura . $consulta[$i]['codestpre']
                 . "', cuenta = '".$cuenta
-                . "', date= '".$consulta[$i]['fecha']
+                . "', date= '".$fechahoy
                 . "' WHERE id_presupuesto = ".$consulta[$i]['id'].";")->execute();        
         
 
@@ -483,10 +560,10 @@ class SepsolicitudController extends Controller
         Yii::$app->db->createCommand("INSERT INTO gestion (solicitud_id, estatus3_id) VALUES "
                 . "("
                 . $numero 
-                .", 17);")->execute(); 
+                .", 6);")->execute(); 
         }else{
         Yii::$app->db->createCommand("UPDATE gestion "
-                . "SET estatus3_id = 17 WHERE solicitud_id = ".$numero.";")->execute();
+                . "SET estatus3_id = 6 WHERE solicitud_id = ".$numero.";")->execute();
         }
         
         
@@ -550,15 +627,18 @@ class SepsolicitudController extends Controller
             $montoapr = Yii::$app->db->createCommand("SELECT SUM(montoapr)FROM presupuestos where solicitud_id = ".$numero)->queryScalar();
             $montoaprenletras = strtoupper($this->Valorenletras($montoapr, 'Bolivares'));
             
+            
+            
+            
         $headerHtml = '<div class="row">'
-        .Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "80 px", "class" => "pull-left"]) 
-        .Html::img("@web/img/despacho.png", ["alt" => "Despacho", "width" => "350 px", "class" => "pull-right"])
+        .Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "80", "class" => "pull-left"]) 
+        .Html::img("@web/img/despacho.png", ["alt" => "Despacho", "width" => "350", "class" => "pull-right"])
         .'</div> '
         .'<div class="row"><table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: solid 2px black; "> '
         .'<tr style="border: solid 2px black;"><td rowspan="2" class="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3" style="font-size:14px;">'.$consulta[0]['solicitud']
         .'</td><td rowspan="2" class="text-center col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border: solid 2px black; font-size:18px;"><strong>PUNTO DE CUENTA</strong> '
         .'</td><td class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center" style="font-size:12px;"><strong>1- N# de página: </strong>{PAGENO}/{nb}</td></tr><tr> '
-        .'<td class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center" style="border: solid 2px black; font-size:12px;"><strong>2. Fecha: </strong>'.Yii::$app->formatter->asDate($consulta[0]['fecha'], "php:d/m/Y")
+        .'<td class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center" style="border: solid 2px black; font-size:12px;"><strong>2. Fecha: </strong>'.Yii::$app->formatter->asDate($consulta[0]['fecha']== 0 ? 'now' : $consulta[0]['fecha'], "php:d/m/Y")
         .'</td></tr><tr> '
         .'<td rowspan="4" class="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3"><strong>3- Presentado:</strong></td> '
         .'<td class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;"> '

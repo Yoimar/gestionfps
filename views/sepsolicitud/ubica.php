@@ -5,6 +5,8 @@ use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\web\JsExpression;
 use yii\helpers\Url;
+use kartik\alert\AlertBlock;
+use app\models\Solicitudes;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Sepsolicitud */
@@ -60,8 +62,17 @@ use yii\helpers\Url;
         <?php ActiveForm::end(); ?>
 
     </div>
+        
                         
     </div>
     
+   
 </div>
+     <div><?= AlertBlock::widget([ 
+                    'type' => AlertBlock::TYPE_ALERT,
+                    'useSessionFlash' => true,
+                    'delay' => 5000,
+                    ]);
+             ?>
+        </div>
 </center>

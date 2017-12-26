@@ -15,4 +15,6 @@ $this->title = 'Gestión';
         <h2>Gestión</h2>
     </div>
     
+    <center>
+    <?= Html::a('<span class="glyphicon glyphicon-ok-sign"></span>Aprobar Caso por SIGESP', ['sepsolicitud/ubica'], ['class' => 'btn btn-primary']) ?>
 </div>

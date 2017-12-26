@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Historialsolicitudes;
-use app\models\HistorialsolicitudesSearch;
+use app\models\Memosgestion;
+use app\models\MemosgestionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * HistorialsolicitudesController implements the CRUD actions for Historialsolicitudes model.
+ * MemosgestionController implements the CRUD actions for Memosgestion model.
  */
-class HistorialsolicitudesController extends Controller
+class MemosgestionController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class HistorialsolicitudesController extends Controller
     }
 
     /**
-     * Lists all Historialsolicitudes models.
+     * Lists all Memosgestion models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new HistorialsolicitudesSearch();
+        $searchModel = new MemosgestionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class HistorialsolicitudesController extends Controller
     }
 
     /**
-     * Displays a single Historialsolicitudes model.
+     * Displays a single Memosgestion model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +57,13 @@ class HistorialsolicitudesController extends Controller
     }
 
     /**
-     * Creates a new Historialsolicitudes model.
+     * Creates a new Memosgestion model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Historialsolicitudes();
+        $model = new Memosgestion();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +75,7 @@ class HistorialsolicitudesController extends Controller
     }
 
     /**
-     * Updates an existing Historialsolicitudes model.
+     * Updates an existing Memosgestion model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,7 +94,7 @@ class HistorialsolicitudesController extends Controller
     }
 
     /**
-     * Deletes an existing Historialsolicitudes model.
+     * Deletes an existing Memosgestion model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -107,15 +107,15 @@ class HistorialsolicitudesController extends Controller
     }
 
     /**
-     * Finds the Historialsolicitudes model based on its primary key value.
+     * Finds the Memosgestion model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Historialsolicitudes the loaded model
+     * @return Memosgestion the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Historialsolicitudes::findOne($id)) !== null) {
+        if (($model = Memosgestion::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

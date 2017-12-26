@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use kartik\grid\GridView;
-
+error_reporting(0);
 ?>
 <div class="row">
     
@@ -161,7 +161,7 @@ if (count($consulta)<=1){
             'vAlign'=>'middle',
             'format'=>'currency',
             'pageSummary'=>true,
-            'pageSummaryFunc'=>GridView::F_AVG,
+            'pageSummaryFunc'=>GridView::F_SUM,
             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; #FFFFFF;'],  
             ]
             

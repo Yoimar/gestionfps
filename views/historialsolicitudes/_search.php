@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\HistorialSolicitudesSearch */
+/* @var $model app\models\HistorialsolicitudesSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="historial-solicitudes-search">
+<div class="historialsolicitudes-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -28,6 +28,14 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'updated_at') ?>
 
     <?php // echo $form->field($model, 'updated_by') ?>
+
+    <?php // echo $form->field($model, 'gestion_id') ?>
+
+    <?php // echo $form->field($model, 'estatus2_id') ?>
+
+    <?php // echo $form->field($model, 'estatus1_id') ?>
+
+    <?php // echo $form->field($model, 'memogestion_id') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

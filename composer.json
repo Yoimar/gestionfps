@@ -28,7 +28,7 @@
         "yiisoft/yii2-jui": "*",
         "kartik-v/yii2-dynagrid": "@dev",
         "kartik-v/yii2-grid": "@dev",
-        "kartik-v/yii2-mpdf": "*",
+        "kartik-v/yii2-mpdf": "dev-master",
         "punic/punic": "1.*",
         "unclead/yii2-multiple-input": "*",
         "wbraganca/yii2-dynamicform": "*",
@@ -36,7 +36,8 @@
         "edofre/yii2-fullcalendar": "V1.0.9",
         "miloschuman/yii2-highcharts-widget": "^5.0",
         "kartik-v/yii2-money": "*",
-        "robregonm/yii2-pdf": "*"
+        "robregonm/yii2-pdf": "*",
+        "kartik-v/yii2-export": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",

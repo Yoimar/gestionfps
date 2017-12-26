@@ -4,13 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Historialsolicitudes */
+/* @var $model app\models\Memosgestion */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Historialsolicitudes', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Memosgestions', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="historialsolicitudes-view">
+<div class="memosgestion-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -29,16 +29,24 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'solicitud_id',
-            'estatus3_id',
+            'dirorigen',
+            'unidadorigen',
+            'trabajadororigen',
+            'estatus1origen',
+            'estatus2origen',
+            'estatus3origen',
+            'dirfinal',
+            'unidadfinal',
+            'trabajadorfinal',
+            'estatus1final',
+            'estatus2final',
+            'estatus3final',
+            'fechamemo',
+            'asunto',
             'created_at',
             'created_by',
             'updated_at',
             'updated_by',
-            'gestion_id',
-            'estatus2_id',
-            'estatus1_id',
-            'memogestion_id',
         ],
     ]) ?>
 

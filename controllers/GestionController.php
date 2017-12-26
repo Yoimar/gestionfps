@@ -191,16 +191,73 @@ class GestionController extends Controller
     return $out;
     }
     
-    public function actionGestiona($trabajador=null, $departamento=null)
+    public function actionGestiona()
     {
         $modelorigenmemo = new Origenmemo;
+        
         $modelfinalmemo = new Finalmemo;
+        
         $searchModel = new \app\models\GestionSearchGestionalo();
+        
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+     
+        return $this->render('gestiona', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'modelorigenmemo' => $modelorigenmemo,
+                'modelfinalmemo' => $modelfinalmemo,
+      
+        ]);
 
+    }
+    
+    /**
+     * Para realizar la Vista Parcial que me permitira filtrar los casos del Origen  
+     */
+    
+    public function actionCambioestatus() {
+    
+    $modelfinalmemo = new Finalmemo;
+    
+    $modelorigenmemo = new Origenmemo;
+    
+    if ($modelfinalmemo->load(Yii::$app->request->post())) {
+        $estatus3id=$modelfinalmemo->estatus3final;
+        $estatus2id=$modelfinalmemo->estatus2final;
+        $estatus1id=$modelfinalmemo->estatus1final;
+        $departamentoid=$modelfinalmemo->departamentofinal;
+        $unidadid=$modelfinalmemo->unidadfinal;
+        $trabajadorid=$modelfinalmemo->usuariofinal;
+        
+        $estatus3id=$modelorigenmemo->estatus3origen;
+        $estatus2id=$modelorigenmemo->estatus2origen;
+        $estatus1id=$modelorigenmemo->estatus1origen;
+        $departamentoid=$modelorigenmemo->departamentoorigen;
+        $unidadid=$modelorigenmemo->unidadorigen;
+        $trabajadorid=$modelorigenmemo->usuarioorigen;
+        
+    }
+    $selection=(array)Yii::$app->request->post('selection');
+
+    return $this->render('memorandum', [
+                'estatus3id' => $estatus3id,
+                'estatus2id' => $estatus2id,
+                'estatus1id' => $estatus1id,
+                'departamentoid' => $departamentoid,
+                'unidadid' => $unidadid,
+                'trabajadorid' => $trabajadorid,
+                'selection' => $selection,
+    ]);
+    
+    }
+    
+    public function actionOrigenmemo()
+    {
+        $modelorigenmemo = new Origenmemo;
+        
         if ($modelorigenmemo->load(Yii::$app->request->post())) {
-            
-            //Recibo los datos de la Busqueda
-            
+            $modelfinalmemo = new Finalmemo;
+            $searchModel = new \app\models\GestionSearchGestionalo();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
             
             if($modelorigenmemo->estatus1!=''){
@@ -220,74 +277,22 @@ class GestionController extends Controller
             }
             if($modelorigenmemo->usuario!=''){
                 $dataProvider->query->andWhere(['trabajador_id'=>$modelorigenmemo->usuario]);
-            }
-            
-            // Deberia Enviar al Controlador con los datos
-            
-            
+            } 
         
-        
-            return $this->render('gestiona', [
+        return $this->render('gestiona', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
                 'modelorigenmemo' => $modelorigenmemo,
                 'modelfinalmemo' => $modelfinalmemo,
       
         ]);
-            
-            
-            
-        } else {
-        
-        
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);      
-        
-        return $this->render('gestiona', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'modelorigenmemo' => $modelorigenmemo,
-            'modelfinalmemo' => $modelfinalmemo,
+                  
+        }
+        return $this->render('origenmemo', [
+                'modelorigenmemo' => $modelorigenmemo,
         ]);
-    
-    }
-    }
-    
-    /**
-     * Para realizar la Vista Parcial que me permitira filtrar los casos del Origen  
-     */
-    
-    public function actionCambioestatus() {
-    
-    $modelfinalmemo = new Finalmemo;
-    
-    if ($modelfinalmemo->load(Yii::$app->request->post())) {
-        $estatus3id=$modelfinalmemo->estatus3final;
-        $estatus2id=$modelfinalmemo->estatus2final;
-        $estatus1id=$modelfinalmemo->estatus1final;
-        $departamentoid=$modelfinalmemo->departamentofinal;
-        $unidadid=$modelfinalmemo->unidadfinal;
-        $trabajadorid=$modelfinalmemo->usuariofinal;
+        
         
     }
-    $selection=(array)Yii::$app->request->post('selection');
-//    for ($i = 0; $i<count($selection); $i++) {
-//        $mensaje = implode($selection);
-//        
-//    }
-    
-
-//    foreach ($selection as $id) {
-//        
-//    }
-    return $this->render('memorandum', [
-                'estatus3id' => $estatus3id,
-                'estatus2id' => $estatus2id,
-                'estatus1id' => $estatus1id,
-                'departamentoid' => $departamentoid,
-                'unidadid' => $unidadid,
-                'trabajadorid' => $trabajadorid,
-                'selection' => $selection,
-    ]);
-}
     
 }

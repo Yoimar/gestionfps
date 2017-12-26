@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Historialsolicitudes;
+use app\models\Memosgestion;
 
 /**
- * HistorialsolicitudesSearch represents the model behind the search form about `app\models\Historialsolicitudes`.
+ * MemosgestionSearch represents the model behind the search form about `app\models\Memosgestion`.
  */
-class HistorialsolicitudesSearch extends Historialsolicitudes
+class MemosgestionSearch extends Memosgestion
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class HistorialsolicitudesSearch extends Historialsolicitudes
     public function rules()
     {
         return [
-            [['id', 'solicitud_id', 'estatus3_id', 'created_by', 'updated_by', 'gestion_id', 'estatus2_id', 'estatus1_id', 'memogestion_id'], 'integer'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['id', 'dirorigen', 'unidadorigen', 'trabajadororigen', 'estatus1origen', 'estatus2origen', 'estatus3origen', 'dirfinal', 'unidadfinal', 'trabajadorfinal', 'estatus1final', 'estatus2final', 'estatus3final', 'created_by', 'updated_by'], 'integer'],
+            [['fechamemo', 'asunto', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class HistorialsolicitudesSearch extends Historialsolicitudes
      */
     public function search($params)
     {
-        $query = Historialsolicitudes::find();
+        $query = Memosgestion::find();
 
         // add conditions that should always apply here
 
@@ -60,17 +60,26 @@ class HistorialsolicitudesSearch extends Historialsolicitudes
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'solicitud_id' => $this->solicitud_id,
-            'estatus3_id' => $this->estatus3_id,
+            'dirorigen' => $this->dirorigen,
+            'unidadorigen' => $this->unidadorigen,
+            'trabajadororigen' => $this->trabajadororigen,
+            'estatus1origen' => $this->estatus1origen,
+            'estatus2origen' => $this->estatus2origen,
+            'estatus3origen' => $this->estatus3origen,
+            'dirfinal' => $this->dirfinal,
+            'unidadfinal' => $this->unidadfinal,
+            'trabajadorfinal' => $this->trabajadorfinal,
+            'estatus1final' => $this->estatus1final,
+            'estatus2final' => $this->estatus2final,
+            'estatus3final' => $this->estatus3final,
+            'fechamemo' => $this->fechamemo,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
-            'gestion_id' => $this->gestion_id,
-            'estatus2_id' => $this->estatus2_id,
-            'estatus1_id' => $this->estatus1_id,
-            'memogestion_id' => $this->memogestion_id,
         ]);
+
+        $query->andFilterWhere(['like', 'asunto', $this->asunto]);
 
         return $dataProvider;
     }

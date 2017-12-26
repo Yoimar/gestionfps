@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "26f1cc25e273c84ee986bae04574141a",
-    "content-hash": "189365af3ec919a8d769c21d8bb5448d",
+    "hash": "667879af603708fc146f0b0ceb845d58",
+    "content-hash": "87e4202f48c5573b58adacbfbc8ef576",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -274,16 +274,16 @@
         },
         {
             "name": "bower-asset/moment",
-            "version": "2.19.4",
+            "version": "2.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/moment/moment.git",
-                "reference": "fea48bb69eda8c0459915d6aa66a910a4d43a55b"
+                "reference": "0e67426b8e8d200a3ca7dab046040717110e87e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/moment/moment/zipball/fea48bb69eda8c0459915d6aa66a910a4d43a55b",
-                "reference": "fea48bb69eda8c0459915d6aa66a910a4d43a55b",
+                "url": "https://api.github.com/repos/moment/moment/zipball/0e67426b8e8d200a3ca7dab046040717110e87e6",
+                "reference": "0e67426b8e8d200a3ca7dab046040717110e87e6",
                 "shasum": ""
             },
             "type": "bower-asset-library",
@@ -957,6 +957,67 @@
             "time": "2017-11-28 03:25:31"
         },
         {
+            "name": "kartik-v/yii2-export",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-export.git",
+                "reference": "42fd901373f03dd983481b8fb2ce537e6fa0577e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-export/zipball/42fd901373f03dd983481b8fb2ce537e6fa0577e",
+                "reference": "42fd901373f03dd983481b8fb2ce537e6fa0577e",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-dialog": "~1.0",
+                "kartik-v/yii2-dynagrid": ">=1.4.5",
+                "kartik-v/yii2-mpdf": "~1.0",
+                "phpoffice/phpexcel": "~1.8"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kartik\\export\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "A library to export server/db data in various formats (e.g. excel, html, pdf, csv etc.)",
+            "homepage": "https://github.com/kartik-v/yii2-export",
+            "keywords": [
+                "OpenXML",
+                "csv",
+                "export",
+                "extension",
+                "html",
+                "json",
+                "pdf",
+                "spreadsheet",
+                "text",
+                "widget",
+                "xls",
+                "xlsx",
+                "yii2"
+            ],
+            "time": "2017-11-19 18:30:55"
+        },
+        {
             "name": "kartik-v/yii2-field-range",
             "version": "dev-master",
             "source": {
@@ -1020,12 +1081,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-grid.git",
-                "reference": "01a52accfe58eab2444a4085b1d5589a4d6e0f90"
+                "reference": "af3712c9798d0e9ac4f07404f8b67879b508efff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/01a52accfe58eab2444a4085b1d5589a4d6e0f90",
-                "reference": "01a52accfe58eab2444a4085b1d5589a4d6e0f90",
+                "url": "https://api.github.com/repos/kartik-v/yii2-grid/zipball/af3712c9798d0e9ac4f07404f8b67879b508efff",
+                "reference": "af3712c9798d0e9ac4f07404f8b67879b508efff",
                 "shasum": ""
             },
             "require": {
@@ -1065,7 +1126,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2017-12-08 03:15:18"
+            "time": "2017-12-17 04:48:02"
         },
         {
             "name": "kartik-v/yii2-helpers",
@@ -1226,7 +1287,7 @@
         },
         {
             "name": "kartik-v/yii2-mpdf",
-            "version": "v1.0.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-mpdf.git",
@@ -2594,12 +2655,12 @@
         },
         {
             "name": "npm-asset/moment",
-            "version": "2.19.4",
+            "version": "2.20.0",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/moment/-/moment-2.19.4.tgz",
+                "url": "https://registry.npmjs.org/moment/-/moment-2.20.0.tgz",
                 "reference": null,
-                "shasum": "17e5e2c6ead8819c8ecfad83a0acccb312e94682"
+                "shasum": "53396358994dd3a551e966a66af715ecb6c30ad0"
             },
             "require-dev": {
                 "npm-asset/benchmark": "dev-default|*",
@@ -2799,6 +2860,63 @@
                 "yii2"
             ],
             "time": "2017-11-15 19:23:34"
+        },
+        {
+            "name": "phpoffice/phpexcel",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPOffice/PHPExcel.git",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xml": "*",
+                "ext-xmlwriter": "*",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "PHPExcel": "Classes/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL"
+            ],
+            "authors": [
+                {
+                    "name": "Maarten Balliauw",
+                    "homepage": "http://blog.maartenballiauw.be"
+                },
+                {
+                    "name": "Mark Baker"
+                },
+                {
+                    "name": "Franck Lefevre",
+                    "homepage": "http://blog.rootslabs.net"
+                },
+                {
+                    "name": "Erik Tilt"
+                }
+            ],
+            "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
+            "homepage": "http://phpexcel.codeplex.com",
+            "keywords": [
+                "OpenXML",
+                "excel",
+                "php",
+                "spreadsheet",
+                "xls",
+                "xlsx"
+            ],
+            "time": "2015-05-01 07:00:55"
         },
         {
             "name": "psr/log",
@@ -6045,7 +6163,9 @@
         "kartik-v/dependent-dropdown": 20,
         "kartik-v/yii2-field-range": 20,
         "kartik-v/yii2-dynagrid": 20,
-        "kartik-v/yii2-grid": 20
+        "kartik-v/yii2-grid": 20,
+        "kartik-v/yii2-mpdf": 20,
+        "kartik-v/yii2-export": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

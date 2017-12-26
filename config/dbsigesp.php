@@ -5,7 +5,7 @@ return [
     'dsn' => 'pgsql:host=localhost;dbname=db_pueblosoberano_2017',
     'username' => 'postgres',
     'password' => 'r00TFpS123',
-    'charset' => 'utf8',
+    'charset' => 'latin9',
     'schemaMap' => [
     'pgsql'=> [
       'class'=>'yii\db\pgsql\Schema',

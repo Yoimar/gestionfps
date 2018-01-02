@@ -83,7 +83,7 @@ error_reporting(0);
         </tr>
     </table>
 
-<?php if ($consulta[0]['codestpre'] == 0201){
+<?php if ($consulta[0]['codestpre'] == '0201'){
     $estructuraparaimprimir= "407010201";
 } else {
     $estructuraparaimprimir= "407010401";
@@ -94,6 +94,8 @@ if (count($consulta)<=1){
     $titulotablacheques= "Los cheques serán emitidos a favor de: ";
 }
 ?>
+    
+   
 
 <?= GridView::widget([
         'dataProvider' => $dataProvider,

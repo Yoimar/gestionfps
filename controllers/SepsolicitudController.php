@@ -135,7 +135,7 @@ class SepsolicitudController extends Controller
     {
         $model = new Sepingreso;
 
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post())&&$model->validate()) {
             
             //Se hace el Modelo Personalizado lo recibe el mismo caso y lo reenvia a la siguiente Vista
             
@@ -298,7 +298,7 @@ class SepsolicitudController extends Controller
     
     public function actionInserta($numero)            
     {
-        $consulta = Yii::$app->db->createCommand("SELECT CONCAT('Caso N°: ' || s1.num_solicitud) AS solicitud, "
+        $consulta = Yii::$app->db->createCommand("SELECT CONCAT('Caso N: ' || s1.num_solicitud) AS solicitud, "
             ."CONCAT('Solicitante: ' ||ps.nombre || ' ' || ps.apellido || ' C.I.: ' ||ps.ci ) AS solicitante, "
             ."CONCAT('Beneficiario: ' ||pb.nombre || ' ' || pb.apellido || ' C.I.: ' ||pb.ci ) AS beneficiario, "
             ."CONCAT('Requerimiento: ' || r1.nombre) AS requerimiento, "
@@ -349,7 +349,7 @@ class SepsolicitudController extends Controller
                     . "', 'V', NULL, 'F', "
                     . "NULL, NULL);")->execute();
         }
-        $estructura = ($consulta[$i]['codestpre'] == "0201") ? "3701" : "3702";
+        $estructura = ($consulta[$i]['codestpre'] == "0201") ? "0102" : "0102";
         $cuenta = ($consulta[$i]['codestpre'] == "0201") ? "407010201" : "407010401";
         $tiposolicitud = ($consulta[$i]['codestpre'] == "0201") ? "00001" : "00002";
         
@@ -377,12 +377,12 @@ class SepsolicitudController extends Controller
                 . "', "
                 . "'E', "
                 . "'"
-                .$consulta[$i]['solicitud']. ' '
+                .iconv("UTF-8", "ISO-8859-1//IGNORE",$consulta[$i]['solicitud']. ' '
                 .$consulta[$i]['beneficiario']. ' '
                 .$consulta[$i]['requerimiento']. ' '
                 .$consulta[$i]['necesidad']. ' '
                 .$consulta[$i]['descripcion']. ' '
-                .$consulta[$i]['telefonos']. ' '
+                .$consulta[$i]['telefonos']. ' ' ) 
                 . "', "
                 . ""
                 . $consulta[$i]['monto']
@@ -394,13 +394,13 @@ class SepsolicitudController extends Controller
                 . "'"
                 . $consulta[$i]['rif']
                 . "', "
-                . "'0000000003', '000000000000000000000AE01', '000000000000000000000"
+                . "'0000000003', '000000000000000000000AC02', '000000000000000000000"
                 . $estructura
                 . "', "
                 . "'000000000000000000000"
                 . $consulta[$i]['codestpre']
                 . "', '0000000000000000000000000', "
-                . "'0000000000000000000000000', 'P', "
+                . "'0000000000000000000000000', 'A', "
                 . "1, '"
                 . $fechahoy
                 . "', 'ADMINISTRADOR', 0, '1900-1-1', "
@@ -415,14 +415,12 @@ class SepsolicitudController extends Controller
                 Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud"
                         . " SET "
                 . "fecregsol='".$fechahoy. "', "
-                
-                . "consol ='"
-                .$consulta[$i]['solicitud']. ' '
+                . "consol ='" .iconv("UTF-8", "ISO-8859-1//IGNORE",$consulta[$i]['solicitud']. ' '
                 .$consulta[$i]['beneficiario']. ' '
                 .$consulta[$i]['requerimiento']. ' '
                 .$consulta[$i]['necesidad']. ' '
                 .$consulta[$i]['descripcion']. ' '
-                .$consulta[$i]['telefonos']. ' '
+                .$consulta[$i]['telefonos']. ' ' ) 
                 . "', "
                 . "monto = "
                 . $consulta[$i]['monto']
@@ -456,11 +454,11 @@ class SepsolicitudController extends Controller
                 . ($i+1)
                 . "', '"
                 . $tiposolicitud
-                . "', '000000000000000000000AE01', '000000000000000000000"
+                . "', '000000000000000000000AC02', '000000000000000000000"
                 . $estructura
                 ."', '000000000000000000000"
                 .$consulta[$i]['codestpre']
-                . "', '0000000000000000000000000', '0000000000000000000000000', 'P', "
+                . "', '0000000000000000000000000', '0000000000000000000000000', 'A', "
                 ."'"
                 . $cuenta
                 . "', '--', '---', 1, "
@@ -496,11 +494,11 @@ class SepsolicitudController extends Controller
                 . "DON- "
                 . $consulta[$i]['ndonacion']."-"
                 . ($i+1)
-                . "', '000000000000000000000AE01', '000000000000000000000"
+                . "', '000000000000000000000AC02', '000000000000000000000"
                 . $estructura
                 . "', '000000000000000000000"
                 . $consulta[$i]['codestpre']
-                . "', '0000000000000000000000000', '0000000000000000000000000', 'P', '"
+                . "', '0000000000000000000000000', '0000000000000000000000000', 'A', '"
                 . $cuenta
                 . "', '--', '---', "
                 . $consulta[$i]['monto']
@@ -586,7 +584,7 @@ class SepsolicitudController extends Controller
             ],
             ]);
             
-            $consulta = Yii::$app->db->createCommand("SELECT CONCAT('Caso N°: ' || s1.num_solicitud) AS solicitud, "
+            $consulta = Yii::$app->db->createCommand("SELECT CONCAT('Caso N: ' || s1.num_solicitud) AS solicitud, "
             ."CONCAT(ps.nombre || ' ' || ps.apellido) AS solicitante, "
             ."ps.ci AS cisolicitante, "
             ."CONCAT(pb.nombre || ' ' || pb.apellido) AS beneficiario, "

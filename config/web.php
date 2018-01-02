@@ -57,7 +57,7 @@ $config = [
             'dateFormat' => 'dd.MM.yyyy',
             'decimalSeparator' => ',',
             'thousandSeparator' => '.',
-            'currencyCode' => 'Bs. ',
+            'currencyCode' => 'VEF',
             'nullDisplay' => '0',
             'defaultTimeZone' => 'America/Caracas',
         ],

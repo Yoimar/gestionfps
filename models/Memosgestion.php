@@ -58,6 +58,7 @@ class Memosgestion extends \yii\db\ActiveRecord
         return [
             [['dirorigen', 'unidadorigen', 'trabajadororigen', 'estatus1origen', 'estatus2origen', 'estatus3origen', 'dirfinal', 'unidadfinal', 'trabajadorfinal', 'estatus1final', 'estatus2final', 'estatus3final', 'created_by', 'updated_by'], 'integer'],
             [['fechamemo', 'created_at', 'updated_at'], 'safe'],
+            [['fechamemo', 'unidadfinal', 'estatus3final'],'required'],
             [['asunto'], 'string', 'max' => 150],
             [['dirorigen'], 'exist', 'skipOnError' => true, 'targetClass' => Departamentos::className(), 'targetAttribute' => ['dirorigen' => 'id']],
             [['dirfinal'], 'exist', 'skipOnError' => true, 'targetClass' => Departamentos::className(), 'targetAttribute' => ['dirfinal' => 'id']],

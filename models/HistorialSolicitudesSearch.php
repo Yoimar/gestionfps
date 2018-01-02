@@ -18,7 +18,7 @@ class HistorialsolicitudesSearch extends Historialsolicitudes
     public function rules()
     {
         return [
-            [['id', 'solicitud_id', 'estatus3_id', 'created_by', 'updated_by', 'gestion_id', 'estatus2_id', 'estatus1_id', 'memogestion_id'], 'integer'],
+            [['id', 'estatus3_id', 'created_by', 'updated_by', 'gestion_id', 'estatus2_id', 'estatus1_id', 'memogestion_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
         ];
     }
@@ -60,7 +60,6 @@ class HistorialsolicitudesSearch extends Historialsolicitudes
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'solicitud_id' => $this->solicitud_id,
             'estatus3_id' => $this->estatus3_id,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,

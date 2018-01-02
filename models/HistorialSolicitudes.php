@@ -8,7 +8,6 @@ use Yii;
  * This is the model class for table "historial_solicitudes".
  *
  * @property integer $id
- * @property integer $solicitud_id
  * @property integer $estatus3_id
  * @property string $created_at
  * @property integer $created_by
@@ -24,7 +23,6 @@ use Yii;
  * @property Estatus3 $estatus3
  * @property Gestion $gestion
  * @property Memosgestion $memogestion
- * @property Solicitudes $solicitud
  */
 class Historialsolicitudes extends \yii\db\ActiveRecord
 {
@@ -42,14 +40,13 @@ class Historialsolicitudes extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['solicitud_id', 'estatus3_id', 'created_by', 'updated_by', 'gestion_id', 'estatus2_id', 'estatus1_id', 'memogestion_id'], 'integer'],
+            [['estatus3_id', 'created_by', 'updated_by', 'gestion_id', 'estatus2_id', 'estatus1_id', 'memogestion_id'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['estatus1_id'], 'exist', 'skipOnError' => true, 'targetClass' => Estatus1::className(), 'targetAttribute' => ['estatus1_id' => 'id']],
             [['estatus2_id'], 'exist', 'skipOnError' => true, 'targetClass' => Estatus2::className(), 'targetAttribute' => ['estatus2_id' => 'id']],
             [['estatus3_id'], 'exist', 'skipOnError' => true, 'targetClass' => Estatus3::className(), 'targetAttribute' => ['estatus3_id' => 'id']],
             [['gestion_id'], 'exist', 'skipOnError' => true, 'targetClass' => Gestion::className(), 'targetAttribute' => ['gestion_id' => 'id']],
             [['memogestion_id'], 'exist', 'skipOnError' => true, 'targetClass' => Memosgestion::className(), 'targetAttribute' => ['memogestion_id' => 'id']],
-            [['solicitud_id'], 'exist', 'skipOnError' => true, 'targetClass' => Solicitudes::className(), 'targetAttribute' => ['solicitud_id' => 'id']],
         ];
     }
 
@@ -60,7 +57,6 @@ class Historialsolicitudes extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'solicitud_id' => 'Solicitud ID',
             'estatus3_id' => 'Estatus3 ID',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
@@ -111,13 +107,5 @@ class Historialsolicitudes extends \yii\db\ActiveRecord
     public function getMemogestion()
     {
         return $this->hasOne(Memosgestion::className(), ['id' => 'memogestion_id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSolicitud()
-    {
-        return $this->hasOne(Solicitudes::className(), ['id' => 'solicitud_id']);
     }
 }

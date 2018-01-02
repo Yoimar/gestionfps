@@ -51,7 +51,7 @@ class GestionSearchGestionalo extends Gestion
                 'gestion.estatus3_id',
                 'gestion.trabajador_id',
                 'gestion.recepcion_id', 
-                'departamentos.id as departamento_id', 
+                'departamentos.id as departamento', 
                 "personabeneficiario.ci as cibeneficiario", 
                 "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario", 
                 'users.nombre as trabajadorsocial', 
@@ -255,7 +255,7 @@ class GestionSearchGestionalo extends Gestion
             'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
             'gestion.recepcion_id' => $this->recepcion_id,
-            'departamentos.id' => $this->departamento_id,
+            'departamentos.id' => $this->departamento,
             'solicitudes.ind_beneficiario_menor' => $this->nino,
         ]);
 

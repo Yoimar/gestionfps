@@ -39,6 +39,7 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Gestión', 'url' => ['/gestion']],
+            ['label' => 'Localizador', 'url' => ['/gestion/origenmemo']],
             [
             'label' => 'Reportes',
             'items' => [

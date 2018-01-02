@@ -2,9 +2,9 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'pgsql:host=localhost;dbname=db_pueblosoberano_2017',
+    'dsn' => 'pgsql:host=192.168.250.7;dbname=db_fps_2018',
     'username' => 'postgres',
-    'password' => 'r00TFpS123',
+    'password' => 'pueblosoberano',
     'charset' => 'latin9',
     'schemaMap' => [
     'pgsql'=> [

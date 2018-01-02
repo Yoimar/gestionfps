@@ -20,6 +20,7 @@ class Sepingreso extends Model
         return [
 
             [['caso'], 'integer'],
+            [['caso'], 'required']
 
         ];
     }

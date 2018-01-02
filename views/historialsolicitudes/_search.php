@@ -17,15 +17,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'solicitud_id') ?>
-
     <?= $form->field($model, 'estatus3_id') ?>
 
     <?= $form->field($model, 'created_at') ?>
 
     <?= $form->field($model, 'created_by') ?>
 
-    <?php // echo $form->field($model, 'updated_at') ?>
+    <?= $form->field($model, 'updated_at') ?>
 
     <?php // echo $form->field($model, 'updated_by') ?>
 

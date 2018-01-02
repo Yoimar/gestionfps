@@ -2,9 +2,9 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'pgsql:host=localhost;dbname=sasyc',
+    'dsn' => 'pgsql:host=localhost;dbname=sasycdev',
     'username' => 'postgres',
-    'password' => 'r00TFpS123',
+    'password' => 'pueblosoberano',
     'charset' => 'utf8',
     'schemaMap' => [
     'pgsql'=> [

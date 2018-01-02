@@ -21,6 +21,7 @@ use yii\web\JsExpression;
 use yii\helpers\Url;
 use kartik\depdrop\DepDrop;
 use kartik\export\ExportMenu;
+use kartik\widgets\DatePicker;
 
 ?>
 <!-- Aqui empieza el Div del Form de la Busqueda -->
@@ -215,6 +216,30 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
     ]
     ]);
     ?>   
+    
+    </div>
+</div>
+
+<div class="col-lg-12 col-md-12">
+<div class="modelorigenmemo-form col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4">
+<?php $fechahoy = Yii::$app->formatter->asDate('now','php:d/m/Y'); ?>
+     <?= $form->field($memosgestion, 'fechamemo')->widget(DatePicker::classname(), [
+    'name' => 'dp_3',
+    'type' => DatePicker::TYPE_COMPONENT_APPEND,
+    'value' => $fechahoy,
+    'value2' => $fechahoy,
+    'pluginOptions' => [
+        'autoclose'=>true,
+       'format' => 'dd/mm/yyyy',
+        'language' => 'es',
+        'todayBtn' => 'linked',
+        'value' => $fechahoy,
+    ]
+    ]); 
+    ?>
+</div>
+<div class="modelorigenmemo-form col-lg-8 col-md-8 col-md-offset-2 col-lg-offset-2">
+    <?= $form->field($memosgestion, 'asunto')->textInput(['maxlength' => true]) ?>
 
    </div>
     </div>                                                  
@@ -224,6 +249,7 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
 
     
 </div>
+<?= "<hr>" ?>
 </center>
 
 <!-- Termina el Formulario de la Busqueda -->

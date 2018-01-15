@@ -31,7 +31,7 @@ class Sepingreso extends Model
     public function attributeLabels()
     {
         return [
-            'caso' => 'N° Caso Sasyc'
+            'caso' => 'N° Solicitud'
         ];
     }
     

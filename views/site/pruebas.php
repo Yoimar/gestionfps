@@ -6,11 +6,134 @@ use yii\data\ActiveDataProvider;
 use kartik\grid\GridView;
 use kartik\alert\AlertBlock;
 use kartik\widgets\DateTimePicker;
+use yii\bootstrap\Progress;
+use yii\bootstrap\Collapse;
+use yii\bootstrap\Tabs;
+use yii\bootstrap\Carousel;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 echo AlertBlock::widget([ 
    'type' => AlertBlock::TYPE_ALERT,
    'useSessionFlash' => true,
+]);
+// default with label
+echo Progress::widget([
+    'percent' => 60,
+    'label' => 'test',
+]);
+
+// styled
+echo Progress::widget([
+    'percent' => 65,
+    'barOptions' => ['class' => 'progress-bar-info'],
+    'label' => '70%',
+]);
+
+// striped
+echo Progress::widget([
+    'percent' => 70,
+    'barOptions' => ['class' => 'progress-bar-warning'],
+    'options' => ['class' => 'progress-striped'],
+    'label' => '70%',
+]);
+
+// striped animated
+echo Progress::widget([
+    'percent' => 70,
+    'barOptions' => ['class' => 'progress-bar-success'],
+    'options' => ['class' => 'active progress-striped']
+]);
+
+// stacked bars
+echo Progress::widget([
+    'bars' => [
+        ['percent' => 30, 'options' => ['class' => 'progress-bar-danger']],
+        ['percent' => 30, 'label' => 'test', 'options' => ['class' => 'progress-bar-success']],
+        ['percent' => 35, 'options' => ['class' => 'progress-bar-warning']],
+    ]
+]);
+
+echo Collapse::widget([
+    'items' => [
+        // equivalent to the above
+        [
+            'label' => 'Collapsible Group Item #1',
+            'content' => 'Anim pariatur 12cliche...',
+            // open its content by default
+            'contentOptions' => ['class' => 'in']
+        ],
+        // another group item
+        [
+            'label' => 'Collapsible Group Item #1',
+            'content' => 'Anim pariatur cl2123iche...',
+            'contentOptions' => ['class' => 'in'],
+//            'options' => [...],
+        ],
+        // if you want to swap out .panel-body with .list-group, you may use the following
+        [
+            'label' => 'Collapsible Group Item #1',
+            'content' => [
+                'Anim pariatur cliche...',
+                'Anim pariatur cliche...'
+            ],
+//            'contentOptions' => [...],
+//            'options' => [...],
+            'footer' => 'Footer' // the footer label in list-group
+        ],
+    ]
+]);
+// creates a URL to a route: /index.php?r=post%2Findex
+echo Url::to(['post/index']);
+ 
+// creates a URL to a route with parameters: /index.php?r=post%2Fview&id=100
+echo Url::to(['post/view', 'id' => 100]);
+ 
+// creates an anchored URL: /index.php?r=post%2Fview&id=100#content
+echo Url::to(['post/view', 'id' => 100, '#' => 'content']);
+ 
+// creates an absolute URL: http://www.example.com/index.php?r=post%2Findex
+echo Url::to(['post/index'], true);
+ 
+// creates an absolute URL using the https scheme: https://www.example.com/index.php?r=post%2Findex
+echo Url::to(['post/index'], 'https');
+$haynumproc = Yii::$app->db->createCommand("select num_proc from solicitudes where id = 90026;")->queryScalar();
+echo $haynumproc;
+echo Tabs::widget([
+    'items' => [
+        [
+            'label' => 'One',
+            'content' => 'Anim pariatur c1111111111111111liche...',
+            'active' => true
+        ],
+        [
+            'label' => 'Two',
+            'content' => 'Anim pariatu231321323122222222222222r cliche...',
+//            'headerOptions' => [...],
+            'options' => ['id' => 'myveryownID'],
+        ],
+        [
+            'label' => 'Example',
+            'url' => 'http://www.example.com',
+        ],
+        [
+            'label' => 'Dropdown',
+            'items' => [
+                 [
+                     'label' => 'DropdownA',
+                     'content' => 'DropdownA, Anim paaaaaaaaaaaaaaariatur cliche...',
+                 ],
+                 [
+                     'label' => 'DropdownB',
+                     'content' => 'DropdownB, Anim paribbbbbbbbbbbbbbbbbbbbatur cliche...',
+                 ],
+                 [
+                     'label' => 'External Link',
+                     'url' => 'http://www.example.com',
+                 ],
+            ],
+        ],
+    ],
 ]);
 
 if(Yii::$app->request->post()){
@@ -37,8 +160,85 @@ echo DateTimePicker::widget([
         'format' => 'dd/mm/yyyy',
     ]
 ]);
-?>
 
+
+echo Carousel::widget([
+    'items' => [
+        // the item contains only the image
+        '<img src="https://cdn.pixabay.com/photo/2018/01/01/20/07/soap-bubble-3054875_960_720.jpg"/>',
+        // equivalent to the above
+        ['content' => '<img src="https://cdn.pixabay.com/photo/2018/01/01/20/07/soap-bubble-3054875_960_720.jpg"/>'],
+        // the item contains both the image and the caption
+        [
+            'content' => '<img src="https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?w=1260&h=750&auto=compress&cs=tinysrgb"/>',
+            'caption' => '<h4>This is title</h4><p>This is the caption text</p>',
+//            'options' => [...],
+        ],
+    ]
+]);
+?>
+<div class="container">
+    <div class="panel panel-primary" >
+        <div class="panel-body">
+            <form id="form1" name="form1" method="post" action="" class="form-horizontal"><!-- START THE FORM -->
+                <div class="col-sm-6"> <!-- FIRST COLUMN -->
+                    <div class="form-group">
+                        <label for="inputFirstname" class="col-sm-4 control-label">First Name</label>
+                        <div class="col-sm-8">
+                        <input type="text" class="form-control" id="inputFirstname" placeholder="First Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputLastname" class="col-sm-4 control-label">Last Name</label>
+                        <div class="col-sm-8">
+                        <input type="text" class="form-control" id="inputLastname" placeholder="Last Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6"> <!-- SECOND COLUMN -->
+                    <div class="form-group">
+                        <label for="inputEmail" class="col-sm-4 control-label">Email</label>
+                        <div class="col-sm-8">
+                        <input type="text" class="form-control" id="inputEmail" placeholder="Email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputUsername" class="col-sm-4 control-label">Username</label>
+                        <div class="col-sm-8">
+                        <input type="text" class="form-control" id="inputUsername" placeholder="Username">
+                        </div>
+                    </div>
+                </div>
+        </form> <!-- END THE FORM -->
+        </div>
+    </div><!-- END PANEL -->
+</div>
+<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+  Popover on left
+</button>
+
+<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+  Popover on top
+</button>
+
+<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus
+sagittis lacus vel augue laoreet rutrum faucibus.">
+  Popover on bottom
+</button>
+
+<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="right" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+  Popover on right
+</button>
+
+
+<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="left" title="Tooltip on left">Tooltip on left</button>
+
+<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Tooltip on top">Tooltip on top</button>
+
+<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">Tooltip on bottom</button>
+
+<button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="right" title="Tooltip on right">Tooltip on right</button>
 
 <?=Html::beginForm(['site/bulk'],'post');?>
 <?=Html::dropDownList('action','',['Holassss'=>'Mark selected as: ','Hello'=>'Confirmed','Hi'=>'No Confirmed'],['class'=>'dropdown',])?>
@@ -58,6 +258,7 @@ $query = \app\models\PresupuestosSearch::find()
                 'pageSize' => 10,
             ],
             ]);
+
             
 echo GridView::widget([
         'dataProvider' => $dataProvider,
@@ -249,6 +450,15 @@ $this->registerJs(<<<JS
    $('#myButton').on('click', function() { alert( 'Hola' ); });
    
    $('#laprueba').on('click', function() { alert( 'Que mas Como esta la vaina' ); }); 
+   
+   $(function () {
+   $('[data-toggle="tooltip"]').tooltip()
+   })
+   
+    $(function () {
+    $('[data-toggle="popover"]').popover()
+    })
+        
 JS
 
 );

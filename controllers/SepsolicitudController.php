@@ -144,30 +144,28 @@ class SepsolicitudController extends Controller
                     ->select(["count(*)"])
                     ->andFilterWhere(['presupuestos.solicitud_id' => $numero])
                     ->scalar();
+            $consultaestatus = Yii::$app->db->createCommand("SELECT estatus "
+                    ."FROM solicitudes "
+                    ."WHERE id = ".$numero)->queryOne();
             
         if($haypresupuesto==0){
                 Yii::$app->session->setFlash("error", "El caso no posee Presupuesto asociado<br>Intente de Nuevo");
                 return $this->render('ubica', [
                 'model' => $model,
                 ]);
-            }else{
-                $consultaestatus = Yii::$app->db->createCommand("SELECT estatus "
-                    ."FROM solicitudes "
-                    ."WHERE id = ".$numero)->queryOne();
-                if (($consultaestatus['estatus']=="APR" or $consultaestatus['estatus']=="PPA")){
-                            
+            }else if($consultaestatus['estatus']=="ACA" or $consultaestatus['estatus']=="EAA" or $consultaestatus['estatus']=="APR" or $consultaestatus['estatus']=="PPA"){
+                
                 return $this->redirect('muestra?numero='.$numero);
-                }else{
                 
-                Yii::$app->session->setFlash("error", "El caso no tiene estatus de aprobado<br>Por favor apruebe el caso e intente de Nuevo");
-                return $this->render('ubica', [
-                'model' => $model,
-                ]);    
+            } else {   
                     
-                }
-                 
-                
+                Yii::$app->session->setFlash("error", "El caso no tiene estatus para ser aprobado <br>Por favor Verifique el caso e intente de Nuevo");
+                return $this->render('ubica', [
+                 'model' => $model,
+                 ]);    
+                    
             }
+                 
         } else {
             return $this->render('ubica', [
                 'model' => $model,
@@ -175,11 +173,25 @@ class SepsolicitudController extends Controller
         }
     }
     
-    public function actionMuestra($numero=null)
+    public function actionMuestra($numero=null)       
     {       
-
+            $consultaempresainstitucion = Yii::$app->db->createCommand("SELECT beneficiario_id from presupuestos WHERE solicitud_id = :id;")
+                    ->bindValue(":id", $numero)
+                    ->queryScalar();
+            
+            $empresainsitucionrevision = Yii::$app->db->createCommand("SELECT count(*) from empresa_institucion WHERE id = :id;")
+                    ->bindValue(":id", $consultaempresainstitucion)
+                    ->queryScalar();
+            
+            if ($empresainsitucionrevision==0){
+                Yii::$app->db->createCommand("INSERT INTO empresa_institucion (id)
+                VALUES(".$consultaempresainstitucion
+                        .");")->execute();
+             }
+                                        
+                    
             $query = \app\models\PresupuestosSearch::find()
-                    ->select(["CONCAT(conexionsigesp.req || ' // ' || presupuestos.documento_id) as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as rif" ])
+                    ->select(["conexionsigesp.req as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as nrif", "empresa_institucion.rif AS rif", "presupuestos.beneficiario_id", "presupuestos.solicitud_id" ])
                     ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
                     ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
                     ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
@@ -193,21 +205,23 @@ class SepsolicitudController extends Controller
             
             $consulta = Yii::$app->db->createCommand("SELECT CONCAT('Caso N°: ' || s1.num_solicitud) AS solicitud, "
             ."CONCAT('Solicitante: ' ||ps.nombre || ' ' || ps.apellido || ' C.I.: ' ||ps.ci ) AS solicitante, "
-            ."CONCAT('Beneficiario: ' ||pb.nombre || ' ' || pb.apellido || ' C.I.: ' ||pb.ci ) AS beneficiario, "
+            ."CONCAT('Beneficiario: ' ||pb.nombre || ' ' || pb.apellido || COALESCE(' C.I.: ' || pb.ci || ' ', '') ) AS beneficiario, "
             ."CONCAT('Requerimiento: ' || r1.nombre) AS requerimiento, "
             ."CONCAT('Unidad: ' || r2.nombre) AS unidad, "
             ."CONCAT('Tipo de Ayuda: ' || ta.nombre) AS tipoayuda, "
             ."CONCAT('Area: ' || a1.nombre) AS area, "
             ."CONCAT('Necesidad: ' || s1.necesidad) AS necesidad, "
             ."CONCAT('Descripcion: ' || s1.descripcion) AS descripcion, "
+            ."pr1.beneficiario_id as beneficiario_id, "
             ."pr1.montoapr as monto, "
             ."CONCAT('Casa Comercial: ' || ei1.nombrecompleto) AS casacomercial, "
             ."ei1.nombrecompleto AS nombrecasacomercial, "
             ."ei1.nrif AS rif, "
+            ."ei1.rif AS tiporif, "
             ."s1.fecha_aprobacion as fecha, "
             ."ta.cod_acc_int as codestpre, "
             ."s1.num_solicitud as ndonacion ,"
-            ."CONCAT('Telefonos: ' || pb.telefono_otro || ' ' || pb.telefono_fijo || ' ' || pb.telefono_otro) as telefonos "
+            ."CONCAT('Telefonos: ' || COALESCE(pb.telefono_otro || ' ', '') || COALESCE(pb.telefono_fijo || ' ', '') || COALESCE(pb.telefono_celular || ' ', '') ) as telefonos "
             ."FROM solicitudes s1 FULL OUTER JOIN presupuestos pr1 ON pr1.solicitud_id=s1.id "
             ."JOIN personas pb ON s1.persona_beneficiario_id=pb.id "
             ."JOIN personas ps ON s1.persona_solicitante_id=ps.id "
@@ -300,7 +314,7 @@ class SepsolicitudController extends Controller
     {
         $consulta = Yii::$app->db->createCommand("SELECT CONCAT('Caso N: ' || s1.num_solicitud) AS solicitud, "
             ."CONCAT('Solicitante: ' ||ps.nombre || ' ' || ps.apellido || ' C.I.: ' ||ps.ci ) AS solicitante, "
-            ."CONCAT('Beneficiario: ' ||pb.nombre || ' ' || pb.apellido || ' C.I.: ' ||pb.ci ) AS beneficiario, "
+            ."CONCAT('Beneficiario: ' ||pb.nombre || ' ' || pb.apellido || COALESCE(' C.I.: ' || pb.ci || ' ', '') ) AS beneficiario, "
             ."CONCAT('Requerimiento: ' || r1.nombre) AS requerimiento, "
             ."CONCAT('Unidad: ' || r2.nombre) AS unidad, "
             ."CONCAT('Tipo de Ayuda: ' || ta.nombre) AS tipoayuda, "
@@ -311,11 +325,12 @@ class SepsolicitudController extends Controller
             ."CONCAT('Casa Comercial: ' || ei1.nombrecompleto) AS casacomercial, "
             ."ei1.nombrecompleto AS nombrecasacomercial, "
             ."ei1.nrif AS rif, "
+            ."ei1.rif AS tiporif, "    
             ."s1.fecha_aprobacion as fecha, "
             ."ta.cod_acc_int as codestpre, "
             ."pr1.id as id, "
             ."s1.num_solicitud as ndonacion, "
-            ."CONCAT('Telefonos: ' || pb.telefono_otro || ' ' || pb.telefono_fijo || ' ' || pb.telefono_otro) as telefonos "
+            ."CONCAT('Telefonos: ' || COALESCE(pb.telefono_otro || ' ', '') || COALESCE(pb.telefono_fijo || ' ', '') || COALESCE(pb.telefono_celular || ' ', '') ) as telefonos "
             ."FROM solicitudes s1 FULL OUTER JOIN presupuestos pr1 ON pr1.solicitud_id=s1.id "
             ."JOIN personas pb ON s1.persona_beneficiario_id=pb.id "
             ."JOIN personas ps ON s1.persona_solicitante_id=ps.id "
@@ -325,13 +340,41 @@ class SepsolicitudController extends Controller
             ."JOIN recepciones r2 ON s1.recepcion_id=r2.id "
             ."JOIN empresa_institucion ei1 ON pr1.beneficiario_id = ei1.id "
             ."WHERE pr1.solicitud_id = ".$numero)->queryAll();
+        
         $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
+        
+        if ($consulta[0]['tiporif']==""){
+            
+                $query = \app\models\PresupuestosSearch::find()
+                    ->select(["conexionsigesp.req as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as nrif", "empresa_institucion.rif AS rif", "presupuestos.beneficiario_id", "presupuestos.solicitud_id" ])
+                    ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
+                    ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
+                    ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            ]);    
+        
+        Yii::$app->session->setFlash("error", "El caso no posee rif<br>Por Favor rellene los datos de la casa comercial");
+                
+                return $this->render('muestra', [
+                'numero' => $numero,
+                'dataProvider' => $dataProvider,
+                'consulta' => $consulta
+                ]);
+        }   
         
         
         for ($i=0 ; $i<count($consulta); $i++){
-            $hayrif = Yii::$app->dbsigesp->createCommand("select count(*) from rpc_beneficiario where ced_bene = '"
+        
+        $hayrif = Yii::$app->dbsigesp->createCommand("select count(*) from rpc_beneficiario where ced_bene = '"
                 .$consulta[$i]['rif']
                 ."';")->queryScalar();
+            
+        /**INSERTO O ACTUALIZO EN LA TABLA RPC_BENEFICIARIO DE SIGESP**/    
         
         if ($hayrif == 0){
             Yii::$app->dbsigesp->createCommand("INSERT INTO rpc_beneficiario (codemp, ced_bene, "
@@ -340,15 +383,25 @@ class SepsolicitudController extends Controller
                     . "fecregben, nacben, numpasben, tipconben, tipcuebanben, sc_cuentarecdoc) "
                     . "VALUES ('0001', '"
                     . $consulta[$i]['rif']
-                    . "', '---', '---', '---', '---', NULL, NULL, '"
-                    . substr($consulta[$i]['nombrecasacomercial'],50)
+                    . "', '---', '---', '---', '---', NULL, '"
+                    .$consulta[$i]['tiporif']."-".substr(str_pad($consulta[$i]['rif'], 9, "0", STR_PAD_LEFT),0,8)."-".substr(str_pad($consulta[$i]['rif'], 9, "0", STR_PAD_LEFT),-1)
+                    ."', '"
+                    . substr($consulta[$i]['nombrecasacomercial'],100)
                     . "', '"
-                    . substr($consulta[$i]['nombrecasacomercial'],0,50)
+                    . substr($consulta[$i]['nombrecasacomercial'],0,100)
                     . "', 'CARACAS', NULL, NULL, NULL, '21104990001', '---', NULL, NULL, NULL, '"
                     . $fechahoy
                     . "', 'V', NULL, 'F', "
                     . "NULL, NULL);")->execute();
+        }else{
+             Yii::$app->dbsigesp->createCommand("UPDATE rpc_beneficiario  SET "
+                     . "rifben='".$consulta[$i]['tiporif']."-".substr(str_pad($consulta[$i]['rif'], 9, '0', STR_PAD_LEFT),0,8)."-".substr(str_pad($consulta[$i]['rif'], 9, '0', STR_PAD_LEFT),-1)."'"
+                    . ", nombene='".substr($consulta[$i]['nombrecasacomercial'],50)."'"
+                     . ", apebene='". substr($consulta[$i]['nombrecasacomercial'],0,50)."'"
+                     . " WHERE ced_bene = '".$consulta[$i]['rif']."';")->execute();     
         }
+        
+        
         $estructura = ($consulta[$i]['codestpre'] == "0201") ? "0102" : "0102";
         $cuenta = ($consulta[$i]['codestpre'] == "0201") ? "407010201" : "407010401";
         $tiposolicitud = ($consulta[$i]['codestpre'] == "0201") ? "00001" : "00002";
@@ -358,6 +411,8 @@ class SepsolicitudController extends Controller
                 . $consulta[$i]['ndonacion']."-"
                 . ($i+1)
                 ."';")->queryScalar();
+        
+        /**INSERTO O ACTUALIZO EN LA TABLA SEP_SOLIICITUD DE SIGESP**/
         
         if ($haydon == 0){ 
             Yii::$app->dbsigesp->createCommand("INSERT INTO sep_solicitud (codemp, "
@@ -379,10 +434,8 @@ class SepsolicitudController extends Controller
                 . "'"
                 .iconv("UTF-8", "ISO-8859-1//IGNORE",$consulta[$i]['solicitud']. ' '
                 .$consulta[$i]['beneficiario']. ' '
-                .$consulta[$i]['requerimiento']. ' '
-                .$consulta[$i]['necesidad']. ' '
                 .$consulta[$i]['descripcion']. ' '
-                .$consulta[$i]['telefonos']. ' ' ) 
+                .$consulta[$i]['necesidad']. ' ') 
                 . "', "
                 . ""
                 . $consulta[$i]['monto']
@@ -417,10 +470,8 @@ class SepsolicitudController extends Controller
                 . "fecregsol='".$fechahoy. "', "
                 . "consol ='" .iconv("UTF-8", "ISO-8859-1//IGNORE",$consulta[$i]['solicitud']. ' '
                 .$consulta[$i]['beneficiario']. ' '
-                .$consulta[$i]['requerimiento']. ' '
                 .$consulta[$i]['necesidad']. ' '
-                .$consulta[$i]['descripcion']. ' '
-                .$consulta[$i]['telefonos']. ' ' ) 
+                .$consulta[$i]['descripcion']. ' ' ) 
                 . "', "
                 . "monto = "
                 . $consulta[$i]['monto']
@@ -443,6 +494,8 @@ class SepsolicitudController extends Controller
                 . $consulta[$i]['ndonacion']."-"
                 . ($i+1)
                 ."';")->queryScalar();
+        
+        /**INSERTO O ACTUALIZO EN LA TABLA SEP_DT_CONCEPTO DE SIGESP**/
         
         if ($hayconcepto == 0){   
         Yii::$app->dbsigesp->createCommand("INSERT INTO sep_dt_concepto (codemp, numsol, codconsep, "
@@ -487,6 +540,8 @@ class SepsolicitudController extends Controller
                 . ($i+1)
                 ."';")->queryScalar();
         
+        /**INSERTO O ACTUALIZO EN LA TABLA SEP_CUENTA GASTO DE SIGESP**/
+        
         if ($hayasiento == 0){ 
         Yii::$app->dbsigesp->createCommand("INSERT INTO sep_cuentagasto (codemp, numsol, codestpro1, "
                 . "codestpro2, codestpro3, codestpro4, codestpro5, estcla, spg_cuenta, codfuefin, "
@@ -518,6 +573,8 @@ class SepsolicitudController extends Controller
         
         $hayconexionsigesp = Yii::$app->db->createCommand("select count(*) from conexionsigesp where id_presupuesto = "
                 .$consulta[$i]['id'].";")->queryScalar();
+        
+        /**INSERTO O ACTUALIZO EN LA TABLA CONEXION SIGESP DE GESTION**/
         
         if ($hayconexionsigesp == 0){
            Yii::$app->db->createCommand("INSERT INTO conexionsigesp (id_presupuesto, rif, req, codestpre, cuenta, date)"
@@ -551,6 +608,8 @@ class SepsolicitudController extends Controller
             
         }
         
+        /** CONSULTO SI EL CASO POSEE UNA GESTION SI NO SE LA REGISTRO **/
+        
         $haygestion = Yii::$app->db->createCommand("select count(*) from gestion where solicitud_id = "
                 .$numero.";")->queryScalar();
         
@@ -558,21 +617,65 @@ class SepsolicitudController extends Controller
         Yii::$app->db->createCommand("INSERT INTO gestion (solicitud_id, estatus3_id) VALUES "
                 . "("
                 . $numero 
-                .", 6);")->execute(); 
+                .", 61);")->execute(); 
         }else{
         Yii::$app->db->createCommand("UPDATE gestion "
-                . "SET estatus3_id = 6 WHERE solicitud_id = ".$numero.";")->execute();
+                . "SET estatus3_id = 61 WHERE solicitud_id = ".$numero.";")->execute();
         }
         
+        /** CONSULTO SI EL CASO POSEE PUNTO DE CUENTA **/
         
+        $haypunto = Yii::$app->db->createCommand("select num_proc from solicitudes where id = "
+                    .$numero.";")->queryScalar();
         
-        return $this->redirect('imprimir?numero='.$numero);
+        /** REGISTRO DEL NUMERO DE PUNTO Y AUMENTO DEL NUMERO DE PUNTO EN EL SIGUIENTE CASO **/
+        
+        if($haypunto==""){
+                $idmemo =  Yii::$app->db->createCommand("SELECT valor FROM configuraciones "
+                ." WHERE id = 9;")->queryOne();
+
+               Yii::$app->db->createCommand("UPDATE solicitudes SET "
+                    ." estatus = 'PPA',"
+                    . "tipo_proc = 'P',"
+                    ."fecha_aprobacion = '".$fechahoy    
+                    ."', num_proc = ".$idmemo['valor']
+                    ." WHERE id = ".$numero.";")->execute();
+                    
+               $nuevoidmemo = $idmemo['valor']+1;
+                    Yii::$app->db->createCommand("UPDATE configuraciones SET "
+                    ."valor = '".$nuevoidmemo
+                    ."' WHERE id = 9;")->queryOne();
+        }
+        
+        $query = \app\models\PresupuestosSearch::find()
+                    ->select(["conexionsigesp.req as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as nrif", "empresa_institucion.rif AS rif", "presupuestos.beneficiario_id", "presupuestos.solicitud_id" ])
+                    ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
+                    ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
+                    ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            ]);
+        
+        Yii::$app->session->setFlash("success", "<br>El caso fue aprobado correctamente<br>");
+        
+        return $this->render('muestra', [
+                'numero' => $numero,
+                'dataProvider' => $dataProvider,
+                'consulta' => $consulta
+                ]);
+        
+
+        //return $this->redirect('imprimir?numero='.$numero);
     }
     
     public function actionImprimir($numero){
             
             $query = \app\models\PresupuestosSearch::find()
-                    ->select(["CONCAT(conexionsigesp.req || ' // ' || presupuestos.documento_id) as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as rif" ])
+                    ->select(["conexionsigesp.req  as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "CONCAT(empresa_institucion.rif || '-' || empresa_institucion.nrif) as rif" ])
                     ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
                     ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
                     ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
@@ -609,7 +712,7 @@ class SepsolicitudController extends Controller
             ."s1.observaciones,"
             ."extract(YEAR FROM age(now(),pb.fecha_nacimiento)) as edadbeneficiario,"
             ."extract(YEAR FROM age(now(),ps.fecha_nacimiento)) as edadsolicitante,"
-            ."CONCAT('Telefonos: ' || pb.telefono_otro || ' ' || pb.telefono_fijo || ' ' || pb.telefono_otro) as telefonos "
+            ."CONCAT('Telefonos: ' || COALESCE(pb.telefono_otro || ' ', '') || COALESCE(pb.telefono_fijo || ' ', '') || COALESCE(pb.telefono_celular || ' ', '') ) as telefonos "
             ."FROM solicitudes s1 FULL OUTER JOIN presupuestos pr1 ON pr1.solicitud_id=s1.id "
             ."JOIN personas pb ON s1.persona_beneficiario_id=pb.id "
             ."JOIN personas ps ON s1.persona_solicitante_id=ps.id "
@@ -636,7 +739,7 @@ class SepsolicitudController extends Controller
         .'<tr style="border: solid 2px black;"><td rowspan="2" class="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3" style="font-size:14px;">'.$consulta[0]['solicitud']
         .'</td><td rowspan="2" class="text-center col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border: solid 2px black; font-size:18px;"><strong>PUNTO DE CUENTA</strong> '
         .'</td><td class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center" style="font-size:12px;"><strong>1- N# de página: </strong>{PAGENO}/{nb}</td></tr><tr> '
-        .'<td class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center" style="border: solid 2px black; font-size:12px;"><strong>2. Fecha: </strong>'.Yii::$app->formatter->asDate($consulta[0]['fecha']== 0 ? 'now' : $consulta[0]['fecha'], "php:d/m/Y")
+        .'<td class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center" style="border: solid 2px black; font-size:12px;"><strong>2. Fecha: </strong>'.Yii::$app->formatter->asDate($consulta[0]['fecha'],'php:d-m-Y')
         .'</td></tr><tr> '
         .'<td rowspan="4" class="text-center col-xs-3 col-sm-3 col-md-3 col-lg-3"><strong>3- Presentado:</strong></td> '
         .'<td class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;"> '
@@ -651,43 +754,43 @@ class SepsolicitudController extends Controller
         .'D- POR: 1erTte. Miguel Silveiro Castillo Pérez<br>Administrador de la Fundación Pueblo Soberano '
         .'</td></tr></table></div>';
         
-        $footerHtml = '<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:12px;">'
-.'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
-.'<strong>6- Presentado por: Dirección de Bienestar Social</strong></td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
-.'<strong>7- Revisado por: Unidad de Presupuesto</strong></td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
-.'<strong>8- Aprobado por: Unidad de Contabilidad</strong></td></tr><tr>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
-.'<br><br>________________________________<br>Firma</td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
-.'<br><br>________________________________<br>Firma</td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
-.'<br><br>________________________________<br>Firma</td></tr><tr>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
-.'<strong>Fecha:</strong></td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
-.'<strong>Fecha:</strong></td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
-.'<strong>Fecha:</strong></td></tr>'
-.'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
-.'<strong>9- Aprobado por: Director de Administración y Finanzas</strong>'
-.'</td><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
-.'<strong>10- Revisado por: Coordinador General</strong>'
-.'</td><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
-.'<strong>11- Aprobado por: Presidente</strong></td></tr><tr>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
-.'<br><br>________________________________<br>Firma</td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
-.'<br><br>________________________________<br>Firma</td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
-.'<br><br>________________________________<br>Firma</td></tr><tr>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
-.'<strong>Fecha:</strong></td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
-.'<strong>Fecha:</strong></td>'
-.'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
-.'<strong>Fecha:</strong></td></tr></table></div> <p style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></p>';
+                $footerHtml = '<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:12px;">'
+        .'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
+        .'<strong>6- Presentado por: Dirección de Bienestar Social</strong></td>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
+        .'<strong>7- Revisado por: Unidad de Presupuesto</strong></td>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
+        .'<strong>8- Aprobado por: Unidad de Contabilidad</strong></td></tr><tr>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<br><br>________________________________<br>Firma</td>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<br><br>________________________________<br>Firma</td>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<br><br>________________________________<br>Firma</td></tr><tr>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<strong>Fecha:</strong></td>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<strong>Fecha:</strong></td>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<strong>Fecha:</strong></td></tr>'
+        .'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
+        .'<strong>9- Aprobado por: Director de Administración y Finanzas</strong>'
+        .'</td><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
+        .'<strong>10- Revisado por: Coordinador General</strong>'
+        .'</td><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
+        .'<strong>11- Aprobado por: Presidente</strong></td></tr><tr>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<br><br>________________________________<br>Firma</td>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<br><br>________________________________<br>Firma</td>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<br><br>________________________________<br>Firma</td></tr><tr>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<strong>Fecha:</strong></td>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<strong>Fecha:</strong></td>'
+        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="border: solid 2px black; text-align:justify; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<strong>Fecha:</strong></td></tr></table></div> <p style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></p>';
         
     // get your HTML raw content without any layouts or scripts
     $content = $this->renderPartial('imprimir', [
@@ -970,7 +1073,159 @@ class SepsolicitudController extends Controller
            Case 3: $t = " Billones";break; 
         } 
         return($Rtn . $t); 
-    } 
+    }
+    
+    
+    public function actionDevolver($numero)            
+    {
+        $consulta = Yii::$app->db->createCommand("SELECT CONCAT('Caso N: ' || s1.num_solicitud) AS solicitud, "
+            ."CONCAT('Solicitante: ' ||ps.nombre || ' ' || ps.apellido || ' C.I.: ' ||ps.ci ) AS solicitante, "
+            ."CONCAT('Beneficiario: ' ||pb.nombre || ' ' || pb.apellido || COALESCE(' C.I.: ' || pb.ci || ' ', '') ) AS beneficiario, "
+            ."CONCAT('Requerimiento: ' || r1.nombre) AS requerimiento, "
+            ."CONCAT('Unidad: ' || r2.nombre) AS unidad, "
+            ."CONCAT('Tipo de Ayuda: ' || ta.nombre) AS tipoayuda, "
+            ."CONCAT('Area: ' || a1.nombre) AS area, "
+            ."CONCAT('Necesidad: ' || s1.necesidad) AS necesidad, "
+            ."CONCAT('Descripcion: ' || s1.descripcion) AS descripcion, "
+            ."pr1.montoapr as monto, "
+            ."CONCAT('Casa Comercial: ' || ei1.nombrecompleto) AS casacomercial, "
+            ."ei1.nombrecompleto AS nombrecasacomercial, "
+            ."ei1.nrif AS rif, "
+            ."ei1.rif AS tiporif, "
+            ."s1.estatus, "
+            ."s1.fecha_aprobacion as fecha, "
+            ."ta.cod_acc_int as codestpre, "
+            ."pr1.id as id, "
+            ."s1.num_solicitud as ndonacion, "
+            ."CONCAT('Telefonos: ' || COALESCE(pb.telefono_otro || ' ', '') || COALESCE(pb.telefono_fijo || ' ', '') || COALESCE(pb.telefono_celular || ' ', '') ) as telefonos "
+            ."FROM solicitudes s1 FULL OUTER JOIN presupuestos pr1 ON pr1.solicitud_id=s1.id "
+            ."JOIN personas pb ON s1.persona_beneficiario_id=pb.id "
+            ."JOIN personas ps ON s1.persona_solicitante_id=ps.id "
+            ."JOIN areas a1 ON a1.id=s1.area_id "
+            ."JOIN tipo_ayudas ta ON a1.tipo_ayuda_id= ta.id "
+            ."JOIN requerimientos r1 ON pr1.requerimiento_id=r1.id "
+            ."JOIN recepciones r2 ON s1.recepcion_id=r2.id "
+            ."JOIN empresa_institucion ei1 ON pr1.beneficiario_id = ei1.id "
+            ."WHERE pr1.solicitud_id = ".$numero)->queryAll();
+        
+        $query = \app\models\PresupuestosSearch::find()
+                    ->select(["conexionsigesp.req as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as nrif", "empresa_institucion.rif AS rif", "presupuestos.beneficiario_id", "presupuestos.solicitud_id" ])
+                    ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
+                    ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
+                    ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
+
+            $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            ]);
+        
+        $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
+        
+        
+        for ($i=0 ; $i<count($consulta); $i++){
+        
+        /**CONSULTO EN LA TABLA SEP_SOLIICITUD DE SIGESP**/
+        
+        if ((Yii::$app->dbsigesp->createCommand("select estsol from sep_solicitud where numsol = '"
+                ."DON- "
+                . $consulta[$i]['ndonacion']."-"
+                . ($i+1)
+                ."';")->queryScalar())=='E' and $consulta[$i]['estatus']=='PPA')        
+        {
+            /**DELETE DE LA TABLA SEP_DT_CUENTAGASTO**/
+            
+            Yii::$app->dbsigesp->createCommand("DELETE FROM sep_cuentagasto " 
+            ." WHERE numsol = 'DON- ".$consulta[$i]['ndonacion']."-".($i+1)."';")->execute();
+            
+            /**DELETE DE LA TABLA SEP_DT_CONCEPTO**/
+                
+            Yii::$app->dbsigesp->createCommand("DELETE FROM sep_dt_concepto "       
+            ." WHERE numsol = 'DON- ".$consulta[$i]['ndonacion']."-".($i+1)."';")->execute();
+             
+            /**DELETE DE LA TABLA SEP_SOLICITUD**/
+            Yii::$app->dbsigesp->createCommand("DELETE FROM sep_solicitud"
+            . " WHERE numsol = 'DON- ".$consulta[$i]['ndonacion']."-".($i+1)."';")->execute();
+            
+            
+            /**DELETE DE LA TABLA CONEXIONSIGESP**/
+            
+            Yii::$app->db->createCommand("DELETE FROM conexionsigesp "
+            . " WHERE id_presupuesto = ".$consulta[$i]['id'].";")->execute();
+            
+            /** ACTUALIZO A CASO POR ESTATUS POR APROBAR **/
+            
+            Yii::$app->db->createCommand("UPDATE gestion "
+            . "SET estatus3_id = 61 WHERE solicitud_id = ".$numero.";")->execute();       
+                
+        }else{
+            
+            /**DEVUELVO A LA VISTA PORQUE EL CASO NO HA PASADO A SIGESP **/
+            
+            Yii::$app->session->setFlash("error", "El caso no se puede devolver, Ya ha sido procesado<br>Verifique e intente con otro caso");
+                
+                return $this->render('muestra', [
+                'numero' => $numero,
+                'dataProvider' => $dataProvider,
+                'consulta' => $consulta
+                ]);
+            
+        }
+                
+        }
+        
+        /** ACTUALIZO A CASO POR ESTATUS POR APROBAR SALUD **/
+        
+        if ($consulta[0]['tipoayuda']=='Salud')        
+        {
+            
+            Yii::$app->db->createCommand("UPDATE gestion "
+                . "SET estatus3_id = 10 WHERE solicitud_id = ".$numero.";")->execute(); 
+        
+        } else {
+            
+            Yii::$app->db->createCommand("UPDATE gestion "
+                . "SET estatus3_id = 11 WHERE solicitud_id = ".$numero.";")->execute(); 
+            
+        }
+               
+        
+        /** CONSULTO SI EL CASO POSEE PUNTO DE CUENTA **/
+        
+        $haypunto = Yii::$app->db->createCommand("select num_proc from solicitudes where id = "
+                    .$numero.";")->queryScalar();
+        
+        /** ELIMINO EL NUMERO DE PUNTO Y DISMINUYO EL NUMERO DE PUNTO EN EL SIGUIENTE CASO **/
+        
+        if($haypunto!=""){
+                $idmemo =  Yii::$app->db->createCommand("SELECT valor FROM configuraciones "
+                ." WHERE id = 9;")->queryOne();
+
+               Yii::$app->db->createCommand("UPDATE solicitudes SET "
+                    ." estatus = 'ACA',"
+                    . "tipo_proc = '',"
+                    ."fecha_aprobacion = null"    
+                    .", num_proc = null"
+                    ." WHERE id = ".$numero.";")->execute();
+                    
+               $nuevoidmemo = $idmemo['valor']-1;
+                    Yii::$app->db->createCommand("UPDATE configuraciones SET "
+                    ."valor = '".$nuevoidmemo
+                    ."' WHERE id = 9;")->queryOne();
+        }
+        
+        /**DEVUELVO A LA VISTA PORQUE EL CASO NO HA PASADO A SIGESP **/
+            
+            Yii::$app->session->setFlash("success", "El caso ha sido devuelto exitosamente");
+            
+            return $this->render('muestra', [
+                'numero' => $numero,
+                'dataProvider' => $dataProvider,
+                'consulta' => $consulta
+                ]);
+                    
+    }
 
  
 

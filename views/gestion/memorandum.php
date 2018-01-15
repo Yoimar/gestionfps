@@ -19,7 +19,7 @@ use app\controllers\ActiveDataProvider;
 error_reporting(0);
 
    
-    $columns = [
+$columns = [
 //            [
 //            'class'=>'kartik\grid\CheckboxColumn',
 //            'headerOptions'=>['class'=>'kartik-sheet-style'],
@@ -29,13 +29,15 @@ error_reporting(0);
 //                },
 //
 //            ],
-//        
+        
             [
             'class'=>'kartik\grid\SerialColumn',
             'contentOptions'=>['class'=>'kartik-sheet-style'],
             'width'=>'36px',
             'header'=>'',
-            'headerOptions'=>['class'=>'kartik-sheet-style'],
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
             ],
 
             [
@@ -44,63 +46,72 @@ error_reporting(0);
             'label' => 'N°<br>Solicitud',
             'encodeLabel' => false,
             'format' => 'text',
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
             ],
                     
             [
             'attribute' => 'requerimiento',
             'value' => 'requerimiento',
-            'label' => 'SEP',
             'format' => 'text',
-            ],
-                    
-            [
-            'attribute' => 'iddoc',
-            'value' => 'iddoc',
-            'format' => 'text',
-            'label' => 'IDDOC',    
-            ],
-            
-            [
-            'attribute' => 'fechaingreso',
-            'value' => 'fechaingreso',
-            'format' => 'text',
-            'label' => 'Fecha<br>Ingreso',
-            'format' => 'text',
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
+            'label' => 'Doc.',
             'encodeLabel' => false,
-            ],
-            
-            [
-            'attribute' => 'fechaultimamodificacion',
-            'value' => 'fechaultimamodificacion',
-            'label' => 'Fecha<br>Modificación',
-            'format' => 'text',
-            'encodeLabel' => false,
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
             ],
         
             [ 
             'attribute' => 'beneficiario', 				
             'value' => 'beneficiario', 
             'format' => 'text', 
+            'vAlign'=>'middle',
+            'hAlign'=>'center',
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
             ],
         
             [ 
             'attribute' => 'cibeneficiario', 				
             'value' => 'cibeneficiario', 
             'format' => 'text', 
-            ],
-        
-            [                     
-            'attribute' => 'edadbeneficiario', 			
-            'value' => 'edadbeneficiario', 
-            'format' => 'text',
-            'visible'=> false,
+            'label' => '<center>C.I.<br>Benefic.</center>',
+            'encodeLabel' => false,
+            'vAlign'=>'middle',
+            'hAlign'=>'center',
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
             ],
         
             [                     
             'attribute' => 'telefono', 			
             'value' => 'telefono', 
             'format' => 'text',
-            'visible'=> false,
+            'visible'=> $vertelefono,
+            'vAlign'=>'middle',
+            'hAlign'=>'center',
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
+            ],                      
+        
+            [                     
+            'attribute' => 'unidadorigen', 			
+            'value' => 'unidadorigen', 
+            'format' => 'text',
+            'visible'=> $verunidad,
+            'vAlign'=>'middle',
+            'hAlign'=>'center',
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
             ],
                    
             [ 
@@ -109,12 +120,23 @@ error_reporting(0);
             'label' => 'Empresa<br>Casa Comercial',
             'format' => 'text',
             'encodeLabel' => false,
+            'width'=>'150px',
+            'vAlign'=>'middle',
+            'hAlign'=>'center',
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
             ],
             
             [ 
             'attribute' => 'rif', 		
             'value' => 'rif', 
             'format' => 'text',
+            'vAlign'=>'middle',
+            'hAlign'=>'center',
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
             ],
      
             [ 
@@ -122,22 +144,36 @@ error_reporting(0);
             'value' => 'cantidad',
             'label' => 'N°',
             'format' => 'text',
-            //'visible'=> false,
+            'pageSummary'=>true,
+            'vAlign'=>'middle',
+            'hAlign'=>'center',
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
             ],
-            
+                        
             [ 
             'attribute' => 'orpa', 						
             'value' => 'orpa', 
             'format' => 'text',
-            'visible'=> false,
+            'visible'=> $verorpa,
+            'vAlign'=>'middle',
+            'hAlign'=>'center',
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
             ],
-
-                    
+                               
             [ 
             'attribute' => 'cheque', 						
             'value' => 'cheque', 
             'format' => 'text',
-            'visible'=> false,
+            'visible'=> $vercheque,
+            'vAlign'=>'middle',
+            'hAlign'=>'center',
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
             ],
                     
                        
@@ -150,7 +186,11 @@ error_reporting(0);
             'width'=>'100px',
             'format'=>'currency',
             'pageSummary'=>true,
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; '],
+            'contentOptions' => ['class' => 'text-right', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:10px; background: #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:10px; background: #FFFFFF;'],  
             ],
+
             
             //[
             //'class'=>'kartik\grid\ActionColumn',
@@ -164,7 +204,10 @@ error_reporting(0);
 echo   GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => $columns, // check the configuration for grid columns by clicking button above
-        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'headerRowOptions' => ['class' => 'text-center', 'margin: 0px; padding: 2px; border: solid 1px black !important; font-size:10px; background: #FFFFFF; '],
+        'captionOptions' => ['class' => 'text-center', 'style' => 'color: black; margin: 0px; padding: 2px; font-size:10px;'],
+        'footerRowOptions'=> ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black !important; font-size:10px;'],
+        'rowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black !important; font-size:10px;'],
         'filterRowOptions' => ['class' => 'kartik-sheet-style'],
         'layout' => "{items}\n{pager}",
         'pjax' => false, 

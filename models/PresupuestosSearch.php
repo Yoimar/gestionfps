@@ -15,6 +15,7 @@ class PresupuestosSearch extends Presupuestos
     public $documento;
     public $nombre;
     public $rif;
+    public $nrif;
     
     
     /**

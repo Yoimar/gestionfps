@@ -195,15 +195,37 @@ class GestionController extends Controller
     return $out;
     }
     
-    public function actionGestiona()
+    public function actionGestiona($estatus1=null,$estatus2=null,$estatus3=null,$departamento=null,$unidad=null,$usuario=null,$verorpa=null, $vercheque =null, $vertelefono=null, $verunidad=null)
     {
         $modelorigenmemo = new Origenmemo;
         $modelfinalmemo = new Finalmemo;
         $memosgestion = new Memosgestion;
+        $modelorigenmemo->load(Yii::$app->request->post());
+        $modelfinalmemo->load(Yii::$app->request->post());
+        $memosgestion->load(Yii::$app->request->post());
         
         $searchModel = new \app\models\GestionSearchGestionalo();
         
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+         if($estatus1!=''){
+                $dataProvider->query->andWhere(['estatus1_id'=>$estatus1]);
+            }
+            if($estatus2!=''){
+                $dataProvider->query->andWhere(['estatus2_id'=>$estatus2]);
+            }
+            if($estatus3!=''){
+                $dataProvider->query->andWhere(['estatus3_id'=>$estatus3]);
+            }
+            if($departamento!=''){
+                $dataProvider->query->andWhere(['departamentos.id'=>$departamento]);
+            }
+            if($unidad!=''){
+                $dataProvider->query->andWhere(['gestion.recepcion_id'=>$unidad]);
+            }
+            if($usuario!=''){
+                $dataProvider->query->andWhere(['trabajador_id'=>$usuario]);
+            } 
      
         return $this->render('gestiona', [
                 'searchModel' => $searchModel,
@@ -211,6 +233,16 @@ class GestionController extends Controller
                 'modelorigenmemo' => $modelorigenmemo,
                 'modelfinalmemo' => $modelfinalmemo,
                 'memosgestion' => $memosgestion,
+                'estatus1' => $estatus1,
+                'estatus2' => $estatus2,
+                'estatus3' => $estatus3,
+                'departamento' => $departamento,
+                'unidad' => $unidad,
+                'usuario' => $usuario,
+                'verorpa' => $verorpa,
+                'vercheque' => $vercheque,
+                'vertelefono' => $vertelefono,
+                'verunidad' => $verunidad
         ]);
 
     }
@@ -224,6 +256,7 @@ class GestionController extends Controller
     $modelfinalmemo = new Finalmemo;
     $modelorigenmemo = new Origenmemo;
     $memosgestion = new Memosgestion;
+    
     
     if ($modelorigenmemo->load(Yii::$app->request->post())&&$modelfinalmemo->load(Yii::$app->request->post())&&$memosgestion->load(Yii::$app->request->post())&&$modelfinalmemo->validate()) {
         
@@ -246,7 +279,7 @@ class GestionController extends Controller
         $selection=(array)Yii::$app->request->post('selection');
             
         foreach ($selection as $idgestion) {
-                     /* Guardo la Informacion en el Historial de Solicitudes*/
+        /* Guardo la Informacion en el Historial de Solicitudes*/
                     $modelhistorialsolicitudes = new Historialsolicitudes;            
                     $modelhistorialsolicitudes->gestion_id=$idgestion;
                     $modelhistorialsolicitudes->estatus3_id = $memosgestion->estatus3final;
@@ -254,6 +287,13 @@ class GestionController extends Controller
                     $modelhistorialsolicitudes->estatus1_id = $memosgestion->estatus1final;
                     $modelhistorialsolicitudes->memogestion_id = $memosgestion->id;
                     $modelhistorialsolicitudes->save();
+                    
+                    
+                    $modelgestion =  Gestion::findOne($idgestion);
+                    $modelgestion->estatus3_id = $memosgestion->estatus3final;
+                    $modelgestion->trabajador_id = $memosgestion->trabajadorfinal;
+                    $modelgestion->recepcion_id = $memosgestion->unidadfinal;
+                    $modelgestion->save();
         } 
          
         return $this->redirect('memorandum?id='.$memosgestion->id);
@@ -263,21 +303,45 @@ class GestionController extends Controller
 //            'memosgestion' => $memosgestion,
 //        ]);
                  
-    }  else {
-            $searchModel = new \app\models\GestionSearchGestionalo();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);  
-    
-            return $this->render('gestiona', [
-                       'memosgestion' => $memosgestion,
-                        'searchModel' => $searchModel,
-                       'dataProvider' => $dataProvider,
-                       'modelorigenmemo' => $modelorigenmemo,
-                       'modelfinalmemo' => $modelfinalmemo,
-                        ]);
-                
-      }
+        } else {
+        $searchModel = (array)Yii::$app->request->post('searchModel');
+        $dataProvider = (array)Yii::$app->request->post('dataProvider');
+        $modelorigenmemo->load(Yii::$app->request->post());
+        $modelfinalmemo->load(Yii::$app->request->post());
+        $memosgestion->load(Yii::$app->request->post());
+        $estatus1 = Yii::$app->request->post('estatus1');
+        $estatus2 = Yii::$app->request->post('estatus2');
+        $estatus3 = Yii::$app->request->post('estatus3');
+        $departamento = Yii::$app->request->post('departamento');
+        $unidad = Yii::$app->request->post('unidad');
+        $usuario = Yii::$app->request->post('usuario');
+        $verorpa = Yii::$app->request->post('verorpa');
+        $vercheque = Yii::$app->request->post('vercheque');
+        $vertelefono = Yii::$app->request->post('vertelefono');
+        $verunidad = Yii::$app->request->post('verunidad');
+        $selection=(array)Yii::$app->request->post('selection');
         
-   
+        return $this->redirect(['gestiona', 
+                'estatus1' => $estatus1,
+                'estatus2' => $estatus2,
+                'estatus3' => $estatus3,
+                'departamento' => $departamento,
+                'unidad' => $unidad,
+                'usuario' => $usuario,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'modelorigenmemo' => $modelorigenmemo,
+                'modelfinalmemo' => $modelfinalmemo,
+                'memosgestion' => $memosgestion,
+                'selection' => $selection,
+                'verorpa' => $verorpa,
+                'vercheque' => $vercheque,
+                'vertelefono' => $vertelefono,
+                'verunidad' => $verunidad
+               ]);
+                
+        }
+        
     }
     
     public function actionOrigenmemo()
@@ -291,35 +355,34 @@ class GestionController extends Controller
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
             
             if($modelorigenmemo->estatus1!=''){
-                $dataProvider->query->andWhere(['estatus1_id'=>$modelorigenmemo->estatus1]);
-            }
+                $estatus1 = $modelorigenmemo->estatus1;
+            } else { $estatus1 = "";}
             if($modelorigenmemo->estatus2!=''){
-                $dataProvider->query->andWhere(['estatus2_id'=>$modelorigenmemo->estatus2]);
-            }
+                $estatus2 = $modelorigenmemo->estatus2;
+            } else { $estatus2 = "";}
             if($modelorigenmemo->estatus3!=''){
-                $dataProvider->query->andWhere(['estatus3_id'=>$modelorigenmemo->estatus3]);
-            }
+                $estatus3 = $modelorigenmemo->estatus3;
+            } else { $estatus3 = "";}
             if($modelorigenmemo->departamento!=''){
-                $dataProvider->query->andWhere(['departamentos.id'=>$modelorigenmemo->departamento]);
-            }
+                $departamento = $modelorigenmemo->departamento;
+            } else { $departamento = "";}
             if($modelorigenmemo->unidad!=''){
-                $dataProvider->query->andWhere(['gestion.recepcion_id'=>$modelorigenmemo->unidad]);
-            }
+                $unidad= $modelorigenmemo->unidad;
+            } else { $unidad = "";}
             if($modelorigenmemo->usuario!=''){
-                $dataProvider->query->andWhere(['trabajador_id'=>$modelorigenmemo->usuario]);
-            } 
-        
-        return $this->render('gestiona', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-                'modelorigenmemo' => $modelorigenmemo,
-                'modelfinalmemo' => $modelfinalmemo,
-                'memosgestion' => $memosgestion,
-             
-      
-        ]);
-                  
+                $usuario = $modelorigenmemo->usuario;
+            } else { $usuario = "";}
+            
+            return $this->redirect(['gestiona', 
+                 'estatus1' => $estatus1,
+                'estatus2' => $estatus2,
+                'estatus3' => $estatus3,
+                'departamento' => $departamento,
+                'unidad' => $unidad,
+                'usuario' => $usuario,
+               ]); 
         }
+        
         return $this->render('origenmemo', [
                 'modelorigenmemo' => $modelorigenmemo,
         ]);
@@ -327,8 +390,8 @@ class GestionController extends Controller
         
     }
     
-    public function actionMemorandum($id)
-    {
+    public function actionMemorandum($id, $verorpa=null, $vercheque =null, $vertelefono=null, $verunidad=null){
+        
         $modelimprime =  Memosgestion::findOne($id);
         
         $query = Gestion::find()
@@ -340,7 +403,7 @@ class GestionController extends Controller
                 'gestion.estatus3_id',
                 'gestion.trabajador_id',
                 'gestion.recepcion_id', 
-                'departamentos.id as departamento_id', 
+                'departamentos.id as departamentos_id', 
                 "personabeneficiario.ci as cibeneficiario", 
                 "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario", 
                 'users.nombre as trabajadorsocial', 
@@ -352,7 +415,7 @@ class GestionController extends Controller
                 "extract(YEAR FROM age(now(),personabeneficiario.fecha_nacimiento)) as edadbeneficiario",
                 "string_agg(to_char(presupuestos.documento_id,'999999'), '  //  ') as iddoc",
                 "string_agg(to_char(presupuestos.numop,'999999'), '  //  ') as orpa",
-                "string_agg(empresa_institucion.nrif, '  //  ') as rif",
+                "string_agg(CONCAT(empresa_institucion.rif || '-' || empresa_institucion.nrif), '  //  ') as rif",
                 "string_agg(conexionsigesp.req, '  //  ') as requerimiento",
                 "string_agg(empresa_institucion.nombrecompleto, '  //  ') as empresaoinstitucion",
                 "count(presupuestos.cantidad) as cantidad", 
@@ -369,7 +432,7 @@ class GestionController extends Controller
                 ->join('LEFT JOIN', 'empresa_institucion', 'presupuestos.beneficiario_id = empresa_institucion.id')
                 ->join('LEFT JOIN', 'conexionsigesp', 'presupuestos.id = conexionsigesp.id_presupuesto')
                 ->join('LEFT JOIN', 'recepciones', 'recepciones.id = gestion.recepcion_id')
-                ->join('LEFT JOIN', 'departamentos', 'recepciones.departamento_id = departamentos.id')
+                ->join('LEFT JOIN', 'departamentos', 'recepciones.departamentos_id = departamentos.id')
                 ->join('LEFT JOIN', 'historial_solicitudes', 'historial_solicitudes.gestion_id = gestion.id')
                 ->groupBy(['solicitudes.num_solicitud', 
                     'gestion.id', 
@@ -389,9 +452,9 @@ class GestionController extends Controller
                     'fechaultimamodificacion', 
                     'telefono', 
                     'edadbeneficiario']);
-         $query->andFilterWhere([
+        $query->andFilterWhere([
             'historial_solicitudes.memogestion_id' => $modelimprime->id,
-         ]);
+        ]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -399,144 +462,222 @@ class GestionController extends Controller
                 'pageSize' => 50,
             ],
             ]);
+
+        $usuarioorigen = isset($modelimprime->trabajadororigen) ? $modelimprime->trabajadororigennombre->dimprofesion. " ".$modelimprime->trabajadororigennombre->primernombre. " ".$modelimprime->trabajadororigennombre->primerapellido .'<br>' : "";        
+        $unidadorigen = isset($modelimprime->unidadorigen) ? $modelimprime->unidadorigennombre->nombre.'<br>' : "";              
+        $direccionorigen = isset($modelimprime->dirorigen) ? $modelimprime->dirorigennombre->nombre : "";      
+        $enviado = isset($modelimprime->trabajadororigen) && isset($modelimprime->unidadorigen) && isset($modelimprime->dirorigen) ? "Enviado por" : "";       
+        $usuariofinal = isset($modelimprime->trabajadorfinal) ? $modelimprime->trabajadorfinalnombre->dimprofesion. " ".$modelimprime->trabajadorfinalnombre->primernombre. " ".$modelimprime->trabajadorfinalnombre->primerapellido .'<br>' : "";        
         
-$usuarioorigen = isset($modelimprime->trabajadororigen) ? $modelimprime->trabajadororigen0->dimprofesion. " ".$modelimprime->trabajadororigen0->primernombre. " ".$modelimprime->trabajadororigen0->primerapellido .'<br>' : "";        
-$unidadorigen = isset($modelimprime->unidadorigen) ? $modelimprime->unidadorigen0->nombre.'<br>' : "";              
-$direccionorigen = isset($modelimprime->dirorigen) ? $modelimprime->dirorigen0->nombre : "";      
-$enviado = isset($modelimprime->trabajadororigen) && isset($modelimprime->unidadorigen) && isset($modelimprime->dirorigen) ? "Enviado por" : "";       
- $usuariofinal = isset($modelimprime->trabajadorfinal) ? $modelimprime->trabajadorfinal0->dimprofesion. " ".$modelimprime->trabajadorfinal0->primernombre. " ".$modelimprime->trabajadorfinal0->primerapellido .'<br>' : "";        
+        $headerHtml = '<div class="row">'
+        .Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "150", "class" => "pull-left"])
+        .Html::img("@web/img/despacho.png", ["alt" => "Despacho", "width" => "450", "style" =>"margin-top: 10px; margin-bottom: 10px;", "class" => "pull-right"])
+        .'</div>'
+                .'<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:12px;">'
+        .'    <tr>'
+        .'     <td colspan="4" class="text-center col-xs-8 col-sm-8 col-md-8 col-lg-8" style="font-size:12px;">'
+        .'     </td>'
+        .'     <td colspan="2" class="text-center col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-size:12px;">'
+        .'Relación N° '.  $modelimprime->id  .'<br>  '    
+        . Yii::$app->formatter->asDate($modelimprime->fechamemo,'full').'<br>  '
+        .'      </td>'
+        .'      </tr>'
+        .'        <tr>'
+        .'         <td  colspan="6" class="text-center col-xs-4 col-sm-4 col-md-4 col-lg-4 col-md-offset-4 col-xs-offset-4 col-sm-offset-4 col-lg-offset-4" style="font-size:18px;">'
+        .'          RELACIÓN DE CASOS'
+        .'         </td >'
+        .'        </tr>'
+        .'        <tr>'
+        .'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
+        .'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'
+        .$enviado
+        .'            </td>'
+        .'          <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="font-size:14px;">'
+        .$usuarioorigen
+        .$unidadorigen 
+        .$direccionorigen
+        .'         </td>'
+        .'         <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
+        .'        </tr>'
+        .'        <tr>'
+        .'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
+        .'          <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'
+        .'         Recibido Por:'
+        .'          </td>'
+        .'          <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="font-size:14px;">'
+        . $usuariofinal 
+        . $modelimprime->unidadfinalnombre->nombre.'<br>'
+        . $modelimprime->dirfinalnombre->nombre
+        .'            </td>'
+        .'             <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
+        .'        </tr>'
+        .'        <tr>'
+        .'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
+        .'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'
+        .'            Estatus:'
+        .'            </td>'
+        .'            <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="font-size:14px;">'
+        . $modelimprime->estatus3finalnombre->nombre
+        .'            </td>'
+        .'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
+        .'        </tr>'
+        .'        <tr>'
+        .'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
+        .'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'
+        .'            Asunto:'
+        .'            </td>'
+        .'            <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="font-size:14px;">'
+        .$modelimprime->asunto
+        .'            </td>'
+        .'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
+        .'             </tr>'
+        .'</table>'
+        .'</div>';
         
-$headerHtml = '<div class="row">'
-.Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "150", "class" => "pull-left"])
-.Html::img("@web/img/despacho.png", ["alt" => "Despacho", "width" => "450", "style" =>"margin-top: 10px; margin-bottom: 10px;", "class" => "pull-right"])
-.'</div>'
-        .'<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:12px;">'
-.'    <tr>'
-.'     <td colspan="4" class="text-center col-xs-8 col-sm-8 col-md-8 col-lg-8" style="font-size:12px;">'
-.'     </td>'
-.'     <td colspan="2" class="text-center col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-size:12px;">'
-.'Relación N° '.  $modelimprime->id  .'<br>  '
-. Yii::$app->formatter->asDate($modelimprime->fechamemo,'long')
-.'      </td>'
-.'      </tr>'
-.'        <tr>'
-.'         <td  colspan="6" class="text-center col-xs-4 col-sm-4 col-md-4 col-lg-4 col-md-offset-4 col-xs-offset-4 col-sm-offset-4 col-lg-offset-4" style="font-size:18px;">'
-.'          RELACIÓN DE CASOS'
-.'         </td >'
-.'        </tr>'
-.'        <tr>'
-.'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
-.'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'
-.$enviado
-.'            </td>'
-.'          <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="font-size:14px;">'
-.$usuarioorigen
-.$unidadorigen 
-.$direccionorigen
-.'         </td>'
-.'         <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
-.'        </tr>'
-.'        <tr>'
-.'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
-.'          <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'
-.'         Recibido Por:'
-.'          </td>'
-.'          <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="font-size:14px;">'
-. $usuariofinal 
-. $modelimprime->unidadfinal0->nombre.'<br>'
-. $modelimprime->dirfinal0->nombre
-.'            </td>'
-.'             <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
-.'        </tr>'
-.'        <tr>'
-.'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
-.'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'
-.'            Estatus:'
-.'            </td>'
-.'            <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="font-size:14px;">'
-. $modelimprime->estatus3final0->nombre
-.'            </td>'
-.'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
-.'        </tr>'
-.'        <tr>'
-.'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
-.'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'
-.'            Asunto:'
-.'            </td>'
-.'            <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="font-size:14px;">'
-.$modelimprime->asunto
-.'            </td>'
-.'            <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
-.'             </tr>'
-.'</table>'
-.'</div>';
-        
-    $footerHtml = '<center>'
-.'<div class="row">'
-.'<table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:12px; text-align: center;">'
-.'<tr>'
-.'    <td>'
-.'        <strong>¡CHAVEZ VIVE, LA PATRIA SIGUE!</strong>'
-.'        <br>"Independencia y Patria Socialista" ¡Viviremos y Venceremos!'
-.'        <br> <strong>¡PRIMEROS EN EL SACRIFICIO! ¡ULTIMOS EN EL BENEFICIO!</strong>'
-.'    </td>'
-.'</tr>'
-.'</table>'
-.'</div>'
-.'<hr style="color: #000000; margin: 0px; padding: 0px;" size="1" />'
-.'<div class="row">'
-.'<table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:10px; text-align: center;">'
-.'<tr>'
-.'    <td>'
-.'            <strong>Avenida Urdaneta, Esquina de Boleros, Palacio de Miraflores, Edificio Administrativo</strong>'
-.'            <br>'
-.'            <strong>Piso 2, Fundación Pueblo Soberano, RIF G-2000-2056-3</strong>'
-.'            <br>'
-.'            <strong>Teléfono: 0212-8063573</strong>'
-.'     </td></tr>'
-.'</table>'
-.'</div></center> <p style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></p>';
-    // get your HTML raw content without any layouts or scripts
-    $content = $this->renderPartial('memorandum', [
-            'dataProvider' => $dataProvider,
-            'memosgestion' => $modelimprime,
+        $footerHtml = '<p style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></p>';
+        // get your HTML raw content without any layouts or scripts
+        $content = $this->renderPartial('memorandum', [
+                'dataProvider' => $dataProvider,
+                'memosgestion' => $modelimprime,
+            ]);
+
+        // setup kartik\mpdf\Pdf component
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_UTF8, 
+            // A4 paper format
+            'format' => Pdf::FORMAT_LETTER, 
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_PORTRAIT, 
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER, 
+            // your html content input
+            'content' => $content,  
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting 
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => '.kv-heading-1{font-size:7px}', 
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Punto de Cuenta '],
+             // call mPDF methods on the fly
+            'marginTop' => '90',
+
+            'methods' => [ 
+                'SetHTMLHeader'=>[$headerHtml, [ 'E', [TRUE]]], 
+                'SetHTMLFooter'=>[$footerHtml, [ 'E', [TRUE]]], 
+            ],
+
         ]);
     
-    // setup kartik\mpdf\Pdf component
-    $pdf = new Pdf([
-        // set to use core fonts only
-        'mode' => Pdf::MODE_UTF8, 
-        // A4 paper format
-        'format' => Pdf::FORMAT_LETTER, 
-        // portrait orientation
-        'orientation' => Pdf::ORIENT_PORTRAIT, 
-        // stream to browser inline
-        'destination' => Pdf::DEST_BROWSER, 
-        // your html content input
-        'content' => $content,  
-        // format content from your own css file if needed or use the
-        // enhanced bootstrap css built by Krajee for mPDF formatting 
-        'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
-        // any css to be embedded if required
-        'cssInline' => '.kv-heading-1{font-size:9px}', 
-         // set mPDF properties on the fly
-        'options' => ['title' => 'Punto de Cuenta '],
-         // call mPDF methods on the fly
-        'marginTop' => '100',
+    
+            /*** Pie de Página Bonito
+             * '<center>'
+            .'<div class="row">'
+            .'<table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:12px; text-align: center;">'
+            .'<tr>'
+            .'    <td>'
+            .'        <strong>¡CHAVEZ VIVE, LA PATRIA SIGUE!</strong>'
+            .'        <br>"Independencia y Patria Socialista" ¡Viviremos y Venceremos!'
+            .'        <br> <strong>¡PRIMEROS EN EL SACRIFICIO! ¡ULTIMOS EN EL BENEFICIO!</strong>'
+            .'    </td>'
+            .'</tr>'
+            .'</table>'
+            .'</div>'
+            .'<hr style="color: #000000; margin: 0px; padding: 0px;" size="1" />'
+            .'<div class="row">'
+            .'<table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:10px; text-align: center;">'
+            .'<tr>'
+            .'    <td>'
+            .'            <strong>Avenida Urdaneta, Esquina de Boleros, Palacio de Miraflores, Edificio Administrativo</strong>'
+            .'            <br>'
+            .'            <strong>Piso 2, Fundación Pueblo Soberano, RIF G-2000-2056-3</strong>'
+            .'            <br>'
+            .'            <strong>Teléfono: 0212-8063573</strong>'
+            .'     </td></tr>'
+            .'</table>'
+            .'</div></center> 
+             * 
+             * **/
+    
+    
+            // return the pdf output as per the destination setting
+            return $pdf->render();       
+    
+        }
         
-        'methods' => [ 
-            'SetHTMLHeader'=>[$headerHtml, [ 'E', [TRUE]]], 
-            'SetHTMLFooter'=>[$footerHtml, [ 'E', [TRUE]]], 
+    public function actionActualiza($id,$estatus1=null,$estatus2=null,$estatus3=null,$departamento=null,$unidad=null,$usuario=null,$verorpa=null, $vercheque =null, $vertelefono=null, $verunidad=null){
+     
+    $modelgestion = Gestion::findOne($id);
+    
+    $modelsolicitudes = Solicitudes::findOne($modelgestion->solicitud_id);
+        
+    $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
+        
+    if ($consulta[0]['tiporif']==""){
+
+    $query = \app\models\PresupuestosSearch::find()
+            ->select(["conexionsigesp.req as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as nrif", "empresa_institucion.rif AS rif", "presupuestos.beneficiario_id", "presupuestos.solicitud_id" ])
+            ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
+            ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
+            ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
+
+    $dataProvider = new ActiveDataProvider([
+        'query' => $query,
+        'pagination' => [
+            'pageSize' => 10,
         ],
+        ]);    
+        
+        $modelorigenmemo = new Origenmemo;
+        $modelfinalmemo = new Finalmemo;
+        $memosgestion = new Memosgestion;
+        $modelorigenmemo->load(Yii::$app->request->post());
+        $modelfinalmemo->load(Yii::$app->request->post());
+        $memosgestion->load(Yii::$app->request->post());
+        
+        $searchModel = new \app\models\GestionSearchGestionalo();
+        
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+        if($estatus1!=''){
+            $dataProvider->query->andWhere(['estatus1_id'=>$estatus1]);
+        }
+        if($estatus2!=''){
+            $dataProvider->query->andWhere(['estatus2_id'=>$estatus2]);
+        }
+        if($estatus3!=''){
+            $dataProvider->query->andWhere(['estatus3_id'=>$estatus3]);
+        }
+        if($departamento!=''){
+            $dataProvider->query->andWhere(['departamentos.id'=>$departamento]);
+        }
+        if($unidad!=''){
+            $dataProvider->query->andWhere(['gestion.recepcion_id'=>$unidad]);
+        }
+        if($usuario!=''){
+            $dataProvider->query->andWhere(['trabajador_id'=>$usuario]);
+        } 
+     
+        return $this->render('gestiona', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'modelorigenmemo' => $modelorigenmemo,
+                'modelfinalmemo' => $modelfinalmemo,
+                'memosgestion' => $memosgestion,
+                'estatus1' => $estatus1,
+                'estatus2' => $estatus2,
+                'estatus3' => $estatus3,
+                'departamento' => $departamento,
+                'unidad' => $unidad,
+                'usuario' => $usuario,
+                'verorpa' => $verorpa,
+                'vercheque' => $vercheque,
+                'vertelefono' => $vertelefono,
+                'verunidad' => $verunidad,
+        ]);
 
-    ]);
-    
-    
-    
-    // return the pdf output as per the destination setting
-    return $pdf->render();       
-    
-    }  
-
-    
     }
+
+    }
+}

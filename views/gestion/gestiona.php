@@ -28,11 +28,9 @@ use kartik\widgets\DatePicker;
 <center>
     <div class="container center-block">
 	<div class="col-lg-12">
-			<div class="box-header center-block">
                             <h3 class="display-3 center-block">
-					Cambio de Estatus y Envio de MEMO					
+					Envio de Memorandum					
                             </h3>
-			</div>
         </div>
     </div>
 <!-- Formulario para cambio de Estatus de Varias Items a la Vez-->
@@ -43,14 +41,17 @@ use kartik\widgets\DatePicker;
 <?=Html::beginForm(['gestion/cambioestatus'],'post');?>
     
 <div class="container center-block">
-	<div class="col-lg-6 col-md-6">
-            <div class="modelorigenmemo-form col-lg-8 col-md-8 col-md-offset-2 col-lg-offset-2">
+    <div class="col-lg-4 col-md-4">
+        <div class="panel panel-primary" >
+            <div class="panel-heading"> Enviado Por :</div>
+        <div class="panel-body">
+	<div class="col-lg-12 col-md-12">
  <!-- Formulario del Origen Memos -->
 <?php 
 echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Departamentos::find()->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
-        'options' => ['placeholder' => 'Seleccione el Departamento'],
+        'options' => ['placeholder' => 'Seleccione la Dirección'],
         'pluginOptions' => [
         'allowClear' => true
         ],
@@ -82,64 +83,25 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
     ]);
     
     ?>
+ 
+        </div>
 
-     <?=
-    /* Estatus 1 con Select2 de kartik*/
-        $form->field($modelorigenmemo, 'estatus1')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Estatus1::find()->orderBy('nombre')->all(), 'id', 'nombre'),
-        'language' => 'es',
-        'options' => ['placeholder' => 'Seleccione el Estatus Nivel 1'],
-        'pluginOptions' => [
-        'allowClear' => true
-        ],
-    ]);
-    
-    ?>
-    
-    
-    <?php
-    /* Estatus 2 con depdrop de kartik*/
-    echo $form->field($modelorigenmemo, 'estatus2')->widget(DepDrop::classname(), [
-    'data' => ArrayHelper::map(Estatus2::find()->orderBy('nombre')->all(), 'id', 'nombre'),
-    'type'=>DepDrop::TYPE_SELECT2,
-    'options'=>['id'=>'estatus2_id', 'placeholder'=>'Seleccione el Estatus Nivel 2'],
-    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-    'pluginOptions'=>[
-        'placeholder' => 'Seleccione el Estatus Nivel 2',
-        'depends'=>['origenmemo-estatus1'],
-        'url'=>Url::to(['/estatus3/estatus1']),
-    ]
-    ]);
-        
-    ?>
 
-    <?=
-    /* Estatus 3 con depdrop de kartik*/
-    $form->field($modelorigenmemo, 'estatus3')->widget(DepDrop::classname(), [
-    'data' => ArrayHelper::map(Estatus3::find()->orderBy('nombre')->all(), 'id', 'nombre'),
-    'type'=>DepDrop::TYPE_SELECT2,
-    'options'=>['id'=>'estatus3_id', 'placeholder'=>'Seleccione el Estatus Nivel 3'],
-    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-    'pluginOptions'=>[
-        'placeholder' => 'Seleccione el Estatus Nivel 3',
-        'depends'=>['estatus2_id'],
-        'url'=>Url::to(['/estatus3/estatus2']),
-    ]
-    ]);
 
-    ?>  
 </div>
-            
 </div>
-
-<div class="col-lg-6 col-md-6">
-<div class="modelorigenmemo-form col-lg-8 col-md-8 col-md-offset-2 col-lg-offset-2">
-
+</div>
+<div class="container center-block">
+    <div class="col-lg-8 col-md-8">
+        <div class="panel panel-primary" >
+            <div class="panel-heading"> Recibido Por :</div>
+        <div class="panel-body">
+	<div class="col-lg-6 col-md-6">
                             
     <?= $form->field($modelfinalmemo, 'departamentofinal')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Departamentos::find()->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
-        'options' => ['placeholder' => 'Seleccione el Departamento'],
+        'options' => ['placeholder' => 'Seleccione la Dirección'],
         'pluginOptions' => [
         'allowClear' => true
         ],
@@ -171,7 +133,9 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
     ]);
     
     ?>
-    
+    </div> 
+    <div class="col-lg-6 col-md-6">
+      
     <?=
     /* Estatus 1 con Select2 de kartik*/
         $form->field($modelfinalmemo, 'estatus1final')->widget(Select2::classname(), [
@@ -216,40 +180,94 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
     ]
     ]);
     ?>   
-    
-    </div>
+
+</div>
+</div>
+</div>
+</div>
 </div>
 
+<!-- AQUI TERMINA EL DIV ENVIADO POR Y RECIBIDO POR -->    
+    
 <div class="col-lg-12 col-md-12">
-<div class="modelorigenmemo-form col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4">
-<?php $fechahoy = Yii::$app->formatter->asDate('now','php:d/m/Y'); ?>
+
+<div class="modelorigenmemo-form col-lg-9 col-md-9">
+    <?= $form->field($memosgestion, 'asunto')->textInput(['maxlength' => true]) ?>
+</div>
+    
+<div class="modelorigenmemo-form col-lg-3 col-md-3">
+<?php 
+$fechahoy = Yii::$app->formatter->asDate('now','php:d/m/Y');
+$memosgestion->fechamemo = $fechahoy;
+?>
+    <center>
      <?= $form->field($memosgestion, 'fechamemo')->widget(DatePicker::classname(), [
     'name' => 'dp_3',
-    'type' => DatePicker::TYPE_COMPONENT_APPEND,
-    'value' => $fechahoy,
-    'value2' => $fechahoy,
+    'type' => DatePicker::TYPE_COMPONENT_APPEND, 
     'pluginOptions' => [
         'autoclose'=>true,
        'format' => 'dd/mm/yyyy',
         'language' => 'es',
         'todayBtn' => 'linked',
-        'value' => $fechahoy,
     ]
     ]); 
     ?>
+    </center>
 </div>
-<div class="modelorigenmemo-form col-lg-8 col-md-8 col-md-offset-2 col-lg-offset-2">
-    <?= $form->field($memosgestion, 'asunto')->textInput(['maxlength' => true]) ?>
 
-   </div>
-    </div>                                                  
-<?= Html::submitButton('<span class="glyphicon glyphicon-floppy-saved"></span> Enviar e Imprimir Memorandum', ['class' => 'btn btn-primary btn-lg']) ?>                            
-    
-                        
+</div>    
+</div>       
 
+<?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['gestiona', 
+                'estatus1' => $estatus1,
+                'estatus2' => $estatus2,
+                'estatus3' => $estatus3,
+                'departamento' => $departamento,
+                'unidad' => $unidad,
+                'usuario' => $usuario,
+                'verorpa' => true,
+                'vercheque' => $vercheque,
+                'vertelefono' => $vertelefono,
+                'verunidad' => $verunidad], ['class'=>'btn btn-primary', 'data-container' => 'body', 'data-toggle' => 'tooltip', 'data-placement'=> 'bottom', 'title'=>'Ver Orden de Pago']) ?>
+
+<?= Html::a('<span class="glyphicon glyphicon-certificate"></span>', ['gestiona', 
+                'estatus1' => $estatus1,
+                'estatus2' => $estatus2,
+                'estatus3' => $estatus3,
+                'departamento' => $departamento,
+                'unidad' => $unidad,
+                'usuario' => $usuario,
+                'verorpa' => $verorpa,
+                'vercheque' => true,
+                'vertelefono' => $vertelefono,
+                'verunidad' => $verunidad], ['class'=>'btn btn-primary', 'data-container' => 'body', 'data-toggle' => 'tooltip', 'data-placement'=> 'bottom', 'title'=>'Ver Cheque']) ?>
+
+<?= Html::a('<span class="glyphicon glyphicon-earphone"></span>', ['gestiona', 
+                'estatus1' => $estatus1,
+                'estatus2' => $estatus2,
+                'estatus3' => $estatus3,
+                'departamento' => $departamento,
+                'unidad' => $unidad,
+                'usuario' => $usuario,
+                'verorpa' => $verorpa,
+                'vercheque' => $vercheque,
+                'vertelefono' => true,
+                'verunidad' => $verunidad], ['class'=>'btn btn-primary', 'data-container' => 'body', 'data-toggle' => 'tooltip', 'data-placement'=> 'bottom', 'title'=>'Ver Telefono' ]) ?>
+
+<?= Html::a('<span class="glyphicon glyphicon-collapse-down"></span>', ['gestiona', 
+                'estatus1' => $estatus1,
+                'estatus2' => $estatus2,
+                'estatus3' => $estatus3,
+                'departamento' => $departamento,
+                'unidad' => $unidad,
+                'usuario' => $usuario,
+                'verorpa' => $verorpa,
+                'vercheque' => $vercheque,
+                'vertelefono' => $vertelefono,
+                'verunidad' => true], ['class'=>'btn btn-primary', 'data-container' => 'body', 'data-toggle' => 'tooltip', 'data-placement'=> 'bottom', 'title'=>'Ver Unidad']) ?>
+
+<?= Html::submitButton('<span class="glyphicon glyphicon-floppy-saved"></span> Enviar e Imprimir', ['class' => 'btn btn-primary btn-lg']) ?>                            
     
-</div>
-<?= "<hr>" ?>
 </center>
 
 <!-- Termina el Formulario de la Busqueda -->
@@ -281,61 +299,52 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
             'label' => 'N°<br>Solicitud',
             'encodeLabel' => false,
             'format' => 'text',
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
             ],
                     
             [
             'attribute' => 'requerimiento',
             'value' => 'requerimiento',
             'format' => 'text',
-            ],
-                    
-            [
-            'attribute' => 'iddoc',
-            'value' => 'iddoc',
-            'format' => 'text',
-            ],
-            
-            [
-            'attribute' => 'fechaingreso',
-            'value' => 'fechaingreso',
-            'format' => 'text',
-            'label' => 'Fecha<br>Ingreso',
-            'format' => 'text',
-            'encodeLabel' => false,
-            ],
-            
-            [
-            'attribute' => 'fechaultimamodificacion',
-            'value' => 'fechaultimamodificacion',
-            'label' => 'Fecha<br>Modificación',
-            'format' => 'text',
-            'encodeLabel' => false,
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
             ],
         
             [ 
             'attribute' => 'beneficiario', 				
             'value' => 'beneficiario', 
             'format' => 'text', 
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
             ],
         
             [ 
             'attribute' => 'cibeneficiario', 				
             'value' => 'cibeneficiario', 
             'format' => 'text', 
-            ],
-        
-            [                     
-            'attribute' => 'edadbeneficiario', 			
-            'value' => 'edadbeneficiario', 
-            'format' => 'text',
-            'visible'=> false,
+            'label' => '<center>C.I.<br>Benefic.</center>',
+            'encodeLabel' => false,
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
             ],
         
             [                     
             'attribute' => 'telefono', 			
             'value' => 'telefono', 
             'format' => 'text',
-            'visible'=> false,
+            'visible'=> $vertelefono,
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
+            ],                      
+        
+            [                     
+            'attribute' => 'unidadorigen', 			
+            'value' => 'unidadorigen', 
+            'format' => 'text',
+            'visible'=> $verunidad,
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
             ],
                    
             [ 
@@ -344,12 +353,16 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
             'label' => 'Empresa<br>Casa Comercial',
             'format' => 'text',
             'encodeLabel' => false,
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
             ],
             
             [ 
             'attribute' => 'rif', 		
             'value' => 'rif', 
             'format' => 'text',
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
             ],
      
             [ 
@@ -357,22 +370,27 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
             'value' => 'cantidad',
             'label' => 'N°',
             'format' => 'text',
-            //'visible'=> false,
+            'pageSummary'=>true,
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
             ],
-            
+                        
             [ 
             'attribute' => 'orpa', 						
             'value' => 'orpa', 
             'format' => 'text',
-            'visible'=> false,
+            'visible'=> $verorpa,
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
             ],
-
-                    
+                               
             [ 
             'attribute' => 'cheque', 						
             'value' => 'cheque', 
             'format' => 'text',
-            'visible'=> false,
+            'visible'=> $vercheque,
+            'vAlign'=>'middle',
+            'hAlign'=>'center', 
             ],
                     
                        
@@ -387,9 +405,45 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
             'pageSummary'=>true,
             ],
             
-            //[
-            //'class'=>'kartik\grid\ActionColumn',
-            //],
+//            [
+//            'class'=>'kartik\grid\ActionColumn',
+//            ],
+            
+            [
+            'class'=>'kartik\grid\ActionColumn',
+            'template' => '{update} {view} {actualiza}',
+            'buttons' => [
+                'view' => function($url, $model){
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',
+                                $url, 
+                                    [
+                                        'title' => 'Ver Gestión',
+                                    ]
+                                );
+                },
+                'update' => function($url, $model){
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>',
+                                $url, 
+                                    [
+                                        'title' => 'Actualizar',
+                                    ]
+                                );
+                },
+                'actualiza' => function($url, $model){
+                        return Html::a('<span class="glyphicon glyphicon-refresh"></span>',
+                                $url, 
+                                    [
+                                        'title' => 'Actualizar',
+                                    ]
+                                );
+                },
+            ],
+            'urlCreator' => function ($action, $model, $key, $index) {
+                if ( $action == 'actualiza'){
+                    return yii\helpers\Url::to(['actualiza', 'id' => $key, 'estatus3' => $model->estatus3_id,'verorpa' => true, 'vercheque' => true, 'vertelefono' => true, 'verunidad' => true ]);
+                }    
+            }
+            ],
             
         ];
 
@@ -436,3 +490,15 @@ echo   GridView::widget([
 <!-- Fin del Formulario -->
 
 </div>
+<?php
+$this->registerJs(<<<JS
+   
+   $(function () {
+   $('[data-toggle="tooltip"]').tooltip()
+   })
+
+JS
+        
+);
+
+?>

@@ -35,7 +35,7 @@ class Origenmemo extends Model
     public function attributeLabels()
     {
         return [
-            'departamento' => 'Departamento',
+            'departamento' => 'Dirección',
             'estatus1' => 'Estatus 1',
             'estatus2' => 'Estatus 2',
             'estatus3' => 'Estatus 3',

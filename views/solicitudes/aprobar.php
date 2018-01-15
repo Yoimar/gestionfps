@@ -12,18 +12,24 @@ use app\models\Solicitudes;
 /* @var $model app\models\Sepsolicitud */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-<div class="col-lg-6 col-md-6 col-md-offset-3 col-lg-offset-3">
-<div class="panel panel-primary">
-<div class="panel-heading">
-    <h3 class="panel-title text-center">Aprobar Caso por el SIGESP</h3>
-  </div>
-    <hr>
-    <center>
-<!-- Inicio del Panel-->  
-    
-    <div class="panel-body center-block">
-	<div class="col-lg-6 col-md-8 col-md-offset-2 col-lg-offset-3">
-                        
+<div class="jumbotron" style="font-size: 1em;" >
+    <div class="container">
+	<div class="col-lg-12">
+		<div class="box">
+			<div class="box-header">
+                            <h3 class="display-3">
+					Aprobar Caso por el SASYC 					
+                            </h3>
+			</div>
+
+                </div>
+        </div>
+    </div>
+</div>
+<center>
+<div class="container center-block">
+	<div class="col-lg-12 col-md-12">
+                        <div class="sepingresa-form col-lg-4 col-md-4 col-md-offset-4 col-lg-offset-4">
 
         <?php $form = ActiveForm::begin(); ?>
 
@@ -31,8 +37,7 @@ use app\models\Solicitudes;
         $form->field($model, 'caso')->widget(Select2::classname(), 
             [
             'initValueText' => empty($model->caso) ? '' : Solicitudes::findOne($model->caso)->num_solicitud, // set the initial display text
-            'options' => ['placeholder' => 'Ingrese el Caso a Aprobar', 'class' => 'container center-block','language' => 'es',],
-            'language' => 'es',
+            'options' => ['placeholder' => 'Ingrese el Caso a Aprobar'],
             'pluginOptions' => [
             'allowClear' => true,
             'minimumInputLength' => 4,
@@ -50,26 +55,19 @@ use app\models\Solicitudes;
             ],
             ]); 
         ?>
-  <div class="col-lg-6 col-md-8 col-lg-offset-3 col-md-offset-2">
-                        <?= Html::submitButton('Muestra', ['class' => 'btn btn-primary']) ?>
+  <div class="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4">
+                        <?= Html::submitButton('Muestra', ['class' => 'btn btn-success']) ?>
     </div>
 
         <?php ActiveForm::end(); ?>
 
+    </div>
+        
+                        
+    </div>
     
    
-</div>  
-
-    </center>
-    <hr>
-<!-- Fin del Panel -->    
-    
-</div>    
-    
-
-
-<center>
-
+</div>
      <div><?= AlertBlock::widget([ 
                     'type' => AlertBlock::TYPE_ALERT,
                     'useSessionFlash' => true,
@@ -78,5 +76,3 @@ use app\models\Solicitudes;
              ?>
         </div>
 </center>
-
-</div>

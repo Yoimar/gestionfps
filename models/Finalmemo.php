@@ -36,11 +36,12 @@ class Finalmemo extends Model
     public function attributeLabels()
     {
         return [
-            'departamento' => 'Departamento',
-            'estatus1' => 'Estatus 1',
-            'estatus2' => 'Estatus 2',
-            'estatus3' => 'Estatus 3',
-            'unidad' => 'Unidad',
+            'departamentofinal' => 'Dirección ',
+            'estatus1final' => 'Estatus 1',
+            'estatus2final' => 'Estatus 2',
+            'estatus3final' => 'Estatus 3',
+            'unidadfinal' => 'Unidad',
+            'usuariofinal' => 'Trabajador Final',
         ];
     }
     

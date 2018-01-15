@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Users';
+$this->title = 'Usuarios Gestión';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Usuario', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -24,13 +24,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+//            'id',
             'username',
-            'auth_key',
-            'password_hash',
-            'password_reset_token',
+//            'auth_key',
+//            'password_hash',
+//            'password_reset_token',
             // 'email:email',
-            // 'status',
+//             'status',
             // 'created_at',
             // 'updated_at',
 

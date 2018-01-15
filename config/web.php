@@ -8,6 +8,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'language' => 'es-VE',
+    'sourceLanguage' => 'es-VE',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -54,12 +55,13 @@ $config = [
             ],
         ],
         'formatter' => [
-            'dateFormat' => 'dd.MM.yyyy',
+            'dateFormat' => 'dd.mm.yyyy',
             'decimalSeparator' => ',',
             'thousandSeparator' => '.',
             'currencyCode' => 'VEF',
-            'nullDisplay' => '0',
+            'nullDisplay' => '',
             'defaultTimeZone' => 'America/Caracas',
+            'locale' => 'es_VE'
         ],
         
         'pdf' => [

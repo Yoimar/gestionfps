@@ -18,8 +18,8 @@ class GestionSearchGestionalo extends Gestion
     public function rules()
     {
         return [
-            [['id', 'estatus1_id', 'estatus2_id', 'estatus3_id', 'departamento', 'trabajador_id', 'updated_by', 'recepcion_id', 'departamento_id'], 'integer'],
-            [['solicitud_id', 'num_solicitud', 'cibeneficiario', 'beneficiario', 'telefono', 'fechaingreso', 'fechaingreso_hasta', 'trabajadorsocial', 'empresaoinstitucion', 'cheque', 'updated_at', 'updated_hasta', 'iddoc', 'rif', 'orpa', 'requerimiento'  ], 'safe'],
+            [['id', 'estatus1_id', 'estatus2_id', 'estatus3_id', 'departamento', 'trabajador_id', 'updated_by', 'recepcion_id', 'unidadorigen', 'departamento_id', 'cantidad'], 'integer'],
+            [['solicitud_id', 'num_solicitud', 'cibeneficiario', 'beneficiario', 'telefono', 'fechaingreso', 'fechaingreso_hasta', 'fechaultimamodificacion','trabajadorsocial', 'empresaoinstitucion', 'cheque', 'updated_at', 'updated_hasta', 'iddoc', 'rif', 'orpa', 'requerimiento'  ], 'safe'],
             [['monto'], 'number'],
         ];
     }
@@ -51,6 +51,7 @@ class GestionSearchGestionalo extends Gestion
                 'gestion.estatus3_id',
                 'gestion.trabajador_id',
                 'gestion.recepcion_id', 
+                'recepciones2.nombre as unidadorigen',    
                 'departamentos.id as departamento', 
                 "personabeneficiario.ci as cibeneficiario", 
                 "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario", 
@@ -59,11 +60,11 @@ class GestionSearchGestionalo extends Gestion
                 'solicitudes.estatus',
                 "to_char(solicitudes.created_at, 'DD/MM/YYYY') as fechaingreso", 
                 "TO_CHAR(gestion.updated_at, 'DD/MM/YYYY') as fechaultimamodificacion",
-                "CONCAT(personabeneficiario.telefono_fijo || ' / ' || personabeneficiario.telefono_celular || ' / ' || personabeneficiario.telefono_otro) as telefono",
+                "CONCAT(COALESCE(personabeneficiario.telefono_fijo || ' ', '') || COALESCE(personabeneficiario.telefono_celular || ' ', '') || COALESCE(personabeneficiario.telefono_otro || ' ', '') ) as telefono",
                 "extract(YEAR FROM age(now(),personabeneficiario.fecha_nacimiento)) as edadbeneficiario",
                 "string_agg(to_char(presupuestos.documento_id,'999999'), '  //  ') as iddoc",
                 "string_agg(to_char(presupuestos.numop,'999999'), '  //  ') as orpa",
-                "string_agg(empresa_institucion.nrif, '  //  ') as rif",
+                "string_agg(CONCAT(COALESCE(empresa_institucion.rif || '-', '') || empresa_institucion.nrif), '  //  ') as rif",
                 "string_agg(conexionsigesp.req, '  //  ') as requerimiento",
                 "string_agg(empresa_institucion.nombrecompleto, '  //  ') as empresaoinstitucion",
                 "count(presupuestos.cantidad) as cantidad", 
@@ -82,7 +83,8 @@ class GestionSearchGestionalo extends Gestion
                 ->join('LEFT JOIN', 'empresa_institucion', 'presupuestos.beneficiario_id = empresa_institucion.id')
                 ->join('LEFT JOIN', 'conexionsigesp', 'presupuestos.id = conexionsigesp.id_presupuesto')
                 ->join('LEFT JOIN', 'recepciones', 'recepciones.id = gestion.recepcion_id')
-                ->join('LEFT JOIN', 'departamentos', 'recepciones.departamento_id = departamentos.id')
+                ->join('LEFT JOIN', 'recepciones as recepciones2', 'recepciones2.id = solicitudes.recepcion_id')
+                ->join('LEFT JOIN', 'departamentos', 'recepciones.departamentos_id = departamentos.id')
                 ->groupBy(['num_solicitud', 
                     'gestion.id', 
                     'estatus1.id', 
@@ -90,6 +92,7 @@ class GestionSearchGestionalo extends Gestion
                     'gestion.estatus3_id', 
                     'gestion.trabajador_id',
                     'gestion.recepcion_id',
+                    'unidadorigen',    
                     'departamentos.id',
                     'cibeneficiario', 
                     'beneficiario', 
@@ -228,6 +231,18 @@ class GestionSearchGestionalo extends Gestion
                         'asc' => ['iddoc' => \SORT_ASC],
                         'desc' => ['iddoc' => \SORT_DESC],
                     ],
+                    'rif' => [ 
+                        'asc' => ['iddoc' => \SORT_ASC],
+                        'desc' => ['iddoc' => \SORT_DESC],
+                    ],
+                    'unidadorigen' => [ 
+                        'asc' => ['recepciones2.nombre' => \SORT_ASC],
+                        'desc' => ['recepciones2.nombre' => \SORT_DESC],
+                    ],
+                    'orpa' => [ 
+                        'asc' => ['orpa' => \SORT_ASC],
+                        'desc' => ['orpa' => \SORT_DESC],
+                    ],
     
                 ],
             ],
@@ -250,6 +265,7 @@ class GestionSearchGestionalo extends Gestion
             'estatus3_id' => $this->estatus3_id,
             'estatus1_id' => $this->estatus1_id,
             'trabajador_id' => $this->trabajador_id,
+            'cantidad' => $this->cantidad,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
@@ -278,7 +294,7 @@ class GestionSearchGestionalo extends Gestion
             ->andFilterWhere(['=', "date_part('year' ,now()-personabeneficiario.fecha_nacimiento)", $this->edadbeneficiario])
             ->andFilterWhere(['like', "to_char(solicitudes.created_at, 'DD/MM/YYYY')", $this->fechaingreso])
             ->andFilterWhere(['like', "to_char(gestion.updated_at, 'DD/MM/YYYY')", $this->fechaultimamodificacion])
-            ->andFilterWhere(['like', "CONCAT(personabeneficiario.telefono_fijo || ' / ' || personabeneficiario.telefono_celular || ' / ' || personabeneficiario.telefono_otro)", $this->telefono]);
+            ->andFilterWhere(['like', "CONCAT(personabeneficiario.telefono_fijo || ' ' || personabeneficiario.telefono_celular || ' ' || personabeneficiario.telefono_otro)", $this->telefono]);
 
         return $dataProvider;
     }

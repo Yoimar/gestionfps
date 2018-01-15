@@ -45,6 +45,11 @@ class Memosgestion extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public $verorpa;
+    public $vercheque;
+    public $vertelefono;
+    public $verunidad;
+    
     public static function tableName()
     {
         return 'memosgestion';
@@ -82,31 +87,35 @@ class Memosgestion extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'dirorigen' => 'Dirorigen',
-            'unidadorigen' => 'Unidadorigen',
-            'trabajadororigen' => 'Trabajadororigen',
-            'estatus1origen' => 'Estatus1origen',
-            'estatus2origen' => 'Estatus2origen',
-            'estatus3origen' => 'Estatus3origen',
-            'dirfinal' => 'Dirfinal',
-            'unidadfinal' => 'Unidadfinal',
-            'trabajadorfinal' => 'Trabajadorfinal',
-            'estatus1final' => 'Estatus1final',
-            'estatus2final' => 'Estatus2final',
-            'estatus3final' => 'Estatus3final',
-            'fechamemo' => 'Fechamemo',
+            'dirorigen' => 'Direccion de Origen',
+            'unidadorigen' => 'Unidad de Origen',
+            'trabajadororigen' => 'Trabajador a Cargo',
+            'estatus1origen' => 'Estatus1 Origen',
+            'estatus2origen' => 'Estatus2 Origen',
+            'estatus3origen' => 'Estatus3 Origen',
+            'dirfinal' => 'Dirección Final',
+            'unidadfinal' => 'Unidad final',
+            'trabajadorfinal' => 'Trabajador Final',
+            'estatus1final' => 'Estatus1 Final',
+            'estatus2final' => 'Estatus2 Final',
+            'estatus3final' => 'Estatus3 Final',
+            'fechamemo' => 'Fecha',
             'asunto' => 'Asunto',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
             'updated_by' => 'Updated By',
+            'verorpa' => 'Ver Orden de Pago',
+            'vercheque' => 'Ver Cheque',
+            'vertelefono' => 'Ver Telefono', 
+            'verunidad' => 'Ver Unidad Bienestar Social',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getDirorigen0()
+    public function getDirorigennombre()
     {
         return $this->hasOne(Departamentos::className(), ['id' => 'dirorigen']);
     }
@@ -114,7 +123,7 @@ class Memosgestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getDirfinal0()
+    public function getDirfinalnombre()
     {
         return $this->hasOne(Departamentos::className(), ['id' => 'dirfinal']);
     }
@@ -122,7 +131,7 @@ class Memosgestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEstatus1origen0()
+    public function getEstatus1origennombre()
     {
         return $this->hasOne(Estatus1::className(), ['id' => 'estatus1origen']);
     }
@@ -130,7 +139,7 @@ class Memosgestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEstatus1final0()
+    public function getEstatus1finalnombre()
     {
         return $this->hasOne(Estatus1::className(), ['id' => 'estatus1final']);
     }
@@ -138,7 +147,7 @@ class Memosgestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEstatus2origen0()
+    public function getEstatus2origennombre()
     {
         return $this->hasOne(Estatus2::className(), ['id' => 'estatus2origen']);
     }
@@ -146,7 +155,7 @@ class Memosgestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEstatus2final0()
+    public function getEstatus2finalnombre()
     {
         return $this->hasOne(Estatus2::className(), ['id' => 'estatus2final']);
     }
@@ -154,7 +163,7 @@ class Memosgestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEstatus3origen0()
+    public function getEstatus3origennombre()
     {
         return $this->hasOne(Estatus3::className(), ['id' => 'estatus3origen']);
     }
@@ -162,7 +171,7 @@ class Memosgestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEstatus3final0()
+    public function getEstatus3finalnombre()
     {
         return $this->hasOne(Estatus3::className(), ['id' => 'estatus3final']);
     }
@@ -170,7 +179,7 @@ class Memosgestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUnidadorigen0()
+    public function getUnidadorigennombre()
     {
         return $this->hasOne(Recepciones::className(), ['id' => 'unidadorigen']);
     }
@@ -178,7 +187,7 @@ class Memosgestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUnidadfinal0()
+    public function getUnidadfinalnombre()
     {
         return $this->hasOne(Recepciones::className(), ['id' => 'unidadfinal']);
     }
@@ -186,7 +195,7 @@ class Memosgestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTrabajadororigen0()
+    public function getTrabajadororigennombre()
     {
         return $this->hasOne(Trabajador::className(), ['id' => 'trabajadororigen']);
     }
@@ -194,8 +203,9 @@ class Memosgestion extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTrabajadorfinal0()
+    public function getTrabajadorfinalnombre()
     {
         return $this->hasOne(Trabajador::className(), ['id' => 'trabajadorfinal']);
     }
+    
 }

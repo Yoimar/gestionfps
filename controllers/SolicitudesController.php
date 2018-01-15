@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use app\models\Personas;
 use yii\db\Query;
 use yii\db\ActiveQuery;
+use app\models\Sepingreso;
 
 /**
  * SolicitudesController implements the CRUD actions for Solicitudes model.
@@ -56,6 +57,15 @@ class SolicitudesController extends Controller
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
+        ]);
+    }
+    
+    public function actionModificar($id, $referencia=null)
+    {
+
+        return $this->render('modificar', [
+            'model' => $this->findModel($id),
+            'referencia' => $referencia,
         ]);
     }
 
@@ -142,5 +152,18 @@ class SolicitudesController extends Controller
         $out['results'] = ['id' => $id, 'text' => Personas::find($id)->nombre];
     }
     return $out;
-}
+    }
+    
+    public function actionTab1($id, $referencia=null)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->render('modificar', ['model' => $model, 'referencia' => 2]);
+        } else {
+            return $this->render('tab1', [
+                'model' => $model,
+            ]);
+        }
+    }
 }

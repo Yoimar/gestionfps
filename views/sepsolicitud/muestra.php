@@ -3,32 +3,34 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use kartik\alert\AlertBlock;
 
 ?>
-
-
-<div class="row">
-    <?= Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "160 px", "class" => "pull-left"]) ?>
-    <?= Html::img("@web/img/despacho.png", ["alt" => "Logo Fundación", "width" => "500 px", "class" => "pull-right"]) ?>
-</div>
 
 <div class="panel panel-primary">
 <div class="panel-heading">
     <h3 class="panel-title text-center"><?= "Caso N° -".$consulta[0]['ndonacion']?></h3>
   </div>
-   <ul class="list-group">
-    <li class="list-group-item"><?= $consulta[0]['solicitante']?></li>
-    <li class="list-group-item"><?= $consulta[0]['beneficiario']?></li>
-    <li class="list-group-item"><?= $consulta[0]['requerimiento']?></li>
-    <li class="list-group-item"><?= $consulta[0]['tipoayuda']?></li>
-    <li class="list-group-item"><?= $consulta[0]['area']?></li>
-    <li class="list-group-item"><?= $consulta[0]['necesidad']?></li>
-    <li class="list-group-item"><?= $consulta[0]['descripcion']?></li>
-  </ul>
-</div>
-
-
-
+<div class="panel-body">
+    <div class="col-lg-6 col-md-6">
+        <?= $consulta[0]['solicitante']?>
+        <hr>    
+        <?= $consulta[0]['beneficiario']?>
+        <hr>    
+        <?= $consulta[0]['requerimiento']?>
+    </div>
+    <div class="col-lg-6 col-md-6">
+        <?= $consulta[0]['tipoayuda']?></li>
+        <hr>
+        <?= $consulta[0]['area']?></li>
+        <hr>
+        <?= $consulta[0]['necesidad']?></li>
+    </div>
+    <div class="col-lg-12 col-md-12">
+        <hr><center>
+        <?= $consulta[0]['descripcion']?>
+        <hr></center>
+    
 
 <?php if ($consulta[0]['codestpre'] == 0201){
     $estructuraparaimprimir= "407010201";
@@ -42,16 +44,12 @@ if (count($consulta)<=1){
 }
 ?>
 
-
-
-
-
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
 
         'showPageSummary' => true,
-        'tableOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
+        'tableOptions' => ['class' => 'text-center',],
         'layout' => "{items}\n{pager}",
         
         'options' => ['class' => 'text-center primary', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
@@ -91,11 +89,23 @@ if (count($consulta)<=1){
              'pageSummary'=> $estructuraparaimprimir,
              'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
             ],
-            
+             
             [
              'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
              'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
              'attribute'=>'rif',
+             'label' => 'TIPO RIF',
+             'pageSummary'=>'',
+             'hAlign'=>'center',
+             'vAlign'=>'middle',
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
+            ],
+            
+            [
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
+             'attribute'=>'nrif',
+             'label' => 'RIF',
              'pageSummary'=>'Total',
              'hAlign'=>'center',
              'vAlign'=>'middle',
@@ -115,7 +125,22 @@ if (count($consulta)<=1){
             'pageSummary'=>true,
             'pageSummaryFunc'=>GridView::F_SUM,
             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
-            ]
+            ],
+            
+            [
+            'class'=>'kartik\grid\ActionColumn',
+            'template' => '{update}',
+            'buttons' => [
+                'update' => function($url, $model){
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>',
+                                    yii\helpers\Url::to(['empresainstitucion/updates', 'id' => $model->beneficiario_id, 'volver' => $model->solicitud_id]),
+                                    [
+                                        'title' => 'Actualizar',
+                                    ]
+                                );
+                }
+            ],
+            ],
             
                  
         ],
@@ -127,10 +152,43 @@ if (count($consulta)<=1){
         
     ]); ?>
 
-<br><br>
+<br>
 
 <center>
+<?= Html::a('<span class="glyphicon glyphicon-remove"></span>Devolver de SIGESP', ['sepsolicitud/devolver', 'numero' => $numero], ['class' => 'btn btn-danger']) ?>
+
 <?= Html::a('<span class="glyphicon glyphicon-ok-sign"></span>Enviar a SIGESP', ['sepsolicitud/inserta', 'numero' => $numero], ['class' => 'btn btn-primary']) ?>
+</center>
+
+<center>
+<?php 
+
+if(!isset($consulta[0]['fecha'])):
+?>
+    
+    
+<?= Html::a('<span class="glyphicon glyphicon-print"></span>', ['sepsolicitud/imprimir', 'numero' => $numero], ['class' => 'btn btn-info', 'target'=>'_blank']) ?>    
+    
+    
+<?php endif; ?>
+</center>
+
+</div>
+
+</div>
+   
+</div>
+
+<center>
+<div class="col-lg-12 col-md-12">
+     <div><?= AlertBlock::widget([ 
+                    'type' => AlertBlock::TYPE_ALERT,
+                    'useSessionFlash' => true,
+                    'delay' => 5000,
+                    ]);
+             ?>
+        </div>
+</div>
 </center>
 
 

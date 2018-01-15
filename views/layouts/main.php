@@ -27,19 +27,28 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Html::img('@web/img/logo_fps2.jpg', ['alt' => 'Logo Fundación', 'height' => '25 px', 'style' => 'margin: 0 auto; border: 0;' ]),
-        //'brandLabel' => 'Fundación Pueblo Soberano Gestión',
+        'brandLabel' => '<span></span>',
         'brandUrl' => Yii::$app->homeUrl,
-        'brandOptions' => ['style' => 'margin: 0 auto; border: 0;'],
+        'brandOptions' => ['class' => 'glyphicon glyphicon-home', 'style' => 'margin: 0 auto; border: 0; color: #FFFFFF;'],
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
+            'style' => 'background-color:  #337ab7',
         ],
     ]);
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
+        'options' => ['class' => 'navbar-nav navbar-right',
+                       'style' => 'background-color:  #337ab7;',
+            ],
         'items' => [
-            ['label' => 'Gestión', 'url' => ['/gestion']],
-            ['label' => 'Localizador', 'url' => ['/gestion/origenmemo']],
+            ['label' => 'Gestión', 'url' => ['/gestion'], 'linkOptions' => ['style' => 'color: #FFFFFF;']],
+            ['label' => 'Localizador', 
+            'items' => [
+                 '<li class="dropdown-header">Menu Localizador</li>',
+                 ['label' => 'Crear Localizador', 'url' => '@web/gestion/origenmemo'],
+                 ['label' => 'Ver Memorandums', 'url' => '@web/memosgestion/index'],
+            ],       
+            'linkOptions' => ['style' => 'color: #FFFFFF;']
+            ],
             [
             'label' => 'Reportes',
             'items' => [
@@ -63,17 +72,19 @@ AppAsset::register($this);
                  ['label' => 'Total Nivel 1', 'url' => '@web/site/totalnivel1'],
                  ['label' => 'Total Nivel 2', 'url' => '@web/site/totalnivel2'],
                  ['label' => 'Total Nivel 3', 'url' => '@web/site/totalnivel3'],
+            ], 
+            'linkOptions' => ['style' => 'color: #FFFFFF;'],
             ],
-            ],
-            ['label' => 'Registrarse', 'url' => ['/site/signup']],
+            ['label' => 'Registrarse', 'url' => ['/site/signup'],'linkOptions' => ['style' => 'color: #FFFFFF;'], ],
             Yii::$app->user->isGuest ? (
-                ['label' => 'Ingresar', 'url' => ['/site/login']]
+                ['label' => 'Ingresar', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: #FFFFFF;'], ]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
                     'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
+                    ['class' => 'btn btn-link logout', 
+                     'style' => 'color: #FFFFFF;']
                 )
                 . Html::endForm()
                 . '</li>'
@@ -91,9 +102,11 @@ AppAsset::register($this);
     </div>
 </div>
 
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; Fundación Pueblo Soberano <?= date('Y') ?></p>
+<footer class="footer" style="background-color:#337ab7; color: #FFFFFF; margin: 0 auto; border: 0;" >
+    <div class="container" style="background-color:#337ab7; color: #FFFFFF; margin: 0 auto; border: 0; ">
+        <center style="background-color:#337ab7; color: #FFFFFF; margin: 0 auto; border: 0; padding: 0;">
+        <p style="background-color:#337ab7; color: #FFFFFF; margin: 0 auto; border: 0; padding: 0;" >&copy; Fundación Pueblo Soberano <?= date('Y') ?></p>
+        </center>
     </div>
 </footer>
 

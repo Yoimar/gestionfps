@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\EmpresaInstitucion */
@@ -14,20 +16,22 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'nombrecompleto')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'rif')->textInput(['maxlength' => true]) ?>
+    <?= 
+        $form->field($model, 'rif')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map([['id' => 'G', 'nombre' => 'G'],['id' => 'J', 'nombre' => 'J'],['id' => 'V', 'nombre' => 'V']], 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => '¿Tipo de Rif?'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+    
+    ?>
 
     <?= $form->field($model, 'nrif')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'created_by')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_by')->textInput() ?>
-
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

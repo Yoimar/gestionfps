@@ -41,7 +41,27 @@ class MemosgestionSearch extends Memosgestion
      */
     public function search($params)
     {
-        $query = Memosgestion::find();
+        $query = Memosgestion::find()
+                ->select(['id', 
+                    'dirorigen', 
+                    'unidadorigen', 
+                    'trabajadororigen', 
+                    'estatus1origen', 
+                    'estatus2origen', 
+                    'estatus3origen', 
+                    'dirfinal', 
+                    'unidadfinal', 
+                    'trabajadorfinal', 
+                    'estatus1final', 
+                    'estatus2final', 
+                    'estatus3final', 
+                    'created_by', 
+                    'updated_by',
+                    "to_char(fechamemo, 'DD/MM/YYYY') as fechamemo",
+                    'asunto', 
+                    'created_at', 
+                    'updated_at'
+                    ]);
 
         // add conditions that should always apply here
 
@@ -72,14 +92,15 @@ class MemosgestionSearch extends Memosgestion
             'estatus1final' => $this->estatus1final,
             'estatus2final' => $this->estatus2final,
             'estatus3final' => $this->estatus3final,
-            'fechamemo' => $this->fechamemo,
+//            'fechamemo' => $this->fechamemo,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
         ]);
 
-        $query->andFilterWhere(['like', 'asunto', $this->asunto]);
+        $query->andFilterWhere(['like', 'asunto', $this->asunto])
+               ->andFilterWhere(['like', "to_char(fechamemo, 'DD/MM/YYYY')", $this->fechamemo]);
 
         return $dataProvider;
     }

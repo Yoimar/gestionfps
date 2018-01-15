@@ -92,6 +92,19 @@ class EmpresainstitucionController extends Controller
             ]);
         }
     }
+    
+    public function actionUpdates($id,$volver)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['sepsolicitud/muestra', 'numero' => $volver]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+    }
 
     /**
      * Deletes an existing Empresainstitucion model.

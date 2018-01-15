@@ -86,6 +86,7 @@ class Gestion extends \yii\db\ActiveRecord
     public $orpa;
     public $departamento;
     public $departamento_id;
+    public $unidadorigen;
     
     
     /**
@@ -116,6 +117,7 @@ class Gestion extends \yii\db\ActiveRecord
             [['solicitud_id'], 'exist', 'skipOnError' => true, 'targetClass' => Solicitudes::className(), 'targetAttribute' => ['solicitud_id' => 'id']],
             [['tipodecontacto_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tipodecontacto::className(), 'targetAttribute' => ['tipodecontacto_id' => 'id']],
             [['trabajador_id'], 'exist', 'skipOnError' => true, 'targetClass' => Trabajador::className(), 'targetAttribute' => ['trabajador_id' => 'id']],
+            [['recepcion_id'], 'exist', 'skipOnError' => true, 'targetClass' => Recepciones::className(), 'targetAttribute' => ['recepcion_id' => 'id']],
         ];
     }
 
@@ -181,7 +183,8 @@ class Gestion extends \yii\db\ActiveRecord
             'telefono'=> 'Telefonos',
             'num_solicitud'=> 'Num Solicitud',
             'recepcion_id'=> 'Unidad',
-            'departamento_id' => 'Departamento'
+            'departamento_id' => 'Departamento',
+            'unidadorigen' => 'Unidad Origen'
         ];
     }
     

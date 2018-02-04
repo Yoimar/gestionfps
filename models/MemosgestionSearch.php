@@ -57,7 +57,7 @@ class MemosgestionSearch extends Memosgestion
                     'estatus3final', 
                     'created_by', 
                     'updated_by',
-                    "to_char(fechamemo, 'DD/MM/YYYY') as fechamemo",
+                    'fechamemo',
                     'asunto', 
                     'created_at', 
                     'updated_at'
@@ -67,6 +67,11 @@ class MemosgestionSearch extends Memosgestion
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ],
+            ],
         ]);
 
         $this->load($params);
@@ -92,15 +97,15 @@ class MemosgestionSearch extends Memosgestion
             'estatus1final' => $this->estatus1final,
             'estatus2final' => $this->estatus2final,
             'estatus3final' => $this->estatus3final,
-//            'fechamemo' => $this->fechamemo,
+            'fechamemo' => $this->fechamemo,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
         ]);
 
-        $query->andFilterWhere(['like', 'asunto', $this->asunto])
-               ->andFilterWhere(['like', "to_char(fechamemo, 'DD/MM/YYYY')", $this->fechamemo]);
+        $query->andFilterWhere(['like', 'asunto', $this->asunto]);
+//               ->andFilterWhere(['like', "to_char(fechamemo, 'DD/MM/YYYY')", $this->fechamemo]);
 
         return $dataProvider;
     }

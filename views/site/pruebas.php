@@ -5,7 +5,7 @@ use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 use kartik\grid\GridView;
 use kartik\alert\AlertBlock;
-use kartik\widgets\DateTimePicker;
+use kartik\datetime\DateTimePicker;
 use yii\bootstrap\Progress;
 use yii\bootstrap\Collapse;
 use yii\bootstrap\Tabs;

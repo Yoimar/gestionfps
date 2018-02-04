@@ -72,18 +72,19 @@ class Rpcbeneficiario extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['codemp', 'ced_bene', 'nombene', 'apebene', 'sc_cuenta', 'codbansig'], 'required'],
-            [['dirbene', 'foto'], 'string'],
+            [['codemp', 'ced_bene', 'apebene', 'sc_cuenta', 'codbansig'], 'required'],
+            [['foto'], 'string'],
             [['fecregben'], 'safe'],
             [['codemp'], 'string', 'max' => 4],
             [['ced_bene', 'numpasben'], 'string', 'max' => 10],
             [['codpai', 'codest', 'codmun', 'codpar', 'codtipcta', 'codbansig', 'codban'], 'string', 'max' => 3],
             [['rifben'], 'string', 'max' => 12],
-            [['nombene', 'apebene'], 'string', 'max' => 50],
+            [['nombene'], 'string', 'max' => 50],
+            [['apebene', 'email'], 'string', 'max' => 100],
+            [['dirbene'], 'string', 'max' => 254],
             [['telbene', 'celbene'], 'string', 'max' => 20],
-            [['email'], 'string', 'max' => 100],
             [['sc_cuenta', 'ctaban', 'sc_cuentarecdoc'], 'string', 'max' => 25],
-            [['nacben', 'tipconben', 'tipcuebanben'], 'string', 'max' => 1],
+            [['nacben', 'tipconben', 'tipcuebanben'], 'string', 'max' => 1],            
         ];
     }
 
@@ -94,15 +95,15 @@ class Rpcbeneficiario extends \yii\db\ActiveRecord
     {
         return [
             'codemp' => 'Codemp',
-            'ced_bene' => 'Ced Bene',
+            'ced_bene' => 'Rif ó Cedula',
             'codpai' => 'Codpai',
             'codest' => 'Codest',
             'codmun' => 'Codmun',
             'codpar' => 'Codpar',
             'codtipcta' => 'Codtipcta',
-            'rifben' => 'Rifben',
-            'nombene' => 'Nombene',
-            'apebene' => 'Apebene',
+            'rifben' => 'Rif del Beneficiario',
+            'nombene' => 'Nombre del Beneficiario',
+            'apebene' => 'Apellido del Beneficiario',
             'dirbene' => 'Dirbene',
             'telbene' => 'Telbene',
             'celbene' => 'Celbene',
@@ -204,9 +205,9 @@ class Rpcbeneficiario extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSepsolicituds()
+    public function getSepSolicituds()
     {
-        return $this->hasMany(Sepsolicitud::className(), ['codemp' => 'codemp', 'ced_bene' => 'ced_bene']);
+        return $this->hasMany(SepSolicitud::className(), ['codemp' => 'codemp', 'ced_bene' => 'ced_bene']);
     }
 
     /**

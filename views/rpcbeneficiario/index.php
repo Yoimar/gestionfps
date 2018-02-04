@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\RpcbeneficiarioSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Rpcbeneficiarios';
+$this->title = 'Beneficiarios - Casa Comercial "SIGESP"';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="rpcbeneficiario-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Rpcbeneficiario', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Beneficiario Sigesp - Casa Comercial', ['create'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -24,17 +24,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'codemp',
+            //'codemp',
             'ced_bene',
-            'codpai',
-            'codest',
-            'codmun',
+            //'codpai',
+            //'codest',
+            //'codmun',
             // 'codpar',
             // 'codtipcta',
             // 'rifben',
-            // 'nombene',
-            // 'apebene',
-            // 'dirbene:ntext',
+            'nombene',
+            'apebene',
+            // 'dirbene',
             // 'telbene',
             // 'celbene',
             // 'email:email',

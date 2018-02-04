@@ -8,6 +8,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -21,7 +22,7 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body onload="mueveReloj(),recarga()">
+<body onload="mueveReloj(),//recarga()">
 <?php $this->beginBody() ?>
 
 <div class="wrap">
@@ -41,11 +42,14 @@ AppAsset::register($this);
             ],
         'items' => [
             ['label' => 'Gestión', 'url' => ['/gestion'], 'linkOptions' => ['style' => 'color: #FFFFFF;']],
-            ['label' => 'Localizador', 
+            ['label' => 'Aprobación', 
             'items' => [
-                 '<li class="dropdown-header">Menu Localizador</li>',
+                 '<li class="dropdown-header">Menu Aprobacion</li>',
+                 ['label' => 'Aprobar Caso', 'url' => '@web/sepsolicitud/ubica'],
+                ['label' => 'Enviar Caso', 'url' => '@web/gestion/gestiona?precarga=1'],
                  ['label' => 'Crear Localizador', 'url' => '@web/gestion/origenmemo'],
                  ['label' => 'Ver Memorandums', 'url' => '@web/memosgestion/index'],
+                ['label' => 'Cambio de estructura', 'url' => '@web/sepsolicitud/index'],
             ],       
             'linkOptions' => ['style' => 'color: #FFFFFF;']
             ],
@@ -75,20 +79,27 @@ AppAsset::register($this);
             ], 
             'linkOptions' => ['style' => 'color: #FFFFFF;'],
             ],
-            ['label' => 'Registrarse', 'url' => ['/site/signup'],'linkOptions' => ['style' => 'color: #FFFFFF;'], ],
+            Yii::$app->user->isGuest ? (['label' => 'Registrarse', 'url' => Url::to(['site/signup']),'linkOptions' => ['style' => 'color: #FFFFFF;'], ]):(""),
             Yii::$app->user->isGuest ? (
-                ['label' => 'Ingresar', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: #FFFFFF;'], ]
+                ['label' => 'Ingresar', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: #FFFFFF;'], ]         
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
+                    'Salir (' . Yii::$app->user->identity->username . ')',
                     ['class' => 'btn btn-link logout', 
                      'style' => 'color: #FFFFFF;']
                 )
                 . Html::endForm()
                 . '</li>'
-            )
+            ),
+            array_search('administrador', array_keys(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())))!='' ? (
+                ['label' => 'Pruebas - Sueños', 'url' => ['/site/pruebas'],'linkOptions' => ['style' => 'color: #FFFFFF;'], ] ):
+                (""),
+            
+            
+            
+            
         ],
     ]);
     NavBar::end();

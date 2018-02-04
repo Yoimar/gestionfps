@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
 use kartik\alert\AlertBlock;
+use kartik\growl\Growl;
 
 ?>
 
@@ -13,18 +14,18 @@ use kartik\alert\AlertBlock;
   </div>
 <div class="panel-body">
     <div class="col-lg-6 col-md-6">
-        <?= $consulta[0]['solicitante']?>
-        <hr>    
+        <?= $consulta[0]['solicitante']?> 
+        <br>
         <?= $consulta[0]['beneficiario']?>
-        <hr>    
+        <br>    
         <?= $consulta[0]['requerimiento']?>
     </div>
     <div class="col-lg-6 col-md-6">
-        <?= $consulta[0]['tipoayuda']?></li>
-        <hr>
-        <?= $consulta[0]['area']?></li>
-        <hr>
-        <?= $consulta[0]['necesidad']?></li>
+        <?= $consulta[0]['tipoayuda']?>
+        <br>
+        <?= $consulta[0]['area']?>
+        <br>
+        <?= $consulta[0]['necesidad']?>
     </div>
     <div class="col-lg-12 col-md-12">
         <hr><center>
@@ -161,16 +162,9 @@ if (count($consulta)<=1){
 </center>
 
 <center>
-<?php 
-
-if(!isset($consulta[0]['fecha'])):
-?>
-    
     
 <?= Html::a('<span class="glyphicon glyphicon-print"></span>', ['sepsolicitud/imprimir', 'numero' => $numero], ['class' => 'btn btn-info', 'target'=>'_blank']) ?>    
     
-    
-<?php endif; ?>
 </center>
 
 </div>
@@ -181,12 +175,21 @@ if(!isset($consulta[0]['fecha'])):
 
 <center>
 <div class="col-lg-12 col-md-12">
-     <div><?= AlertBlock::widget([ 
-                    'type' => AlertBlock::TYPE_ALERT,
+
+     <div>
+         <?php
+            echo AlertBlock::widget([
                     'useSessionFlash' => true,
-                    'delay' => 5000,
-                    ]);
-             ?>
+                    'type' => AlertBlock::TYPE_GROWL,
+                    'delay' => 0,
+                    'alertSettings' => [
+                        'success' => ['type' => Growl::TYPE_SUCCESS, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]], 
+                        'danger' => ['type' => Growl::TYPE_DANGER, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]], 
+                        'warning' => ['type' => Growl::TYPE_WARNING, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]], 
+                        'info' => ['type' => Growl::TYPE_INFO, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]]
+                        ],
+                     ])
+         ?>
         </div>
 </div>
 </center>

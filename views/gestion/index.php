@@ -607,6 +607,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'visible'=> false,
             ],
             [ 
+            'attribute' => 'fechaaprobacion', 				
+            'value' => 'fechaaprobacion', 
+            'format' => 'text',
+            'visible'=> false,
+            ],
+            [ 
             'attribute' => 'fechaultimamodificacion', 	
             'value' => 'fechaultimamodificacion', 
             'format' => 'text',

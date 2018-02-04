@@ -5,9 +5,9 @@ use miloschuman\highcharts\SeriesDataHelper;
 use app\models\Solicitudes;
  
  
-$trabajadorescolumnas= Yii::$app->db->createCommand("select u1.nombre from solicitudes s1 full outer join users u1 on s1.usuario_asignacion_id = u1.id join recepciones r1 on r1.id = s1.recepcion_id join estatussasyc e1 on e1.id = s1.estatus where extract(year from s1.created_at)=2017 group by u1.nombre order by u1.nombre")->queryAll();
-$estatus= Yii::$app->db->createCommand("select e1.estatus, e1.id from solicitudes s1 full outer join users u1 on s1.usuario_asignacion_id = u1.id join recepciones r1 on r1.id = s1.recepcion_id join estatussasyc e1 on e1.id = s1.estatus where extract(year from s1.created_at)=2017 group by e1.estatus, e1.id order by e1.id")->queryAll();
-$estatusfilas= Yii::$app->db->createCommand("select s1.estatus from solicitudes s1 full outer join users u1 on s1.usuario_asignacion_id = u1.id join recepciones r1 on r1.id = s1.recepcion_id where extract(year from s1.created_at)=2017 group by s1.estatus order by s1.estatus")->queryAll();
+$trabajadorescolumnas= Yii::$app->db->createCommand("select u1.nombre from solicitudes s1 full outer join users u1 on s1.usuario_asignacion_id = u1.id join recepciones r1 on r1.id = s1.recepcion_id join estatussasyc e1 on e1.id = s1.estatus where extract(year from s1.created_at)=2018 group by u1.nombre order by u1.nombre")->queryAll();
+$estatus= Yii::$app->db->createCommand("select e1.estatus, e1.id from solicitudes s1 full outer join users u1 on s1.usuario_asignacion_id = u1.id join recepciones r1 on r1.id = s1.recepcion_id join estatussasyc e1 on e1.id = s1.estatus where extract(year from s1.created_at)=2018 group by e1.estatus, e1.id order by e1.id")->queryAll();
+$estatusfilas= Yii::$app->db->createCommand("select s1.estatus from solicitudes s1 full outer join users u1 on s1.usuario_asignacion_id = u1.id join recepciones r1 on r1.id = s1.recepcion_id where extract(year from s1.created_at)=2018 group by s1.estatus order by s1.estatus")->queryAll();
 foreach ($trabajadorescolumnas as $val) {
     if ($val['nombre']==null){    
         $coso[]="Sin Usuario";
@@ -31,7 +31,7 @@ for ($i = 0; $i < count($trabajadorescolumnas); $i++)
     if ($i + 1 < count($trabajadorescolumnas) ){
         for ($j = 0; $j < count($estatusfilas); $j++)
     {
-        $sql="select count(*) from solicitudes s1 full outer join users u1 on s1.usuario_asignacion_id = u1.id join recepciones r1 on r1.id = s1.recepcion_id join estatussasyc e1 on e1.id = s1.estatus where extract(year from s1.created_at)=2017 and u1.nombre = '". $trabajadorescolumnas[$i]['nombre'] ."' and s1.estatus = '". $estatusfilas[$j]['estatus']."'";
+        $sql="select count(*) from solicitudes s1 full outer join users u1 on s1.usuario_asignacion_id = u1.id join recepciones r1 on r1.id = s1.recepcion_id join estatussasyc e1 on e1.id = s1.estatus where extract(year from s1.created_at)=2018 and u1.nombre = '". $trabajadorescolumnas[$i]['nombre'] ."' and s1.estatus = '". $estatusfilas[$j]['estatus']."'";
         $valores[$k][0]= $i;
         $valores[$k][1]= $j;
         $valores[$k][2]= Yii::$app->db->createCommand($sql)->queryscalar();// Su valor
@@ -43,7 +43,7 @@ for ($i = 0; $i < count($trabajadorescolumnas); $i++)
     
     for ($j = 0; $j < count($estatusfilas); $j++)
     {
-        $sql="select count(*) from solicitudes s1 full outer join users u1 on s1.usuario_asignacion_id = u1.id join recepciones r1 on r1.id = s1.recepcion_id join estatussasyc e1 on e1.id = s1.estatus where extract(year from s1.created_at)=2017 and u1.nombre is NULL and s1.estatus = '". $estatusfilas[$j]['estatus']."'";
+        $sql="select count(*) from solicitudes s1 full outer join users u1 on s1.usuario_asignacion_id = u1.id join recepciones r1 on r1.id = s1.recepcion_id join estatussasyc e1 on e1.id = s1.estatus where extract(year from s1.created_at)=2018 and u1.nombre is NULL and s1.estatus = '". $estatusfilas[$j]['estatus']."'";
         $valores[$k][0]= $i;
         $valores[$k][1]= $j;
         $valores[$k][2]= Yii::$app->db->createCommand($sql)->queryscalar();// Su valor
@@ -67,7 +67,7 @@ echo Highcharts::widget([
 
     'options' => [
 
-            'title' => ['text' => 'REPORTE GENERAL POR TRABAJADOR SOCIAL AÑO 2017'],
+            'title' => ['text' => 'REPORTE GENERAL POR TRABAJADOR SOCIAL AÑO 2018'],
             'chart' => [
                     'type' => 'heatmap',
                     'height' => 800,

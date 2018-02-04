@@ -2,7 +2,7 @@
 
 return [
     'adminEmail' => 'admin@example.com',
-     'maskMoneyOptions' => [
+    'maskMoneyOptions' => [
         'prefix' => 'Bs. ',
         'suffix' => '',
         'affixesStay' => true,

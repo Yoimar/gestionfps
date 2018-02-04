@@ -93,6 +93,8 @@ class SepsolicitudController extends Controller
     {
         $searchModel = new SepsolicitudSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['estsol'=>'E', 'coduniadm'=>'0000000003']); 
+        
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -149,7 +151,7 @@ class SepsolicitudController extends Controller
                     ."WHERE id = ".$numero)->queryOne();
             
         if($haypresupuesto==0){
-                Yii::$app->session->setFlash("error", "El caso no posee Presupuesto asociado<br>Intente de Nuevo");
+                Yii::$app->session->setFlash("warning", "El caso no posee Presupuesto asociado<br>Intente de Nuevo");
                 return $this->render('ubica', [
                 'model' => $model,
                 ]);
@@ -159,7 +161,7 @@ class SepsolicitudController extends Controller
                 
             } else {   
                     
-                Yii::$app->session->setFlash("error", "El caso no tiene estatus para ser aprobado <br>Por favor Verifique el caso e intente de Nuevo");
+                Yii::$app->session->setFlash("warning", "El caso no tiene estatus para ser aprobado <br>Por favor Verifique el caso e intente de Nuevo");
                 return $this->render('ubica', [
                  'model' => $model,
                  ]);    
@@ -358,14 +360,16 @@ class SepsolicitudController extends Controller
             ],
             ]);    
         
-        Yii::$app->session->setFlash("error", "El caso no posee rif<br>Por Favor rellene los datos de la casa comercial");
+        Yii::$app->session->setFlash("warning", "El caso no posee rif<br>Por Favor rellene los datos de la casa comercial");
                 
                 return $this->render('muestra', [
                 'numero' => $numero,
                 'dataProvider' => $dataProvider,
                 'consulta' => $consulta
                 ]);
-        }   
+        }
+        
+        
         
         
         for ($i=0 ; $i<count($consulta); $i++){
@@ -396,8 +400,8 @@ class SepsolicitudController extends Controller
         }else{
              Yii::$app->dbsigesp->createCommand("UPDATE rpc_beneficiario  SET "
                      . "rifben='".$consulta[$i]['tiporif']."-".substr(str_pad($consulta[$i]['rif'], 9, '0', STR_PAD_LEFT),0,8)."-".substr(str_pad($consulta[$i]['rif'], 9, '0', STR_PAD_LEFT),-1)."'"
-                    . ", nombene='".substr($consulta[$i]['nombrecasacomercial'],50)."'"
-                     . ", apebene='". substr($consulta[$i]['nombrecasacomercial'],0,50)."'"
+                    . ", nombene='".substr($consulta[$i]['nombrecasacomercial'],100)."'"
+                     . ", apebene='". substr($consulta[$i]['nombrecasacomercial'],0,100)."'"
                      . " WHERE ced_bene = '".$consulta[$i]['rif']."';")->execute();     
         }
         
@@ -412,7 +416,9 @@ class SepsolicitudController extends Controller
                 . ($i+1)
                 ."';")->queryScalar();
         
-        /**INSERTO O ACTUALIZO EN LA TABLA SEP_SOLIICITUD DE SIGESP**/
+        
+        
+        /**INSERTO O ACTUALIZO EN LA TABLA SEP_SOLICITUD DE SIGESP**/
         
         if ($haydon == 0){ 
             Yii::$app->dbsigesp->createCommand("INSERT INTO sep_solicitud (codemp, "
@@ -485,6 +491,28 @@ class SepsolicitudController extends Controller
                 . "fecaprsep = '"
                 . $fechahoy
                 . "' WHERE numsol = 'DON- ".$consulta[$i]['ndonacion']."-".($i+1)."';")->execute();
+        } else {
+                  $query = \app\models\PresupuestosSearch::find()
+                           ->select(["conexionsigesp.req as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as nrif", "empresa_institucion.rif AS rif", "presupuestos.beneficiario_id", "presupuestos.solicitud_id" ])
+                           ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
+                           ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
+                           ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
+
+                  $dataProvider = new ActiveDataProvider([
+                          'query' => $query,
+                          'pagination' => [
+                          'pageSize' => 10,
+                      ],
+                      ]);    
+            
+                  Yii::$app->session->setFlash("warning", "El caso no se puede Aprobar, Ya ha sido procesado<br>Verifique e intente con otro caso");
+                
+                return $this->render('muestra', [
+                'numero' => $numero,
+                'dataProvider' => $dataProvider,
+                'consulta' => $consulta
+                ]);   
+            
         }
                 
         }
@@ -1163,7 +1191,7 @@ class SepsolicitudController extends Controller
             
             /**DEVUELVO A LA VISTA PORQUE EL CASO NO HA PASADO A SIGESP **/
             
-            Yii::$app->session->setFlash("error", "El caso no se puede devolver, Ya ha sido procesado<br>Verifique e intente con otro caso");
+            Yii::$app->session->setFlash("warning", "El caso no se puede devolver, Ya ha sido procesado<br>Verifique e intente con otro caso");
                 
                 return $this->render('muestra', [
                 'numero' => $numero,
@@ -1227,8 +1255,87 @@ class SepsolicitudController extends Controller
                     
     }
 
- 
+ /**** Cambio de estructura Presupuestaria ****/
 
+    public function actionCambioestructura($numsol=null, $codestpro3=null)
+    {
+        if ($codestpro3 == '0000000000000000000000201'){
+        /** Actualizo la tabla de sepsolicitud  **/
+        Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud 
+             SET codestpro3='0000000000000000000000203' 
+             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();  
+        /** Actualizo sep_dt_concepto **/
+         Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto
+             SET codestpro3='0000000000000000000000203' 
+             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();
+         /** Actualizo en la tabla sep_cuentagasto **/
+         Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto
+             SET codestpro3='0000000000000000000000203' 
+             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();
+         
+         Yii::$app->session->setFlash("success", "El caso ha sido Cambiado a la Estructura Presupuestaria <br>"
+                    . "AC02-0102-203");
+         
+          return $this->redirect('index');
+         
+        } elseif ($codestpro3 == '0000000000000000000000203') {
+            
+         Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud 
+             SET codestpro3='0000000000000000000000201' 
+             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();  
+        /** Actualizo sep_dt_concepto **/
+         Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto
+             SET codestpro3='0000000000000000000000201' 
+             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();
+         /** Actualizo en la tabla sep_cuentagasto **/
+         Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto
+             SET codestpro3='0000000000000000000000201' 
+             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();   
+             
+            Yii::$app->session->setFlash("success", "El caso ha sido Cambiado a la Estructura Presupuestaria <br>"
+                    . "AC02-0102-201");
+                        
+            return $this->redirect('index');
+        } elseif ($codestpro3 == '0000000000000000000000202') {
+            
+         Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud 
+             SET codestpro3='0000000000000000000000204' 
+             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();  
+        /** Actualizo sep_dt_concepto **/
+         Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto
+             SET codestpro3='0000000000000000000000204' 
+             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();
+         /** Actualizo en la tabla sep_cuentagasto **/
+         Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto
+             SET codestpro3='0000000000000000000000204' 
+             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();   
+             
+            Yii::$app->session->setFlash("success", "El caso ha sido Cambiado a la Estructura Presupuestaria <br>"
+                    . "AC02-0102-204");
+                        
+            return $this->redirect('index');
+        } 
+        elseif ($codestpro3 == '0000000000000000000000204') {
+            
+         Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud 
+             SET codestpro3='0000000000000000000000202' 
+             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();  
+        /** Actualizo sep_dt_concepto **/
+         Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto
+             SET codestpro3='0000000000000000000000202' 
+             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();
+         /** Actualizo en la tabla sep_cuentagasto **/
+         Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto
+             SET codestpro3='0000000000000000000000202' 
+             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();   
+             
+            Yii::$app->session->setFlash("success", "El caso ha sido Cambiado a la Estructura Presupuestaria <br>"
+                    . "AC02-0102-202");
+                        
+            return $this->redirect('index');
+        }
+        
+    }
         
     
    

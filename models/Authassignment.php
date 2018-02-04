@@ -11,7 +11,7 @@ use Yii;
  * @property string $user_id
  * @property integer $created_at
  *
- * @property Authitem $itemName
+ * @property AuthItem $itemName
  */
 class Authassignment extends \yii\db\ActiveRecord
 {
@@ -42,26 +42,20 @@ class Authassignment extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'item_name' => 'Rol de Permiso',
-            'user_id' => 'Usuario',
-            'created_at' => 'Created At',
+            'item_name' => 'Perfil del Usuario',
+            'user_id' => 'Usuario Gestion',
+            'created_at' => 'Fecha de Creación',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getItemname()
+    public function getItemName()
     {
-        return $this->hasOne(Authitem::className(), ['name' => 'item_name']);
+        return $this->hasOne(AuthItem::className(), ['name' => 'item_name']);
     }
-    
-    public function getAuthitem()
-    {
-        return $this->hasOne(Authitem::className(), ['name' => 'item_name']);
-    }
-    
-    public function getUser()
+    public function getUsuariogestion()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }

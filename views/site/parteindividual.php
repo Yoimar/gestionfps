@@ -42,7 +42,7 @@ if(Yii::$app->request->post()){
     <?=
     /* Formu con Select2 de kartik*/
         $form->field($model, 'anho')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map([['id' => '2017', 'nombre' => '2017'],['id' => '2016', 'nombre' => '2016']], 'id', 'nombre'),
+        'data' => ArrayHelper::map([['id' => '2018', 'nombre' => '2018'],['id' => '2017', 'nombre' => '2017'],['id' => '2016', 'nombre' => '2016']], 'id', 'nombre'),
         'language' => 'es',
         'options' => ['placeholder' => 'Seleccione el Trabajador Social'],
         'pluginOptions' => [

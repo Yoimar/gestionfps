@@ -64,6 +64,9 @@ use Yii;
  */
 class Sepsolicitud extends \yii\db\ActiveRecord
 {
+    public $nombrebeneficiario;
+    public $rifbeneficiario;
+    public $estructura;
     /**
      * @inheritdoc
      */
@@ -145,6 +148,9 @@ class Sepsolicitud extends \yii\db\ActiveRecord
             'conanusep' => 'Conanusep',
             'feccieinv' => 'Feccieinv',
             'codcencos' => 'Codcencos',
+            'nombrebeneficiario' => 'Casa Comercial',
+            'rifbeneficiario' => 'Rif',
+            'estructura' => 'Estructura',
         ];
     }
 
@@ -207,7 +213,7 @@ class Sepsolicitud extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCodemp0()
+    public function getBeneficiariocheque()
     {
         return $this->hasOne(Rpcbeneficiario::className(), ['codemp' => 'codemp', 'ced_bene' => 'ced_bene']);
     }
@@ -215,7 +221,7 @@ class Sepsolicitud extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCodemp1()
+    public function getProveedorcheque()
     {
         return $this->hasOne(RpcProveedor::className(), ['codemp' => 'codemp', 'cod_pro' => 'cod_pro']);
     }
@@ -307,4 +313,10 @@ class Sepsolicitud extends \yii\db\ActiveRecord
     {
         return $this->hasMany(SocSolCotizacion::className(), ['codemp' => 'codemp', 'numsolcot' => 'numsolcot'])->viaTable('soc_solcotsep', ['codemp' => 'codemp', 'numsol' => 'numsol']);
     }
+    
+    public function getEstructuracaso()
+            {
+        return ltrim($this->codestpro1, '0')."-".ltrim($this->codestpro2, '0')."-".ltrim($this->codestpro3, '0');
+            }
+            
 }

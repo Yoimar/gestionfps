@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Authassignment */
 
-$this->title = 'Update Authassignment: ' . $model->item_name;
-$this->params['breadcrumbs'][] = ['label' => 'Authassignments', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->item_name, 'url' => ['view', 'item_name' => $model->item_name, 'user_id' => $model->user_id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = 'Actualizar Perfil: ' . $model->usuariogestion->username;
+$this->params['breadcrumbs'][] = ['label' => 'Perfiles', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $model->usuariogestion->username, 'url' => ['view', 'id' => $model->user_id]];
+$this->params['breadcrumbs'][] = 'Actualizar';
 ?>
 <div class="authassignment-update">
 

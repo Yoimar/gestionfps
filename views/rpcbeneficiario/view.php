@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'rifben',
             'nombene',
             'apebene',
-            'dirbene:ntext',
+            'dirbene',
             'telbene',
             'celbene',
             'email:email',

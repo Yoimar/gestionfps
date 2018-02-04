@@ -87,6 +87,7 @@ class Gestion extends \yii\db\ActiveRecord
     public $departamento;
     public $departamento_id;
     public $unidadorigen;
+    public $fechaaprobacion;
     
     
     /**
@@ -176,6 +177,7 @@ class Gestion extends \yii\db\ActiveRecord
             'direccion' => 'Dirección del Beneficiario',
             'fechaactividad' => 'Fecha de la Actividad',
             'fechaingreso' => 'Fecha del ingreso',
+            'fechaaprobacion' => 'Fecha de Aprobación',
             'fechaultimamodificacion' => 'Fecha de la ultima modificación',
             'estadodireccion' => 'Estado del Beneficiario',
             'edadbeneficiario' => 'Edad del Beneficiario',

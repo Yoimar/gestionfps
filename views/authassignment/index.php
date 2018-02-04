@@ -3,13 +3,15 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use kartik\select2\Select2;
+use app\models\User;
 use yii\helpers\ArrayHelper;
+use app\models\Authitem;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\AuthassignmentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Authassignments';
+$this->title = 'Perfiles';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="authassignment-index">
@@ -18,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Authassignment', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Perfil', ['create'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -26,26 +28,36 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'item_name',
-            
-            [
+            //'item_name',
+             [
+            'attribute' => 'item_name',
+            'label' => 'Perfil de usuario',
+            'value' => 'item_name',
+            'format' => 'text',
+            'filter' => Select2::widget([
+                        'model' => $searchModel,
+                        'attribute' => 'item_name',
+                        'data' => ArrayHelper::map(Authitem::find()->where(['type' => 1])->orderBy('name')->all(), 'name', 'name'),
+                        'options' => 
+                            ['placeholder' => 'Usuario Gestion FPS'],
+                        'pluginOptions' => [ 'allowClear' => true ],
+                ]),
+            ],
+            //'user_id',
+             [
             'attribute' => 'user_id',
-            'value' => 'user.username',
+            'label' => 'Usuario Gestion FPS',
+            'value' => 'usuariogestion.username',
             'format' => 'text',
             'filter' => Select2::widget([
                         'model' => $searchModel,
                         'attribute' => 'user_id',
-                        'data' => ArrayHelper::map(\app\models\User::find()->orderBy('id')->all(), 'id', 'username'),
+                        'data' => ArrayHelper::map(User::find()->orderBy('username')->all(), 'id', 'username'),
                         'options' => 
-                            ['placeholder' => 'Seleccione el Usuario'],
+                            ['placeholder' => 'Usuario Gestion FPS'],
                         'pluginOptions' => [ 'allowClear' => true ],
-                ]),    
-                
+                ]),
             ],
-            
-            
-            
-
             //'created_at',
 
             ['class' => 'yii\grid\ActionColumn'],

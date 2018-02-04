@@ -195,7 +195,7 @@ class GestionController extends Controller
     return $out;
     }
     
-    public function actionGestiona($estatus1=null,$estatus2=null,$estatus3=null,$departamento=null,$unidad=null,$usuario=null,$verorpa=null, $vercheque =null, $vertelefono=null, $verunidad=null)
+    public function actionGestiona($estatus1=null,$estatus2=null,$estatus3=null,$departamento=null,$unidad=null,$usuario=null,$verorpa=null, $vercheque =null, $vertelefono=null, $verunidad=null, $precarga=null)
     {
         $modelorigenmemo = new Origenmemo;
         $modelfinalmemo = new Finalmemo;
@@ -205,6 +205,22 @@ class GestionController extends Controller
         $memosgestion->load(Yii::$app->request->post());
         
         $searchModel = new \app\models\GestionSearchGestionalo();
+        
+        if ($precarga == 1){
+                 /**  Carga de Las Personas del Memo   **/
+                $modelorigenmemo->departamento = 1;
+//                $modelorigenmemo->unidad = 2;
+                $modelorigenmemo->usuario = 6;
+                $modelfinalmemo->departamentofinal = 6;
+                $modelfinalmemo->unidadfinal = 8;
+                $modelfinalmemo->usuariofinal = 11;
+                $modelfinalmemo->estatus1final = 1;
+                $modelfinalmemo->estatus2final = 2;
+              //  $modelfinalmemo->estatus3final = 62;
+                
+                /** Filtro los que tienen o estan en estatus de elaboración de Memo **/
+              //   $dataProvider->query->andWhere(['estatus3_id'=>61]);
+        }
         
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         
@@ -242,7 +258,8 @@ class GestionController extends Controller
                 'verorpa' => $verorpa,
                 'vercheque' => $vercheque,
                 'vertelefono' => $vertelefono,
-                'verunidad' => $verunidad
+                'verunidad' => $verunidad,
+                'precarga' => $precarga,
         ]);
 
     }
@@ -466,7 +483,7 @@ class GestionController extends Controller
         $usuarioorigen = isset($modelimprime->trabajadororigen) ? $modelimprime->trabajadororigennombre->dimprofesion. " ".$modelimprime->trabajadororigennombre->primernombre. " ".$modelimprime->trabajadororigennombre->primerapellido .'<br>' : "";        
         $unidadorigen = isset($modelimprime->unidadorigen) ? $modelimprime->unidadorigennombre->nombre.'<br>' : "";              
         $direccionorigen = isset($modelimprime->dirorigen) ? $modelimprime->dirorigennombre->nombre : "";      
-        $enviado = isset($modelimprime->trabajadororigen) && isset($modelimprime->unidadorigen) && isset($modelimprime->dirorigen) ? "Enviado por" : "";       
+        $enviado = isset($modelimprime->trabajadororigen)&& isset($modelimprime->dirorigen) ? "Enviado por" : "";       
         $usuariofinal = isset($modelimprime->trabajadorfinal) ? $modelimprime->trabajadorfinalnombre->dimprofesion. " ".$modelimprime->trabajadorfinalnombre->primernombre. " ".$modelimprime->trabajadorfinalnombre->primerapellido .'<br>' : "";        
         
         $headerHtml = '<div class="row">'
@@ -479,7 +496,7 @@ class GestionController extends Controller
         .'     </td>'
         .'     <td colspan="2" class="text-center col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-size:12px;">'
         .'Relación N° '.  $modelimprime->id  .'<br>  '    
-        . Yii::$app->formatter->asDate($modelimprime->fechamemo,'full').'<br>  '
+        . Yii::$app->formatter->asDate($modelimprime->fechamemo." 23:00",'php:d/m/Y').'<br>  '
         .'      </td>'
         .'      </tr>'
         .'        <tr>'

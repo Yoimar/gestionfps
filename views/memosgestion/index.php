@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use app\models\Departamentos;
@@ -9,7 +9,9 @@ use app\models\Recepciones;
 use app\models\Trabajador;
 use app\models\Estatus3;
 use yii\db\Query;
-use kartik\widgets\DatePicker;
+use kartik\date\DatePicker;
+use kartik\datecontrol\DateControl;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\MemosgestionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -30,30 +32,40 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             //['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-//            'dirorigen',
-            [
-            'attribute' => 'dirorigen',
-            'value' => 'dirorigennombre.nombre',
-            'options' => ['width'=>'10%',],
-            'format' => 'text',
-            'label' => 'Dir. Origen',
-            'filter' => Select2::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'dirorigen',
-                    'data' => ArrayHelper::map(Departamentos::find()->orderBy('id')->all(), 'id', 'nombre'),
-                    'options' => 
-                        ['placeholder' => '¿Dir. Origen?'],
-                    'pluginOptions' => [ 'allowClear' => true ],
-            ]),
-            ],
             
+            [
+            'attribute' =>  'id',
+            'value' =>  'id',
+            'options' => ['width'=>'5%',],
+            'hAlign'=>'center',
+             'vAlign'=>'middle',
+            ],
+
+//            'id',
+//            'dirorigen',
+//            [
+//            'attribute' => 'dirorigen',
+//            'value' => 'dirorigennombre.nombre',
+//            'options' => ['width'=>'10%',],
+//            'format' => 'text',
+//            'label' => 'Dir. Origen',
+//            'filter' => Select2::widget([
+//                    'model' => $searchModel,
+//                    'attribute' => 'dirorigen',
+//                    'data' => ArrayHelper::map(Departamentos::find()->orderBy('id')->all(), 'id', 'nombre'),
+//                    'options' => 
+//                        ['placeholder' => '¿Dir. Origen?'],
+//                    'pluginOptions' => [ 'allowClear' => true ],
+//            ]),
+//            ],
+//            
             [
             'attribute' => 'unidadorigen',
             'value' => 'unidadorigennombre.nombre',
-            'options' => ['width'=>'10%',],
+            'options' => ['width'=>'15%',],
             'format' => 'text',
+              'hAlign'=>'center',
+            'vAlign'=>'middle',
             'label' => 'Unidad Origen',
             'filter' => Select2::widget([
                     'model' => $searchModel,
@@ -67,8 +79,10 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             'attribute' => 'trabajadororigen',
             'value' => 'trabajadororigennombre.Trabajadorfps',
-            'options' => ['width'=>'10%',],
+            'options' => ['width'=>'15%',],
             'format' => 'text',
+             'hAlign'=>'center',
+            'vAlign'=>'middle',
             'label' => 'Trabajador Origen',
             'filter' => Select2::widget([
                     'model' => $searchModel,
@@ -80,27 +94,29 @@ $this->params['breadcrumbs'][] = $this->title;
                     'pluginOptions' => [ 'allowClear' => true ],
             ]),
             ],
-            
-            [
-            'attribute' => 'dirfinal',
-            'value' => 'dirfinalnombre.nombre',
-            'options' => ['width'=>'10%',],
-            'format' => 'text',
-            'label' => 'Dir. Final',
-            'filter' => Select2::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'dirfinal',
-                    'data' => ArrayHelper::map(Departamentos::find()->orderBy('id')->all(), 'id', 'nombre'),
-                    'options' => 
-                        ['placeholder' => '¿Dir Final?'],
-                    'pluginOptions' => [ 'allowClear' => true ],
-            ]),
-            ],
-            
+//            
+//            [
+//            'attribute' => 'dirfinal',
+//            'value' => 'dirfinalnombre.nombre',
+//            'options' => ['width'=>'10%',],
+//            'format' => 'text',
+//            'label' => 'Dir. Final',
+//            'filter' => Select2::widget([
+//                    'model' => $searchModel,
+//                    'attribute' => 'dirfinal',
+//                    'data' => ArrayHelper::map(Departamentos::find()->orderBy('id')->all(), 'id', 'nombre'),
+//                    'options' => 
+//                        ['placeholder' => '¿Dir Final?'],
+//                    'pluginOptions' => [ 'allowClear' => true ],
+//            ]),
+//            ],
+//            
             [
             'attribute' => 'unidadfinal',
             'value' => 'unidadfinalnombre.nombre',
-            'options' => ['width'=>'10%',],
+            'options' => ['width'=>'15%',],
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
             'format' => 'text',
             'label' => 'Unidad Final',
             'filter' => Select2::widget([
@@ -114,9 +130,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
             'attribute' => 'trabajadorfinal',
-            'options' => ['width'=>'10%',],
+            'options' => ['width'=>'15%',],
             'value' => 'trabajadorfinalnombre.Trabajadorfps',
             'format' => 'text',
+             'hAlign'=>'center',
+            'vAlign'=>'middle',
             'label' => 'Trabajador Final',
             'filter' => Select2::widget([
                     'model' => $searchModel,
@@ -128,22 +146,24 @@ $this->params['breadcrumbs'][] = $this->title;
                     'pluginOptions' => [ 'allowClear' => true ],
             ]),
             ],
-            
-            //'estatus1origen',
-            // 'estatus2origen',
-            //'estatus3origen',
-            //'dirfinal',
-            //'unidadfinal',
-            //'trabajadorfinal',
-            // 'estatus1final',
-            // 'estatus2final',
-            //'estatus3final',
+//            
+//            //'estatus1origen',
+//            // 'estatus2origen',
+//            //'estatus3origen',
+//            //'dirfinal',
+//            //'unidadfinal',
+//            //'trabajadorfinal',
+//            // 'estatus1final',
+//            // 'estatus2final',
+//            //'estatus3final',
             [
             'attribute' => 'estatus3final',
             'value' => 'estatus3finalnombre.nombre',
-            'options' => ['width'=>'10%',],
+            'options' => ['width'=>'15%',],
             'format' => 'text',
-            'label' => 'Estatus3',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'label' => 'Estatus Final',
             'options' => ['width'=>'100px',],
             'filter' => Select2::widget([
                     'model' => $searchModel,
@@ -158,32 +178,73 @@ $this->params['breadcrumbs'][] = $this->title;
                     'pluginOptions' => [ 'allowClear' => true ],
             ]),
             ],
-            
+//            
     
             //'fechamemo',
                                 
-            [
-                'attribute' => 'fechamemo',
-                'format' => 'text',
-                'options' => ['width'=>'10%',],
-                'filter' =>DatePicker::widget([
-                     'model' => $searchModel,
-                     'attribute' => 'fechamemo',
-                    'name' => 'datetime_20',
-                    'options' => ['placeholder' => 'Fecha'],
-                    'type' => DatePicker::TYPE_INPUT,
-                    'pluginOptions' => [
-                        'orientation' => 'up right',
-                        'todayHighlight' => true,
-                        'todayBtn' => true,
-                        'format' => 'dd/mm/yyyy',
-                        'showMeridian' => true,
-                        'autoclose' => true,
-                        'language' => 'es',
-                ]
+//            [
+//                'attribute' => 'fechamemo',
+//                'format' => 'date',
+//                'options' => ['width'=>'10%',],
+//                 'hAlign'=>'center',
+//                'vAlign'=>'middle',
+//                'filter' =>DatePicker::widget([
+//                     'model' => $searchModel,
+//                     'attribute' => 'fechamemo',
+//                    'name' => 'datetime_20',
+//                    'options' => ['placeholder' => 'Fecha'],
+//                    'type' => DatePicker::TYPE_INPUT,
+//                    'pluginOptions' => [
+//                        'orientation' => 'up right',
+//                        'todayHighlight' => true,
+//                        'todayBtn' => 'linked',
+//                        'format' => 'mm/dd/yyyy',
+//                        'showMeridian' => true,
+//                        'autoclose' => true,
+//                        'language' => 'es',
+//                ]
+//
+//            ]),
+//            ],
+            
+//             [
+//                'attribute' => 'fechamemo',
+//                'format' => 'date',
+//                'options' => ['width'=>'30%',],
+//                'filter' =>DateControl::widget([
+//                'model' => $searchModel,
+//                'attribute' => 'fechamemo',
+//                'type'=>DateControl::FORMAT_DATE,
+////                'autoWidget'=>true,
+//                'displayFormat' => 'php:d-m-Y',                    
+//                'pluginOptions' => [
+//                        'orientation' => 'up right',
+//                        'todayHighlight' => true,
+//                        'todayBtn' => 'linked',
+//                        'showMeridian' => true,
+//                        'autoclose' => true,
+//                        'language' => 'es',
+//                ],
+//                'language' => 'es',
+//                
+//            ]),
+//            ],
 
-            ]),
-            ],
+            [
+                'attribute' => 'fechamemo', 
+                'format' => ['date', 'php:d-m-Y'], 
+                'filter' => DateControl::widget([
+                    'model' => $searchModel, 
+                    'attribute' => 'fechamemo', 
+                    'name' => 'kartik-date-2', 
+                    'value' => 'fechamemo', 
+                    'asyncRequest' => false,
+                    'type' => DateControl::FORMAT_DATE, 
+                    'options' => ['layout' => '{input}']
+                    ]), 
+                    'contentOptions' => ['style' => 'width: 20%;']
+                ],                    
+                                
             // 'asunto',
             // 'created_at',
             // 'created_by',
@@ -191,7 +252,10 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updated_by',
 
             [
-            'class'=>'yii\grid\ActionColumn',
+             'class'=>'kartik\grid\ActionColumn',
+            'options' => ['width'=>'5%',],
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
             'template' => '{print} {update}',
             'buttons' => [
                 'print' => function($url, $model){
@@ -212,6 +276,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 );
                 }
             ],
+            
             ],
         ],
     ]); ?>

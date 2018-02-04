@@ -20,7 +20,7 @@ class GestionSearch extends Gestion
         return [
             [['id', 'programaevento_id', 'convenio_id',  'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'edadbeneficiario','instruccion_id'], 'integer'],
             [['militar_solicitante', 'militar_beneficiario', 'nino', ], 'boolean'],
-            [['solicitante', 'solicitud_id', 'estatus1_id', 'estatus2_id', 'cisolicitante', 'cibeneficiario', 'recepcion', 'beneficiario', 'necesidad', 'descripcion', 'anodelasolicitud', 'telefono', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'mes_actividad', 'afrodescendiente', 'indigena', 'sexodiversidad', 'trabajadorsocial', 'trabajadoracargoactividad', 'especialidad', 'mesingreso', 'estado_actividad', 'tipodeayuda', 'estatussa', 'empresaoinstitucion', 'proceso', 'cheque', 'direccion', 'estadodireccion','created_at', 'updated_at'], 'safe'],
+            [['solicitante', 'solicitud_id', 'estatus1_id', 'estatus2_id', 'cisolicitante', 'cibeneficiario', 'recepcion', 'beneficiario', 'necesidad', 'descripcion', 'anodelasolicitud', 'telefono', 'fechaactividad', 'fechaingreso', 'fechaaprobacion', 'fechaultimamodificacion', 'tratamiento', 'mes_actividad', 'afrodescendiente', 'indigena', 'sexodiversidad', 'trabajadorsocial', 'trabajadoracargoactividad', 'especialidad', 'mesingreso', 'estado_actividad', 'tipodeayuda', 'estatussa', 'empresaoinstitucion', 'proceso', 'cheque', 'direccion', 'estadodireccion','created_at', 'updated_at'], 'safe'],
             [['monto', 'cantidad',], 'number'],
         ];
     }
@@ -51,7 +51,7 @@ class GestionSearch extends Gestion
                 'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id', 'gestion.afrodescendiente', 'gestion.indigena', 
                 'gestion.sexodiversidad', 'gestion.trabajador_id', "personasolicitante.ci as cisolicitante", "personabeneficiario.ci as cibeneficiario", 
                 "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario", 'solicitudes.ind_beneficiario_menor as nino',
-                "CONCAT(personasolicitante.nombre || ' ' || personasolicitante.apellido) AS solicitante",  
+                "CONCAT(personasolicitante.nombre || ' ' || personasolicitante.apellido) AS solicitante",  "to_char(solicitudes.fecha_aprobacion, 'DD/MM/YYYY') as fechaaprobacion",
                 'users.nombre as trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'areas.nombre as especialidad', 'solicitudes.area_id', 
                 'solicitudes.recepcion_id', 'recepciones.nombre as recepcion', "CONCAT(trabajadoracargo.dimprofesion || ' ' || trabajadoracargo.primernombre || ' ' || trabajadoracargo.primerapellido) AS trabajadoracargoactividad",
                 "extract(month from solicitudes.created_at)::int as mesingreso", 'estadoactividad.nombre as estado_actividad', 'tipo_ayudas.nombre as tipodeayuda', 'estatussasyc.estatus as estatussa',
@@ -304,6 +304,10 @@ class GestionSearch extends Gestion
                         'asc' => ['telefono' => \SORT_ASC],
                         'desc' => ['telefono' => \SORT_DESC],
                     ],
+                    'fechaaprobacion' => [ 
+                        'asc' => ['solicitudes.fecha_aprobacion' => \SORT_ASC],
+                        'desc' => ['solicitudes.fecha_aprobacion' => \SORT_DESC],
+                    ],
     
                 ],
             ],
@@ -370,6 +374,7 @@ class GestionSearch extends Gestion
             ->andFilterWhere(['=', "date_part('year' ,now()-personabeneficiario.fecha_nacimiento)", $this->edadbeneficiario])
             ->andFilterWhere(['like', "to_char(programaevento.fechaprograma, 'DD/MM/YYYY')", $this->fechaactividad])
             ->andFilterWhere(['like', "to_char(solicitudes.created_at, 'DD/MM/YYYY')", $this->fechaingreso])
+            ->andFilterWhere(['like', "to_char(solicitudes.fecha_aprobacion, 'DD/MM/YYYY')", $this->fechaaprobacion])
             ->andFilterWhere(['like', "to_char(gestion.updated_at, 'DD/MM/YYYY')", $this->fechaultimamodificacion])
             ->andFilterWhere(['like', "CONCAT(trabajadoracargo.dimprofesion || ' ' || trabajadoracargo.primernombre || ' ' || trabajadoracargo.primerapellido)", $this->trabajadoracargoactividad])
             ->andFilterWhere(['like', "CONCAT(estadobeneficiario.nombre || ' ' || municipiobeneficiario.nombre || ' ' || parroquiabeneficiario.nombre || ' ' || personabeneficiario.zona_sector || ' ' || personabeneficiario.calle_avenida || ' ' || personabeneficiario.apto_casa)", $this->direccion])

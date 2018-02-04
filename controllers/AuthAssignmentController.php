@@ -46,14 +46,13 @@ class AuthassignmentController extends Controller
 
     /**
      * Displays a single Authassignment model.
-     * @param string $item_name
-     * @param string $user_id
+     * @param string $id
      * @return mixed
      */
-    public function actionView($item_name, $user_id)
+    public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($item_name, $user_id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -67,7 +66,7 @@ class AuthassignmentController extends Controller
         $model = new Authassignment();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'item_name' => $model->item_name, 'user_id' => $model->user_id]);
+            return $this->redirect(['view', 'id' => $model->user_id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -78,16 +77,15 @@ class AuthassignmentController extends Controller
     /**
      * Updates an existing Authassignment model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $item_name
-     * @param string $user_id
+     * @param string $id
      * @return mixed
      */
-    public function actionUpdate($item_name, $user_id)
+    public function actionUpdate($id)
     {
-        $model = $this->findModel($item_name, $user_id);
+        $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'item_name' => $model->item_name, 'user_id' => $model->user_id]);
+            return $this->redirect(['view', 'id' => $model->user_id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -98,13 +96,12 @@ class AuthassignmentController extends Controller
     /**
      * Deletes an existing Authassignment model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $item_name
-     * @param string $user_id
+     * @param string $id
      * @return mixed
      */
-    public function actionDelete($item_name, $user_id)
+    public function actionDelete($id)
     {
-        $this->findModel($item_name, $user_id)->delete();
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
@@ -112,14 +109,13 @@ class AuthassignmentController extends Controller
     /**
      * Finds the Authassignment model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $item_name
-     * @param string $user_id
+     * @param string $id
      * @return Authassignment the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($item_name, $user_id)
+    protected function findModel($id)
     {
-        if (($model = Authassignment::findOne(['item_name' => $item_name, 'user_id' => $user_id])) !== null) {
+        if (($model = Authassignment::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

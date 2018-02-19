@@ -19,6 +19,11 @@ use kartik\mpdf\Pdf;
 use yii\helpers\Html;
 use app\models\Historialsolicitudes;
 use yii\data\ActiveDataProvider;
+use app\models\Presupuestos;
+use app\models\Conexionsigesp;
+use app\models\Spgdtcmp;
+use app\models\Cxprdspg;
+use app\models\Cxprd;
 
 
 /**
@@ -206,6 +211,8 @@ class GestionController extends Controller
         
         $searchModel = new \app\models\GestionSearchGestionalo();
         
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
         if ($precarga == 1){
                  /**  Carga de Las Personas del Memo   **/
                 $modelorigenmemo->departamento = 1;
@@ -216,13 +223,12 @@ class GestionController extends Controller
                 $modelfinalmemo->usuariofinal = 11;
                 $modelfinalmemo->estatus1final = 1;
                 $modelfinalmemo->estatus2final = 2;
-              //  $modelfinalmemo->estatus3final = 62;
+                $modelfinalmemo->estatus3final = 62;
                 
                 /** Filtro los que tienen o estan en estatus de elaboración de Memo **/
-              //   $dataProvider->query->andWhere(['estatus3_id'=>61]);
+                $dataProvider->query->andWhere(['estatus3_id'=>61]);
         }
         
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         
          if($estatus1!=''){
                 $dataProvider->query->andWhere(['estatus1_id'=>$estatus1]);
@@ -623,78 +629,111 @@ class GestionController extends Controller
     
         }
         
-    public function actionActualiza($id,$estatus1=null,$estatus2=null,$estatus3=null,$departamento=null,$unidad=null,$usuario=null,$verorpa=null, $vercheque =null, $vertelefono=null, $verunidad=null){
+    public function actionActualiza($id){
      
     $modelgestion = Gestion::findOne($id);
     
     $modelsolicitudes = Solicitudes::findOne($modelgestion->solicitud_id);
+    
+    $modelpresupuesto = Presupuestos::findOne(['solicitud_id' => $modelsolicitudes->id ]);
+    
+    $modelconexionsigesp = Conexionsigesp::findOne(['id_presupuesto' => $modelpresupuesto->id ]);
         
     $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
-        
-    if ($consulta[0]['tiporif']==""){
-
-    $query = \app\models\PresupuestosSearch::find()
-            ->select(["conexionsigesp.req as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as nrif", "empresa_institucion.rif AS rif", "presupuestos.beneficiario_id", "presupuestos.solicitud_id" ])
-            ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
-            ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
-            ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
-
-    $dataProvider = new ActiveDataProvider([
-        'query' => $query,
-        'pagination' => [
-            'pageSize' => 10,
-        ],
-        ]);    
-        
-        $modelorigenmemo = new Origenmemo;
-        $modelfinalmemo = new Finalmemo;
-        $memosgestion = new Memosgestion;
-        $modelorigenmemo->load(Yii::$app->request->post());
-        $modelfinalmemo->load(Yii::$app->request->post());
-        $memosgestion->load(Yii::$app->request->post());
-        
-        $searchModel = new \app\models\GestionSearchGestionalo();
-        
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
-        if($estatus1!=''){
-            $dataProvider->query->andWhere(['estatus1_id'=>$estatus1]);
-        }
-        if($estatus2!=''){
-            $dataProvider->query->andWhere(['estatus2_id'=>$estatus2]);
-        }
-        if($estatus3!=''){
-            $dataProvider->query->andWhere(['estatus3_id'=>$estatus3]);
-        }
-        if($departamento!=''){
-            $dataProvider->query->andWhere(['departamentos.id'=>$departamento]);
-        }
-        if($unidad!=''){
-            $dataProvider->query->andWhere(['gestion.recepcion_id'=>$unidad]);
-        }
-        if($usuario!=''){
-            $dataProvider->query->andWhere(['trabajador_id'=>$usuario]);
-        } 
-     
-        return $this->render('gestiona', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-                'modelorigenmemo' => $modelorigenmemo,
-                'modelfinalmemo' => $modelfinalmemo,
-                'memosgestion' => $memosgestion,
-                'estatus1' => $estatus1,
-                'estatus2' => $estatus2,
-                'estatus3' => $estatus3,
-                'departamento' => $departamento,
-                'unidad' => $unidad,
-                'usuario' => $usuario,
-                'verorpa' => $verorpa,
-                'vercheque' => $vercheque,
-                'vertelefono' => $vertelefono,
-                'verunidad' => $verunidad,
-        ]);
-
+    $usuarioid = Yii::$app->user->id;
+    
+    /////*** DEFINO 10 ESTATUS PARA LOS ESTATUS DEL DOCUMENTO ES DECIR EL ESTATUS DE LA CONEXION A SIGESP ****////
+    
+$i = 0;
+while ($i<11){
+    
+    switch($modelconexionsigesp->estatus_sigesp){
+        // ESTATUS VACIO
+        case '':
+            $modelconexionsigesp->estatus_sigesp = 'ELA';
+            break 1; // Aquí salé del switch
+        // ESTATUS ELA -> ELABORADO
+        case 'ELA':
+            //VERIFICO QUE EL ESTATUS ES DIFERENTE DE 61 (EN ELABORACIÓN DE MEMO)
+            if ($modelgestion->estatus3_id != 61){
+            $modelconexionsigesp->estatus_sigesp = 'APR';
+            }else{
+            //salgo de los while ya que el caso no esta aprobado
+                break 2;
+            }
+            break 1; // Aquí salé del switch
+        //ESTATUS APR -> APROBADO Y ENVIADO A ADMINISTRACIÓN    
+        case 'APR':
+            //reviso si el caso esta comprometido
+            $modelcomprometido = Spgdtcmp::findOne(['comprobante' => $modelconexionsigesp->req]);
+            if (isset($modelcomprometido)){
+                // Si esta comprometido
+                $modelconexionsigesp->estatus_sigesp = 'COM';
+                $modelconexionsigesp->date_compromiso = $modelcomprometido->fecha;
+                $modelconexionsigesp->compromiso_by = $usuarioid;
+            } elseif ($modelgestion->estatus3_id == 61) {
+                // Verifico si por casualidad lo devolvieron a Elaboración de Memo
+                $modelconexionsigesp->estatus_sigesp = 'ELA';
+            } else {
+                //salgo de los while ya que el caso no esta comprometido
+                break 2;    
+            }
+            break 1; // Aquí salé del switch
+        //ESTATUS COM -> EL CASO SE ENCUENTRA COMPROMETIDO
+        case 'COM':
+            //reviso si el caso esta comprometido
+            $modelcomprometido = Spgdtcmp::findOne(['comprobante' => $modelconexionsigesp->req]);
+            if (isset($modelcomprometido)){
+                // Si esta comprometido
+                $modelconexionsigesp->estatus_sigesp = 'COM';
+                $modelconexionsigesp->date_compromiso = $modelcomprometido->fecha;
+                $modelconexionsigesp->compromiso_by = $usuarioid;
+            } elseif ($modelgestion->estatus3_id == 61) {
+                // Verifico si por casualidad lo devolvieron a Elaboración de Memo
+                $modelconexionsigesp->estatus_sigesp = 'ELA';
+            } else {
+                //salgo de los while ya que el caso no esta comprometido
+                break 2;    
+            }
+            break 1; // Aquí salé del switch
+            
+        //ESTATUS ROR -> EL CASO SE ENCUENTRA RECIBIDO POR ORPA
+        case 'ROR':
+            //reviso si el caso esta recibido por orpa
+            $modelrecibidoorpa = Cxprdspg::findOne(['numdoccom' => $modelconexionsigesp->req]);
+            if (isset($modelrecibidoorpa)){
+                // Si esta recibido
+                $modelconexionsigesp->numrecdoc = $modelrecibidoorpa->numrecdoc;
+                $modeldocorpa = Cxprd::findOne(['numrecdoc' => $modelconexionsigesp->numrecdoc, 'ced_bene' => $modelconexionsigesp->rif]);
+                $modelconexionsigesp->date_regdocorpa = $modeldocorpa->fecemidoc;
+                $modelconexionsigesp->compromiso_by = $usuarioid;
+                $modelconexionsigesp->estatus_sigesp = 'COM';
+                
+                
+            } elseif ($modelgestion->estatus3_id == 61) {
+                // Verifico si por casualidad lo devolvieron a Elaboración de Memo
+                $modelconexionsigesp->estatus_sigesp = 'ELA';
+            } else {
+                //salgo de los while ya que el caso no esta comprometido
+                break 2;    
+            }
+            break 1; // Aquí salé del switch    
+            
+        case 10:
+            echo "He llegado a 10 </br>";
+            break 1; // Sale del switch y del while
+        default:
+            break;
     }
+    ++$i;
+    $modelconexionsigesp->save();
+}    
+        return $this->render('actualiza', [
+                'modelgestion' => $modelgestion,
+                'modelsolicitudes' => $modelsolicitudes,
+                'modelpresupuesto' => $modelpresupuesto,
+                'modelconexionsigesp' => $modelconexionsigesp,
+        ]);
 
     }
 }

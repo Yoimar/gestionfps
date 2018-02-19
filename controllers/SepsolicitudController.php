@@ -186,9 +186,19 @@ class SepsolicitudController extends Controller
                     ->queryScalar();
             
             if ($empresainsitucionrevision==0){
-                Yii::$app->db->createCommand("INSERT INTO empresa_institucion (id)
-                VALUES(".$consultaempresainstitucion
-                        .");")->execute();
+                if ($consultaempresainstitucion == ''){
+                    
+                    Yii::$app->session->setFlash("warning", "El caso no tiene cargada una casa presupuestaria <br> "
+                            . "Por favor Verifique el caso <br> "
+                            . "Si es un caso de ALMACEN <br> "
+                            . "Entre por el Menu de Aprobacion por Almacen");
+                    return $this->redirect(['ubica']);
+                    
+                } else {
+                Yii::$app->db->createCommand("INSERT INTO empresa_institucion (id) "
+                ." VALUES(".$consultaempresainstitucion
+                .");")->execute();
+                }
              }
                                         
                     
@@ -235,7 +245,6 @@ class SepsolicitudController extends Controller
             ."WHERE pr1.solicitud_id = ".$numero)->queryAll();
 
         return $this->render('muestra', [
-//            'searchModel' => $searchModel,
             'numero' => $numero,
             'dataProvider' => $dataProvider,
             'consulta' => $consulta
@@ -390,9 +399,9 @@ class SepsolicitudController extends Controller
                     . "', '---', '---', '---', '---', NULL, '"
                     .$consulta[$i]['tiporif']."-".substr(str_pad($consulta[$i]['rif'], 9, "0", STR_PAD_LEFT),0,8)."-".substr(str_pad($consulta[$i]['rif'], 9, "0", STR_PAD_LEFT),-1)
                     ."', '"
-                    . substr($consulta[$i]['nombrecasacomercial'],100)
+                    . iconv("UTF-8", "ISO-8859-1//IGNORE",substr($consulta[$i]['nombrecasacomercial'],100))
                     . "', '"
-                    . substr($consulta[$i]['nombrecasacomercial'],0,100)
+                    . iconv("UTF-8", "ISO-8859-1//IGNORE",substr($consulta[$i]['nombrecasacomercial'],0,100))
                     . "', 'CARACAS', NULL, NULL, NULL, '21104990001', '---', NULL, NULL, NULL, '"
                     . $fechahoy
                     . "', 'V', NULL, 'F', "
@@ -400,8 +409,8 @@ class SepsolicitudController extends Controller
         }else{
              Yii::$app->dbsigesp->createCommand("UPDATE rpc_beneficiario  SET "
                      . "rifben='".$consulta[$i]['tiporif']."-".substr(str_pad($consulta[$i]['rif'], 9, '0', STR_PAD_LEFT),0,8)."-".substr(str_pad($consulta[$i]['rif'], 9, '0', STR_PAD_LEFT),-1)."'"
-                    . ", nombene='".substr($consulta[$i]['nombrecasacomercial'],100)."'"
-                     . ", apebene='". substr($consulta[$i]['nombrecasacomercial'],0,100)."'"
+                    . ", nombene='".iconv("UTF-8", "ISO-8859-1//IGNORE",substr($consulta[$i]['nombrecasacomercial'],100))."'"
+                     . ", apebene='". iconv("UTF-8", "ISO-8859-1//IGNORE",substr($consulta[$i]['nombrecasacomercial'],0,100))."'"
                      . " WHERE ced_bene = '".$consulta[$i]['rif']."';")->execute();     
         }
         
@@ -603,9 +612,10 @@ class SepsolicitudController extends Controller
                 .$consulta[$i]['id'].";")->queryScalar();
         
         /**INSERTO O ACTUALIZO EN LA TABLA CONEXION SIGESP DE GESTION**/
-        
+        $fechaconminutos = date('Y-m-d H:i:s');
+        $idusuario = Yii::$app->user->id; 
         if ($hayconexionsigesp == 0){
-           Yii::$app->db->createCommand("INSERT INTO conexionsigesp (id_presupuesto, rif, req, codestpre, cuenta, date)"
+           Yii::$app->db->createCommand("INSERT INTO conexionsigesp (id_presupuesto, rif, req, codestpre, cuenta, date, created_at, created_by, estatus_sigesp)"
                 ."VALUES ('"
                 . $consulta[$i]['id']
                 . "', '"
@@ -616,10 +626,16 @@ class SepsolicitudController extends Controller
                 . ($i+1)
                 . "', '"
                 . "AE01". $estructura . $consulta[$i]['codestpre']
-                ."', '"
+                . "', '"
                 . $cuenta
                 . "', '"
-                . $fechahoy . "');")->execute();     
+                . $fechahoy 
+                . "', '"
+                . $fechaconminutos   
+                . "', '"
+                . $idusuario
+                . "', 'ELA"
+                . "');")->execute();     
         }else{
         Yii::$app->db->createCommand("UPDATE conexionsigesp "
                 . "SET "
@@ -629,6 +645,8 @@ class SepsolicitudController extends Controller
                 . "', codestpre = 'AE01". $estructura . $consulta[$i]['codestpre']
                 . "', cuenta = '".$cuenta
                 . "', date= '".$fechahoy
+                . "', updated_at= '".$fechaconminutos
+                . "', updated_by= '".$idusuario
                 . "' WHERE id_presupuesto = ".$consulta[$i]['id'].";")->execute();        
         
 
@@ -1314,8 +1332,7 @@ class SepsolicitudController extends Controller
                     . "AC02-0102-204");
                         
             return $this->redirect('index');
-        } 
-        elseif ($codestpro3 == '0000000000000000000000204') {
+        } elseif ($codestpro3 == '0000000000000000000000204') {
             
          Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud 
              SET codestpro3='0000000000000000000000202' 
@@ -1336,6 +1353,7 @@ class SepsolicitudController extends Controller
         }
         
     }
+    
         
     
    

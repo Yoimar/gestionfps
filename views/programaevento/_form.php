@@ -1,6 +1,6 @@
 <?php
 
-use kartik\widgets\ActiveForm;
+use kartik\form\ActiveForm;
 use yii\helpers\Html;
 use kartik\select2\Select2;
 use app\models\Trabajador;
@@ -13,7 +13,7 @@ use app\models\Estados;
 use app\models\Parroquias;
 use app\models\Municipios;
 use yii\helpers\Url;
-use kartik\widgets\DateTimePicker;
+use kartik\datetime\DateTimePicker;
 
 
 /* @var $this yii\web\View */

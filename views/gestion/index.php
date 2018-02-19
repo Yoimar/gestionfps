@@ -116,21 +116,26 @@ $defaultExportConfig = [
             'format' => 'Letter',
             'destination' => 'I', 
             'orientation' => 'L',
-            'marginTop' => 20,
+            'marginTop' => 35,
             'marginBottom' => 20,
             'cssInline' => '.kv-wrap{padding:20px;}' .
-                '.kv-align-center{text-align:center;font-size:10 px;}' .
-                '.kv-grid-table{font-size:10 px;}'.
+                '.kv-align-center{text-align:center;}' .
                 '.kv-align-left{text-align:left;}' .
                 '.kv-align-right{text-align:right;}' .
                 '.kv-align-top{vertical-align:top!important;}' .
                 '.kv-align-bottom{vertical-align:bottom!important;}' .
-                '.kv-align-middle{vertical-align:middle!important;font-size:10 px;}' .
+                '.kv-align-middle{vertical-align:middle!important;}' .
                 '.kv-page-summary{border-top:4px double #ddd;font-weight: bold;}' .
                 '.kv-table-footer{border-top:4px double #ddd;font-weight: bold;}' .
-                '.kv-table-caption{font-size:0.5em;padding:8px;border:1px solid #ddd;border-bottom:none;}',
+                '.kv-table-caption{font-size:0.5em;padding:0px;border:1px solid #ddd;border-bottom:none;}',
             'methods' => [
-                'SetHeader'=>['<h1>Reporte de Gestiones</h1>'], 
+                'SetHeader'=>[''
+                    .'<div class="row">'
+                    .Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "120", "class" => "pull-left"])
+                    .Html::img("@web/img/despacho.png", ["alt" => "Despacho", "width" => "350", "style" =>"margin-top: 10px; margin-bottom: 10px;", "class" => "pull-right"])
+                    . '<center class="text-center col-xs-12 col-sm-12 col-md-12 col-lg-12" style = "margin-top: 30px; margin-bottom: 0px;"><h2 style = "padding-top: 20px; margin-bottom: 0px;">Relación de Casos</h2></center>'
+                    .'</div>'
+                    . ''], 
                 'SetFooter'=>['{PAGENO}'],
             ],
             'options' => [

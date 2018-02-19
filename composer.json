@@ -19,6 +19,14 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "yiisoft/yii2-jui": "*",
+        "yiisoft/yii2-imagine": "~2.1.0",
+        "noam148/yii2-image-manager" : "*",
+        "2amigos/yii2-ckeditor-widget" : "~2.1",
+        "2amigos/yii2-chartjs-widget" : "~2.0",
+        "2amigos/yii2-tinymce-widget" : "*",
+        "vova07/yii2-imperavi-widget": "*",
+        "2amigos/yii2-gallery-widget": "~1.0",
+        "zxbodya/yii2-gallery-manager": "*@dev",
         "kartik-v/yii2-widget-select2": "*",
         "kartik-v/dependent-dropdown": "@dev",
         "kartik-v/yii2-date-range": "*",
@@ -81,7 +89,13 @@
         "codeception/specify": "~0.4.3"
     },
     "config": {
-        "process-timeout": 1800
+        "process-timeout": 1800,
+        "fxp-asset":{
+            "installer-paths": {
+                "npm-asset-library": "vendor/npm",
+                "bower-asset-library": "vendor/bower"
+            }
+}
     },
     "scripts": {
         "post-create-project-cmd": [
@@ -100,10 +114,6 @@
             "generateCookieValidationKey": [
                 "config/web.php"
             ]
-        },
-        "asset-installer-paths": {
-            "npm-asset-library": "vendor/npm",
-            "bower-asset-library": "vendor/bower"
         }
     }
 }

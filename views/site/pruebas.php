@@ -373,8 +373,8 @@ echo GridView::widget([
 <?= Html::endForm();?> 
  <div class="row">
 <?php
-echo Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "150", "class" => "pull-left"]);
-echo Html::img("@web/img/despacho.png", ["alt" => "Despacho", "width" => "450", "style" =>"margin-top: 10px; margin-bottom: 10px;", "class" => "pull-right"]);
+//echo Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "150", "class" => "pull-left"]);
+//echo Html::img("@web/img/despacho.png", ["alt" => "Despacho", "width" => "450", "style" =>"margin-top: 10px; margin-bottom: 10px;", "class" => "pull-right"]);
 ?>
   </div>'
 .'<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:12px;">'
@@ -440,6 +440,15 @@ echo Html::img("@web/img/despacho.png", ["alt" => "Despacho", "width" => "450", 
 .'</table>'
 .'</div>';
 
+<?php $footer = '<div class="row">'
+                .Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "150", "class" => "pull-left", "style" =>"margin-top: 0px; margin-bottom: 0px;"])
+                .Html::img("@web/img/despacho.png", ["alt" => "Despacho", "width" => "300", "style" =>"margin-top: 10px; margin-bottom: 10px;", "class" => "pull-right"])
+                . '<center><h3>Relación de Casos</h3></center>'
+                .'</div>';
+echo $footer;
+                    ?>
+                    
+                    
 
  <?php
 

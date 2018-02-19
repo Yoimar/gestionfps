@@ -80,6 +80,7 @@ class GestionSearchGestionalo extends Gestion
                 ->join('LEFT JOIN', 'estatus2', 'estatus3.estatus2_id = estatus2.id')
                 ->join('LEFT JOIN', 'estatus1', 'estatus2.estatus1_id = estatus1.id')
                 ->join('LEFT JOIN', 'personas as personabeneficiario', 'solicitudes.persona_beneficiario_id  = personabeneficiario.id')
+                ->join('LEFT JOIN', 'personas as personasolicitante', 'solicitudes.persona_solicitante_id  = personasolicitante.id')
                 ->join('LEFT JOIN', 'empresa_institucion', 'presupuestos.beneficiario_id = empresa_institucion.id')
                 ->join('LEFT JOIN', 'conexionsigesp', 'presupuestos.id = conexionsigesp.id_presupuesto')
                 ->join('LEFT JOIN', 'recepciones', 'recepciones.id = gestion.recepcion_id')

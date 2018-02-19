@@ -59,7 +59,8 @@ class GestionSearch extends Gestion
                 'solicitudes.descripcion', "date_part('day' ,now()-gestion.updated_at) as diasdeultimamodificacion", "date_part('day' ,now()-solicitudes.created_at) as diasdesolicitud", "date_part('day' ,now()-programaevento.fechaprograma) as diasdesdeactividad",
                 "extract(year from solicitudes.created_at) as anodelasolicitud", "CONCAT(estadobeneficiario.nombre || ' ' || municipiobeneficiario.nombre || ' ' || parroquiabeneficiario.nombre || ' ' || personabeneficiario.zona_sector || ' ' || personabeneficiario.calle_avenida || ' ' || personabeneficiario.apto_casa) as direccion",
                 "to_char(programaevento.fechaprograma, 'DD/MM/YYYY') as fechaactividad", "to_char(solicitudes.created_at, 'DD/MM/YYYY') as fechaingreso", 'estadobeneficiario.nombre as estadodireccion', "TO_CHAR(gestion.updated_at, 'DD/MM/YYYY') as fechaultimamodificacion",
-                "gestion.instruccion_id", "CONCAT(personabeneficiario.telefono_fijo || ' / ' || personabeneficiario.telefono_celular || ' / ' || personabeneficiario.telefono_otro) as telefono",
+                "gestion.instruccion_id", 
+                "CONCAT(COALESCE(personabeneficiario.telefono_fijo || ' ', '') || COALESCE(personabeneficiario.telefono_celular || ' ', '') || COALESCE(personabeneficiario.telefono_otro || ' ', '') ) as telefono",
                 "extract(YEAR FROM age(now(),personabeneficiario.fecha_nacimiento)) as edadbeneficiario", "string_agg(empresa_institucion.nombrecompleto, '  //  ') as empresaoinstitucion",
                 "count(presupuestos.cantidad) as cantidad", "string_agg(presupuestos.cheque, ' / ') as cheque", "string_agg(to_char(presupuestos.beneficiario_id,'99999'), ', ')", "string_agg(to_char(presupuestos.proceso_id,'99999'), ', ')", "string_agg(requerimientos.nombre, ', ') as tratamiento", "sum(presupuestos.montoapr) as monto"]);
 

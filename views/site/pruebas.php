@@ -11,7 +11,14 @@ use yii\bootstrap\Collapse;
 use yii\bootstrap\Tabs;
 use yii\bootstrap\Carousel;
 use yii\helpers\Url;
+use app\models\Presupuestos;
 
+ //creo la direccion para guardar la imagen que se llama adjuntos
+            $path =  Yii::getAlias('@app')."/nombre" ;
+            $prueba = "@web/img/logo_fps.jpg";
+            
+ echo $path."<br>";
+ echo $prueba;
 /* @var $this yii\web\View */
 echo AlertBlock::widget([ 
    'type' => AlertBlock::TYPE_ALERT,

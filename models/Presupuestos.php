@@ -53,7 +53,7 @@ class Presupuestos extends \yii\db\ActiveRecord
     public $diasdeultimamodificacion;
     public $diasdesolicitud;
     public $diasdesdeactividad;
-    public $cheque;
+    public $cheque_gestion;
     public $anodelasolicitud;
     public $direccion;
     public $fechaactividad;

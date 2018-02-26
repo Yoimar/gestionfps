@@ -62,8 +62,8 @@ $config = [
             'thousandSeparator' => '.',
             'currencyCode' => ' Bs',
             'nullDisplay' => '',
-//            'defaultTimeZone' => 'America/Caracas',
-//            'timeZone' => 'America/Caracas',
+            'defaultTimeZone' => 'America/Caracas',
+            'timeZone' => 'Etc/GMT+4',
 //            'locale' => 'es'
         ],
         

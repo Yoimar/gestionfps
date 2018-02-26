@@ -6,6 +6,7 @@ use kartik\select2\Select2;
 use app\models\User;
 use app\models\Users;
 use yii\helpers\ArrayHelper;
+use app\models\Sssusuarios;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Trabajador */
@@ -33,6 +34,18 @@ use yii\helpers\ArrayHelper;
         'data' => ArrayHelper::map(Users::find()->where(['activated' => 'TRUE'])->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
         'options' => ['placeholder' => 'Usuario del SASYC'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+    
+    ?>
+    
+    <?= 
+        $form->field($model, 'usuario_sigesp')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Sssusuarios::find()->where(['actusu' => 0])->orderBy('codusu')->all(), 'codusu', 'codusu'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Usuario del SIGESP'],
         'pluginOptions' => [
         'allowClear' => true
         ],

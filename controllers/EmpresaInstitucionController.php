@@ -8,6 +8,8 @@ use app\models\EmpresainstitucionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Conexionsigesp;
+use app\models\Sepsolicitud;
 
 /**
  * EmpresainstitucionController implements the CRUD actions for Empresainstitucion model.
@@ -93,9 +95,28 @@ class EmpresainstitucionController extends Controller
         }
     }
     
-    public function actionUpdates($id,$volver)
+    public function actionUpdates($id,$volver,$idpresupuesto)
     {
         $model = $this->findModel($id);
+
+        $modelconexionsigesp = Conexionsigesp::findOne([
+            'id_presupuesto' => $idpresupuesto
+        ]);
+
+        $modelsepsolicitud = Sepsolicitud::findOne([
+            'numsol' => $modelconexionsigesp->req,
+            'ced_bene' => $modelconexionsigesp->rif
+        ]);
+
+        if ($modelsepsolicitud->estsol == 'C'){
+             Yii::$app->session->setFlash("warning", "El caso ya esta PROCESADO<br> "
+                            . "Para reparar la solicitud POR FAVOR<br> "
+                            . "ay que devolverlo del sistema"
+                            . "ADMINISTRATIVO SIGESP <br>"
+                            . "Si el caso ya posee un CHEQUE <br> "
+                            . "DEBE ser INGRESADO nuevamente");
+                    return $this->redirect(['sepsolicitud/muestra', 'numero' => $volver]);
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['sepsolicitud/muestra', 'numero' => $volver]);

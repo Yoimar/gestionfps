@@ -16,6 +16,8 @@ use yii\data\ActiveDataProvider;
 use kartik\mpdf\Pdf;
 use yii\helpers\Html;
 use yii\i18n\Formatter;
+use app\models\Bitacoras;
+use app\models\Trabajador;
 
 /**
  * SepsolicitudController implements the CRUD actions for Sepsolicitud model.
@@ -203,9 +205,26 @@ class SepsolicitudController extends Controller
                                         
                     
             $query = \app\models\PresupuestosSearch::find()
-                    ->select(["conexionsigesp.req as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as nrif", "empresa_institucion.rif AS rif", "presupuestos.beneficiario_id", "presupuestos.solicitud_id" ])
-                    ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
-                    ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
+                    ->select([
+                        "conexionsigesp.req as documento", 
+                        'presupuestos.montoapr as montopre', 
+                        'empresa_institucion.nombrecompleto as nombre', 
+                        "empresa_institucion.nrif as nrif", 
+                        "empresa_institucion.rif AS rif", 
+                        "presupuestos.beneficiario_id", 
+                        "presupuestos.solicitud_id",
+                        "presupuestos.id as id" 
+                    ])
+                    ->join(
+                        'LEFT JOIN', 
+                        'conexionsigesp', 
+                        'conexionsigesp.id_presupuesto = presupuestos.id'
+                    )
+                    ->join(
+                        'LEFT JOIN', 
+                        'empresa_institucion', 
+                        'empresa_institucion.id = presupuestos.beneficiario_id'
+                    )
                     ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
 
             $dataProvider = new ActiveDataProvider([
@@ -350,7 +369,9 @@ class SepsolicitudController extends Controller
             ."JOIN requerimientos r1 ON pr1.requerimiento_id=r1.id "
             ."JOIN recepciones r2 ON s1.recepcion_id=r2.id "
             ."JOIN empresa_institucion ei1 ON pr1.beneficiario_id = ei1.id "
-            ."WHERE pr1.solicitud_id = ".$numero)->queryAll();
+            ."WHERE pr1.solicitud_id = :id;")
+                        ->bindValue(":id", $numero)
+                        ->queryAll();
         
         $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
         
@@ -694,7 +715,14 @@ class SepsolicitudController extends Controller
         }
         
         $query = \app\models\PresupuestosSearch::find()
-                    ->select(["conexionsigesp.req as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as nrif", "empresa_institucion.rif AS rif", "presupuestos.beneficiario_id", "presupuestos.solicitud_id" ])
+                    ->select(["conexionsigesp.req as documento", 
+                            'presupuestos.montoapr as montopre', 
+                            'empresa_institucion.nombrecompleto as nombre', 
+                            "empresa_institucion.nrif as nrif", 
+                            "empresa_institucion.rif as rif", 
+                            "presupuestos.beneficiario_id", 
+                            "presupuestos.solicitud_id",
+                            "presupuestos.id as id"])
                     ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
                     ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
                     ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
@@ -707,6 +735,27 @@ class SepsolicitudController extends Controller
             ]);
         
         Yii::$app->session->setFlash("success", "<br>El caso fue aprobado correctamente<br>");
+
+        $usuarioid = Yii::$app->user->id;
+            $modeluser = Trabajador::findOne([
+                    'user_id' => $usuarioid 
+            ]);
+
+            $modelbitacora = new Bitacoras;
+            $modelbitacora->solicitud_id = $numero;
+            $modelbitacora->fecha = date('Y-m-d');
+            $modelbitacora->nota = "El trabajador ".$modeluser->Trabajadorfps. " ha aprobado"
+                ."satisfactoriamente el caso con el número de solicitud: "
+                . $consulta[$i]['ndonacion'] . " el día " 
+                . date('d/m/Y') . " a las " . date('h:i a');                
+            $modelbitacora->usuario_id = $modeluser->users_id; 
+            $modelbitacora->ind_activo = 1;
+            $modelbitacora->ind_alarma = 0;
+            $modelbitacora->ind_atendida = 0;
+            $modelbitacora->version = 0;
+            $modelbitacora->created_at = date('Y-m-d H:i:s');
+            $modelbitacora->updated_at = date('Y-m-d H:i:s');
+            $modelbitacora->save();
         
         return $this->render('muestra', [
                 'numero' => $numero,
@@ -1124,7 +1173,8 @@ class SepsolicitudController extends Controller
     
     public function actionDevolver($numero)            
     {
-        $consulta = Yii::$app->db->createCommand("SELECT CONCAT('Caso N: ' || s1.num_solicitud) AS solicitud, "
+        $consulta = Yii::$app->db->createCommand(
+            "SELECT CONCAT('Caso N: ' || s1.num_solicitud) AS solicitud, "
             ."CONCAT('Solicitante: ' ||ps.nombre || ' ' || ps.apellido || ' C.I.: ' ||ps.ci ) AS solicitante, "
             ."CONCAT('Beneficiario: ' ||pb.nombre || ' ' || pb.apellido || COALESCE(' C.I.: ' || pb.ci || ' ', '') ) AS beneficiario, "
             ."CONCAT('Requerimiento: ' || r1.nombre) AS requerimiento, "
@@ -1152,12 +1202,25 @@ class SepsolicitudController extends Controller
             ."JOIN requerimientos r1 ON pr1.requerimiento_id=r1.id "
             ."JOIN recepciones r2 ON s1.recepcion_id=r2.id "
             ."JOIN empresa_institucion ei1 ON pr1.beneficiario_id = ei1.id "
-            ."WHERE pr1.solicitud_id = ".$numero)->queryAll();
+            ."WHERE pr1.solicitud_id = :numero;")
+                    ->bindValue(":numero", $numero)
+                    ->queryAll();
         
         $query = \app\models\PresupuestosSearch::find()
-                    ->select(["conexionsigesp.req as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as nrif", "empresa_institucion.rif AS rif", "presupuestos.beneficiario_id", "presupuestos.solicitud_id" ])
-                    ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
-                    ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
+                    ->select([
+                        "conexionsigesp.req as documento", 
+                        'presupuestos.montoapr as montopre', 
+                        'empresa_institucion.nombrecompleto as nombre', 
+                        "empresa_institucion.nrif as nrif", 
+                        "empresa_institucion.rif AS rif", 
+                        "presupuestos.beneficiario_id", 
+                        "presupuestos.solicitud_id" ])
+                    ->join('LEFT JOIN', 
+                        'conexionsigesp', 
+                        'conexionsigesp.id_presupuesto = presupuestos.id')
+                    ->join('LEFT JOIN', 
+                        'empresa_institucion', 
+                        'empresa_institucion.id = presupuestos.beneficiario_id')
                     ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
 
             $dataProvider = new ActiveDataProvider([
@@ -1253,7 +1316,9 @@ class SepsolicitudController extends Controller
                     . "tipo_proc = '',"
                     ."fecha_aprobacion = null"    
                     .", num_proc = null"
-                    ." WHERE id = ".$numero.";")->execute();
+                    ." WHERE id = :numero;")
+                    ->bindValue(":numero", $numero)
+                    ->execute();
                     
                $nuevoidmemo = $idmemo['valor']-1;
                     Yii::$app->db->createCommand("UPDATE configuraciones SET "
@@ -1265,6 +1330,27 @@ class SepsolicitudController extends Controller
             
             Yii::$app->session->setFlash("success", "El caso ha sido devuelto exitosamente");
             
+            $usuarioid = Yii::$app->user->id;
+            $modeluser = Trabajador::findOne([
+                    'user_id' => $usuarioid 
+            ]);
+
+            $modelbitacora = new Bitacoras;
+            $modelbitacora->solicitud_id = $numero;
+            $modelbitacora->fecha = date('Y-m-d');
+            $modelbitacora->nota = "El trabajador ".$modeluser->Trabajadorfps. " ha devuelto "
+                ."satisfactoriamente el caso con el número de solicitud: "
+                . $consulta[$i]['ndonacion'] . " el día " 
+                . date('d/m/Y') . " a las " . date('h:i a');                
+            $modelbitacora->usuario_id = $modeluser->users_id; 
+            $modelbitacora->ind_activo = 1;
+            $modelbitacora->ind_alarma = 0;
+            $modelbitacora->ind_atendida = 0;
+            $modelbitacora->version = 0;
+            $modelbitacora->created_at = date('Y-m-d H:i:s');
+            $modelbitacora->updated_at = date('Y-m-d H:i:s');
+            $modelbitacora->save();
+
             return $this->render('muestra', [
                 'numero' => $numero,
                 'dataProvider' => $dataProvider,
@@ -1281,15 +1367,21 @@ class SepsolicitudController extends Controller
         /** Actualizo la tabla de sepsolicitud  **/
         Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud 
              SET codestpro3='0000000000000000000000203' 
-             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();  
+             WHERE codemp='0001' AND numsol=':numsol';")
+                    ->bindValue (":numsol", $numsol)
+                    ->execute();  
         /** Actualizo sep_dt_concepto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto
              SET codestpro3='0000000000000000000000203' 
-             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();
+             WHERE codemp='0001' AND numsol='':numsol';")
+                    ->bindValue (":numsol", $numsol)
+                    ->execute();
          /** Actualizo en la tabla sep_cuentagasto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto
              SET codestpro3='0000000000000000000000203' 
-             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();
+             WHERE codemp='0001' AND numsol='':numsol';")
+                    ->bindValue (":numsol", $numsol)
+                    ->execute();
          
          Yii::$app->session->setFlash("success", "El caso ha sido Cambiado a la Estructura Presupuestaria <br>"
                     . "AC02-0102-203");
@@ -1300,15 +1392,21 @@ class SepsolicitudController extends Controller
             
          Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud 
              SET codestpro3='0000000000000000000000201' 
-             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();  
+             WHERE codemp='0001' AND numsol='':numsol';")
+                    ->bindValue (":numsol", $numsol)
+                    ->execute();
         /** Actualizo sep_dt_concepto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto
              SET codestpro3='0000000000000000000000201' 
-             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();
+             WHERE codemp='0001' AND numsol='':numsol';")
+                    ->bindValue (":numsol", $numsol)
+                    ->execute();
          /** Actualizo en la tabla sep_cuentagasto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto
              SET codestpro3='0000000000000000000000201' 
-             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();   
+             WHERE codemp='0001' AND numsol='':numsol';")
+                    ->bindValue (":numsol", $numsol)
+                    ->execute();
              
             Yii::$app->session->setFlash("success", "El caso ha sido Cambiado a la Estructura Presupuestaria <br>"
                     . "AC02-0102-201");
@@ -1318,15 +1416,21 @@ class SepsolicitudController extends Controller
             
          Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud 
              SET codestpro3='0000000000000000000000204' 
-             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();  
+             WHERE codemp='0001' AND numsol='':numsol';")
+                    ->bindValue (":numsol", $numsol)
+                    ->execute();
         /** Actualizo sep_dt_concepto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto
              SET codestpro3='0000000000000000000000204' 
-             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();
+             WHERE codemp='0001' AND numsol='':numsol';")
+                    ->bindValue (":numsol", $numsol)
+                    ->execute();
          /** Actualizo en la tabla sep_cuentagasto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto
              SET codestpro3='0000000000000000000000204' 
-             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();   
+             WHERE codemp='0001' AND numsol='':numsol';")
+                    ->bindValue (":numsol", $numsol)
+                    ->execute();
              
             Yii::$app->session->setFlash("success", "El caso ha sido Cambiado a la Estructura Presupuestaria <br>"
                     . "AC02-0102-204");
@@ -1336,15 +1440,21 @@ class SepsolicitudController extends Controller
             
          Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud 
              SET codestpro3='0000000000000000000000202' 
-             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();  
+             WHERE codemp='0001' AND numsol='':numsol';")
+                    ->bindValue (":numsol", $numsol)
+                    ->execute();
         /** Actualizo sep_dt_concepto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto
              SET codestpro3='0000000000000000000000202' 
-             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();
+             WHERE codemp='0001' AND numsol='':numsol';")
+                    ->bindValue (":numsol", $numsol)
+                    ->execute();
          /** Actualizo en la tabla sep_cuentagasto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto
              SET codestpro3='0000000000000000000000202' 
-             WHERE codemp='0001' AND numsol='".$numsol."';")->execute();   
+             WHERE codemp='0001' AND numsol='':numsol';")
+                    ->bindValue (":numsol", $numsol)
+                    ->execute();
              
             Yii::$app->session->setFlash("success", "El caso ha sido Cambiado a la Estructura Presupuestaria <br>"
                     . "AC02-0102-202");
@@ -1354,7 +1464,4 @@ class SepsolicitudController extends Controller
         
     }
     
-        
-    
-   
 }

@@ -134,7 +134,11 @@ if (count($consulta)<=1){
             'buttons' => [
                 'update' => function($url, $model){
                         return Html::a('<span class="glyphicon glyphicon-pencil"></span>',
-                                    yii\helpers\Url::to(['empresainstitucion/updates', 'id' => $model->beneficiario_id, 'volver' => $model->solicitud_id]),
+                                    yii\helpers\Url::to([
+                                        'empresainstitucion/updates', 
+                                        'id' => $model->beneficiario_id, 
+                                        'volver' => $model->solicitud_id,
+                                        'idpresupuesto' => $model->id]),
                                     [
                                         'title' => 'Actualizar',
                                     ]

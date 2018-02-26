@@ -55,7 +55,7 @@ class Trabajador extends \yii\db\ActiveRecord
         return [
             [['user_id', 'users_id', 'ci', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['primernombre', 'segundonombre', 'primerapellido', 'segundoapellido'], 'string', 'max' => 20],
+            [['primernombre', 'segundonombre', 'primerapellido', 'segundoapellido', 'usuario_sigesp'], 'string', 'max' => 20],
             [['telfextension', 'telfpersonal', 'telfpersonal2', 'telfcasa'], 'string', 'max' => 12],
             [['dimprofesion'], 'string', 'max' => 8],
             [['profesion', 'TrabajadorFPS',], 'string', 'max' => 100],
@@ -73,6 +73,7 @@ class Trabajador extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => 'Usuario Gestión FPS',
             'users_id' => 'Usuario SASYC',
+            'usuario_sigesp' => 'Usuario SIGESP',
             'primernombre' => 'Primer Nombre',
             'segundonombre' => 'Segundo Nombre',
             'primerapellido' => 'Primer Apellido',

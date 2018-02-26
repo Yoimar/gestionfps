@@ -24,7 +24,13 @@ use app\models\Conexionsigesp;
 use app\models\Spgdtcmp;
 use app\models\Cxprdspg;
 use app\models\Cxprd;
-
+use app\models\Trabajador;
+use app\models\Cxpdtsolicitudes;
+use app\models\Cxpsolicitudes;
+use app\models\Scbprogpago;
+use app\models\Scbmovbcospg;
+use app\models\Scbmovbco;
+use app\models\Bitacoras;
 
 /**
  * GestionController implements the CRUD actions for Gestion model.
@@ -652,6 +658,7 @@ while ($i<11){
         case '':
             $modelconexionsigesp->estatus_sigesp = 'ELA';
             break 1; // Aquí salé del switch
+        
         // ESTATUS ELA -> ELABORADO
         case 'ELA':
             //VERIFICO QUE EL ESTATUS ES DIFERENTE DE 61 (EN ELABORACIÓN DE MEMO)
@@ -662,6 +669,7 @@ while ($i<11){
                 break 2;
             }
             break 1; // Aquí salé del switch
+        
         //ESTATUS APR -> APROBADO Y ENVIADO A ADMINISTRACIÓN    
         case 'APR':
             //reviso si el caso esta comprometido
@@ -674,59 +682,393 @@ while ($i<11){
             } elseif ($modelgestion->estatus3_id == 61) {
                 // Verifico si por casualidad lo devolvieron a Elaboración de Memo
                 $modelconexionsigesp->estatus_sigesp = 'ELA';
+
             } else {
                 //salgo de los while ya que el caso no esta comprometido
                 break 2;    
             }
             break 1; // Aquí salé del switch
-        //ESTATUS COM -> EL CASO SE ENCUENTRA COMPROMETIDO
+        
+//////////ESTATUS COM -> EL CASO SE ENCUENTRA COMPROMETIDO
         case 'COM':
-            //reviso si el caso esta comprometido
-            $modelcomprometido = Spgdtcmp::findOne(['comprobante' => $modelconexionsigesp->req]);
-            if (isset($modelcomprometido)){
-                // Si esta comprometido
-                $modelconexionsigesp->estatus_sigesp = 'COM';
-                $modelconexionsigesp->date_compromiso = $modelcomprometido->fecha;
-                $modelconexionsigesp->compromiso_by = $usuarioid;
-            } elseif ($modelgestion->estatus3_id == 61) {
-                // Verifico si por casualidad lo devolvieron a Elaboración de Memo
-                $modelconexionsigesp->estatus_sigesp = 'ELA';
-            } else {
-                //salgo de los while ya que el caso no esta comprometido
-                break 2;    
-            }
-            break 1; // Aquí salé del switch
-            
-        //ESTATUS ROR -> EL CASO SE ENCUENTRA RECIBIDO POR ORPA
-        case 'ROR':
             //reviso si el caso esta recibido por orpa
             $modelrecibidoorpa = Cxprdspg::findOne(['numdoccom' => $modelconexionsigesp->req]);
+            //reviso si esta comprometido
+            $modelcomprometido = Spgdtcmp::findOne(['comprobante' => $modelconexionsigesp->req]);
             if (isset($modelrecibidoorpa)){
-                // Si esta recibido
+                // Si esta recibido en el modulo de Orpa
                 $modelconexionsigesp->numrecdoc = $modelrecibidoorpa->numrecdoc;
-                $modeldocorpa = Cxprd::findOne(['numrecdoc' => $modelconexionsigesp->numrecdoc, 'ced_bene' => $modelconexionsigesp->rif]);
+                $modeldocorpa = Cxprd::findOne([
+                    'numrecdoc' => $modelconexionsigesp->numrecdoc, 
+                    'ced_bene' => $modelconexionsigesp->rif
+                ]);
                 $modelconexionsigesp->date_regdocorpa = $modeldocorpa->fecemidoc;
-                $modelconexionsigesp->compromiso_by = $usuarioid;
+                $modeluser = Trabajador::findOne([
+                    'usuario_sigesp' => $modeldocorpa->codusureg
+                ]);
+                if(isset($modeluser)){
+                    $modelconexionsigesp->regdocorpa_by = $modeluser->user_id;    
+                } else {        
+                    $modelconexionsigesp->regdocorpa_by = $usuarioid;
+                }
+                $modelconexionsigesp->estatus_sigesp = 'ROR';
+            } elseif (empty ($modelcomprometido)) {
+                // Verifico si esta comprometido
+                $modelconexionsigesp->estatus_sigesp = 'APR';
+                //lo que lleno en COM
+                $modelconexionsigesp->date_compromiso = '';
+                $modelconexionsigesp->compromiso_by = '';
+
+            } else {
+                //salgo de los while ya que el caso no esta recibido por orpa
+                break 2;    
+            }
+            break 1; // Aquí salé del switch
+            
+//////////ESTATUS ROR -> EL CASO SE ENCUENTRA RECIBIDO POR ORPA
+        case 'ROR':
+            //reviso si el caso esta aprobado
+            $modeldocorpa = Cxprd::findOne([
+                'numrecdoc' => $modelconexionsigesp->numrecdoc, 
+                'ced_bene' => $modelconexionsigesp->rif
+            ]);
+            if ($modeldocorpa->estaprord==1){
+                // Si esta aprobada la orpa
+                $modelconexionsigesp->date_aprdocorpa = $modeldocorpa->fecaprord;
+                $modeluser = Trabajador::findOne(['usuario_sigesp' => $modeldocorpa->usuaprord]);
+                if(isset($modeluser)){
+                    $modelconexionsigesp->aprdocorpa_by = $modeluser->user_id;    
+                } else {        
+                    $modelconexionsigesp->aprdocorpa_by = $usuarioid;
+                }
+                $modelconexionsigesp->estatus_sigesp = 'AOR';
+                
+            } elseif (empty($modeldocorpa)) {
+                // Verifico si esta recibido en orpa
                 $modelconexionsigesp->estatus_sigesp = 'COM';
-                
-                
-            } elseif ($modelgestion->estatus3_id == 61) {
-                // Verifico si por casualidad lo devolvieron a Elaboración de Memo
-                $modelconexionsigesp->estatus_sigesp = 'ELA';
+                //lo que lleno en ROR
+                $modelconexionsigesp->numrecdoc = '';
+                $modelconexionsigesp->date_regdocorpa = '';
+                $modelconexionsigesp->regdocorpa_by = '';
+
             } else {
                 //salgo de los while ya que el caso no esta comprometido
                 break 2;    
             }
-            break 1; // Aquí salé del switch    
+            break 1; // Aquí salé del switch
+        
+//////////ESTATUS AOR -> EL CASO SE ENCUENTRA APROBADA LA RECEPCION DEL DOCUMENTO EN ORPA
+        case 'AOR':
+            //reviso si el caso esta recibido en Solicitud de Pago
+            $modeldtorpa = Cxpdtsolicitudes::findOne([
+                'numrecdoc' => $modelconexionsigesp->numrecdoc, 
+                'ced_bene' => $modelconexionsigesp->rif
+            ]);
+            // reviso si el caso esta aprobado en recepcion de documentos de la solicitud de pago
+            $modeldocorpa = Cxprd::findOne([
+                'numrecdoc' => $modelconexionsigesp->numrecdoc, 
+                'ced_bene' => $modelconexionsigesp->rif
+            ]);
+            if (isset($modeldtorpa)){
+                // Si esta aprobada la orpa
+                $modelconexionsigesp->orpa = $modeldtorpa->numsol;
+                $modelorpa = Cxpsolicitudes::findOne([
+                    'numsol' => $modelconexionsigesp->orpa, 
+                    'ced_bene' => $modelconexionsigesp->rif
+                    ]);
+                $modelconexionsigesp->date_orpa = $modelorpa->fecemisol;
+                $modeluser = Trabajador::findOne(
+                    ['usuario_sigesp' => $modelorpa->codusureg
+                ]);
+                if(isset($modeluser)){
+                    $modelconexionsigesp->orpa_by = $modeluser->user_id;    
+                } else {        
+                    $modelconexionsigesp->orpa_by = $usuarioid;
+                }
+                $modelconexionsigesp->estatus_sigesp = 'ORR';
+                
+            } elseif ($modeldocorpa->estaprord==0) {
+                // Verifico si esta recibido en orpa
+                $modelconexionsigesp->estatus_sigesp = 'ROR';
+                // lo que lleno en AOR 
+                $modelconexionsigesp->date_aprdocorpa = '';
+                $modelconexionsigesp->aprdocorpa_by = '';
+            } else {
+                //salgo de los while ya que el caso no esta co
+                break 2;    
+            }
+            break 1; // Aquí salé del switch
+
+//////////ESTATUS ORR -> EL CASO SE ENCUENTRA EN RECEPCION DE LA SOLICITUD DE PAGO ORPA 
+        case 'ORR':
+            //reviso si el caso esta aprobado en en Solicitud de Pago
+            $modelorpa = Cxpsolicitudes::findOne([
+                    'numsol' => $modelconexionsigesp->orpa, 
+                    'ced_bene' => $modelconexionsigesp->rif
+            ]);
+            if ($modelorpa->estaprosol == 1){
+                // el caso esta aprobado en orpa
+                $modelconexionsigesp->date_aprorpa = $modelorpa->fecaprosol;
+                $modeluser = Trabajador::findOne(
+                    ['usuario_sigesp' => $modelorpa->usuaprosol
+                ]);
+                if(isset($modeluser)){
+                    $modelconexionsigesp->aprorpa_by = $modeluser->user_id;    
+                } else {        
+                    $modelconexionsigesp->aprorpa_by = $usuarioid;
+                }
+                $modelconexionsigesp->estatus_sigesp = 'ORP';
+                
+            } elseif (empty($modelorpa)) {
+                // Verifico si el modelo orpa existe 
+                $modelconexionsigesp->estatus_sigesp = 'AOR';
+                // lo que lleno en ORR
+                $modelconexionsigesp->orpa = '';
+                $modelconexionsigesp->date_orpa = '';
+                $modelconexionsigesp->orpa_by = '';
+            } else {
+                //salgo de los while ya que el caso no esta co
+                break 2;    
+            }
+            break 1; // Aquí salé del switch
+
+//////////ESTATUS ORP -> LA ORPA SE ENCUENTRA ELABORADA Y APROBADA   
+        case 'ORP':
+            //reviso si el caso esta causado
+            $modelcausado = Spgdtcmp::findOne(['comprobante' => $modelconexionsigesp->orpa]);
+            //reviso si el caso esta aprobado en en Solicitud de Pago
+            $modelorpa = Cxpsolicitudes::findOne([
+                    'numsol' => $modelconexionsigesp->orpa, 
+                    'ced_bene' => $modelconexionsigesp->rif
+            ]);
+            if (isset($modelcausado)){
+                // el caso esta causado
+                $modelconexionsigesp->date_causado = $modelcausado->fecha;
+                $modelconexionsigesp->causado_by = $usuarioid;
+                $modelconexionsigesp->estatus_sigesp = 'CAU';
+                
+            } elseif ($modelorpa->estaprosol == 0) {
+                // Verifico si esta recibido en orpa
+                $modelconexionsigesp->estatus_sigesp = 'ORR';
+                // lo que lleno en ORR
+                $modelconexionsigesp->date_aprorpa = '';
+                $modelconexionsigesp->aprorpa_by = '';
+            } else {
+                //salgo de los while ya que el caso no esta co
+                break 2;    
+            }
+            break 1; // Aquí salé del switch
+
+//////////ESTATUS CAU -> EL CASO SE ENCUENTRA CONTABILIZADO Y CAUSADO
+        case 'CAU':
+            //reviso si el caso esta dispuesto para la programacion del pago
+            $modelprogpago = Scbprogpago::findOne(['numsol' => $modelconexionsigesp->orpa]);
+            //reviso si la orpa tiene un causado
+            $modelcausado = Spgdtcmp::findOne(['comprobante' => $modelconexionsigesp->orpa]);
+            if (isset($modelprogpago)){
+                // el caso esta aprobado en orpa
+                $modelconexionsigesp->date_progpago = $modelprogpago->fecpropag;
+                $modeluser = Trabajador::findOne([
+                    'usuario_sigesp' => $modelprogpago->codusu
+                ]);
+                if(isset($modeluser)){
+                    $modelconexionsigesp->progpago_by = $modeluser->user_id;    
+                } else {        
+                    $modelconexionsigesp->progpago_by = $usuarioid;
+                }
+                $modelconexionsigesp->estatus_sigesp = 'PGP';
+                
+            } elseif (empty($modelcausado)) {
+                // Verifico si el modelo causado existe
+                $modelconexionsigesp->estatus_sigesp = 'ORP';
+                // lo que lleno en CAU
+                $modelconexionsigesp->date_causado = '';
+                $modelconexionsigesp->causado_by = '';
+            } else {
+                //salgo de los while ya que el caso no esta co
+                break 2;    
+            }
+            break 1; // Aquí salé del switch
+
+//////////ESTATUS PGP -> EL CASO SE ENCUENTRA EN PROGRAMACION DE PAGO 
+        case 'PGP':
+            //reviso si el caso tiene impreso un cheque
+            $modelimprcheque = Scbmovbcospg::findOne([
+                'documento' => $modelconexionsigesp->orpa,
+                'estmov' => ['N','C']
+            ]);
+            //reviso si la orpa tiene programado un pago
+            $modelprogpago = Scbprogpago::findOne(['numsol' => $modelconexionsigesp->orpa]);
+            if (isset($modelimprcheque)){
+                // el caso tiene un cheque
+                $modelconexionsigesp->cheque = $modelimprcheque->numdoc;
+                $modelcheque = Scbmovbco::findOne([
+                    'numdoc' => $modelconexionsigesp->cheque,
+                    'ced_bene' => $modelconexionsigesp->rif, 
+                    'codope' => 'CH', 
+                    'estmov' => ['N','C']
+                ]);
+                $fechabitacora = Yii::$app->formatter
+                                 ->asDate($modelconexionsigesp->date_cheque,'php:d/m/Y');
+                $modeluser = Trabajador::findOne([
+                    'usuario_sigesp' => $modelcheque->codusu
+                ]);
+                if(isset($modeluser)){
+                    $modelconexionsigesp->cheque_by = $modeluser->user_id;    
+                } else {        
+                    $modelconexionsigesp->cheque_by = $usuarioid;
+                    $modeluser = Trabajador::findOne([
+                    'usuario_sigesp' => $modelconexionsigesp->cheque_by
+                    ]);
+                }
+                $modelconexionsigesp->date_cheque = $modelcheque->fecmov;
+                $modelconexionsigesp->estatus_sigesp = 'CHE';
+
+                //*** Llenado de Tablas de SASYC solicitudes, presupuestos y Bitacoras ***//
+                $modelsolicitudes->estatus = 'APR';
+                $modelpresupuesto->estatus_doc = 'CHE';
+                $modelpresupuesto->cheque = ltrim(substr($modelconexionsigesp->cheque, -5),"0");
+                $modelpresupuesto->numop = ltrim(substr($modelconexionsigesp->orpa, -5),"0");
+
+                $modelbitacora = new Bitacoras;
+                $modelbitacora->solicitud_id = $modelsolicitudes->id;
+                $modelbitacora->fecha = $modelconexionsigesp->date_cheque;
+                $modelbitacora->nota = "El trabajador ".$modeluser->Trabajadorfps. " ha impreso "
+                    ."satisfactoriamente el cheque con el número: "
+                    .$modelpresupuesto->cheque . " el día " 
+                    .$fechabitacora;                
+                $modelbitacora->usuario_id = $modeluser->users_id; 
+                $modelbitacora->ind_activo = 1;
+                $modelbitacora->ind_alarma = 0;
+                $modelbitacora->ind_atendida = 0;
+                $modelbitacora->version = 0;
+                $modelbitacora->created_at = date('Y-m-d H:i:s');
+                $modelbitacora->updated_at = date('Y-m-d H:i:s');
+                $modelbitacora->save();
+                $modelsolicitudes->save();
+                $modelpresupuesto->save(); 
+                
+            } elseif (empty($modelprogpago)) {
+                // Verifico si el modelo de programacion de pago existe 
+                $modelconexionsigesp->estatus_sigesp = 'CAU';
+                // lo que lleno en PGP
+                $modelconexionsigesp->date_progpago = '';
+                $modelconexionsigesp->progpago_by = '';
+            } else {
+                //salgo de los while ya que el caso no esta co
+                break 2;    
+            }
+            break 1; // Aquí salé del switch
             
-        case 10:
-            echo "He llegado a 10 </br>";
-            break 1; // Sale del switch y del while
+//////////ESTATUS CHE -> EL CASO SE ENCUENTRA ELABORADO EL CHEQUE 
+        case 'CHE':
+            //reviso si el modelo del cheque para verificar si esta anulado
+            $modelcheque = Scbmovbco::findOne([
+                    'numdoc' => $modelconexionsigesp->cheque,
+                    'ced_bene' => $modelconexionsigesp->rif, 
+                    'codope' => 'CH', 
+                    'estmov' => ['N','C']
+                ]);
+            //reviso el estatus del cheque es en caja
+            if (isset($modelcheque)&&$modelcheque->estcondoc=='C'){
+                $modelconexionsigesp->date_enviofirma = $modelcheque->fecenvfir;
+                $modelconexionsigesp->date_enviocaja = $modelcheque->fecenvcaj;
+                $modelconexionsigesp->estatus_sigesp = 'CHC';
+                break 2;
+            }
+
+            //reviso el estatus del cheque es entregado y lo coloco en caja
+            if (isset($modelcheque)&&$modelcheque->estcondoc=='E'){
+                $modelconexionsigesp->estatus_sigesp = 'CHC';
+                break 1;
+            }
+
+            //reviso si el estatus es para la firma
+            if (isset($modelcheque)&&$modelcheque->estcondoc=='F'){
+                // el caso tiene un cheque
+                $modelconexionsigesp->date_enviofirma = $modelcheque->fecenvfir;
+                $modelconexionsigesp->estatus_sigesp = 'CHF';
+                
+            } elseif (empty($modelcheque)) {
+                // Verifico si el cheque existe 
+                $modelconexionsigesp->estatus_sigesp = 'PGP';
+                // lo que lleno en CHE
+                $modelconexionsigesp->cheque = '';
+                $modelconexionsigesp->date_cheque = '';
+                $modelconexionsigesp->cheque_by = '';
+            } else {
+                //salgo de los while ya que el caso no esta co
+                break 2;    
+            }
+            break 1; // Aquí salé del switch
+
+//////////ESTATUS CHF -> EL CASO SE ENCUENTRA ENVIADO PARA LA FIRMA 
+        case 'CHF':
+            //reviso si el modelo del cheque para verificar si esta anulado
+            $modelcheque = Scbmovbco::findOne([
+                    'numdoc' => $modelconexionsigesp->cheque,
+                    'ced_bene' => $modelconexionsigesp->rif, 
+                    'codope' => 'CH', 
+                    'estmov' => ['N','C']
+                ]);
+            //reviso el estatus del cheque
+
+            if (isset($modelcheque)&&$modelcheque->estcondoc=='C'){
+                // el caso tiene un cheque
+                $modelconexionsigesp->date_enviofirma = $modelcheque->fecenvfir;
+                $modelconexionsigesp->date_enviocaja = $modelcheque->fecenvcaj;
+                $modelconexionsigesp->estatus_sigesp = 'CHC';
+                
+            } elseif (isset($modelcheque)&&$modelcheque->estcondoc=='S') {
+                // Verifico si el cheque existe 
+                $modelconexionsigesp->estatus_sigesp = 'CHE';
+                // lo que lleno en CHF
+                $modelconexionsigesp->date_enviofirma = '';
+            } else {
+                //salgo de los while ya que el caso no esta co
+                break 2;    
+            }
+            break 1; // Aquí salé del switch
+
+//////////ESTATUS CHF -> EL CASO SE ENCUENTRA ENVIADO A CAJA PARA ENTREGAR 
+        case 'CHC':
+            //reviso si el modelo del cheque para verificar si esta anulado
+            $modelcheque = Scbmovbco::findOne([
+                    'numdoc' => $modelconexionsigesp->cheque,
+                    'ced_bene' => $modelconexionsigesp->rif, 
+                    'codope' => 'CH', 
+                    'estmov' => ['N','C']
+                ]);
+            //reviso si la orpa tiene programado un pago
+
+            if (isset($modelcheque)&&$modelcheque->estcondoc=='E'){
+                // el caso tiene un cheque
+                $modelconexionsigesp->date_enviofirma = $modelcheque->fecenvfir;
+                $modelconexionsigesp->date_enviocaja = $modelcheque->fecenvcaj;
+                $modelconexionsigesp->date_entregado = $modelcheque->emichefec;
+                $modelconexionsigesp->ci_entrega = $modelcheque->emicheced;
+                $modelconexionsigesp->nombre_entrega = $modelcheque->emichenom;
+
+                $modelconexionsigesp->estatus_sigesp = 'ENT';
+                
+            } elseif (isset($modelcheque)&&$modelcheque->estcondoc=='F') {
+                // Verifico si el cheque existe 
+                $modelconexionsigesp->estatus_sigesp = 'CHF';
+                // lo que lleno en CHC
+                $modelconexionsigesp->date_enviocaja = '';
+            } else {
+                //salgo de los while ya que el caso no esta co
+                break 2;    
+            }
+            break 1; // Aquí salé del switch
+        
+
         default:
             break;
     }
     ++$i;
     $modelconexionsigesp->save();
+
 }    
         return $this->render('actualiza', [
                 'modelgestion' => $modelgestion,

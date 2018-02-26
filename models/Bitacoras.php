@@ -1,6 +1,9 @@
 <?php
 
 namespace app\models;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 use Yii;
 
@@ -82,5 +85,20 @@ class Bitacoras extends \yii\db\ActiveRecord
     public function getUsuario()
     {
         return $this->hasOne(Users::className(), ['id' => 'usuario_id']);
+    }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at'],
+                    
+                ],
+                'value' => date('Y-m-d H:i:s'),
+            ],
+
+        ];
     }
 }

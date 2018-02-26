@@ -1,9 +1,12 @@
 <?php
 
 namespace app\models;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\BlameableBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 use Yii;
-
 /**
  * This is the model class for table "historial_solicitudes".
  *
@@ -66,6 +69,26 @@ class Historialsolicitudes extends \yii\db\ActiveRecord
             'estatus2_id' => 'Estatus2 ID',
             'estatus1_id' => 'Estatus1 ID',
             'memogestion_id' => 'Memogestion ID',
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => date('Y-m-d H:i:s'),
+            ],
+            'blameable' => [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
+
         ];
     }
 

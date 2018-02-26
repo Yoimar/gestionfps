@@ -1,9 +1,4 @@
 <?php
-
-echo "PHP: " . PHP_VERSION . "\n";
-echo "ICU: " . INTL_ICU_VERSION . "\n";
-echo "ICU Data: " . INTL_ICU_DATA_VERSION . "\n";
-echo "<br><hr><br>";
 $fechaconminutos = Yii::$app->formatter->asDatetime('now','php:Y-m-d H:i:s');
 echo $fechaconminutos;
 echo "<br><hr><br>";
@@ -16,6 +11,7 @@ echo "<br><hr><br>";
 print_r($modelpresupuesto);
 echo "<br><hr><br>";
 print_r($modelconexionsigesp);
+echo "<br><hr><br>";
 echo "<br><hr><br>";
 $i = 0;
 while ($i<11){

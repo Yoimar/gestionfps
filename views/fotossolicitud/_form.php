@@ -6,7 +6,7 @@ use kartik\file\FileInput;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Fotossolicitud */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form yii\widgets\ActiveForm   */
 ?>
 
 <div class="fotossolicitud-form">
@@ -22,21 +22,33 @@ use kartik\file\FileInput;
     <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 
     <?php //echo $form->field($model, 'foto')->textInput(['maxlength' => true]) ?>
-     
-    <?php 
+
+    <?php
 //    echo FileInput::widget([
 //    'model' => $model,
 //    'attribute' => 'imagen',
 //    'options' => ['multiple' => true]
 //    ]); ?>
-    
+
     <?php
         echo $form->field($model, 'imagen[]')
                 ->widget(FileInput::classname(),[
                         'options'=>[
-                            'accept'=>'imagen/*', 
+                            'accept'=>'imagen/*',
                             'multiple'=>true
                         ],
+                        'pluginOptions' => [
+                        'initialPreview'=>[
+                            Yii::getAlias('@web')."/img/adjuntos/".$model->foto
+                        ],
+                        'initialPreviewAsData'=>true,
+                        'initialCaption'=>"Subir Archivo",
+                        'initialPreviewConfig' => [
+
+                        ],
+                        'overwriteInitial'=>false,
+                        'maxFileSize'=>2800
+                        ]
                     ])
     ?>
 

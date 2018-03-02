@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\helpers\Html;
 
 /**
  * FotossolicitudController implements the CRUD actions for Fotossolicitud model.
@@ -74,18 +75,18 @@ class FotossolicitudController extends Controller
             $model->ind_reporte = false;
             $model->created_at = Yii::$app->formatter->asDate('now','php:Y-m-d H:i:s');
             $model->updated_at = Yii::$app->formatter->asDate('now','php:Y-m-d H:i:s');
-                             
+
             foreach ($imagen as $file) {
 
             //creo la direccion para guardar la imagen que se llama adjuntos
-            $path = Yii::getAlias('@app').'\web\img\adjuntos'.'\\'.$file->baseName. '.' .$file->extension;
+            $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$file->baseName. '.' .$file->extension;
 
             $model->foto = $file->name;
-            
-             
+
+
             //Guardar dos de acuerdo al numero de imagenes
                 $modelparaguardar = new Fotossolicitud();
-                
+
                 $modelparaguardar->solicitud_id = $model->solicitud_id;
                 $modelparaguardar->descripcion = $model->descripcion;
                 $modelparaguardar->foto = $model->foto;
@@ -93,15 +94,14 @@ class FotossolicitudController extends Controller
                 $modelparaguardar->created_at = $model->created_at;
                 $modelparaguardar->updated_at = $model->updated_at;
                 $modelparaguardar->save();
-                
+
             //Guardo cada Imagen
             $file->saveAs($path);
-                
-            
+
 
             //Fin del Foreach
             }
-                
+
             return $this->redirect(['index']);
         }
 

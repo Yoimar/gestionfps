@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Fotossolicitud */
 
-$this->title = 'Update Fotossolicitud: {nameAttribute}';
+$this->title = 'Actualizar Fotos Solicitud: '. $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Fotossolicituds', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';

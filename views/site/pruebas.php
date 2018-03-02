@@ -14,13 +14,33 @@ use yii\helpers\Url;
 use app\models\Presupuestos;
 
  //creo la direccion para guardar la imagen que se llama adjuntos
-            $path =  Yii::getAlias('@app')."/nombre" ;
-            $prueba = "@web/img/logo_fps.jpg";
-            
- echo $path."<br>";
+
+$aliasyii = Yii::getAlias('@yii');
+$aliasapp = Yii::getAlias('@app');
+$aliasruntime = Yii::getAlias('@runtime');
+$aliasweb = Yii::getAlias('@web');
+$aliaswebroot = Yii::getAlias('@webroot');
+$aliasvendor = Yii::getAlias('@vendor');
+$aliasbower = Yii::getAlias('@bower');
+$aliasnpm = Yii::getAlias('@npm');
+$path = Yii::getAlias('@app').'\web\img\adjuntos';
+
+
+            //$path =  Yii::getAlias('@app')."/nombre" ;
+            $prueba = Url::home();
+
+ echo "<br>".$path."<br>";
  echo $prueba;
+ echo $aliasyii . "<br>";
+ echo $aliasapp . "   <- app<br>";
+ echo $aliasruntime . "<br>";
+ echo $aliasweb . "<br>";
+ echo $aliaswebroot . "<br>";
+ echo $aliasvendor . "<br>";
+ echo $aliasbower . "<br>";
+ echo $aliasnpm . "<br>";
 /* @var $this yii\web\View */
-echo AlertBlock::widget([ 
+echo AlertBlock::widget([
    'type' => AlertBlock::TYPE_ALERT,
    'useSessionFlash' => true,
 ]);
@@ -92,16 +112,16 @@ echo Collapse::widget([
 ]);
 // creates a URL to a route: /index.php?r=post%2Findex
 echo Url::to(['post/index']);
- 
+
 // creates a URL to a route with parameters: /index.php?r=post%2Fview&id=100
 echo Url::to(['post/view', 'id' => 100]);
- 
+
 // creates an anchored URL: /index.php?r=post%2Fview&id=100#content
 echo Url::to(['post/view', 'id' => 100, '#' => 'content']);
- 
+
 // creates an absolute URL: http://www.example.com/index.php?r=post%2Findex
 echo Url::to(['post/index'], true);
- 
+
 // creates an absolute URL using the https scheme: https://www.example.com/index.php?r=post%2Findex
 echo Url::to(['post/index'], 'https');
 $haynumproc = Yii::$app->db->createCommand("select num_proc from solicitudes where id = 90026;")->queryScalar();
@@ -144,7 +164,7 @@ echo Tabs::widget([
 ]);
 
 if(Yii::$app->request->post()){
-    
+
 }else {
     $seleccion =0;
 }
@@ -156,7 +176,7 @@ $consultaestatus = Yii::$app->db->createCommand("SELECT estatus "
                     ."WHERE id = 90034")->queryScalar();
 print_r($consultaestatus);
 echo $consultaestatus;
-    
+
 echo DateTimePicker::widget([
     'name' => 'dp_2',
     'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
@@ -251,7 +271,7 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
 <?=Html::dropDownList('action','',['Holassss'=>'Mark selected as: ','Hello'=>'Confirmed','Hi'=>'No Confirmed'],['class'=>'dropdown',])?>
 <?=Html::submitButton('Send', ['class' => 'btn btn-info',]);?>
 
-    
+
 <?php
 $query = \app\models\PresupuestosSearch::find()
                     ->select(["CONCAT(conexionsigesp.req || ' // ' || presupuestos.documento_id) as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "empresa_institucion.nrif as rif" ])
@@ -266,7 +286,7 @@ $query = \app\models\PresupuestosSearch::find()
             ],
             ]);
 
-            
+
 echo GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
@@ -274,14 +294,14 @@ echo GridView::widget([
         'showPageSummary' => true,
         'tableOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
         'layout' => "{items}\n{pager}",
-        
+
         'options' => ['class' => 'text-center primary', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
         'headerRowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF; '],
         'captionOptions' => ['class' => 'text-center', 'style' => 'color: black; margin: 0px; padding: 2px; font-size:16px;'],
         'footerRowOptions'=> ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],
         'rowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
         'caption' => 'Cheques',
-    
+
         'columns' => [
 //            [
 //             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
@@ -290,9 +310,9 @@ echo GridView::widget([
 //             'pageSummary'=>'Total',
 //             'hAlign'=>'center',
 //             'vAlign'=>'middle',
-//             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
+//             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],
 //            ],
-            
+
 //            [
 //                'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
 //                'class'=>'kartik\grid\SerialColumn',
@@ -301,7 +321,7 @@ echo GridView::widget([
 //                'vAlign'=>'middle',
 //                'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
 //            ],
-//            
+//
 //            [
 //             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
 //             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
@@ -309,9 +329,9 @@ echo GridView::widget([
 //             'hAlign'=>'center',
 //             'vAlign'=>'middle',
 //             'pageSummary'=>'Cuenta Presupuestaria',
-//             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
-//            ],       
-//            
+//             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],
+//            ],
+//
 //            [
 //             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
 //             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
@@ -320,12 +340,12 @@ echo GridView::widget([
 //             'hAlign'=>'center',
 //             'vAlign'=>'middle',
 //             'pageSummary'=> '401010101',
-//             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
+//             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],
 //            ],
-//            
-//            
-//            
-//            
+//
+//
+//
+//
 //            //'',
 //            [
 //            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
@@ -337,10 +357,10 @@ echo GridView::widget([
 //            'format'=>'currency',
 //            'pageSummary'=>true,
 //            'pageSummaryFunc'=>GridView::F_AVG,
-//            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
+//            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],
 //            ],
-//            
-                 
+//
+
 
            'id',
            'rif',
@@ -365,19 +385,19 @@ echo GridView::widget([
         'condensed'=>true,
         'bordered'=>true,
 
-        
-        
+
+
     ]); ?>
 
 <br><br>
 
 <center>
 <?= Html::button('<span class="glyphicon glyphicon-ok-sign"></span>SIGESP',  ['class' => 'btn btn-primary', 'id' => 'myButton']) ?>
-    
+
 <?= Html::button('<span class="glyphicon glyphicon-ok-sign"></span>Prueba',  ['class' => 'btn btn-primary', 'id' => 'laprueba']) ?>
 </center>
 
-<?= Html::endForm();?> 
+<?= Html::endForm();?>
  <div class="row">
 <?php
 //echo Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "150", "class" => "pull-left"]);
@@ -454,29 +474,27 @@ echo GridView::widget([
                 .'</div>';
 echo $footer;
                     ?>
-                    
-                    
+
+
 
  <?php
 
 
 
 $this->registerJs(<<<JS
-    
+
    $('#myButton').on('click', function() { alert( 'Hola' ); });
-   
-   $('#laprueba').on('click', function() { alert( 'Que mas Como esta la vaina' ); }); 
-   
+
+   $('#laprueba').on('click', function() { alert( 'Que mas Como esta la vaina' ); });
+
    $(function () {
    $('[data-toggle="tooltip"]').tooltip()
    })
-   
+
     $(function () {
     $('[data-toggle="popover"]').popover()
     })
-        
+
 JS
 
 );
-
-

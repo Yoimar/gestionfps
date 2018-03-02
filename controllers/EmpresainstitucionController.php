@@ -3,16 +3,18 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Trabajador;
-use app\models\TrabajadorSearch;
+use app\models\Empresainstitucion;
+use app\models\EmpresainstitucionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Conexionsigesp;
+use app\models\Sepsolicitud;
 
 /**
- * TrabajadorController implements the CRUD actions for Trabajador model.
+ * EmpresainstitucionController implements the CRUD actions for Empresainstitucion model.
  */
-class TrabajadorController extends Controller
+class EmpresainstitucionController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +32,12 @@ class TrabajadorController extends Controller
     }
 
     /**
-     * Lists all Trabajador models.
+     * Lists all Empresainstitucion models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new TrabajadorSearch();
+        $searchModel = new EmpresainstitucionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +47,7 @@ class TrabajadorController extends Controller
     }
 
     /**
-     * Displays a single Trabajador model.
+     * Displays a single Empresainstitucion model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +59,13 @@ class TrabajadorController extends Controller
     }
 
     /**
-     * Creates a new Trabajador model.
+     * Creates a new Empresainstitucion model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Trabajador();
+        $model = new Empresainstitucion();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +77,7 @@ class TrabajadorController extends Controller
     }
 
     /**
-     * Updates an existing Trabajador model.
+     * Updates an existing Empresainstitucion model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -93,8 +95,41 @@ class TrabajadorController extends Controller
         }
     }
 
+    public function actionUpdates($id,$volver,$idpresupuesto)
+    {
+        $model = $this->findModel($id);
+
+        $modelconexionsigesp = Conexionsigesp::findOne([
+            'id_presupuesto' => $idpresupuesto
+        ]);
+        // Para verificar si el caso, posee una conexion con SIGESP y necesita cambiar el caso
+        if (isset($modelconexionsigesp)){
+        $modelsepsolicitud = Sepsolicitud::findOne([
+            'numsol' => $modelconexionsigesp->req,
+            'ced_bene' => $modelconexionsigesp->rif
+        ]);
+
+        if ($modelsepsolicitud->estsol == 'C'){
+             Yii::$app->session->setFlash("warning", "El caso ya esta PROCESADO<br> "
+                            . "Para reparar la solicitud POR FAVOR<br> "
+                            . "ay que devolverlo del sistema"
+                            . "ADMINISTRATIVO SIGESP <br>"
+                            . "Si el caso ya posee un CHEQUE <br> "
+                            . "DEBE ser INGRESADO nuevamente");
+                    return $this->redirect(['sepsolicitud/muestra', 'numero' => $volver]);
+        }
+        }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['sepsolicitud/muestra', 'numero' => $volver]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+
     /**
-     * Deletes an existing Trabajador model.
+     * Deletes an existing Empresainstitucion model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -106,29 +141,16 @@ class TrabajadorController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionMostrarusuario($idgestion)
-    {
-        $modeluser = Trabajador::findOne(['user_id' => $idgestion]);
-
-        if (isset($modeluser)){
-            return $this->redirect(['update', 'id' => $modeluser->id]);
-        } else {
-            return $this->redirect(['create']);
-        }
-
-
-    }
-
     /**
-     * Finds the Trabajador model based on its primary key value.
+     * Finds the Empresainstitucion model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Trabajador the loaded model
+     * @return Empresainstitucion the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Trabajador::findOne($id)) !== null) {
+        if (($model = Empresainstitucion::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

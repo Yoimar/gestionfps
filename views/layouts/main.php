@@ -42,7 +42,7 @@ AppAsset::register($this);
             ],
         'items' => [
             ['label' => 'Gestión', 'url' => ['/gestion'], 'linkOptions' => ['style' => 'color: #FFFFFF;']],
-            ['label' => 'Aprobación', 
+            ['label' => 'Aprobación',
             'items' => [
                  '<li class="dropdown-header">Menu Aprobacion</li>',
                  ['label' => 'Aprobar Caso', 'url' => '@web/sepsolicitud/ubica'],
@@ -50,7 +50,7 @@ AppAsset::register($this);
                  ['label' => 'Crear Localizador', 'url' => '@web/gestion/origenmemo'],
                  ['label' => 'Ver Memorandums', 'url' => '@web/memosgestion/index'],
                 ['label' => 'Cambio de estructura', 'url' => '@web/sepsolicitud/index'],
-            ],       
+            ],
             'linkOptions' => ['style' => 'color: #FFFFFF;']
             ],
             [
@@ -60,13 +60,15 @@ AppAsset::register($this);
                  ['label' => 'Atención al Soberano', 'url' => '@web/site/tablaatencionsoberano'],
                  ['label' => 'Atención Institucional', 'url' => '@web/site/tablaatencioninstitucional'],
                  ['label' => 'Instruccion Presidencial', 'url' => '@web/site/tablainstruccionpresidencial'],
-                 ['label' => 'Reporte General', 'url' => '@web/site/tablareportegeneral'],
+                 ['label' => 'Reporte General 2017', 'url' => '@web/site/tablareportegeneral17'],
+                 ['label' => 'Reporte General 2018', 'url' => '@web/site/tablareportegeneral18'],
                  '<li class="divider"></li>',
-                '<li class="dropdown-header">Reporte Por Unidad</li>', 
+                '<li class="dropdown-header">Reporte Por Unidad</li>',
                  ['label' => 'Atención al Soberano', 'url' => '@web/site/atencionsoberano'],
                  ['label' => 'Atención Institucional', 'url' => '@web/site/atencioninstitucional'],
                  ['label' => 'Instruccion Presidencial', 'url' => '@web/site/instruccionpresidencial'],
-                 ['label' => 'Reporte General', 'url' => '@web/site/reportegeneral'],
+                 ['label' => 'Reporte General 2017', 'url' => '@web/site/reportegeneral17'],
+                 ['label' => 'Reporte General 2018', 'url' => '@web/site/reportegeneral18'],
                 '<li class="divider"></li>',
                 '<li class="dropdown-header">Reporte de Trabajador Social</li>',
                 ['label' => 'General Trabajador Social', 'url' => '@web/site/parteportrabajador'],
@@ -76,30 +78,37 @@ AppAsset::register($this);
                  ['label' => 'Total Nivel 1', 'url' => '@web/site/totalnivel1'],
                  ['label' => 'Total Nivel 2', 'url' => '@web/site/totalnivel2'],
                  ['label' => 'Total Nivel 3', 'url' => '@web/site/totalnivel3'],
-            ], 
+            ],
             'linkOptions' => ['style' => 'color: #FFFFFF;'],
             ],
             Yii::$app->user->isGuest ? (['label' => 'Registrarse', 'url' => Url::to(['site/signup']),'linkOptions' => ['style' => 'color: #FFFFFF;'], ]):(""),
+            Yii::$app->user->isGuest ? (""):(['label' => 'Ir a Perfil', 'url' => Url::to(['/trabajador/mostrarusuario', 'idgestion' => Yii::$app->user->getId()]),'linkOptions' => ['style' => 'color: #FFFFFF;'], ]),
             Yii::$app->user->isGuest ? (
-                ['label' => 'Ingresar', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: #FFFFFF;'], ]         
+                ['label' => 'Ingresar', 'url' => ['/site/login'],'linkOptions' => ['style' => 'color: #FFFFFF;'], ]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
                 . Html::submitButton(
                     'Salir (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout', 
+                    ['class' => 'btn btn-link logout',
                      'style' => 'color: #FFFFFF;']
                 )
                 . Html::endForm()
                 . '</li>'
             ),
             array_search('administrador', array_keys(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())))!='' ? (
-                ['label' => 'Pruebas - Sueños', 'url' => ['/site/pruebas'],'linkOptions' => ['style' => 'color: #FFFFFF;'], ] ):
-                (""),
-            
-            
-            
-            
+                ['label' => 'Administracion',
+                'items' => [
+                     '<li class="dropdown-header">Menu Administración</li>',
+                     ['label' => 'Pruebas', 'url' => '@web/site/pruebas'],
+                     ['label' => 'Trabajadores', 'url' => '@web/trabajador/index'],
+                     ['label' => 'Perfiles', 'url' => '@web/authassignment/index'],
+                     ['label' => 'Cambio Masivo', 'url' => '@web/gestion/masivo'],
+                     ['label' => 'Cambio de Trabajador Social', 'url' => '@web/solicitudes/index'],
+                ],
+                'linkOptions' => ['style' => 'color: #FFFFFF;']
+                ] ): (""),
+
         ],
     ]);
     NavBar::end();

@@ -21,16 +21,16 @@ class SiteController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => [
-                    'logout', 
-                    'atencionsoberano', 
-                    'reportegeneral', 
+                    'logout',
+                    'atencionsoberano',
+                    'reportegeneral',
                     'atencioninstitucional',
                     'instruccionpresidencial',
                     'totalnivel1',
                     'totalnivel2',
                     'totalnivel3',
-                    'tablaatencionsoberano', 
-                    'tablareportegeneral', 
+                    'tablaatencionsoberano',
+                    'tablareportegeneral',
                     'tablaatencioninstitucional',
                     'tablainstruccionpresidencial',
                     'parteportrabajador',
@@ -54,8 +54,8 @@ class SiteController extends Controller
                     ],
                     [
                         'actions' => [
-                            'atencionsoberano', 
-                            'reportegeneral', 
+                            'atencionsoberano',
+                            'reportegeneral',
                             'atencioninstitucional',
                             'instruccionpresidencial',
                         ],
@@ -64,15 +64,17 @@ class SiteController extends Controller
                     ],
                     [
                         'actions' => [
-                            'tablaatencionsoberano', 
-                            'tablareportegeneral', 
+                            'tablaatencionsoberano',
+                            'tablareportegeneral',
+                            'tablareportegeneral18',
+                            'tablareportegeneral17',
                             'tablaatencioninstitucional',
                             'tablainstruccionpresidencial',
                         ],
                         'allow' => true,
                         'roles' => ['ver-tablas'],
                     ],
-                    [
+                  [
                         'actions' => [
                             'totalnivel1',
                             'totalnivel2',
@@ -157,7 +159,7 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
-    
+
     /**
      * Signs user up.
      *
@@ -206,81 +208,96 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
-    
+
     public function actionAtencionsoberano()
     {
 //Asi valido con rbac en la vista
 //        if(!Yii::$app->user->can('ver-tablas') ){
 //            throw new \yii\web\ForbiddenHttpException('No tiene permiso para ver este contenido');
 //        }
-            
+
         return $this->render('atencionsoberano');
     }
-    
+
     public function actionAtencioninstitucional()
     {
         return $this->render('atencioninstitucional');
     }
-    
+
     public function actionInstruccionpresidencial()
     {
         return $this->render('instruccionpresidencial');
     }
-    
-    public function actionReportegeneral()
+
+    public function actionReportegeneral18()
     {
-        return $this->render('reportegeneral');
+        return $this->render('reportegeneral18');
     }
-    
+
+    public function actionReportegeneral17()
+    {
+        return $this->render('reportegeneral17');
+    }
+
     public function actionPruebas()
     {
         return $this->render('pruebas');
     }
-    
+
     public function actionTotalnivel3()
     {
         return $this->render('totalnivel3');
     }
-    
+
     public function actionTotalnivel2()
     {
         return $this->render('totalnivel2');
     }
-    
+
     public function actionTotalnivel1()
     {
         return $this->render('totalnivel1');
     }
-    
+
     public function actionTablareportegeneral()
     {
         return $this->render('tablareportegeneral');
     }
-    
+
+    public function actionTablareportegeneral17()
+    {
+        return $this->render('tablareportegeneral17');
+    }
+
+    public function actionTablareportegeneral18()
+    {
+        return $this->render('tablareportegeneral18');
+    }
+
     public function actionTablaatencionsoberano()
     {
         return $this->render('tablaatencionsoberano');
     }
-    
+
     public function actionTablaatencioninstitucional()
     {
         return $this->render('tablaatencioninstitucional');
     }
-    
+
     public function actionTablainstruccionpresidencial()
     {
         return $this->render('tablainstruccionpresidencial');
     }
-    
+
     public function actionParteportrabajador()
     {
         return $this->render('parteportrabajador');
     }
-    
+
     public function actionParteindividual()
     {
         $model = new \app\models\Parteindividual;
-       
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             // Valida los datos recibidos en $model
             $partetrabajador = Yii::$app->db->createCommand("select u1.nombre, e1.estatus, count(*), string_agg(s1.num_solicitud, ', ')  from solicitudes s1 join users u1 on s1.usuario_asignacion_id = u1.id join estatussasyc e1 on s1.estatus = e1.id where s1.usuario_asignacion_id =". $model->trabajador ." and extract(year from s1.created_at)= ". $model->anho ." group by u1.nombre, e1.estatus order by u1.nombre, e1.estatus")->queryAll();
@@ -293,76 +310,76 @@ class SiteController extends Controller
             // Se puede manipular los datos de $model
 
         return $this->render('parteindividual', [
-            'model' => $model, 
-            'partetrabajador' => $partetrabajador, 
-            'partegestion' => $partegestion, 
-            'counttrabajador' => $counttrabajador, 
-            'countgestion' => $countgestion, 
+            'model' => $model,
+            'partetrabajador' => $partetrabajador,
+            'partegestion' => $partegestion,
+            'counttrabajador' => $counttrabajador,
+            'countgestion' => $countgestion,
             'partenogestion' => $partenogestion,
-            'countnogestion' => $countnogestion,   
+            'countnogestion' => $countnogestion,
             ]);
         } else {
             // Se despliega la pagina inicial o si hay un error de validacion
          return $this->render('parteindividual', ['model' => $model]);
         }
     }
-    
+
     public function actionRbac(){
         $auth = Yii::$app->authManager;
         $auth->removeAll();
-        
+
         $vertablas = $auth->createPermission('ver-tablas');
         $vertablas->description = 'Permite ver las tablas generales';
         $auth->add($vertablas);
-        
+
         $verreporteunidad = $auth->createPermission('ver-reporteunidad');
         $verreporteunidad->description = 'Permite ver los reportes por unidad';
         $auth->add($verreporteunidad);
-        
+
         $verreportetrabajador = $auth->createPermission('ver-reportetrabajador');
         $verreportetrabajador->description = 'Permite ver los reportes por trabajador';
         $auth->add($verreportetrabajador);
-        
+
         $vergraficas = $auth->createPermission('ver-graficas');
         $vergraficas->description = 'Permite ver las graficas de la unidad';
         $auth->add($vergraficas);
-      
+
         $creargestion = $auth->createPermission('gestion-crear');
         $creargestion->description = 'Permite insertar el registro de una gestion';
         $auth->add($creargestion);
-        
+
         $actualizargestion = $auth->createPermission('gestion-actualizar');
         $actualizargestion->description = 'Permite actualizar el registro de una gestion';
         $auth->add($actualizargestion);
-        
+
         $listargestion = $auth->createPermission('gestion-listar');
         $listargestion->description = 'Permite listar todos los registros de gestion';
         $auth->add($listargestion);
-        
+
         $eliminargestion = $auth->createPermission('gestion-eliminar');
         $eliminargestion->description = 'Permite eliminar el registro de una gestion';
         $auth->add($eliminargestion);
-       
+
         $roladministrador = $auth->createRole('administrador');
-        $auth->add($roladministrador);        
-       
+        $auth->add($roladministrador);
+
         $rolpresidente = $auth->createRole('presidente');
         $auth->add($rolpresidente);
-        
+
         $roltrabajador = $auth->createRole('trabajador');
         $auth->add($roltrabajador);
-        
+
         $rolingreso = $auth->createRole('ingreso');
         $auth->add($rolingreso);
-        
+
         $rolconsulta = $auth->createRole('consulta');
         $auth->add($rolconsulta);
-        
-        
+
+
         $auth->addChild($rolpresidente, $vertablas);
         $auth->addChild($rolpresidente, $verreporteunidad);
         $auth->addChild($rolpresidente, $verreportetrabajador);
-        $auth->addChild($rolpresidente, $vergraficas);          
+        $auth->addChild($rolpresidente, $vergraficas);
         $auth->addChild($roladministrador, $creargestion);
         $auth->addChild($roladministrador, $actualizargestion);
         $auth->addChild($roladministrador, $listargestion);
@@ -372,55 +389,55 @@ class SiteController extends Controller
         $auth->addChild($roladministrador, $verreportetrabajador);
         $auth->addChild($roladministrador, $vergraficas);
         $auth->addChild($rolpresidente, $listargestion);
-        
+
         $auth->addChild($roltrabajador, $vertablas);
         $auth->addChild($roltrabajador, $verreporteunidad);
         $auth->addChild($roltrabajador, $verreportetrabajador);
-        $auth->addChild($roltrabajador, $vergraficas);          
+        $auth->addChild($roltrabajador, $vergraficas);
         $auth->addChild($roltrabajador, $creargestion);
         $auth->addChild($roltrabajador, $actualizargestion);
         $auth->addChild($roltrabajador, $listargestion);
-        
-        
+
+
         $auth->addChild($rolingreso, $creargestion);
         $auth->addChild($rolingreso, $listargestion);
-        
-        
+
+
         $auth->addChild($rolconsulta, $listargestion);
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
         $auth->assign($roladministrador, 1);
         $auth->assign($roladministrador, 2);
         $auth->assign($roladministrador, 4);
         $auth->assign($roltrabajador, 3);
         $auth->assign($rolingreso, 6);
         $auth->assign($rolconsulta, 5);
-        
-        
+
+
         echo "ok";
     }
-    
+
     public function actionBulk(){
     $action = Yii::$app->request->post('action');
     $selection=(array)Yii::$app->request->post('selection');
     for ($i = 0; $i<count($selection); $i++) {
         $mensaje = implode($selection);
-        
+
     }
     Yii::$app->session->setFlash("success", $mensaje);
-        
+
         ////typecasting
         //foreach($selection as $id){
         //$e=Evento::findOne((int)$id);//make a typecasting
         //do your stuff
         //$e->save();
         //}
-    
+
      return $this->render('pruebas', ['seleccion'=>$selection]);
     }
 }

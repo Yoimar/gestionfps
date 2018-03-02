@@ -231,9 +231,19 @@ class Solicitudes extends \yii\db\ActiveRecord
      */
     public function getPersonas()
     {
-        return $this->hasOne(Personas::className(), ['id' => 'persona_beneficiario_id','id' => 'persona_solicitante_id']);
+         return $this->hasOne(Personas::className(), ['id' => 'persona_solicitante_id']);
     }
-    
+
+    public function getPersonasolicitante()
+    {
+        return $this->hasOne(Personas::className(), ['id' => 'persona_solicitante_id']);
+    }
+
+    public function getPersonabeneficiario()
+    {
+        return $this->hasOne(Personas::className(), ['id' => 'persona_beneficiario_id']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -265,12 +275,12 @@ class Solicitudes extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::className(), ['id' => 'usuario_autorizacion_id']);
     }
-    
+
     public function getEstatussasyc()
     {
         return $this->hasOne(Estatussasyc::className(), ['id' => 'estatus']);
     }
-    
+
     public function behaviors()
     {
         return [
@@ -285,9 +295,9 @@ class Solicitudes extends \yii\db\ActiveRecord
 
         ];
     }
-    
+
     public function beforeSave($insert) {
-       
+
         if (parent::beforeSave($insert)) {
             $this->version = ($this->version +1);
             if ($this->isNewRecord) {
@@ -298,18 +308,18 @@ class Solicitudes extends \yii\db\ActiveRecord
             return true;
         } else {
             return false;
-        }           
+        }
     }
     /* Para contar el numero de solicitudes e insertar un nuevo registro*/
     public function calcularnumsolicitud() {
         $consulta = Solicitudes::find()
             ->andFilterWhere(['=',"extract(year from created_at)", date('Y')])
             ->count();
-        
+
         return $consulta + 1;
     }
-    
-    /* Para colocar el numero de solicitud con cinco Números */ 
+
+    /* Para colocar el numero de solicitud con cinco Números */
     public function formatonumsolicitud($numero) {
         if ($numero <= 9) {
             $numero = "0000" . $numero;
@@ -322,7 +332,7 @@ class Solicitudes extends \yii\db\ActiveRecord
         }
         return $numero;
     }
-    
-    
-    
+
+
+
 }

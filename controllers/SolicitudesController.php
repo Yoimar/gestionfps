@@ -12,6 +12,9 @@ use app\models\Personas;
 use yii\db\Query;
 use yii\db\ActiveQuery;
 use app\models\Sepingreso;
+use app\models\Bitacoras;
+use app\models\Users;
+use app\models\Trabajador;
 
 /**
  * SolicitudesController implements the CRUD actions for Solicitudes model.
@@ -59,7 +62,7 @@ class SolicitudesController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
-    
+
     public function actionModificar($id, $referencia=null)
     {
 
@@ -106,6 +109,48 @@ class SolicitudesController extends Controller
         }
     }
 
+    public function actionCambiotrabajador($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post())) {
+                $trabajadorid = Yii::$app->user->id;
+                $modeluser = Trabajador::findOne([
+                    'user_id' => $trabajadorid,
+                ]);
+                $modelusers = Users::findOne([
+                    'id' => $model->usuario_asignacion_id,
+                ]);
+
+                $modelbitacora = new Bitacoras;
+                $modelbitacora->solicitud_id = $model->id;
+                $modelbitacora->fecha = date('Y-m-d');
+                $modelbitacora->nota = "A traves del Sistema Gestión se realizó el cambio de trabajador social a "
+                    .$modelusers->nombre
+                    ." el día "
+                    . date('d/m/Y')
+                    . " a las "
+                    . date('h:i a')
+                    . " Cambio realizado por el trabajador:"
+                    . $modeluser->Trabajadorfps;
+                $modelbitacora->usuario_id = $modeluser->users_id;
+                $modelbitacora->ind_activo = 1;
+                $modelbitacora->ind_alarma = 0;
+                $modelbitacora->ind_atendida = 0;
+                $modelbitacora->version = 0;
+                $modelbitacora->created_at = date('Y-m-d H:i:s');
+                $modelbitacora->updated_at = date('Y-m-d H:i:s');
+                $modelbitacora->save();
+
+            $model->save();
+            return $this->redirect(['index']);
+        } else {
+            return $this->render('cambiotrabajador', [
+                'model' => $model,
+            ]);
+        }
+    }
+
     /**
      * Deletes an existing Solicitudes model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -134,7 +179,7 @@ class SolicitudesController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
+
     public function actionListapersonas($q = null, $id = null) {
     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     $out = ['results' => ['id' => '', 'text' => '']];
@@ -153,7 +198,7 @@ class SolicitudesController extends Controller
     }
     return $out;
     }
-    
+
     public function actionTab1($id, $referencia=null)
     {
         $model = $this->findModel($id);

@@ -23,9 +23,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
 
-    <p>
-        <?= Html::a('Crear Solicitud', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
     </div>
 
     </div>
@@ -34,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'layout' => "{summary}\n{items}\n<div align='center'>{pager}</div>",
-        'tableOptions' => ['class' => 'table table-bordered table-hover', 'style'=>'max-width: 80px; margin-left: auto; margin-right: auto;'],    
+        'tableOptions' => ['class' => 'table table-bordered table-hover', 'style'=>'max-width: 80px; margin-left: auto; margin-right: auto;'],
 
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -45,40 +42,40 @@ $this->params['breadcrumbs'][] = $this->title;
             //'persona_beneficiario_id',
             [
             'attribute' => 'persona_beneficiario_nombre',
-            'value' => 'personas.nombre',
+            'value' => 'personabeneficiario.nombre',
             'format' => 'text',
             'label' => 'Nombre Beneficiario'
             ],
             [
             'attribute' => 'persona_beneficiario_apellido',
-            'value' => 'personas.apellido',
+            'value' => 'personabeneficiario.apellido',
             'format' => 'text',
             'label' => 'Apellido Beneficiario'
             ],
             [
             'attribute' => 'persona_beneficiario_ci',
-            'value' => 'personas.ci',
+            'value' => 'personabeneficiario.ci',
             'label' => 'CI Beneficiario'
             ],
             [
             'attribute' => 'persona_solicitante_nombre',
-            'value' => 'personas.nombre',
+            'value' => 'personasolicitante.nombre',
             'format' => 'text',
             'label' => 'Nombre Solicitante'
             ],
             [
             'attribute' => 'persona_solicitante_apellido',
-            'value' => 'personas.apellido',
+            'value' => 'personasolicitante.apellido',
             'format' => 'text',
             'label' => 'Apellido Solicitante'
             ],
             [
             'attribute' => 'persona_solicitante_ci',
-            'value' => 'personas.ci',
+            'value' => 'personasolicitante.ci',
             'format' => 'text',
             'label' => 'CI Solicitante'
             ],
-                                  
+
             //'persona_solicitante_id',
             //'area_id',
             // 'referente_id',
@@ -106,12 +103,12 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $searchModel,
                         'attribute' => 'estatus',
                         'data' => ArrayHelper::map(app\models\Estatussasyc::find()->orderBy('estatus')->all(), 'id', 'estatus'),
-                        'options' => 
+                        'options' =>
                             ['placeholder' => '¿Estatus?'],
                         'pluginOptions' => [ 'allowClear' => true ],
                 ]),
             ],
-            
+
             [
             'attribute' => 'usuario_asignacion_id',
             'value' => 'users.nombre',
@@ -120,7 +117,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $searchModel,
                         'attribute' => 'usuario_asignacion_id',
                         'data' => ArrayHelper::map(Users::find()->where(['activated' => 'TRUE'])->orderBy('nombre')->all(), 'id', 'nombre'),
-                        'options' => 
+                        'options' =>
                             ['placeholder' => '¿Trabajador Asignado?'],
                         'pluginOptions' => [ 'allowClear' => true ],
                 ]),
@@ -139,14 +136,30 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'total_ingresos',
             // 'beneficiario_json:ntext',
             // 'solicitante_json:ntext',
-            
+
             // 'version',
             // 'created_at',
             // 'updated_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+            [
+            'class' => 'yii\grid\ActionColumn',
+            'template' => '{cambiotrabajador}',
+            'buttons' => [
+            'cambiotrabajador' => function($url, $model){
+                                return Html::a('<span class="glyphicon glyphicon-arrow-right"></span>CambTrab.',
+                                    yii\helpers\Url::to(['solicitudes/cambiotrabajador', 'id' => $model->id, ]),
+                                    [
+                                        'title' => 'Cambio de Trabajador',
+                                    ]
+                                    );
+                                }
+
+                              ],
+            ],
+          ],
+        ]);
+
+        ?>
     </div>
     </div>
 </div>

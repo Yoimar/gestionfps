@@ -88,8 +88,8 @@ class Gestion extends \yii\db\ActiveRecord
     public $departamento_id;
     public $unidadorigen;
     public $fechaaprobacion;
-    
-    
+
+
     /**
      * @inheritdoc
      */
@@ -189,7 +189,7 @@ class Gestion extends \yii\db\ActiveRecord
             'unidadorigen' => 'Unidad Origen'
         ];
     }
-    
+
     public function behaviors()
     {
         return [
@@ -210,6 +210,15 @@ class Gestion extends \yii\db\ActiveRecord
         ];
     }
 
+    public function afterSave($insert, $changedAttributes) {
+
+      $modelhistorialsolicitudes = new Historialsolicitudes;
+      $modelhistorialsolicitudes->gestion_id= $this->id;
+      $modelhistorialsolicitudes->estatus3_id = $this->estatus3_id;
+      $modelhistorialsolicitudes->save();
+
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -225,7 +234,7 @@ class Gestion extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Estatus3::className(), ['id' => 'estatus3_id']);
     }
-    
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -273,12 +282,12 @@ class Gestion extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Trabajador::className(), ['id' => 'trabajador_id']);
     }
-    
+
     public function getInstruccion()
     {
         return $this->hasOne(Instruccion::className(), ['id' => 'instruccion_id']);
     }
-    
+
     public function getMesnombreactividad()
     {
         $mesespanish = ArrayHelper::map([
@@ -296,12 +305,12 @@ class Gestion extends \yii\db\ActiveRecord
             ['id' => '11', 'Mesactividad' => 'Noviembre'],
             ['id' => '12', 'Mesactividad' => 'Diciembre']
             ], 'id', 'Mesactividad');
-        
+
         return $mesespanish[$this->mes_actividad];
 //        return $this->mes_actividad;
-        
+
     }
-    
+
     public function getMesnombreingreso()
     {
         $mesespanish = ArrayHelper::map([
@@ -319,9 +328,9 @@ class Gestion extends \yii\db\ActiveRecord
             ['id' => '11', 'Mesactividad' => 'Noviembre'],
             ['id' => '12', 'Mesactividad' => 'Diciembre']
             ], 'id', 'Mesactividad');
-        
+
         return $mesespanish[$this->mesingreso];
-        
+
     }
 
 }

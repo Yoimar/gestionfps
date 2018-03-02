@@ -38,17 +38,19 @@ use kartik\file\FileInput;
                             'multiple'=>true
                         ],
                         'pluginOptions' => [
-                        'initialPreview'=>[
-                            Yii::getAlias('@web')."/img/adjuntos/".$model->foto
+                          'initialPreview'=>[
+                              Yii::getAlias('@web')."/img/adjuntos/".$model->foto
+                          ],
+                          'initialPreviewAsData'=>true,
+                          'initialCaption'=>"Subir Archivo",
+                          'initialPreviewConfig' => [
+                              ['caption' => "Archivo: ".$model->foto]
+                          ],
+                          'overwriteInitial'=>false,
+                          'maxFileSize'=>28000,
+                          'showRemove' => false,
                         ],
-                        'initialPreviewAsData'=>true,
-                        'initialCaption'=>"Subir Archivo",
-                        'initialPreviewConfig' => [
 
-                        ],
-                        'overwriteInitial'=>false,
-                        'maxFileSize'=>2800
-                        ]
                     ])
     ?>
 

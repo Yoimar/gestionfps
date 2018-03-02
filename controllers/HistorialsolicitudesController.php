@@ -3,16 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Trabajador;
-use app\models\TrabajadorSearch;
+use app\models\Historialsolicitudes;
+use app\models\HistorialsolicitudesSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * TrabajadorController implements the CRUD actions for Trabajador model.
+ * HistorialsolicitudesController implements the CRUD actions for Historialsolicitudes model.
  */
-class TrabajadorController extends Controller
+class HistorialsolicitudesController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,12 +30,12 @@ class TrabajadorController extends Controller
     }
 
     /**
-     * Lists all Trabajador models.
+     * Lists all Historialsolicitudes models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new TrabajadorSearch();
+        $searchModel = new HistorialsolicitudesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -45,7 +45,7 @@ class TrabajadorController extends Controller
     }
 
     /**
-     * Displays a single Trabajador model.
+     * Displays a single Historialsolicitudes model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +57,13 @@ class TrabajadorController extends Controller
     }
 
     /**
-     * Creates a new Trabajador model.
+     * Creates a new Historialsolicitudes model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Trabajador();
+        $model = new Historialsolicitudes();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +75,7 @@ class TrabajadorController extends Controller
     }
 
     /**
-     * Updates an existing Trabajador model.
+     * Updates an existing Historialsolicitudes model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,7 +94,7 @@ class TrabajadorController extends Controller
     }
 
     /**
-     * Deletes an existing Trabajador model.
+     * Deletes an existing Historialsolicitudes model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -106,29 +106,16 @@ class TrabajadorController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionMostrarusuario($idgestion)
-    {
-        $modeluser = Trabajador::findOne(['user_id' => $idgestion]);
-
-        if (isset($modeluser)){
-            return $this->redirect(['update', 'id' => $modeluser->id]);
-        } else {
-            return $this->redirect(['create']);
-        }
-
-
-    }
-
     /**
-     * Finds the Trabajador model based on its primary key value.
+     * Finds the Historialsolicitudes model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Trabajador the loaded model
+     * @return Historialsolicitudes the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Trabajador::findOne($id)) !== null) {
+        if (($model = Historialsolicitudes::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

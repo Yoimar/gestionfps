@@ -9,7 +9,7 @@ $this->title = 'Reporte General';
 //$this->params['breadcrumbs'][] = $this->title;
 $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre","Total");
 
-$ano = 2018;
+$ano = 2017;
 
 ?>
 <div class="row" style="font-size: 1em;" >

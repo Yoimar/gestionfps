@@ -31,6 +31,7 @@ use app\models\Scbprogpago;
 use app\models\Scbmovbcospg;
 use app\models\Scbmovbco;
 use app\models\Bitacoras;
+use app\models\Multiplessolicitudes;
 
 /**
  * GestionController implements the CRUD actions for Gestion model.
@@ -78,9 +79,9 @@ class GestionController extends Controller
                     ],
                 ],
             ],
-            
-            
-            
+
+
+
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -182,11 +183,11 @@ class GestionController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
+
     /*
      * Esto de abajo es un select2 con Ajax
      */
-    
+
     public function actionNumsolicitud($q = null, $id = null) {
     \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     $out = ['results' => ['id' => '', 'text' => '']];
@@ -205,7 +206,7 @@ class GestionController extends Controller
     }
     return $out;
     }
-    
+
     public function actionGestiona($estatus1=null,$estatus2=null,$estatus3=null,$departamento=null,$unidad=null,$usuario=null,$verorpa=null, $vercheque =null, $vertelefono=null, $verunidad=null, $precarga=null)
     {
         $modelorigenmemo = new Origenmemo;
@@ -214,11 +215,11 @@ class GestionController extends Controller
         $modelorigenmemo->load(Yii::$app->request->post());
         $modelfinalmemo->load(Yii::$app->request->post());
         $memosgestion->load(Yii::$app->request->post());
-        
+
         $searchModel = new \app\models\GestionSearchGestionalo();
-        
+
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        
+
         if ($precarga == 1){
                  /**  Carga de Las Personas del Memo   **/
                 $modelorigenmemo->departamento = 1;
@@ -230,12 +231,12 @@ class GestionController extends Controller
                 $modelfinalmemo->estatus1final = 1;
                 $modelfinalmemo->estatus2final = 2;
                 $modelfinalmemo->estatus3final = 62;
-                
+
                 /** Filtro los que tienen o estan en estatus de elaboración de Memo **/
                 $dataProvider->query->andWhere(['estatus3_id'=>61]);
         }
-        
-        
+
+
          if($estatus1!=''){
                 $dataProvider->query->andWhere(['estatus1_id'=>$estatus1]);
             }
@@ -253,8 +254,8 @@ class GestionController extends Controller
             }
             if($usuario!=''){
                 $dataProvider->query->andWhere(['trabajador_id'=>$usuario]);
-            } 
-     
+            }
+
         return $this->render('gestiona', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
@@ -275,63 +276,63 @@ class GestionController extends Controller
         ]);
 
     }
-    
+
     /**
-     * Para realizar la Vista Parcial que me permitira filtrar los casos del Origen  
+     * Para realizar la Vista Parcial que me permitira filtrar los casos del Origen
      */
-    
+
     public function actionCambioestatus() {
-    
+
     $modelfinalmemo = new Finalmemo;
     $modelorigenmemo = new Origenmemo;
     $memosgestion = new Memosgestion;
-    
-    
+
+
     if ($modelorigenmemo->load(Yii::$app->request->post())&&$modelfinalmemo->load(Yii::$app->request->post())&&$memosgestion->load(Yii::$app->request->post())&&$modelfinalmemo->validate()) {
-        
+
         $memosgestion->estatus3origen= $modelorigenmemo->estatus3;
         $memosgestion->estatus2origen= $modelorigenmemo->estatus2;
         $memosgestion->estatus1origen= $modelorigenmemo->estatus1;
         $memosgestion->dirorigen = $modelorigenmemo->departamento;
         $memosgestion->unidadorigen = $modelorigenmemo->unidad;
         $memosgestion->trabajadororigen = $modelorigenmemo->usuario;
-        
+
         $memosgestion->estatus3final=$modelfinalmemo->estatus3final;
         $memosgestion->estatus2final=$modelfinalmemo->estatus2final;
         $memosgestion->estatus1final=$modelfinalmemo->estatus1final;
         $memosgestion->dirfinal = $modelfinalmemo->departamentofinal;
         $memosgestion->unidadfinal = $modelfinalmemo->unidadfinal;
-        $memosgestion->trabajadorfinal =$modelfinalmemo->usuariofinal;        
-        
+        $memosgestion->trabajadorfinal =$modelfinalmemo->usuariofinal;
+
         $memosgestion->save();
-        
+
         $selection=(array)Yii::$app->request->post('selection');
-            
+
         foreach ($selection as $idgestion) {
         /* Guardo la Informacion en el Historial de Solicitudes*/
-                    $modelhistorialsolicitudes = new Historialsolicitudes;            
+                    $modelhistorialsolicitudes = new Historialsolicitudes;
                     $modelhistorialsolicitudes->gestion_id=$idgestion;
                     $modelhistorialsolicitudes->estatus3_id = $memosgestion->estatus3final;
                     $modelhistorialsolicitudes->estatus2_id = $memosgestion->estatus2final;
                     $modelhistorialsolicitudes->estatus1_id = $memosgestion->estatus1final;
                     $modelhistorialsolicitudes->memogestion_id = $memosgestion->id;
                     $modelhistorialsolicitudes->save();
-                    
-                    
+
+
                     $modelgestion =  Gestion::findOne($idgestion);
                     $modelgestion->estatus3_id = $memosgestion->estatus3final;
                     $modelgestion->trabajador_id = $memosgestion->trabajadorfinal;
                     $modelgestion->recepcion_id = $memosgestion->unidadfinal;
                     $modelgestion->save();
-        } 
-         
+        }
+
         return $this->redirect('memorandum?id='.$memosgestion->id);
-           
+
 //        return $this->render('memorandum', [
 //            'dataProvider' => $dataProvider,
 //            'memosgestion' => $memosgestion,
 //        ]);
-                 
+
         } else {
         $searchModel = (array)Yii::$app->request->post('searchModel');
         $dataProvider = (array)Yii::$app->request->post('dataProvider');
@@ -349,8 +350,8 @@ class GestionController extends Controller
         $vertelefono = Yii::$app->request->post('vertelefono');
         $verunidad = Yii::$app->request->post('verunidad');
         $selection=(array)Yii::$app->request->post('selection');
-        
-        return $this->redirect(['gestiona', 
+
+        return $this->redirect(['gestiona',
                 'estatus1' => $estatus1,
                 'estatus2' => $estatus2,
                 'estatus3' => $estatus3,
@@ -368,21 +369,21 @@ class GestionController extends Controller
                 'vertelefono' => $vertelefono,
                 'verunidad' => $verunidad
                ]);
-                
+
         }
-        
+
     }
-    
+
     public function actionOrigenmemo()
     {
         $modelorigenmemo = new Origenmemo;
-        
+
         if ($modelorigenmemo->load(Yii::$app->request->post())) {
             $modelfinalmemo = new Finalmemo;
             $memosgestion = new Memosgestion;
             $searchModel = new \app\models\GestionSearchGestionalo();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-            
+
             if($modelorigenmemo->estatus1!=''){
                 $estatus1 = $modelorigenmemo->estatus1;
             } else { $estatus1 = "";}
@@ -401,44 +402,44 @@ class GestionController extends Controller
             if($modelorigenmemo->usuario!=''){
                 $usuario = $modelorigenmemo->usuario;
             } else { $usuario = "";}
-            
-            return $this->redirect(['gestiona', 
+
+            return $this->redirect(['gestiona',
                  'estatus1' => $estatus1,
                 'estatus2' => $estatus2,
                 'estatus3' => $estatus3,
                 'departamento' => $departamento,
                 'unidad' => $unidad,
                 'usuario' => $usuario,
-               ]); 
+               ]);
         }
-        
+
         return $this->render('origenmemo', [
                 'modelorigenmemo' => $modelorigenmemo,
         ]);
-        
-        
+
+
     }
-    
+
     public function actionMemorandum($id, $verorpa=null, $vercheque =null, $vertelefono=null, $verunidad=null){
-        
+
         $modelimprime =  Memosgestion::findOne($id);
-        
+
         $query = Gestion::find()
-                ->select(['solicitudes.num_solicitud as num_solicitud', 
+                ->select(['solicitudes.num_solicitud as num_solicitud',
                 'gestion.id as id',
                 'historial_solicitudes.memogestion_id',
-                "estatus1.id as estatus1_id", 
-                "estatus2.id as estatus2_id", 
+                "estatus1.id as estatus1_id",
+                "estatus2.id as estatus2_id",
                 'gestion.estatus3_id',
                 'gestion.trabajador_id',
-                'gestion.recepcion_id', 
-                'departamentos.id as departamentos_id', 
-                "personabeneficiario.ci as cibeneficiario", 
-                "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario", 
-                'users.nombre as trabajadorsocial', 
+                'gestion.recepcion_id',
+                'departamentos.id as departamentos_id',
+                "personabeneficiario.ci as cibeneficiario",
+                "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario",
+                'users.nombre as trabajadorsocial',
                 'solicitudes.usuario_asignacion_id',
                 'solicitudes.estatus',
-                "to_char(solicitudes.created_at, 'DD/MM/YYYY') as fechaingreso", 
+                "to_char(solicitudes.created_at, 'DD/MM/YYYY') as fechaingreso",
                 "TO_CHAR(gestion.updated_at, 'DD/MM/YYYY') as fechaultimamodificacion",
                 "CONCAT(personabeneficiario.telefono_fijo || ' / ' || personabeneficiario.telefono_celular || ' / ' || personabeneficiario.telefono_otro) as telefono",
                 "extract(YEAR FROM age(now(),personabeneficiario.fecha_nacimiento)) as edadbeneficiario",
@@ -447,10 +448,10 @@ class GestionController extends Controller
                 "string_agg(CONCAT(empresa_institucion.rif || '-' || empresa_institucion.nrif), '  //  ') as rif",
                 "string_agg(conexionsigesp.req, '  //  ') as requerimiento",
                 "string_agg(empresa_institucion.nombrecompleto, '  //  ') as empresaoinstitucion",
-                "count(presupuestos.cantidad) as cantidad", 
-                "string_agg(presupuestos.cheque, ' // ') as cheque", 
+                "count(presupuestos.cantidad) as cantidad",
+                "string_agg(presupuestos.cheque, ' // ') as cheque",
                 "sum(presupuestos.montoapr) as monto"]);
-        
+
         $query->join('LEFT JOIN', 'solicitudes','gestion.solicitud_id = solicitudes.id')
                 ->join('LEFT JOIN', 'users', 'solicitudes.usuario_asignacion_id = users.id')
                 ->join('LEFT JOIN', 'presupuestos', 'presupuestos.solicitud_id = solicitudes.id')
@@ -463,23 +464,23 @@ class GestionController extends Controller
                 ->join('LEFT JOIN', 'recepciones', 'recepciones.id = gestion.recepcion_id')
                 ->join('LEFT JOIN', 'departamentos', 'recepciones.departamentos_id = departamentos.id')
                 ->join('LEFT JOIN', 'historial_solicitudes', 'historial_solicitudes.gestion_id = gestion.id')
-                ->groupBy(['solicitudes.num_solicitud', 
-                    'gestion.id', 
+                ->groupBy(['solicitudes.num_solicitud',
+                    'gestion.id',
                     'historial_solicitudes.memogestion_id',
-                    'estatus1.id', 
-                    'estatus2.id', 
-                    'gestion.estatus3_id', 
+                    'estatus1.id',
+                    'estatus2.id',
+                    'gestion.estatus3_id',
                     'gestion.trabajador_id',
                     'gestion.recepcion_id',
                     'departamentos.id',
-                    'cibeneficiario', 
-                    'beneficiario', 
-                    'trabajadorsocial', 
-                    'solicitudes.usuario_asignacion_id', 
-                    'solicitudes.estatus', 
-                    'fechaingreso', 
-                    'fechaultimamodificacion', 
-                    'telefono', 
+                    'cibeneficiario',
+                    'beneficiario',
+                    'trabajadorsocial',
+                    'solicitudes.usuario_asignacion_id',
+                    'solicitudes.estatus',
+                    'fechaingreso',
+                    'fechaultimamodificacion',
+                    'telefono',
                     'edadbeneficiario']);
         $query->andFilterWhere([
             'historial_solicitudes.memogestion_id' => $modelimprime->id,
@@ -492,12 +493,12 @@ class GestionController extends Controller
             ],
             ]);
 
-        $usuarioorigen = isset($modelimprime->trabajadororigen) ? $modelimprime->trabajadororigennombre->dimprofesion. " ".$modelimprime->trabajadororigennombre->primernombre. " ".$modelimprime->trabajadororigennombre->primerapellido .'<br>' : "";        
-        $unidadorigen = isset($modelimprime->unidadorigen) ? $modelimprime->unidadorigennombre->nombre.'<br>' : "";              
-        $direccionorigen = isset($modelimprime->dirorigen) ? $modelimprime->dirorigennombre->nombre : "";      
-        $enviado = isset($modelimprime->trabajadororigen)&& isset($modelimprime->dirorigen) ? "Enviado por" : "";       
-        $usuariofinal = isset($modelimprime->trabajadorfinal) ? $modelimprime->trabajadorfinalnombre->dimprofesion. " ".$modelimprime->trabajadorfinalnombre->primernombre. " ".$modelimprime->trabajadorfinalnombre->primerapellido .'<br>' : "";        
-        
+        $usuarioorigen = isset($modelimprime->trabajadororigen) ? $modelimprime->trabajadororigennombre->dimprofesion. " ".$modelimprime->trabajadororigennombre->primernombre. " ".$modelimprime->trabajadororigennombre->primerapellido .'<br>' : "";
+        $unidadorigen = isset($modelimprime->unidadorigen) ? $modelimprime->unidadorigennombre->nombre.'<br>' : "";
+        $direccionorigen = isset($modelimprime->dirorigen) ? $modelimprime->dirorigennombre->nombre : "";
+        $enviado = isset($modelimprime->trabajadororigen)&& isset($modelimprime->dirorigen) ? "Enviado por" : "";
+        $usuariofinal = isset($modelimprime->trabajadorfinal) ? $modelimprime->trabajadorfinalnombre->dimprofesion. " ".$modelimprime->trabajadorfinalnombre->primernombre. " ".$modelimprime->trabajadorfinalnombre->primerapellido .'<br>' : "";
+
         $headerHtml = '<div class="row">'
         .Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "150", "class" => "pull-left"])
         .Html::img("@web/img/despacho.png", ["alt" => "Despacho", "width" => "450", "style" =>"margin-top: 10px; margin-bottom: 10px;", "class" => "pull-right"])
@@ -507,7 +508,7 @@ class GestionController extends Controller
         .'     <td colspan="4" class="text-center col-xs-8 col-sm-8 col-md-8 col-lg-8" style="font-size:12px;">'
         .'     </td>'
         .'     <td colspan="2" class="text-center col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-size:12px;">'
-        .'Relación N° '.  $modelimprime->id  .'<br>  '    
+        .'Relación N° '.  $modelimprime->id  .'<br>  '
         . Yii::$app->formatter->asDate($modelimprime->fechamemo." 23:00",'php:d/m/Y').'<br>  '
         .'      </td>'
         .'      </tr>'
@@ -523,7 +524,7 @@ class GestionController extends Controller
         .'            </td>'
         .'          <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="font-size:14px;">'
         .$usuarioorigen
-        .$unidadorigen 
+        .$unidadorigen
         .$direccionorigen
         .'         </td>'
         .'         <td class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2"></td>'
@@ -534,7 +535,7 @@ class GestionController extends Controller
         .'         Recibido Por:'
         .'          </td>'
         .'          <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="font-size:14px;">'
-        . $usuariofinal 
+        . $usuariofinal
         . $modelimprime->unidadfinalnombre->nombre.'<br>'
         . $modelimprime->dirfinalnombre->nombre
         .'            </td>'
@@ -562,7 +563,7 @@ class GestionController extends Controller
         .'             </tr>'
         .'</table>'
         .'</div>';
-        
+
         $footerHtml = '<p style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></p>';
         // get your HTML raw content without any layouts or scripts
         $content = $this->renderPartial('memorandum', [
@@ -573,33 +574,33 @@ class GestionController extends Controller
         // setup kartik\mpdf\Pdf component
         $pdf = new Pdf([
             // set to use core fonts only
-            'mode' => Pdf::MODE_UTF8, 
+            'mode' => Pdf::MODE_UTF8,
             // A4 paper format
-            'format' => Pdf::FORMAT_LETTER, 
+            'format' => Pdf::FORMAT_LETTER,
             // portrait orientation
-            'orientation' => Pdf::ORIENT_PORTRAIT, 
+            'orientation' => Pdf::ORIENT_PORTRAIT,
             // stream to browser inline
-            'destination' => Pdf::DEST_BROWSER, 
+            'destination' => Pdf::DEST_BROWSER,
             // your html content input
-            'content' => $content,  
+            'content' => $content,
             // format content from your own css file if needed or use the
-            // enhanced bootstrap css built by Krajee for mPDF formatting 
+            // enhanced bootstrap css built by Krajee for mPDF formatting
             'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
             // any css to be embedded if required
-            'cssInline' => '.kv-heading-1{font-size:7px}', 
+            'cssInline' => '.kv-heading-1{font-size:7px}',
              // set mPDF properties on the fly
             'options' => ['title' => 'Punto de Cuenta '],
              // call mPDF methods on the fly
             'marginTop' => '90',
 
-            'methods' => [ 
-                'SetHTMLHeader'=>[$headerHtml, [ 'E', [TRUE]]], 
-                'SetHTMLFooter'=>[$footerHtml, [ 'E', [TRUE]]], 
+            'methods' => [
+                'SetHTMLHeader'=>[$headerHtml, [ 'E', [TRUE]]],
+                'SetHTMLFooter'=>[$footerHtml, [ 'E', [TRUE]]],
             ],
 
         ]);
-    
-    
+
+
             /*** Pie de Página Bonito
              * '<center>'
             .'<div class="row">'
@@ -625,40 +626,40 @@ class GestionController extends Controller
             .'            <strong>Teléfono: 0212-8063573</strong>'
             .'     </td></tr>'
             .'</table>'
-            .'</div></center> 
-             * 
+            .'</div></center>
+             *
              * **/
-    
-    
+
+
             // return the pdf output as per the destination setting
-            return $pdf->render();       
-    
+            return $pdf->render();
+
         }
-        
+
     public function actionActualiza($id){
-     
+
     $modelgestion = Gestion::findOne($id);
-    
+
     $modelsolicitudes = Solicitudes::findOne($modelgestion->solicitud_id);
-    
+
     $modelpresupuesto = Presupuestos::findOne(['solicitud_id' => $modelsolicitudes->id ]);
-    
+
     $modelconexionsigesp = Conexionsigesp::findOne(['id_presupuesto' => $modelpresupuesto->id ]);
-        
+
     $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
     $usuarioid = Yii::$app->user->id;
-    
+
     /////*** DEFINO 10 ESTATUS PARA LOS ESTATUS DEL DOCUMENTO ES DECIR EL ESTATUS DE LA CONEXION A SIGESP ****////
-    
+
 $i = 0;
 while ($i<11){
-    
+
     switch($modelconexionsigesp->estatus_sigesp){
         // ESTATUS VACIO
         case '':
             $modelconexionsigesp->estatus_sigesp = 'ELA';
             break 1; // Aquí salé del switch
-        
+
         // ESTATUS ELA -> ELABORADO
         case 'ELA':
             //VERIFICO QUE EL ESTATUS ES DIFERENTE DE 61 (EN ELABORACIÓN DE MEMO)
@@ -669,8 +670,8 @@ while ($i<11){
                 break 2;
             }
             break 1; // Aquí salé del switch
-        
-        //ESTATUS APR -> APROBADO Y ENVIADO A ADMINISTRACIÓN    
+
+        //ESTATUS APR -> APROBADO Y ENVIADO A ADMINISTRACIÓN
         case 'APR':
             //reviso si el caso esta comprometido
             $modelcomprometido = Spgdtcmp::findOne(['comprobante' => $modelconexionsigesp->req]);
@@ -685,10 +686,10 @@ while ($i<11){
 
             } else {
                 //salgo de los while ya que el caso no esta comprometido
-                break 2;    
+                break 2;
             }
             break 1; // Aquí salé del switch
-        
+
 //////////ESTATUS COM -> EL CASO SE ENCUENTRA COMPROMETIDO
         case 'COM':
             //reviso si el caso esta recibido por orpa
@@ -699,7 +700,7 @@ while ($i<11){
                 // Si esta recibido en el modulo de Orpa
                 $modelconexionsigesp->numrecdoc = $modelrecibidoorpa->numrecdoc;
                 $modeldocorpa = Cxprd::findOne([
-                    'numrecdoc' => $modelconexionsigesp->numrecdoc, 
+                    'numrecdoc' => $modelconexionsigesp->numrecdoc,
                     'ced_bene' => $modelconexionsigesp->rif
                 ]);
                 $modelconexionsigesp->date_regdocorpa = $modeldocorpa->fecemidoc;
@@ -707,8 +708,8 @@ while ($i<11){
                     'usuario_sigesp' => $modeldocorpa->codusureg
                 ]);
                 if(isset($modeluser)){
-                    $modelconexionsigesp->regdocorpa_by = $modeluser->user_id;    
-                } else {        
+                    $modelconexionsigesp->regdocorpa_by = $modeluser->user_id;
+                } else {
                     $modelconexionsigesp->regdocorpa_by = $usuarioid;
                 }
                 $modelconexionsigesp->estatus_sigesp = 'ROR';
@@ -721,15 +722,15 @@ while ($i<11){
 
             } else {
                 //salgo de los while ya que el caso no esta recibido por orpa
-                break 2;    
+                break 2;
             }
             break 1; // Aquí salé del switch
-            
+
 //////////ESTATUS ROR -> EL CASO SE ENCUENTRA RECIBIDO POR ORPA
         case 'ROR':
             //reviso si el caso esta aprobado
             $modeldocorpa = Cxprd::findOne([
-                'numrecdoc' => $modelconexionsigesp->numrecdoc, 
+                'numrecdoc' => $modelconexionsigesp->numrecdoc,
                 'ced_bene' => $modelconexionsigesp->rif
             ]);
             if ($modeldocorpa->estaprord==1){
@@ -737,12 +738,12 @@ while ($i<11){
                 $modelconexionsigesp->date_aprdocorpa = $modeldocorpa->fecaprord;
                 $modeluser = Trabajador::findOne(['usuario_sigesp' => $modeldocorpa->usuaprord]);
                 if(isset($modeluser)){
-                    $modelconexionsigesp->aprdocorpa_by = $modeluser->user_id;    
-                } else {        
+                    $modelconexionsigesp->aprdocorpa_by = $modeluser->user_id;
+                } else {
                     $modelconexionsigesp->aprdocorpa_by = $usuarioid;
                 }
                 $modelconexionsigesp->estatus_sigesp = 'AOR';
-                
+
             } elseif (empty($modeldocorpa)) {
                 // Verifico si esta recibido en orpa
                 $modelconexionsigesp->estatus_sigesp = 'COM';
@@ -753,27 +754,27 @@ while ($i<11){
 
             } else {
                 //salgo de los while ya que el caso no esta comprometido
-                break 2;    
+                break 2;
             }
             break 1; // Aquí salé del switch
-        
+
 //////////ESTATUS AOR -> EL CASO SE ENCUENTRA APROBADA LA RECEPCION DEL DOCUMENTO EN ORPA
         case 'AOR':
             //reviso si el caso esta recibido en Solicitud de Pago
             $modeldtorpa = Cxpdtsolicitudes::findOne([
-                'numrecdoc' => $modelconexionsigesp->numrecdoc, 
+                'numrecdoc' => $modelconexionsigesp->numrecdoc,
                 'ced_bene' => $modelconexionsigesp->rif
             ]);
             // reviso si el caso esta aprobado en recepcion de documentos de la solicitud de pago
             $modeldocorpa = Cxprd::findOne([
-                'numrecdoc' => $modelconexionsigesp->numrecdoc, 
+                'numrecdoc' => $modelconexionsigesp->numrecdoc,
                 'ced_bene' => $modelconexionsigesp->rif
             ]);
             if (isset($modeldtorpa)){
                 // Si esta aprobada la orpa
                 $modelconexionsigesp->orpa = $modeldtorpa->numsol;
                 $modelorpa = Cxpsolicitudes::findOne([
-                    'numsol' => $modelconexionsigesp->orpa, 
+                    'numsol' => $modelconexionsigesp->orpa,
                     'ced_bene' => $modelconexionsigesp->rif
                     ]);
                 $modelconexionsigesp->date_orpa = $modelorpa->fecemisol;
@@ -781,29 +782,29 @@ while ($i<11){
                     ['usuario_sigesp' => $modelorpa->codusureg
                 ]);
                 if(isset($modeluser)){
-                    $modelconexionsigesp->orpa_by = $modeluser->user_id;    
-                } else {        
+                    $modelconexionsigesp->orpa_by = $modeluser->user_id;
+                } else {
                     $modelconexionsigesp->orpa_by = $usuarioid;
                 }
                 $modelconexionsigesp->estatus_sigesp = 'ORR';
-                
+
             } elseif ($modeldocorpa->estaprord==0) {
                 // Verifico si esta recibido en orpa
                 $modelconexionsigesp->estatus_sigesp = 'ROR';
-                // lo que lleno en AOR 
+                // lo que lleno en AOR
                 $modelconexionsigesp->date_aprdocorpa = '';
                 $modelconexionsigesp->aprdocorpa_by = '';
             } else {
                 //salgo de los while ya que el caso no esta co
-                break 2;    
+                break 2;
             }
             break 1; // Aquí salé del switch
 
-//////////ESTATUS ORR -> EL CASO SE ENCUENTRA EN RECEPCION DE LA SOLICITUD DE PAGO ORPA 
+//////////ESTATUS ORR -> EL CASO SE ENCUENTRA EN RECEPCION DE LA SOLICITUD DE PAGO ORPA
         case 'ORR':
             //reviso si el caso esta aprobado en en Solicitud de Pago
             $modelorpa = Cxpsolicitudes::findOne([
-                    'numsol' => $modelconexionsigesp->orpa, 
+                    'numsol' => $modelconexionsigesp->orpa,
                     'ced_bene' => $modelconexionsigesp->rif
             ]);
             if ($modelorpa->estaprosol == 1){
@@ -813,14 +814,14 @@ while ($i<11){
                     ['usuario_sigesp' => $modelorpa->usuaprosol
                 ]);
                 if(isset($modeluser)){
-                    $modelconexionsigesp->aprorpa_by = $modeluser->user_id;    
-                } else {        
+                    $modelconexionsigesp->aprorpa_by = $modeluser->user_id;
+                } else {
                     $modelconexionsigesp->aprorpa_by = $usuarioid;
                 }
                 $modelconexionsigesp->estatus_sigesp = 'ORP';
-                
+
             } elseif (empty($modelorpa)) {
-                // Verifico si el modelo orpa existe 
+                // Verifico si el modelo orpa existe
                 $modelconexionsigesp->estatus_sigesp = 'AOR';
                 // lo que lleno en ORR
                 $modelconexionsigesp->orpa = '';
@@ -828,17 +829,17 @@ while ($i<11){
                 $modelconexionsigesp->orpa_by = '';
             } else {
                 //salgo de los while ya que el caso no esta co
-                break 2;    
+                break 2;
             }
             break 1; // Aquí salé del switch
 
-//////////ESTATUS ORP -> LA ORPA SE ENCUENTRA ELABORADA Y APROBADA   
+//////////ESTATUS ORP -> LA ORPA SE ENCUENTRA ELABORADA Y APROBADA
         case 'ORP':
             //reviso si el caso esta causado
             $modelcausado = Spgdtcmp::findOne(['comprobante' => $modelconexionsigesp->orpa]);
             //reviso si el caso esta aprobado en en Solicitud de Pago
             $modelorpa = Cxpsolicitudes::findOne([
-                    'numsol' => $modelconexionsigesp->orpa, 
+                    'numsol' => $modelconexionsigesp->orpa,
                     'ced_bene' => $modelconexionsigesp->rif
             ]);
             if (isset($modelcausado)){
@@ -846,7 +847,7 @@ while ($i<11){
                 $modelconexionsigesp->date_causado = $modelcausado->fecha;
                 $modelconexionsigesp->causado_by = $usuarioid;
                 $modelconexionsigesp->estatus_sigesp = 'CAU';
-                
+
             } elseif ($modelorpa->estaprosol == 0) {
                 // Verifico si esta recibido en orpa
                 $modelconexionsigesp->estatus_sigesp = 'ORR';
@@ -855,7 +856,7 @@ while ($i<11){
                 $modelconexionsigesp->aprorpa_by = '';
             } else {
                 //salgo de los while ya que el caso no esta co
-                break 2;    
+                break 2;
             }
             break 1; // Aquí salé del switch
 
@@ -872,12 +873,12 @@ while ($i<11){
                     'usuario_sigesp' => $modelprogpago->codusu
                 ]);
                 if(isset($modeluser)){
-                    $modelconexionsigesp->progpago_by = $modeluser->user_id;    
-                } else {        
+                    $modelconexionsigesp->progpago_by = $modeluser->user_id;
+                } else {
                     $modelconexionsigesp->progpago_by = $usuarioid;
                 }
                 $modelconexionsigesp->estatus_sigesp = 'PGP';
-                
+
             } elseif (empty($modelcausado)) {
                 // Verifico si el modelo causado existe
                 $modelconexionsigesp->estatus_sigesp = 'ORP';
@@ -886,11 +887,11 @@ while ($i<11){
                 $modelconexionsigesp->causado_by = '';
             } else {
                 //salgo de los while ya que el caso no esta co
-                break 2;    
+                break 2;
             }
             break 1; // Aquí salé del switch
 
-//////////ESTATUS PGP -> EL CASO SE ENCUENTRA EN PROGRAMACION DE PAGO 
+//////////ESTATUS PGP -> EL CASO SE ENCUENTRA EN PROGRAMACION DE PAGO
         case 'PGP':
             //reviso si el caso tiene impreso un cheque
             $modelimprcheque = Scbmovbcospg::findOne([
@@ -904,8 +905,8 @@ while ($i<11){
                 $modelconexionsigesp->cheque = $modelimprcheque->numdoc;
                 $modelcheque = Scbmovbco::findOne([
                     'numdoc' => $modelconexionsigesp->cheque,
-                    'ced_bene' => $modelconexionsigesp->rif, 
-                    'codope' => 'CH', 
+                    'ced_bene' => $modelconexionsigesp->rif,
+                    'codope' => 'CH',
                     'estmov' => ['N','C']
                 ]);
                 $fechabitacora = Yii::$app->formatter
@@ -914,11 +915,11 @@ while ($i<11){
                     'usuario_sigesp' => $modelcheque->codusu
                 ]);
                 if(isset($modeluser)){
-                    $modelconexionsigesp->cheque_by = $modeluser->user_id;    
-                } else {        
+                    $modelconexionsigesp->cheque_by = $modeluser->user_id;
+                } else {
                     $modelconexionsigesp->cheque_by = $usuarioid;
                     $modeluser = Trabajador::findOne([
-                    'usuario_sigesp' => $modelconexionsigesp->cheque_by
+                    'user_id' => $modelconexionsigesp->cheque_by
                     ]);
                 }
                 $modelconexionsigesp->date_cheque = $modelcheque->fecmov;
@@ -935,9 +936,9 @@ while ($i<11){
                 $modelbitacora->fecha = $modelconexionsigesp->date_cheque;
                 $modelbitacora->nota = "El trabajador ".$modeluser->Trabajadorfps. " ha impreso "
                     ."satisfactoriamente el cheque con el número: "
-                    .$modelpresupuesto->cheque . " el día " 
-                    .$fechabitacora;                
-                $modelbitacora->usuario_id = $modeluser->users_id; 
+                    .$modelpresupuesto->cheque . " el día "
+                    .$fechabitacora;
+                $modelbitacora->usuario_id = $modeluser->users_id;
                 $modelbitacora->ind_activo = 1;
                 $modelbitacora->ind_alarma = 0;
                 $modelbitacora->ind_atendida = 0;
@@ -946,27 +947,27 @@ while ($i<11){
                 $modelbitacora->updated_at = date('Y-m-d H:i:s');
                 $modelbitacora->save();
                 $modelsolicitudes->save();
-                $modelpresupuesto->save(); 
-                
+                $modelpresupuesto->save();
+
             } elseif (empty($modelprogpago)) {
-                // Verifico si el modelo de programacion de pago existe 
+                // Verifico si el modelo de programacion de pago existe
                 $modelconexionsigesp->estatus_sigesp = 'CAU';
                 // lo que lleno en PGP
                 $modelconexionsigesp->date_progpago = '';
                 $modelconexionsigesp->progpago_by = '';
             } else {
                 //salgo de los while ya que el caso no esta co
-                break 2;    
+                break 2;
             }
             break 1; // Aquí salé del switch
-            
-//////////ESTATUS CHE -> EL CASO SE ENCUENTRA ELABORADO EL CHEQUE 
+
+//////////ESTATUS CHE -> EL CASO SE ENCUENTRA ELABORADO EL CHEQUE
         case 'CHE':
             //reviso si el modelo del cheque para verificar si esta anulado
             $modelcheque = Scbmovbco::findOne([
                     'numdoc' => $modelconexionsigesp->cheque,
-                    'ced_bene' => $modelconexionsigesp->rif, 
-                    'codope' => 'CH', 
+                    'ced_bene' => $modelconexionsigesp->rif,
+                    'codope' => 'CH',
                     'estmov' => ['N','C']
                 ]);
             //reviso el estatus del cheque es en caja
@@ -988,9 +989,9 @@ while ($i<11){
                 // el caso tiene un cheque
                 $modelconexionsigesp->date_enviofirma = $modelcheque->fecenvfir;
                 $modelconexionsigesp->estatus_sigesp = 'CHF';
-                
+
             } elseif (empty($modelcheque)) {
-                // Verifico si el cheque existe 
+                // Verifico si el cheque existe
                 $modelconexionsigesp->estatus_sigesp = 'PGP';
                 // lo que lleno en CHE
                 $modelconexionsigesp->cheque = '';
@@ -998,17 +999,17 @@ while ($i<11){
                 $modelconexionsigesp->cheque_by = '';
             } else {
                 //salgo de los while ya que el caso no esta co
-                break 2;    
+                break 2;
             }
             break 1; // Aquí salé del switch
 
-//////////ESTATUS CHF -> EL CASO SE ENCUENTRA ENVIADO PARA LA FIRMA 
+//////////ESTATUS CHF -> EL CASO SE ENCUENTRA ENVIADO PARA LA FIRMA
         case 'CHF':
             //reviso si el modelo del cheque para verificar si esta anulado
             $modelcheque = Scbmovbco::findOne([
                     'numdoc' => $modelconexionsigesp->cheque,
-                    'ced_bene' => $modelconexionsigesp->rif, 
-                    'codope' => 'CH', 
+                    'ced_bene' => $modelconexionsigesp->rif,
+                    'codope' => 'CH',
                     'estmov' => ['N','C']
                 ]);
             //reviso el estatus del cheque
@@ -1018,25 +1019,25 @@ while ($i<11){
                 $modelconexionsigesp->date_enviofirma = $modelcheque->fecenvfir;
                 $modelconexionsigesp->date_enviocaja = $modelcheque->fecenvcaj;
                 $modelconexionsigesp->estatus_sigesp = 'CHC';
-                
+
             } elseif (isset($modelcheque)&&$modelcheque->estcondoc=='S') {
-                // Verifico si el cheque existe 
+                // Verifico si el cheque existe
                 $modelconexionsigesp->estatus_sigesp = 'CHE';
                 // lo que lleno en CHF
                 $modelconexionsigesp->date_enviofirma = '';
             } else {
                 //salgo de los while ya que el caso no esta co
-                break 2;    
+                break 2;
             }
             break 1; // Aquí salé del switch
 
-//////////ESTATUS CHF -> EL CASO SE ENCUENTRA ENVIADO A CAJA PARA ENTREGAR 
+//////////ESTATUS CHF -> EL CASO SE ENCUENTRA ENVIADO A CAJA PARA ENTREGAR
         case 'CHC':
             //reviso si el modelo del cheque para verificar si esta anulado
             $modelcheque = Scbmovbco::findOne([
                     'numdoc' => $modelconexionsigesp->cheque,
-                    'ced_bene' => $modelconexionsigesp->rif, 
-                    'codope' => 'CH', 
+                    'ced_bene' => $modelconexionsigesp->rif,
+                    'codope' => 'CH',
                     'estmov' => ['N','C']
                 ]);
             //reviso si la orpa tiene programado un pago
@@ -1050,18 +1051,18 @@ while ($i<11){
                 $modelconexionsigesp->nombre_entrega = $modelcheque->emichenom;
 
                 $modelconexionsigesp->estatus_sigesp = 'ENT';
-                
+
             } elseif (isset($modelcheque)&&$modelcheque->estcondoc=='F') {
-                // Verifico si el cheque existe 
+                // Verifico si el cheque existe
                 $modelconexionsigesp->estatus_sigesp = 'CHF';
                 // lo que lleno en CHC
                 $modelconexionsigesp->date_enviocaja = '';
             } else {
                 //salgo de los while ya que el caso no esta co
-                break 2;    
+                break 2;
             }
             break 1; // Aquí salé del switch
-        
+
 
         default:
             break;
@@ -1069,7 +1070,7 @@ while ($i<11){
     ++$i;
     $modelconexionsigesp->save();
 
-}    
+}
         return $this->render('actualiza', [
                 'modelgestion' => $modelgestion,
                 'modelsolicitudes' => $modelsolicitudes,
@@ -1077,5 +1078,38 @@ while ($i<11){
                 'modelconexionsigesp' => $modelconexionsigesp,
         ]);
 
+    }
+
+    public function actionMasivo()
+    {
+      $model = new Multiplessolicitudes;
+
+      if ($model->load(Yii::$app->request->post())&&$model->validate()) {
+        foreach ($model->caso as $idsolicitud) {
+          $modelgestion = Gestion::findOne(['solicitud_id' => $idsolicitud ]);
+          if (isset($modelgestion)) {
+            $modelgestion->estatus3_id = $model->estatus3;
+          } else {
+            $modelgestion = new Gestion;
+            $modelgestion->solicitud_id = $idsolicitud;
+            $modelgestion->estatus3_id = $model->estatus3;
+          }
+          $modelgestion->save();
+        }
+
+        Yii::$app->session->setFlash("warning", "Los casos fueron"
+         . " cambiados exitosamente");
+
+        return $this->render('masivo', [
+            'model' => $model,
+        ]);
+
+
+
+      } else {
+          return $this->render('masivo', [
+              'model' => $model,
+          ]);
+      }
     }
 }

@@ -56,6 +56,7 @@ class SiteController extends Controller
                         'actions' => [
                             'atencionsoberano',
                             'reportegeneral',
+                            'reportes',
                             'atencioninstitucional',
                             'instruccionpresidencial',
                         ],
@@ -406,11 +407,6 @@ class SiteController extends Controller
         $auth->addChild($rolconsulta, $listargestion);
 
 
-
-
-
-
-
         $auth->assign($roladministrador, 1);
         $auth->assign($roladministrador, 2);
         $auth->assign($roladministrador, 4);
@@ -423,21 +419,19 @@ class SiteController extends Controller
     }
 
     public function actionBulk(){
-    $action = Yii::$app->request->post('action');
-    $selection=(array)Yii::$app->request->post('selection');
-    for ($i = 0; $i<count($selection); $i++) {
-        $mensaje = implode($selection);
 
+        $action = Yii::$app->request->post('action');
+        $selection=(array)Yii::$app->request->post('selection');
+        for ($i = 0; $i<count($selection); $i++) {
+            $mensaje = implode($selection);
+        }
+        Yii::$app->session->setFlash("success", $mensaje);
+
+        return $this->render('pruebas', ['seleccion'=>$selection]);
     }
-    Yii::$app->session->setFlash("success", $mensaje);
 
-        ////typecasting
-        //foreach($selection as $id){
-        //$e=Evento::findOne((int)$id);//make a typecasting
-        //do your stuff
-        //$e->save();
-        //}
-
-     return $this->render('pruebas', ['seleccion'=>$selection]);
+    public function actionReportes()
+    {
+        return $this->render('reportes');
     }
 }

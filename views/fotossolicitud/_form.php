@@ -22,11 +22,6 @@ use kartik\file\FileInput;
     <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 
     <?php //echo $form->field($model, 'foto')->textInput(['maxlength' => true]) ?>
-    
-    <?php 
-    /* Prueba desde mi casa para el Githubd */
-    
-    ?>
 
     <?php
 //    echo FileInput::widget([

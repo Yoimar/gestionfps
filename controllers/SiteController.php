@@ -9,6 +9,9 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\SignupForm;
+use yii\db\Query;
+use yii\data\ActiveDataProvider;
+use app\models\Snohsalida;
 
 class SiteController extends Controller
 {
@@ -432,6 +435,57 @@ class SiteController extends Controller
 
     public function actionReportes()
     {
-        return $this->render('reportes');
+        // Nota: Para ver el sql nativo del query se utiliza:
+        // echo $query->createCommand()->sql;
+
+        $queryejex = new Query;
+
+        $columnaejey = "usuario_asignacion_id";
+        $columnaejex = "estatus";
+
+        $columnastotales = [$columnaejey];
+        $columnasmostrar = [$columnaejey];
+
+        $sqlejex = $queryejex
+                ->select($columnaejex)
+                ->from('solicitudes')
+                ->where(['extract(year from created_at)' => 2018])
+                ->groupBy($columnaejex)
+                ->orderBy($columnaejex);
+
+
+        foreach ($sqlejex->each() as $value) {
+            array_push($columnastotales, "SUM(CASE WHEN ".$columnaejex. " = '"
+            .$value[$columnaejex]. "' THEN 1 ELSE 0 END) as ". $value[$columnaejex]);
+        }
+
+        foreach ($sqlejex->each() as $value) {
+            $data = [
+                'attribute'=>$value[$columnaejex],
+                'value'=>strtolower($value[$columnaejex]),
+                'pageSummary'=>true,
+            ];
+            array_push($columnasmostrar, $data);
+        }
+
+        $query = new Query;
+
+        $sql = $query
+                ->select($columnastotales)
+                ->from('solicitudes')
+                ->where(['extract(year from created_at)' => 2018])
+                ->groupBy($columnastotales[0])
+                ->orderBy($columnastotales[0]);
+
+        $solicitudes = new ActiveDataProvider([
+            'query' => $sql,
+        ]);
+
+        return $this->render('reportes',
+        [
+            'solicitudes' => $solicitudes,
+            'pruebas' => $columnasmostrar,
+        ]);
     }
+
 }

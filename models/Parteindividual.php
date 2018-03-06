@@ -15,11 +15,13 @@ class Parteindividual extends Model
      */
     public $trabajador;
     public $anho;
-    
+    public $mes;
+    public $tipoempleado;
+
     public function rules()
     {
         return [
-            [['trabajador', 'anho'], 'integer'],
+            [['trabajador', 'anho', 'mes', 'tipoempleado'], 'integer'],
             [['trabajador'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['trabajador' => 'id']],
         ];
     }
@@ -32,6 +34,8 @@ class Parteindividual extends Model
         return [
             'trabajador' => 'Trabajador Social',
             'anho' => 'Año',
+            'mes' => 'Mes',
+            'tipoempleado' => 'Tipo de Empleado',
         ];
     }
 
@@ -43,9 +47,8 @@ class Parteindividual extends Model
         return $this->hasOne(Users::className(), ['id' => 'trabajador']);
     }
 }
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-

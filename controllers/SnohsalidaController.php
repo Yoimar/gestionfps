@@ -323,7 +323,7 @@ class SnohsalidaController extends Controller
         }
 
 
-        $consultaivss = Yii::$app->dbsigesp->createCommand("select rifben, nombene, tipo, sum(retencion) as retencion, sum(aporte) as aporte, sum(aporte+retencion) as total
+        $consultaivss = Yii::$app->dbsigesp->createCommand("select rifben, nombene, nomcon, tipo, sum(retencion) as retencion, sum(aporte) as aporte, sum(aporte+retencion) as total
 from
 (select
 rpc_beneficiario.rifben,
@@ -469,11 +469,11 @@ and sno_hsalida.codnom in ('0400', '0600')
  "
 .$filtrosql
 ." ) as w
-group by rifben, nombene, tipo
+group by rifben, nombene, nomcon, tipo
 order by rifben;")->queryAll();
 
 
-        $usuarioorigen = 'Cap. Enmanuel Gonzalez<br>';
+        $usuarioorigen = 'Cap. Enmanuel González<br>';
         $direccionorigen = 'Director de la Oficina de Gestión Humana <br>';
         $usuariofinal = 'Ptte. Miguel Castillo <br>';
         $direccionfinal = 'Direccion de Administración y Finanzas<br>';

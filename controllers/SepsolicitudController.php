@@ -1403,19 +1403,19 @@ class SepsolicitudController extends Controller
         /** Actualizo la tabla de sepsolicitud  **/
         Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud
              SET codestpro3='0000000000000000000000203'
-             WHERE codemp='0001' AND numsol=':numsol';")
+             WHERE codemp='0001' AND numsol= :numsol;")
                     ->bindValue (":numsol", $numsol)
                     ->execute();
         /** Actualizo sep_dt_concepto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto
              SET codestpro3='0000000000000000000000203'
-             WHERE codemp='0001' AND numsol='':numsol';")
+             WHERE codemp='0001' AND numsol=:numsol;")
                     ->bindValue (":numsol", $numsol)
                     ->execute();
          /** Actualizo en la tabla sep_cuentagasto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto
              SET codestpro3='0000000000000000000000203'
-             WHERE codemp='0001' AND numsol='':numsol';")
+             WHERE codemp='0001' AND numsol=:numsol;")
                     ->bindValue (":numsol", $numsol)
                     ->execute();
 
@@ -1428,19 +1428,19 @@ class SepsolicitudController extends Controller
 
          Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud
              SET codestpro3='0000000000000000000000201'
-             WHERE codemp='0001' AND numsol='':numsol';")
+             WHERE codemp='0001' AND numsol=:numsol;")
                     ->bindValue (":numsol", $numsol)
                     ->execute();
         /** Actualizo sep_dt_concepto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto
              SET codestpro3='0000000000000000000000201'
-             WHERE codemp='0001' AND numsol='':numsol';")
+             WHERE codemp='0001' AND numsol=:numsol;")
                     ->bindValue (":numsol", $numsol)
                     ->execute();
          /** Actualizo en la tabla sep_cuentagasto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto
              SET codestpro3='0000000000000000000000201'
-             WHERE codemp='0001' AND numsol='':numsol';")
+             WHERE codemp='0001' AND numsol=:numsol;")
                     ->bindValue (":numsol", $numsol)
                     ->execute();
 
@@ -1452,19 +1452,19 @@ class SepsolicitudController extends Controller
 
          Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud
              SET codestpro3='0000000000000000000000204'
-             WHERE codemp='0001' AND numsol='':numsol';")
+             WHERE codemp='0001' AND numsol=:numsol;")
                     ->bindValue (":numsol", $numsol)
                     ->execute();
         /** Actualizo sep_dt_concepto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto
              SET codestpro3='0000000000000000000000204'
-             WHERE codemp='0001' AND numsol='':numsol';")
+             WHERE codemp='0001' AND numsol=:numsol;")
                     ->bindValue (":numsol", $numsol)
                     ->execute();
          /** Actualizo en la tabla sep_cuentagasto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto
              SET codestpro3='0000000000000000000000204'
-             WHERE codemp='0001' AND numsol='':numsol';")
+             WHERE codemp='0001' AND numsol=:numsol;")
                     ->bindValue (":numsol", $numsol)
                     ->execute();
 
@@ -1476,19 +1476,19 @@ class SepsolicitudController extends Controller
 
          Yii::$app->dbsigesp->createCommand("UPDATE sep_solicitud
              SET codestpro3='0000000000000000000000202'
-             WHERE codemp='0001' AND numsol='':numsol';")
+             WHERE codemp='0001' AND numsol=:numsol;")
                     ->bindValue (":numsol", $numsol)
                     ->execute();
         /** Actualizo sep_dt_concepto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_dt_concepto
              SET codestpro3='0000000000000000000000202'
-             WHERE codemp='0001' AND numsol='':numsol';")
+             WHERE codemp='0001' AND numsol=:numsol;")
                     ->bindValue (":numsol", $numsol)
                     ->execute();
          /** Actualizo en la tabla sep_cuentagasto **/
          Yii::$app->dbsigesp->createCommand("UPDATE sep_cuentagasto
              SET codestpro3='0000000000000000000000202'
-             WHERE codemp='0001' AND numsol='':numsol';")
+             WHERE codemp='0001' AND numsol=:numsol;")
                     ->bindValue (":numsol", $numsol)
                     ->execute();
 

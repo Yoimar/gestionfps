@@ -12,36 +12,167 @@ error_reporting(0);
 
 <center>
 <table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: solid 1px black;">
-    <tr>
-    <td style="font-size:13px; text-align:center; border: solid 1px black; height: 40px;">N°</td>
-    <td style="font-size:13px; text-align:center; border: solid 1px black;">RIF</td>
-    <td style="font-size:13px; text-align:center; border: solid 1px black;">NOMBRE COMPLETO</td>
-    <td style="font-size:13px; text-align:center; border: solid 1px black;">TIPO DE EMPLEADO</td>
-    <td style="font-size:13px; text-align:center; border: solid 1px black;">APORTE</td>
-    <td style="font-size:13px; text-align:center; border: solid 1px black;">RETENCIÓN</td>
-    <td style="font-size:13px; text-align:center; border: solid 1px black;">TOTAL</td>
-    </tr>
-<?php
-foreach ($consultaivss as $id => $valores) {
-    echo "<tr>";
-    echo "<td style='text-align:center; height: 40px; border: solid 1px black;'>";
-    echo $id+1;
-    echo "</td>";
-        foreach ($valores as $key => $value) {
+<tr>
+    <th style="font-size:13px; text-align:center; border: solid 1px black; height: 40px;">N°</td>
+    <th style="font-size:13px; text-align:center; border: solid 1px black;">RIF</td>
+    <th style="font-size:13px; text-align:center; border: solid 1px black;">NOMBRE COMPLETO</td>
+    <th style="font-size:13px; text-align:center; border: solid 1px black;">CONCEPTO</td>
+    <th width="80px" style="font-size:13px; text-align:center; border: solid 1px black;">TIPO DE EMPLEADO</td>
+    <th width="90px" style="font-size:13px; text-align:center; border: solid 1px black;">RETENCIÓN</td>
+    <th width="90px" style="font-size:13px; text-align:center; border: solid 1px black;">APORTE</td>
+    <th width="100px" style="font-size:13px; text-align:center; border: solid 1px black;">TOTAL</td>
+</tr>
 
-        if (is_numeric($value)) {
-            echo "<td  style='font-size:12px; text-align:right; border: solid 1px black;'>";
-            echo Yii::$app->formatter->asCurrency($value);
-        }else{
-            echo "<td  style='font-size:12px; text-align:center; border: solid 1px black;'>";
-            echo $value;
-        }
-        echo "</td>";
+<tr>
+    <td style='text-align:center; height: 40px; border: solid 1px black; font-size:10px;'>
+        1
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[0]['rifben']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[0]['nombene']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[0]['nomcon']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= strtoupper($consultaivss[0]['tipo'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[0]['retencion'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[0]['aporte'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[0]['total'])?>
+    </td>
+</tr>
 
-        }
-    echo "</tr>";
-}
-?>
+<tr>
+    <td rowspan="2" style='text-align:center; height: 80px; border: solid 1px black; font-size:10px;'>
+        2
+    </td>
+    <td rowspan="2" style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[1]['rifben']?>
+    </td>
+    <td rowspan="2" style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[1]['nombene']?>
+    </td>
+    <td style='border: solid 1px black; height: 40px; text-align:center; font-size:10px;'>
+        <?= $consultaivss[1]['nomcon']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= strtoupper($consultaivss[1]['tipo'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[1]['retencion'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[1]['aporte'])?>
+    </td>
+    <td rowspan="2" style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[1]['total'] + $consultaivss[2]['total'])?>
+    </td>
+</tr>
+
+<tr>
+    <td style='border: solid 1px black; height: 40px; text-align:center; font-size:10px;'>
+        <?= $consultaivss[2]['nomcon']?>
+    </td>
+    <td style='border: solid 1px black; height: 40px; text-align:center; font-size:10px;'>
+        <?= strtoupper($consultaivss[2]['tipo'])?>
+    </td>
+    <td style='border: solid 1px black; height: 40px; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[2]['retencion'])?>
+    </td>
+    <td style='border: solid 1px black; height: 40px; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[2]['aporte'])?>
+    </td>
+</tr>
+
+<tr>
+    <td style='text-align:center; height: 40px; border: solid 1px black; font-size:10px;'>
+        3
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[3]['rifben']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[3]['nombene']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[3]['nomcon']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= strtoupper($consultaivss[3]['tipo'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[3]['retencion'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[3]['aporte'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[3]['total'])?>
+    </td>
+</tr>
+
+<tr>
+    <td style='text-align:center; height: 40px; border: solid 1px black; font-size:10px;'>
+        4
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[4]['rifben']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[4]['nombene']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[4]['nomcon']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= strtoupper($consultaivss[4]['tipo'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[4]['retencion'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[4]['aporte'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[4]['total'])?>
+    </td>
+</tr>
+
+<tr>
+    <td style='text-align:center; height: 40px; border: solid 1px black; font-size:10px;'>
+        5
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[5]['rifben']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[5]['nombene']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= $consultaivss[5]['nomcon']?>
+    </td>
+    <td style='border: solid 1px black; text-align:center; font-size:10px;'>
+        <?= strtoupper($consultaivss[5]['tipo'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[5]['retencion'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[5]['aporte'])?>
+    </td>
+    <td style='border: solid 1px black; text-align:right; font-size:10px;'>
+        <?= Yii::$app->formatter->asCurrency($consultaivss[5]['total'])?>
+    </td>
+</tr>
+
 </table>
 </center>
 
@@ -57,7 +188,8 @@ foreach ($consultaivss as $id => $valores) {
                     <br>
                     <br>
                     <br>
-                    ___________________________________
+                    <br>
+                    _____________________________________________________
                     <br>
                     Cap. Enmanuel Félix González Hernández
                     <br>

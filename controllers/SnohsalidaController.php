@@ -271,142 +271,186 @@ class SnohsalidaController extends Controller
 
     public function actionImprimir($ano=null,$mes=null)
     {
-
-        $searchModel = new Snohsalidaaportes();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        switch ($ano) {
-            case '2018':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.anocur'=> $ano,
-                ]);
-                break;
-
-            default:
-                break;
-        }
-
         switch ($mes) {
             case '1':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codperi'=> ['001', '002'],
-                ]);
                 $mesnombre = "mes de enero del Año ".$ano;
                 break;
             case '2':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codperi'=> ['003', '004'],
-                ]);
                 $mesnombre = "mes de febrero del Año ".$ano;
                 break;
             case '3':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codperi'=> ['005', '006'],
-                ]);
                 $mesnombre = "mes de marzo del Año ".$ano;
                 break;
             case '4':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codperi'=> ['007', '008'],
-                ]);
                 $mesnombre = "mes de abril del Año ".$ano;
                 break;
             case '5':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codperi'=> ['009', '010'],
-                ]);
                 $mesnombre = "mes de mayo del Año ".$ano;
                 break;
             case '6':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codperi'=> ['011', '012'],
-                ]);
                 $mesnombre = "mes de junio del Año ".$ano;
                 break;
             case '7':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codperi'=> ['013', '014'],
-                ]);
                 $mesnombre = "mes de julio del Año ".$ano;
                 break;
             case '8':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codperi'=> ['015', '016'],
-                ]);
                 $mesnombre = "mes de agosto del Año ".$ano;
                 break;
             case '9':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codperi'=> ['017', '018'],
-                ]);
                 $mesnombre = "mes de septiembre del Año ".$ano;
                 break;
             case '10':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codperi'=> ['019', '020'],
-                ]);
                 $mesnombre = "mes de octubre del Año ".$ano;
                 break;
             case '11':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codperi'=> ['021', '022'],
-                ]);
                 $mesnombre = "mes de noviembre del Año ".$ano;
                 break;
             case '12':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codperi'=> ['023', '024'],
-                ]);
                 $mesnombre = "mes de diciembre del Año ".$ano;
                 break;
-
-            default:
-                break;
         }
-
-        $dataProviderivss = $dataProvider->query->andWhere([
-            'sno_hsalida.codconc' => ['0000000050', '0000000052'],
-        ]);
-/*
-        $dataProvidercastfps = $dataProvider->query->andWhere([
-            'sno_hsalida.codconc' => ['0000000054', '0000000030'],
-        ]);
-
-        $dataProviderfjemp = $dataProvider->query->andWhere([
-            'sno_hsalida.codconc' => ['0000000053'],
-            'sno_hsalida.codnom' => ['0100', '0200','0300', '0500', '0700', '0800'],
-        ]);
-
-        $dataProvider->query->andWhere([
-            'sno_hsalida.codconc' => ['0000000053'],
-            'sno_hsalida.codnom' => ['0400', '0600'],
-        ]);
-
-        $dataProvidervivienda = $dataProvider->query->andWhere([
-            'sno_hsalida.codconc' => ['0000000051'],
-        ]);
-/*
-        switch ($tipoempleado) {
-            //Empleado
-            case '1':
-                $dataProvider->query->andWhere([
-                    'not in',
-                    'sno_hsalida.codnom',
-                    ['0400', '0600']
-                ]);
-                break;
-            //Obrero
-            case '2':
-                $dataProvider->query->andWhere([
-                    'sno_hsalida.codnom' => ['0400', '0600'],
-                ]);
-                break;
-            //Todos
-            default:
-                break;
-        }
-
-*/
+        
+        
+        $consultaivss = Yii::$app->dbsigesp->createCommand("select rifben, nombene, tipo, sum(retencion) as retencion, sum(aporte) as aporte, sum(aporte+retencion) as total
+from
+(select 
+rpc_beneficiario.rifben,
+rpc_beneficiario.nombene,
+rpc_beneficiario.apebene,
+sno_hconcepto.nomcon,
+'t' as tipo,
+-sno_hsalida.valsal as retencion,
+0 as aporte
+from 
+sno_hsalida 
+join sno_hconcepto 
+on sno_hsalida.anocur = sno_hconcepto.anocur
+and sno_hsalida.codperi = sno_hconcepto.codperi
+and sno_hsalida.codconc = sno_hconcepto.codconc
+and sno_hsalida.codnom = sno_hconcepto.codnom
+join rpc_beneficiario
+on rpc_beneficiario.ced_bene = sno_hconcepto.cedben
+where
+sno_hsalida.tipsal = 'P1'
+and sno_hsalida.codconc <> '0000000053'
+and sno_hsalida.codperi in ('001', '002')
+union
+select 
+rpc_beneficiario.rifben,
+rpc_beneficiario.nombene,
+rpc_beneficiario.apebene,
+sno_hconcepto.nomcon,
+'t' as tipo,
+0 as retencion,
+-sno_hsalida.valsal as aporte
+from 
+sno_hsalida 
+join sno_hconcepto 
+on sno_hsalida.anocur = sno_hconcepto.anocur
+and sno_hsalida.codperi = sno_hconcepto.codperi
+and sno_hsalida.codconc = sno_hconcepto.codconc
+and sno_hsalida.codnom = sno_hconcepto.codnom
+join rpc_beneficiario
+on rpc_beneficiario.ced_bene = sno_hconcepto.cedben
+where
+sno_hsalida.tipsal = 'P2'
+and sno_hsalida.codconc <> '0000000053'
+and sno_hsalida.codperi in ('001', '002')
+union
+select 
+rpc_beneficiario.rifben,
+rpc_beneficiario.nombene,
+rpc_beneficiario.apebene,
+sno_hconcepto.nomcon,
+'e' as tipo,
+-sno_hsalida.valsal as retencion,
+0 as aporte
+from 
+sno_hsalida 
+join sno_hconcepto 
+on sno_hsalida.anocur = sno_hconcepto.anocur
+and sno_hsalida.codperi = sno_hconcepto.codperi
+and sno_hsalida.codconc = sno_hconcepto.codconc
+and sno_hsalida.codnom = sno_hconcepto.codnom
+join rpc_beneficiario
+on rpc_beneficiario.ced_bene = sno_hconcepto.cedben
+where
+sno_hsalida.tipsal = 'P1'
+and sno_hsalida.codconc = '0000000053'
+and sno_hsalida.codnom in ('0100', '0200', '0300', '0500', '0700', '0800')
+and sno_hsalida.codperi in ('001', '002')
+union
+select 
+rpc_beneficiario.rifben,
+rpc_beneficiario.nombene,
+rpc_beneficiario.apebene,
+sno_hconcepto.nomcon,
+'e' as tipo,
+0 as retencion,
+-sno_hsalida.valsal as aporte
+from 
+sno_hsalida 
+join sno_hconcepto 
+on sno_hsalida.anocur = sno_hconcepto.anocur
+and sno_hsalida.codperi = sno_hconcepto.codperi
+and sno_hsalida.codconc = sno_hconcepto.codconc
+and sno_hsalida.codnom = sno_hconcepto.codnom
+join rpc_beneficiario
+on rpc_beneficiario.ced_bene = sno_hconcepto.cedben
+where
+sno_hsalida.tipsal = 'P2'
+and sno_hsalida.codconc = '0000000053'
+and sno_hsalida.codnom in ('0100', '0200', '0300', '0500', '0700', '0800')
+and sno_hsalida.codperi in ('001', '002')
+union
+select 
+rpc_beneficiario.rifben,
+rpc_beneficiario.nombene,
+rpc_beneficiario.apebene,
+sno_hconcepto.nomcon,
+'o' as tipo,
+-sno_hsalida.valsal as retencion,
+0 as aporte
+from 
+sno_hsalida 
+join sno_hconcepto 
+on sno_hsalida.anocur = sno_hconcepto.anocur
+and sno_hsalida.codperi = sno_hconcepto.codperi
+and sno_hsalida.codconc = sno_hconcepto.codconc
+and sno_hsalida.codnom = sno_hconcepto.codnom
+join rpc_beneficiario
+on rpc_beneficiario.ced_bene = sno_hconcepto.cedben
+where
+sno_hsalida.tipsal = 'P1'
+and sno_hsalida.codconc = '0000000053'
+and sno_hsalida.codnom in ('0400', '0600')
+and sno_hsalida.codperi in ('001', '002')
+union
+select 
+rpc_beneficiario.rifben,
+rpc_beneficiario.nombene,
+rpc_beneficiario.apebene,
+sno_hconcepto.nomcon,
+'o' as tipo,
+0 as retencion,
+-sno_hsalida.valsal as aporte
+from 
+sno_hsalida 
+join sno_hconcepto 
+on sno_hsalida.anocur = sno_hconcepto.anocur
+and sno_hsalida.codperi = sno_hconcepto.codperi
+and sno_hsalida.codconc = sno_hconcepto.codconc
+and sno_hsalida.codnom = sno_hconcepto.codnom
+join rpc_beneficiario
+on rpc_beneficiario.ced_bene = sno_hconcepto.cedben
+where
+sno_hsalida.tipsal = 'P2'
+and sno_hsalida.codconc = '0000000053'
+and sno_hsalida.codnom in ('0400', '0600')
+and sno_hsalida.codperi in ('001', '002')) as w
+group by rifben, nombene, tipo
+order by rifben;")->queryAll();
+        
 
         $usuarioorigen = 'Cap. Enmanuel Gonzalez<br>';
         $direccionorigen = 'Director de la Oficina de Gestioón Humana <br>';
@@ -494,7 +538,7 @@ class SnohsalidaController extends Controller
        .'<p style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></p>';
         // get your HTML raw content without any layouts or scripts
         $content = $this->renderPartial('imprimir', [
-                'dataProviderivss' => $dataProviderivss,
+                'consultaivss' => $consultaivss,
                 //'dataProvidercastfps' => $dataProvidercastfps,
                 //'dataProviderfjemp' => $dataProviderfjemp,
                 //'dataProviderfjobr' => $dataProviderfjobr,

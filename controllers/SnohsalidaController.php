@@ -274,56 +274,68 @@ class SnohsalidaController extends Controller
         switch ($mes) {
             case '1':
                 $mesnombre = "mes de enero del Año ".$ano;
+                $filtrosql = "and sno_hsalida.codperi in ('001', '002')";
                 break;
             case '2':
                 $mesnombre = "mes de febrero del Año ".$ano;
+                $filtrosql = "and sno_hsalida.codperi in ('003', '004')";
                 break;
             case '3':
                 $mesnombre = "mes de marzo del Año ".$ano;
+                $filtrosql = "and sno_hsalida.codperi in ('005', '006')";
                 break;
             case '4':
                 $mesnombre = "mes de abril del Año ".$ano;
+                $filtrosql = "and sno_hsalida.codperi in ('007', '008')";
                 break;
             case '5':
                 $mesnombre = "mes de mayo del Año ".$ano;
+                $filtrosql = "and sno_hsalida.codperi in ('009', '010')";
                 break;
             case '6':
                 $mesnombre = "mes de junio del Año ".$ano;
+                $filtrosql = "and sno_hsalida.codperi in ('011', '012')";
                 break;
             case '7':
                 $mesnombre = "mes de julio del Año ".$ano;
+                $filtrosql = "and sno_hsalida.codperi in ('013', '014')";
                 break;
             case '8':
                 $mesnombre = "mes de agosto del Año ".$ano;
+                $filtrosql = "and sno_hsalida.codperi in ('015', '016')";
                 break;
             case '9':
                 $mesnombre = "mes de septiembre del Año ".$ano;
+                $filtrosql = "and sno_hsalida.codperi in ('017', '018')";
                 break;
             case '10':
                 $mesnombre = "mes de octubre del Año ".$ano;
+                $filtrosql = "and sno_hsalida.codperi in ('019', '020')";
                 break;
             case '11':
                 $mesnombre = "mes de noviembre del Año ".$ano;
+                $filtrosql = "and sno_hsalida.codperi in ('021', '022')";
                 break;
             case '12':
                 $mesnombre = "mes de diciembre del Año ".$ano;
+                $filtrosql = "and sno_hsalida.codperi in ('023', '024')";
                 break;
         }
-        
-        
+
+
         $consultaivss = Yii::$app->dbsigesp->createCommand("select rifben, nombene, tipo, sum(retencion) as retencion, sum(aporte) as aporte, sum(aporte+retencion) as total
 from
-(select 
+(select
 rpc_beneficiario.rifben,
 rpc_beneficiario.nombene,
 rpc_beneficiario.apebene,
 sno_hconcepto.nomcon,
-'t' as tipo,
+'todos' as tipo,
 -sno_hsalida.valsal as retencion,
 0 as aporte
-from 
-sno_hsalida 
-join sno_hconcepto 
+from
+sno_hsalida
+join sno_hconcepto
 on sno_hsalida.anocur = sno_hconcepto.anocur
 and sno_hsalida.codperi = sno_hconcepto.codperi
 and sno_hsalida.codconc = sno_hconcepto.codconc
@@ -332,20 +344,20 @@ join rpc_beneficiario
 on rpc_beneficiario.ced_bene = sno_hconcepto.cedben
 where
 sno_hsalida.tipsal = 'P1'
-and sno_hsalida.codconc <> '0000000053'
-and sno_hsalida.codperi in ('001', '002')
-union
-select 
+and sno_hsalida.codconc <> '0000000053' "
+.$filtrosql
+." union all
+select
 rpc_beneficiario.rifben,
 rpc_beneficiario.nombene,
 rpc_beneficiario.apebene,
 sno_hconcepto.nomcon,
-'t' as tipo,
+'todos' as tipo,
 0 as retencion,
 -sno_hsalida.valsal as aporte
-from 
-sno_hsalida 
-join sno_hconcepto 
+from
+sno_hsalida
+join sno_hconcepto
 on sno_hsalida.anocur = sno_hconcepto.anocur
 and sno_hsalida.codperi = sno_hconcepto.codperi
 and sno_hsalida.codconc = sno_hconcepto.codconc
@@ -354,20 +366,21 @@ join rpc_beneficiario
 on rpc_beneficiario.ced_bene = sno_hconcepto.cedben
 where
 sno_hsalida.tipsal = 'P2'
-and sno_hsalida.codconc <> '0000000053'
-and sno_hsalida.codperi in ('001', '002')
-union
-select 
+and sno_hsalida.codconc <> '0000000053' "
+.$filtrosql
+."
+union all
+select
 rpc_beneficiario.rifben,
 rpc_beneficiario.nombene,
 rpc_beneficiario.apebene,
 sno_hconcepto.nomcon,
-'e' as tipo,
+'empleado' as tipo,
 -sno_hsalida.valsal as retencion,
 0 as aporte
-from 
-sno_hsalida 
-join sno_hconcepto 
+from
+sno_hsalida
+join sno_hconcepto
 on sno_hsalida.anocur = sno_hconcepto.anocur
 and sno_hsalida.codperi = sno_hconcepto.codperi
 and sno_hsalida.codconc = sno_hconcepto.codconc
@@ -378,19 +391,21 @@ where
 sno_hsalida.tipsal = 'P1'
 and sno_hsalida.codconc = '0000000053'
 and sno_hsalida.codnom in ('0100', '0200', '0300', '0500', '0700', '0800')
-and sno_hsalida.codperi in ('001', '002')
-union
-select 
+"
+.$filtrosql
+."
+union all
+select
 rpc_beneficiario.rifben,
 rpc_beneficiario.nombene,
 rpc_beneficiario.apebene,
 sno_hconcepto.nomcon,
-'e' as tipo,
+'empleado' as tipo,
 0 as retencion,
 -sno_hsalida.valsal as aporte
-from 
-sno_hsalida 
-join sno_hconcepto 
+from
+sno_hsalida
+join sno_hconcepto
 on sno_hsalida.anocur = sno_hconcepto.anocur
 and sno_hsalida.codperi = sno_hconcepto.codperi
 and sno_hsalida.codconc = sno_hconcepto.codconc
@@ -401,19 +416,21 @@ where
 sno_hsalida.tipsal = 'P2'
 and sno_hsalida.codconc = '0000000053'
 and sno_hsalida.codnom in ('0100', '0200', '0300', '0500', '0700', '0800')
-and sno_hsalida.codperi in ('001', '002')
-union
-select 
+ "
+.$filtrosql
+."
+union all
+select
 rpc_beneficiario.rifben,
 rpc_beneficiario.nombene,
 rpc_beneficiario.apebene,
 sno_hconcepto.nomcon,
-'o' as tipo,
+'obrero' as tipo,
 -sno_hsalida.valsal as retencion,
 0 as aporte
-from 
-sno_hsalida 
-join sno_hconcepto 
+from
+sno_hsalida
+join sno_hconcepto
 on sno_hsalida.anocur = sno_hconcepto.anocur
 and sno_hsalida.codperi = sno_hconcepto.codperi
 and sno_hsalida.codconc = sno_hconcepto.codconc
@@ -424,19 +441,21 @@ where
 sno_hsalida.tipsal = 'P1'
 and sno_hsalida.codconc = '0000000053'
 and sno_hsalida.codnom in ('0400', '0600')
-and sno_hsalida.codperi in ('001', '002')
-union
-select 
+ "
+.$filtrosql
+."
+union all
+select
 rpc_beneficiario.rifben,
 rpc_beneficiario.nombene,
 rpc_beneficiario.apebene,
 sno_hconcepto.nomcon,
-'o' as tipo,
+'obrero' as tipo,
 0 as retencion,
 -sno_hsalida.valsal as aporte
-from 
-sno_hsalida 
-join sno_hconcepto 
+from
+sno_hsalida
+join sno_hconcepto
 on sno_hsalida.anocur = sno_hconcepto.anocur
 and sno_hsalida.codperi = sno_hconcepto.codperi
 and sno_hsalida.codconc = sno_hconcepto.codconc
@@ -447,13 +466,15 @@ where
 sno_hsalida.tipsal = 'P2'
 and sno_hsalida.codconc = '0000000053'
 and sno_hsalida.codnom in ('0400', '0600')
-and sno_hsalida.codperi in ('001', '002')) as w
+ "
+.$filtrosql
+." ) as w
 group by rifben, nombene, tipo
 order by rifben;")->queryAll();
-        
+
 
         $usuarioorigen = 'Cap. Enmanuel Gonzalez<br>';
-        $direccionorigen = 'Director de la Oficina de Gestioón Humana <br>';
+        $direccionorigen = 'Director de la Oficina de Gestión Humana <br>';
         $usuariofinal = 'Ptte. Miguel Castillo <br>';
         $direccionfinal = 'Direccion de Administración y Finanzas<br>';
 
@@ -539,10 +560,8 @@ order by rifben;")->queryAll();
         // get your HTML raw content without any layouts or scripts
         $content = $this->renderPartial('imprimir', [
                 'consultaivss' => $consultaivss,
-                //'dataProvidercastfps' => $dataProvidercastfps,
-                //'dataProviderfjemp' => $dataProviderfjemp,
-                //'dataProviderfjobr' => $dataProviderfjobr,
-                //'dataProvidervivienda' => $dataProvidervivienda,
+                'mesnombre' => $mesnombre,
+
         ]);
 
         // setup kartik\mpdf\Pdf component

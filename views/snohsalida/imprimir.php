@@ -7,7 +7,7 @@ error_reporting(0);
 <p style="font-size:13px; text-align:justify;">
     &nbsp; &nbsp; &nbsp; &nbsp; Tengo el agrado de dirigirme a usted en la oportunidad de saludarlo y a su
     vez solicitar el pago de los siguientes aportes y retenciones laborales correspondientes al <strong>
-    <?= $mesnombre ?></strong>, así mismo solicito que se emitan los siguientes cheques de gerencia según la tabla anexa.
+    <?= $mesnombre ?></strong>, así mismo solicito que se emitan los siguientes cheques de gerencia según la tabla anexa:
 </p>
 
 <center>

@@ -493,7 +493,7 @@ order by rifben;")->queryAll();
         .'      </tr>'
         .'        <tr>'
         .'         <td  colspan="6" class="text-center col-xs-4 col-sm-4 col-md-4 col-lg-4 col-md-offset-4 col-xs-offset-4 col-sm-offset-4 col-lg-offset-4" style="font-size:18px;">'
-        .'REMISIÓN DE PAGOS DE APORTES PATRONALES'
+        .'REMISIÓN DE PAGOS DE APORTES PATRONALES Y RETENCIONES'
         .'         </td >'
         .'        </tr>'
         .'        <tr>'

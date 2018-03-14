@@ -39,6 +39,7 @@ class SiteController extends Controller
                     'parteportrabajador',
                     'parteindividual',
                     'pruebas',
+                    'mapas',
                     'contact',
                     'about',
                     'rbac',
@@ -60,6 +61,7 @@ class SiteController extends Controller
                             'atencionsoberano',
                             'reportegeneral',
                             'reportes',
+                            'mapas',
                             'atencioninstitucional',
                             'instruccionpresidencial',
                         ],
@@ -246,6 +248,11 @@ class SiteController extends Controller
     public function actionPruebas()
     {
         return $this->render('pruebas');
+    }
+
+    public function actionMapas()
+    {
+        return $this->render('mapas');
     }
 
     public function actionTotalnivel3()

@@ -105,6 +105,10 @@ AppAsset::register($this);
                      ['label' => 'Perfiles', 'url' => '@web/authassignment/index'],
                      ['label' => 'Cambio Masivo', 'url' => '@web/gestion/masivo'],
                      ['label' => 'Cambio de Trabajador Social', 'url' => '@web/solicitudes/index'],
+                     ['label' => 'Tipo de centro medico', 'url' => '@web/centrotipo/index'],
+                     ['label' => 'Centro', 'url' => '@web/centro/index'],
+                     ['label' => 'Clasificación de los Centros', 'url' => '@web/centroclasificacion/index'],
+                     ['label' => 'Registro de Lugares Hospitales Farmacias', 'url' => '@web/lugar/index'],
                 ],
                 'linkOptions' => ['style' => 'color: #FFFFFF;']
                 ] ): (""),

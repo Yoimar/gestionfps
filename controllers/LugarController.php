@@ -124,4 +124,26 @@ class LugarController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+    
+    /**
+     * Para hacer vistas Por Geolocalizacion 
+     * Es decir, guardar la ip que tengo por la geolocalizacion 
+     *  
+     **/
+    
+    public function actionCreargeo()
+    {
+        $model = new Lugar();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('creargeo', [
+            'model' => $model,
+        ]);
+    }
+    
+    
+    
 }

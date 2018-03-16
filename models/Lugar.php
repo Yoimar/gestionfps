@@ -33,6 +33,10 @@ class Lugar extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public $lat;
+    public $lng;
+    
+    
     public static function tableName()
     {
         return 'lugar';

@@ -51,6 +51,18 @@ $config = [
         ],
         'db' => require(__DIR__ . '/db.php'),
         'dbsigesp' => require(__DIR__ . '/dbsigesp.php'),
+        
+        'assetManager' => [
+            'bundles' => [
+                'dosamigos\google\maps\MapAsset' => [
+                    'options' => [
+                        'key' => 'AIzaSyBzyQHuP5O9RW7Ep87OPJqC2RqtzxpAPXo',
+                        'language' => 'id',
+                        'version' => '3.1.18'
+                    ]
+                ]
+            ]
+        ],
 
 
         'urlManager' => [
@@ -77,7 +89,7 @@ $config = [
         'orientation' => Pdf::ORIENT_PORTRAIT,
         'destination' => Pdf::DEST_BROWSER,
         // refer settings section for all configuration options
-    ],
+        ],
 
     ],
     'params' => $params,

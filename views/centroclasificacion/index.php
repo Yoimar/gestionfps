@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\CentroclasificacionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Centroclasificacions';
+$this->title = 'Clasificación del Centro';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="centroclasificacion-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Centroclasificacion', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Clasificacion de Centro', ['create'], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,11 +25,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'nombre',
             'centro_id',
-            'created_at',
-            'created_by',
+            //'created_at',
+            //'created_by',
             //'updated_at',
             //'updated_by',
 

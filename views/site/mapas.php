@@ -50,3 +50,52 @@ $map->appendScript($bikeLayer->getJs());
 echo $map->display();
 
 ?>
+
+<!--
+SQL de Array
+
+-- Table: public.lugar
+
+-- DROP TABLE public.lugar;
+
+CREATE TABLE public.lugar
+(
+  id serial,
+  nombre character varying(200) NOT NULL,
+  centro_clasificacion_id integer NOT NULL,
+  lat  NOT NULL,
+  log  NOT NULL,
+  nombre_slug character varying,
+  parroquia_id integer NOT NULL,
+  direccion character varying(500),
+  telefono1 character varying(12),
+  telefono2 character varying(12),
+  telefono3 character varying(12),
+  notas text,
+  created_at timestamp without time zone,
+  created_by integer,
+  updated_at time without time zone,
+  updated_by integer,
+  CONSTRAINT id_lugar PRIMARY KEY (id),
+  CONSTRAINT centro_clasificacion_id FOREIGN KEY (centro_clasificacion_id)
+      REFERENCES public.centro_clasificacion (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT created_by_id_lugar FOREIGN KEY (created_by)
+      REFERENCES public."user" (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT parroquia_id FOREIGN KEY (parroquia_id)
+      REFERENCES public.parroquias (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT updated_by_id_lugar FOREIGN KEY (updated_by)
+      REFERENCES public."user" (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT nombre_slug_unique UNIQUE (nombre_slug)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.lugar
+  OWNER TO postgres;
+
+
+-->

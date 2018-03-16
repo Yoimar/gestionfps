@@ -20,7 +20,7 @@ class Locateasset extends AssetBundle
     public $css = [
     ];
     public $js = [
-      'js/locate.js',
+      'js/Locate.js',
       'js/geoPosition.js',
       //'http://maps.google.com/maps/api/js?sensor=false',
       'https://maps.googleapis.com/maps/api/js?key=AIzaSyBzyQHuP5O9RW7Ep87OPJqC2RqtzxpAPXo&callback=initMap'

@@ -55,7 +55,7 @@ class Centroclasificacion extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nombre' => 'Nombre',
-            'centro_id' => 'Centro ID',
+            'centro_id' => 'Centro',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',

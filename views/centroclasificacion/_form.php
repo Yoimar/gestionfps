@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use kartik\select2\Select2;
+use app\models\Centro;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Centroclasificacion */
@@ -14,7 +17,18 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'centro_id')->textInput() ?>
+    <?=
+
+    $form->field($model, 'centro_id')->widget(Select2::classname(), [
+    'data' => ArrayHelper::map(Centro::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+    'language' => 'es',
+    'options' => ['placeholder' => 'Seleccione el Centro'],
+    'pluginOptions' => [
+    'allowClear' => true
+    ],
+    ]);
+
+    ?>
 
     <?= $form->field($model, 'created_at')->textInput() ?>
 
@@ -25,7 +39,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'updated_by')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

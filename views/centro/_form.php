@@ -2,6 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use kartik\select2\Select2;
+use app\models\Centrotipo;
+
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Centro */
@@ -14,7 +18,16 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'centro_tipo_id')->textInput() ?>
+    <?= $form->field($model, 'centro_tipo_id')->widget(Select2::classname(), [
+    'data' => ArrayHelper::map(Centrotipo::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+    'language' => 'es',
+    'options' => ['placeholder' => 'Seleccione el Origen'],
+    'pluginOptions' => [
+    'allowClear' => true
+    ],
+    ]);
+
+    ?>
 
     <?= $form->field($model, 'created_at')->textInput() ?>
 

@@ -35,8 +35,9 @@ class Lugar extends \yii\db\ActiveRecord
      */
     public $lat;
     public $lng;
-    
-    
+    public $estado_id;
+    public $municipio_id;
+
     public static function tableName()
     {
         return 'lugar';
@@ -50,7 +51,7 @@ class Lugar extends \yii\db\ActiveRecord
         return [
             [['nombre', 'centro_clasificacion_id', 'google_place_gps', 'parroquia_id'], 'required'],
             [['centro_clasificacion_id', 'parroquia_id', 'created_by', 'updated_by'], 'default', 'value' => null],
-            [['centro_clasificacion_id', 'parroquia_id', 'created_by', 'updated_by'], 'integer'],
+            [['centro_clasificacion_id', 'parroquia_id', 'estado_id', 'municipio_id', 'created_by', 'updated_by'], 'integer'],
             [['google_place_gps', 'nombre_slug', 'notas'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
             [['nombre'], 'string', 'max' => 200],
@@ -75,11 +76,13 @@ class Lugar extends \yii\db\ActiveRecord
             'centro_clasificacion_id' => 'Centro Clasificacion ID',
             'google_place_gps' => 'Google Place Gps',
             'nombre_slug' => 'Nombre Slug',
-            'parroquia_id' => 'Parroquia ID',
+            'parroquia_id' => 'Parroquia',
             'direccion' => 'Direccion',
             'telefono1' => 'Telefono1',
             'telefono2' => 'Telefono2',
             'telefono3' => 'Telefono3',
+            'estado_id'=> 'Estado',
+            'municipio_id'=> 'Municipio',
             'notas' => 'Notas',
             'created_at' => 'Created At',
             'created_by' => 'Created By',

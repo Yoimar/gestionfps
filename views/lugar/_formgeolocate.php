@@ -1,8 +1,16 @@
 <?php
 
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use app\models\Estados;
+use app\models\Municipios;
+use app\models\Parroquias;
+use app\models\Centroclasificacion;
+use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use kartik\form\ActiveForm;
+use kartik\select2\Select2;
+use kartik\depdrop\DepDrop;
 
 use app\assets\Locateasset;
 Locateasset::register($this);
@@ -14,7 +22,7 @@ Locateasset::register($this);
 
 <div class="lugar-form">
     <!-- Inicio de la Columna 1 -->
-    
+
     <div class="row">
     <div class="col-md-6" >
 
@@ -22,13 +30,62 @@ Locateasset::register($this);
 
     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'centro_clasificacion_id')->textInput() ?>
+    <?=
+    /* Centro Clasificacion Select2 de kartik*/
+    $form->field($model, 'centro_clasificacion_id')->widget(Select2::classname(), [
+    'data' => ArrayHelper::map(Centroclasificacion::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+    'language' => 'es',
+    'options' => ['placeholder' => 'Seleccione el Tipo de Centro'],
+    'pluginOptions' => [
+    'allowClear' => true
+    ],
+    ]);
 
-    <?= $form->field($model, 'google_place_gps')->textInput() ?>
+    ?>
+
+    <?= $form->field($model, 'google_place_gps')->textInput((['placeholder' => 'Coordenada', 'disabled' => 'disabled'])) ?>
 
     <?= $form->field($model, 'nombre_slug')->textInput() ?>
 
-    <?= $form->field($model, 'parroquia_id')->textInput() ?>
+    <?=
+    /* Estado con Select2 de kartik*/
+        $form->field($model, 'estado_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(Estados::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione el Estado'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+    ?>
+
+    <?=
+    /* Municipio con depdrop de kartik*/
+    $form->field($model, 'municipio_id')->widget(DepDrop::classname(), [
+    'type'=>DepDrop::TYPE_SELECT2,
+    'options'=>['id'=>'municipio_id', 'placeholder'=>'Seleccione el Municipio'],
+    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+    'pluginOptions'=>[
+        'placeholder' => 'Seleccione el Municipio',
+        'depends'=>["lugar-estado_id"],
+        'url'=>Url::to(['/parroquias/estadan']),
+    ]
+    ]);
+    ?>
+
+    <?=
+    /* Parroquia con depdrop de kartik*/
+    $form->field($model, 'parroquia_id')->widget(DepDrop::classname(), [
+    'type'=>DepDrop::TYPE_SELECT2,
+    'options'=>['id'=>'parroquia_id', 'placeholder'=>'Seleccione la Parroquia'],
+    'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+    'pluginOptions'=>[
+        'placeholder' => 'Seleccione la parroquia',
+        'depends'=>['municipio_id'],
+        'url'=>Url::to(['/parroquias/municipan']),
+    ]
+    ]);
+    ?>
 
     <?= $form->field($model, 'direccion')->textInput(['maxlength' => true]) ?>
 
@@ -47,40 +104,42 @@ Locateasset::register($this);
     <?= $form->field($model, 'updated_at')->textInput() ?>
 
     <?= $form->field($model, 'updated_by')->textInput() ?>
-        
+
     <?= BaseHtml::activeHiddenInput($model, 'lat'); ?>
-    <?= BaseHtml::activeHiddenInput($model, 'lng'); ?>    
-    
+    <?= BaseHtml::activeHiddenInput($model, 'lng'); ?>
+
     <!-- Fin de la Columna 1 -->
     </div>
-    
+
     <!-- Inicio de la Columna 2 -->
     <div class="col-md-6">
     <div id="preSearch" class="center">
     <p>
         <br />
-    </p>    
-    <?= Html::a('Lookup Location', 
-            ['lookup'], 
-            ['class' => 'btn btn-success', 
-            'onclick' => "javascript:beginSearch();return false;"]) ?> 
+    </p>
+    <center>
+            <?= Html::a('Buscar Localizacion',
+            ['lookup'],
+            ['class' => 'btn btn-primary',
+            'onclick' => "javascript:beginSearch();return false;"]) ?>
+    </center>
     </div>
- 
+
     <div id="searchArea" class="hidden">
     <div id="autolocateAlert">
     </div> <!-- end autolocateAlert -->
-    <p>Buscando la informacion sobre su posición actual<span id="status"></span></p>    
+    <p>Buscando... <span id="status"></span></p>
     <article>
     </article>
-    <div class="form-actions hidden" id="actionBar">      
-    
+    <div class="form-actions hidden" id="actionBar">
+
     </div> <!-- end action Bar-->
     </div>   <!-- end searchArea -->
-  
-  
+
+
     <!-- Fin de la Columna2 -->
     </div>
-    
+
     </div>
 
     <div class="form-group">

@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Lugar */
 
-$this->title = 'Create Lugar';
-$this->params['breadcrumbs'][] = ['label' => 'Lugars', 'url' => ['index']];
+$this->title = 'Crear Lugar';
+$this->params['breadcrumbs'][] = ['label' => 'Lugares', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="lugar-create">

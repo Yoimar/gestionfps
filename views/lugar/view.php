@@ -9,7 +9,7 @@ use dosamigos\google\maps\overlays\Marker;
 /* @var $this yii\web\View */
 /* @var $model app\models\Lugar */
 
-$this->title = $model->nombre_slug;
+$this->title = $model->nombre;
 $this->params['breadcrumbs'][] = ['label' => 'Lugares', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
       $map = new Map([
         'center' => $coord,
         'zoom' => 16,
-        'width'=>400,
+        'width'=>500,
         'height'=>400,
     ]);
       $marker = new Marker([

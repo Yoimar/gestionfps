@@ -109,6 +109,7 @@ AppAsset::register($this);
                      ['label' => 'Centro', 'url' => '@web/centro/index'],
                      ['label' => 'Clasificación de los Centros', 'url' => '@web/centroclasificacion/index'],
                      ['label' => 'Registro de Lugares Hospitales Farmacias', 'url' => '@web/lugar/index'],
+                     ['label' => 'Reporte de Centros', 'url' => '@web/lugar/createreportes'],
                 ],
                 'linkOptions' => ['style' => 'color: #FFFFFF;']
                 ] ): (""),

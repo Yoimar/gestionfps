@@ -159,7 +159,16 @@ class LugarController extends Controller
                     return $this->render('graficobarras');
                     break;
                 case 2:
-                    return $this->render('maphc');
+                    $data = Lugar::find()
+                    ->select([
+                        "nombre as name",
+                        "lat",
+                        "lng as lon",
+                        ])
+                    ->asArray()->all();
+                    return $this->render('maphc', [
+                        'data' => $data,
+                    ]);
                     break;
                 case 3:
                     return $this->render('mapam');

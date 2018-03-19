@@ -8,43 +8,53 @@ use yii\web\JsExpression;
 $this->registerJsFile('https://code.highcharts.com/mapdata/countries/ve/ve-all.js', [
     'depends' => 'miloschuman\highcharts\HighchartsAsset'
 ]);
-
+?>
+<center>
+<?php
 echo Highmaps::widget([
     'options' => [
+        'chart' => [
+            'map' => 'countries/ve/ve-all',
+            'width' => 1000,
+            'height' => 500
+        ],
         'title' => [
-            'text' => 'Highmaps basic demo',
+            'text' => 'Reporte de Hospitales',
         ],
         'mapNavigation' => [
             'enabled' => true,
-            'buttonOptions' => [
-                'verticalAlign' => 'bottom',
-            ]
         ],
-        'colorAxis' => [
-            'min' => 0,
+        'tooltip' => [
+            'headerFormat' => 'Lugar: ',
+            'pointFormat' => '<b>{point.name}</b><br>Lat: {point.lat}, Lon: {point.lon}',
         ],
         'series' => [
             [
-                'data' => [
-                    ['hc-key' => 've-dp', 'value' => 10],
-                    ['hc-key' => 've-ne', 'value' => 1],
-                    ['hc-key' => 've-su', 'value' => 2],
+                // Use the gb-all map with no data as a basemap
+                'name' => 'Basemap',
+                'borderColor' => '#A0A0A0',
+                'nullColor' => 'rgba(200, 200, 200, 0.3)',
+                'showInLegend' => false
                 ],
-                'mapData' => new JsExpression('Highcharts.maps["countries/ve/ve-all"]'),
-                'joinBy' => 'hc-key',
-                'name' => 'Random data',
-                'states' => [
-                    'hover' => [
-                        'color' => '#BADA55',
-                    ]
-                ],
-                'dataLabels' => [
-                    'enabled' => true,
-                    'format' => '{point.name}',
-                ]
+            [
+                'name' => 'Separators',
+                'type' => 'mapline',
+                'nullColor' => '#707070',
+                'showInLegend' => false,
+                'enableMouseTracking' => false
+            ],
+            [
+                // Specify points using lat/lon
+                'type' => 'mappoint',
+                'name' => 'Lugares',
+                'color' => '#000000',
+                'data' => $data,
             ]
         ]
     ]
 ]);
 
 ?>
+</center>
+<!--OJO TRATAR DE DESCARGAR ESTO POR UN ASSET PARA QUE NO HAGA LA PETICIÓN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.6/proj4.js"></script>

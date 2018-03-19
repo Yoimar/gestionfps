@@ -66,7 +66,7 @@ class Lugar extends \yii\db\ActiveRecord
             [['direccion'], 'string', 'max' => 500],
             [['telefono1', 'telefono2', 'telefono3'], 'string', 'max' => 12],
             [['nombre_slug'], 'unique'],
-            [['centro_clasificacion_id'], 'exist', 'skipOnError' => true, 'targetClass' => CentroClasificacion::className(), 'targetAttribute' => ['centro_clasificacion_id' => 'id']],
+            [['centro_clasificacion_id'], 'exist', 'skipOnError' => true, 'targetClass' => Centroclasificacion::className(), 'targetAttribute' => ['centro_clasificacion_id' => 'id']],
             [['parroquia_id'], 'exist', 'skipOnError' => true, 'targetClass' => Parroquias::className(), 'targetAttribute' => ['parroquia_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
@@ -104,7 +104,7 @@ class Lugar extends \yii\db\ActiveRecord
      */
     public function getCentroclasificacion()
     {
-        return $this->hasOne(CentroClasificacion::className(), ['id' => 'centro_clasificacion_id']);
+        return $this->hasOne(Centroclasificacion::className(), ['id' => 'centro_clasificacion_id']);
     }
 
     /**

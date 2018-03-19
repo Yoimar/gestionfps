@@ -13,9 +13,6 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
-        'options' => [
-            'data-pjax' => 1
-        ],
     ]); ?>
 
     <?= $form->field($model, 'id') ?>
@@ -24,9 +21,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'centro_clasificacion_id') ?>
 
-    <?= $form->field($model, 'google_place_gps') ?>
+    <?= $form->field($model, 'lat') ?>
 
-    <?= $form->field($model, 'nombre_slug') ?>
+    <?= $form->field($model, 'lng') ?>
+
+    <?php // echo $form->field($model, 'nombre_slug') ?>
 
     <?php // echo $form->field($model, 'parroquia_id') ?>
 

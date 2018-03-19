@@ -2,11 +2,14 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use dosamigos\google\maps\Map;
+use dosamigos\google\maps\LatLng;
+use dosamigos\google\maps\overlays\Marker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Lugar */
 
-$this->title = $model->nombre;
+$this->title = $model->nombre_slug;
 $this->params['breadcrumbs'][] = ['label' => 'Lugares', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -19,70 +22,57 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Eliminar', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Está seguro de que desea borrar este item?',
                 'method' => 'post',
             ],
         ]) ?>
     </p>
-
-    <div class="col-md-6">
-
-
-
+<div class="col-md-6">
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
             'nombre',
-            'centro_clasificacion_id',
-            'google_place_gps',
-            'nombre_slug',
-            'parroquia_id',
+            [
+            'attribute' => 'centroclasificacion.nombre',
+            'value' => $model->centroclasificacion->nombre,
+            'format' => 'text',
+            ],
+            //'centroclasificacion.nombre',
+            'parroquia.nombre',
             'direccion',
             'telefono1',
             'telefono2',
             'telefono3',
             'notas:ntext',
-            'created_at',
-            'created_by',
-            'updated_at',
-            'updated_by',
         ],
     ]) ?>
 
-    </div>
+</div>
 
-    <div class="col-md-6">
-
+<div class="col-md-6">
 <?php
-    if ($gps!==false)
-    {
-        $coord = new LatLng([
-            'lat' => $gps->lat,
-            'lng' => $gps->lng
-        ]);
-        $map = new Map([
-            'center' => $coord,
-            'zoom' => 14,
-            'width'=>300,
-            'height'=>300,
-        ]);
-        $marker = new Marker([
-            'position' => $coord,
-            'title' => $model->name,
-        ]);
-        // Add marker to the map
-        $map->addOverlay($marker);
-        echo $map->display();
-    }
-    else
-    {
-        echo 'No location coordinates for this place could be found.';
-    }
+  if ($model->lat!==false) {
+      $coord = new LatLng(['lat' => $model->lat, 'lng' => $model->lng]);
+      $map = new Map([
+        'center' => $coord,
+        'zoom' => 16,
+        'width'=>400,
+        'height'=>400,
+    ]);
+      $marker = new Marker([
+        'position' => $coord,
+        'title' => $model->nombre,
+    ]);
+      // Add marker to the map
+      $map->addOverlay($marker);
+      echo $map->display();
+  } else {
+      echo 'No location coordinates for this place could be found.';
+  }
 ?>
 
+</div> <!-- end second col -->
 
-    </div>
-
-
+<!-- Fin del div class lugar-view-->
 </div>

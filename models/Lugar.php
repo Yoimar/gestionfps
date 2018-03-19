@@ -2,6 +2,11 @@
 
 namespace app\models;
 
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+
 use Yii;
 
 /**
@@ -10,7 +15,8 @@ use Yii;
  * @property int $id
  * @property string $nombre
  * @property int $centro_clasificacion_id
- * @property string $google_place_gps
+ * @property double $lat
+ * @property double $lng
  * @property string $nombre_slug
  * @property int $parroquia_id
  * @property string $direccion
@@ -30,14 +36,15 @@ use Yii;
  */
 class Lugar extends \yii\db\ActiveRecord
 {
+    public $estado_id;
+    public $municipio_id;
+    public $searchbox;
+    public $centro;
+    public $centro_tipo;
+    public $tipo_reporte;
     /**
      * @inheritdoc
      */
-    public $lat;
-    public $lng;
-    public $estado_id;
-    public $municipio_id;
-
     public static function tableName()
     {
         return 'lugar';
@@ -49,16 +56,17 @@ class Lugar extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombre', 'centro_clasificacion_id', 'google_place_gps', 'parroquia_id'], 'required'],
+            [['nombre', 'centro_clasificacion_id', 'lat', 'lng', 'parroquia_id'], 'required'],
             [['centro_clasificacion_id', 'parroquia_id', 'created_by', 'updated_by'], 'default', 'value' => null],
-            [['centro_clasificacion_id', 'parroquia_id', 'estado_id', 'municipio_id', 'created_by', 'updated_by'], 'integer'],
-            [['google_place_gps', 'nombre_slug', 'notas'], 'string'],
+            [['centro_clasificacion_id', 'parroquia_id', 'created_by', 'updated_by', 'tipo_reporte', 'centro', 'centro_tipo', 'estado_id', 'municipio_id' ], 'integer'],
+            [['lat', 'lng'], 'number'],
+            [['nombre_slug', 'notas'], 'string'],
             [['created_at', 'updated_at'], 'safe'],
             [['nombre'], 'string', 'max' => 200],
             [['direccion'], 'string', 'max' => 500],
             [['telefono1', 'telefono2', 'telefono3'], 'string', 'max' => 12],
             [['nombre_slug'], 'unique'],
-            [['centro_clasificacion_id'], 'exist', 'skipOnError' => true, 'targetClass' => Centroclasificacion::className(), 'targetAttribute' => ['centro_clasificacion_id' => 'id']],
+            [['centro_clasificacion_id'], 'exist', 'skipOnError' => true, 'targetClass' => CentroClasificacion::className(), 'targetAttribute' => ['centro_clasificacion_id' => 'id']],
             [['parroquia_id'], 'exist', 'skipOnError' => true, 'targetClass' => Parroquias::className(), 'targetAttribute' => ['parroquia_id' => 'id']],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
             [['updated_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['updated_by' => 'id']],
@@ -73,16 +81,16 @@ class Lugar extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nombre' => 'Nombre',
-            'centro_clasificacion_id' => 'Centro Clasificacion ID',
-            'google_place_gps' => 'Google Place Gps',
-            'nombre_slug' => 'Nombre Slug',
+            'centro_clasificacion_id' => 'Clasificacion del Centro',
+            'lat' => 'Lat',
+            'lng' => 'Lng',
+            'tipo_reporte' => 'Tipo de Reporte',
+            'nombre_slug' => 'Nombre',
             'parroquia_id' => 'Parroquia',
             'direccion' => 'Direccion',
             'telefono1' => 'Telefono1',
             'telefono2' => 'Telefono2',
             'telefono3' => 'Telefono3',
-            'estado_id'=> 'Estado',
-            'municipio_id'=> 'Municipio',
             'notas' => 'Notas',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
@@ -94,7 +102,7 @@ class Lugar extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCentroClasificacion()
+    public function getCentroclasificacion()
     {
         return $this->hasOne(CentroClasificacion::className(), ['id' => 'centro_clasificacion_id']);
     }
@@ -122,4 +130,29 @@ class Lugar extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'updated_by']);
     }
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
+                ],
+                'value' => Yii::$app->formatter->asDate('now','php:m-d-Y H:i:s'),
+            ],
+            'blameable' => [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'updated_by',
+            ],
+            [
+            'class' => SluggableBehavior::className(),
+            'attribute' => 'nombre',
+            'slugAttribute' => 'nombre_slug',
+            ],
+        ];
+    }
+
 }

@@ -43,9 +43,9 @@ Locateasset::register($this);
 
     ?>
 
-    <?= $form->field($model, 'google_place_gps')->textInput((['placeholder' => 'Coordenada', 'disabled' => 'disabled'])) ?>
+    <?= $form->field($model, 'lat')->textInput((['placeholder' => 'Coordenada', 'readonly' => true])) ?>
 
-    <?= $form->field($model, 'nombre_slug')->textInput() ?>
+    <?= $form->field($model, 'lng')->textInput((['placeholder' => 'Coordenada', 'readonly' => true])) ?>
 
     <?=
     /* Estado con Select2 de kartik*/
@@ -105,9 +105,6 @@ Locateasset::register($this);
 
     <?= $form->field($model, 'updated_by')->textInput() ?>
 
-    <?= BaseHtml::activeHiddenInput($model, 'lat'); ?>
-    <?= BaseHtml::activeHiddenInput($model, 'lng'); ?>
-
     <!-- Fin de la Columna 1 -->
     </div>
 
@@ -119,7 +116,7 @@ Locateasset::register($this);
     </p>
     <center>
             <?= Html::a('Buscar Localizacion',
-            ['lookup'],
+            ['mostrar'],
             ['class' => 'btn btn-primary',
             'onclick' => "javascript:beginSearch();return false;"]) ?>
     </center>

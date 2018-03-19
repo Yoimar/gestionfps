@@ -51,14 +51,27 @@ $config = [
         ],
         'db' => require(__DIR__ . '/db.php'),
         'dbsigesp' => require(__DIR__ . '/dbsigesp.php'),
-        
+        // Configuracion de Places dos amigos
+        'places' => [
+            'class' => '\dosamigos\google\places\Places',
+            'key' => 'AIzaSyBzyQHuP5O9RW7Ep87OPJqC2RqtzxpAPXo',
+            'format' => 'json' // or 'xml'
+        ],
+        'placesSearch' => [
+            'class' => '\dosamigos\google\places\Search',
+            'key' => 'AIzaSyBzyQHuP5O9RW7Ep87OPJqC2RqtzxpAPXo',
+            'format' => 'json' // or 'xml'
+        ],
+
+        // Configuraciónd de Google Maps Dos Amigos
         'assetManager' => [
             'bundles' => [
                 'dosamigos\google\maps\MapAsset' => [
                     'options' => [
                         'key' => 'AIzaSyBzyQHuP5O9RW7Ep87OPJqC2RqtzxpAPXo',
-                        'language' => 'id',
+                        'language' => 'es',
                         'version' => '3.1.18'
+                        //'sensor'=> 'false'
                     ]
                 ]
             ]

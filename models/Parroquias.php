@@ -85,7 +85,7 @@ class Parroquias extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Programaevento::className(), ['parroquia_id' => 'id']);
     }
-    
+
     public function behaviors()
     {
         return [
@@ -100,20 +100,20 @@ class Parroquias extends \yii\db\ActiveRecord
 
         ];
     }
-    
+
     public static function getEstadon($estado_id) {
         $data=\app\models\Municipios::find()
        ->where(['estado_id'=>$estado_id])
        ->select(['id','nombre as name'])->asArray()->all();
 
             return $data;
-        }
-        
+    }
+
     public static function getMunicipon($municipio_id) {
         $data=  \app\models\Parroquias::find()
        ->where(['municipio_id'=>$municipio_id])
        ->select(['id','nombre as name'])->asArray()->all();
 
             return $data;
-        }
+    }
 }

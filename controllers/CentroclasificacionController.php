@@ -8,6 +8,8 @@ use app\models\CentroclasificacionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
+use yii\helpers\Json;
 
 /**
  * CentroclasificacionController implements the CRUD actions for Centroclasificacion model.
@@ -124,4 +126,39 @@ class CentroclasificacionController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function actionCentrotipan() {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+
+        if ($parents != null) {
+        $centro_tipo = $parents[0];
+
+        $out = \app\models\Centroclasificacion::getCentrotipon($centro_tipo);
+
+        echo Json::encode(['output'=>$out, 'selected'=>'']);
+            return;
+        }
+    }
+    echo Json::encode(['output'=>'', 'selected'=>'']);
+    }
+
+    public function actionCentran() {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+
+        if ($parents != null) {
+        $centro = $parents[0];
+
+        $out = \app\models\Centroclasificacion::getCentron($centro);
+
+        echo Json::encode(['output'=>$out, 'selected'=>'']);
+            return;
+        }
+    }
+    echo Json::encode(['output'=>'', 'selected'=>'']);
+    }
+
 }

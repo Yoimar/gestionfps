@@ -94,4 +94,21 @@ class Centroclasificacion extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Lugar::className(), ['centro_clasificacion_id' => 'id']);
     }
+
+    public static function getCentrotipon($centro_tipo) {
+        $data=  \app\models\Centro::find()
+       ->where(['centro_tipo_id'=>$centro_tipo])
+       ->select(['id','nombre as name'])->asArray()->all();
+
+        return $data;
+    }
+
+    public static function getCentron($centro) {
+        $data=\app\models\Centroclasificacion::find()
+       ->where(['centro_id'=>$centro])
+       ->select(['id','nombre as name'])->asArray()->all();
+
+        return $data;
+    }
+
 }

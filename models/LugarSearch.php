@@ -19,7 +19,8 @@ class LugarSearch extends Lugar
     {
         return [
             [['id', 'centro_clasificacion_id', 'parroquia_id', 'created_by', 'updated_by'], 'integer'],
-            [['nombre', 'google_place_gps', 'nombre_slug', 'direccion', 'telefono1', 'telefono2', 'telefono3', 'notas', 'created_at', 'updated_at'], 'safe'],
+            [['nombre', 'nombre_slug', 'direccion', 'telefono1', 'telefono2', 'telefono3', 'notas', 'created_at', 'updated_at'], 'safe'],
+            [['lat', 'lng'], 'number'],
         ];
     }
 
@@ -61,6 +62,8 @@ class LugarSearch extends Lugar
         $query->andFilterWhere([
             'id' => $this->id,
             'centro_clasificacion_id' => $this->centro_clasificacion_id,
+            'lat' => $this->lat,
+            'lng' => $this->lng,
             'parroquia_id' => $this->parroquia_id,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
@@ -69,7 +72,6 @@ class LugarSearch extends Lugar
         ]);
 
         $query->andFilterWhere(['ilike', 'nombre', $this->nombre])
-            ->andFilterWhere(['ilike', 'google_place_gps', $this->google_place_gps])
             ->andFilterWhere(['ilike', 'nombre_slug', $this->nombre_slug])
             ->andFilterWhere(['ilike', 'direccion', $this->direccion])
             ->andFilterWhere(['ilike', 'telefono1', $this->telefono1])

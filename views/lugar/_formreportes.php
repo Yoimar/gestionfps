@@ -130,7 +130,8 @@ use kartik\depdrop\DepDrop;
         'data' => ArrayHelper::map([
             ['id' => '1', 'nombre' => 'Gráfico de Barras'],
             ['id' => '2', 'nombre' => 'Mapa Tipo 1 HC'],
-            ['id' => '3', 'nombre' => 'Mapa Tipo 2 AM']], 'id', 'nombre'),
+            ['id' => '3', 'nombre' => 'Mapa Tipo 2 AM'],
+            ['id' => '4', 'nombre' => 'Mapa Tipo 3 GoogleMaps']], 'id', 'nombre'),
         'language' => 'es',
         'options' => ['placeholder' => 'Seleccion el Tipo de Reporte'],
         'pluginOptions' => [

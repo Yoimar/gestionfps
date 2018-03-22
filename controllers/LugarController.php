@@ -173,6 +173,9 @@ class LugarController extends Controller
                 case 3:
                     return $this->render('mapam');
                     break;
+                case 4:
+                    return $this->render('mapgm');
+                    break;
                 default:
                     # code...
                     break;

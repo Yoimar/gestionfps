@@ -26,5 +26,9 @@ phpunit.phar
 # local phpunit config
 /phpunit.xml
 
+# configuracion de los servidores
+/config/db.php
+/config/dbsigesp.php
+
 tests/_output/*
 tests/_support/_generated

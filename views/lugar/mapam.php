@@ -1,30 +1,30 @@
 <?php
+use yii\helpers\ArrayHelper;
 
+foreach ($data as $elindice => $elarray) {
+
+    foreach ($elarray as $key => $value) {
+        $elarray['zoomLevel'] = 20;
+        $elarray['width'] = 15;
+        $elarray['height'] = 15;
+        $elarray['imageURL'] = "https://www.amcharts.com/images/weather/weather-rain.png";
+    }
+    $ammapdata[$elindice]=$elarray;
+}
 
 $chartConfiguration = [
     'type' => "map",
     'theme' => "light",
     'dataProvider' => [
         "map" => "venezuelaHigh",
-        "zoomLevel" => 2,
+        "zoomLevel" => 1,
         "zoomLongitude" => -66,
-        "zoomLatitude" => 10,
-        "images" => [
-            [
-                'latitude' => 10.516326,
-                'longitude' => -66.9549314,
-                'imageURL' => "https://www.amcharts.com/images/weather/weather-rain.png",
-                'width' => 32,
-                'height' => 32,
-                'label' => "Madrid: +22C"
-            ],
-        //Fin del Images
-        ]
-        // Fin del Chart del data Chart
+        "zoomLatitude" => 6.5,
+        "images" => $ammapdata,
     ],
 
     'imagesSettings' => [
-        'labelRollOverColor' => "#000",
+        'labelRollOverColor' => "#FFFFFF",
         'labelPosition' => "bottom"
     ],
 

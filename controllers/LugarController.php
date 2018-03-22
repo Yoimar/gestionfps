@@ -171,7 +171,16 @@ class LugarController extends Controller
                     ]);
                     break;
                 case 3:
-                    return $this->render('mapam');
+                    $data = Lugar::find()
+                    ->select([
+                        "nombre as title",
+                        "lat as latitude",
+                        "lng as longitude",
+                        ])
+                    ->asArray()->all();
+                    return $this->render('mapam', [
+                        'data' => $data,
+                    ]);
                     break;
                 case 4:
                     return $this->render('mapgm');

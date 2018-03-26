@@ -154,6 +154,8 @@ class LugarController extends Controller
         $model = new Lugar();
 
         if ($model->load(Yii::$app->request->post())) {
+
+
             switch ($model->tipo_reporte) {
                 case 1:
                     return $this->render('graficobarras');
@@ -161,10 +163,33 @@ class LugarController extends Controller
                 case 2:
                     $data = Lugar::find()
                     ->select([
-                        "nombre as name",
-                        "lat",
-                        "lng as lon",
+                        "lugar.nombre as name",
+                        "lugar.lat",
+                        "lugar.lng as lon",
                         ])
+
+                    /* Unir con las tablas Auxiliares */
+
+                    ->join('LEFT JOIN', 'centro_clasificacion',
+                    'centro_clasificacion.id = lugar.centro_clasificacion_id')
+                    ->join('LEFT JOIN', 'centro',
+                    'centro.id = centro_clasificacion.centro_id')
+                    ->join('LEFT JOIN', 'centro_tipo',
+                    'centro_tipo.id = centro.centro_tipo_id')
+                    ->join('LEFT JOIN', 'parroquias', 'lugar.parroquia_id = parroquias.id')
+                    ->join('LEFT JOIN', 'municipios', 'parroquias.municipio_id = municipios.id')
+                    ->join('LEFT JOIN', 'estados', 'municipios.estado_id = estados.id')
+
+                    /* Filtro para los Reportes */
+
+                    ->andFilterWhere([
+                        'centro.centro_tipo_id' => $model->centro_tipo,
+                        'centro_clasificacion.centro_id' => $model->centro,
+                        'lugar.centro_clasificacion_id' => $model->centro_clasificacion_id,
+                        'lugar.parroquia_id' => $model->parroquia_id,
+                        'parroquias.municipio_id' => $model->municipio_id,
+                        'municipios.estado_id' => $model->estado_id,
+                    ])
                     ->asArray()->all();
                     return $this->render('maphc', [
                         'data' => $data,
@@ -173,10 +198,34 @@ class LugarController extends Controller
                 case 3:
                     $data = Lugar::find()
                     ->select([
-                        "nombre as title",
-                        "lat as latitude",
-                        "lng as longitude",
+                        "lugar.nombre as title",
+                        "lugar.lat as latitude",
+                        "lugar.lng as longitude",
                         ])
+
+                    /* Unir con las tablas Auxiliares */
+
+                    ->join('LEFT JOIN', 'centro_clasificacion',
+                    'centro_clasificacion.id = lugar.centro_clasificacion_id')
+                    ->join('LEFT JOIN', 'centro',
+                    'centro.id = centro_clasificacion.centro_id')
+                    ->join('LEFT JOIN', 'centro_tipo',
+                    'centro_tipo.id = centro.centro_tipo_id')
+                    ->join('LEFT JOIN', 'parroquias', 'lugar.parroquia_id = parroquias.id')
+                    ->join('LEFT JOIN', 'municipios', 'parroquias.municipio_id = municipios.id')
+                    ->join('LEFT JOIN', 'estados', 'municipios.estado_id = estados.id')
+
+                    /* Filtro para los Reportes */
+
+                    ->andFilterWhere([
+                        'centro.centro_tipo_id' => $model->centro_tipo,
+                        'centro_clasificacion.centro_id' => $model->centro,
+                        'lugar.centro_clasificacion_id' => $model->centro_clasificacion_id,
+                        'lugar.parroquia_id' => $model->parroquia_id,
+                        'parroquias.municipio_id' => $model->municipio_id,
+                        'municipios.estado_id' => $model->estado_id,
+                    ])
+
                     ->asArray()->all();
                     return $this->render('mapam', [
                         'data' => $data,
@@ -185,10 +234,32 @@ class LugarController extends Controller
                 case 4:
                     $data = Lugar::find()
                     ->select([
-                        "nombre",
-                        "lat",
-                        "lng",
+                        "lugar.nombre",
+                        "lugar.lat",
+                        "lugar.lng",
                         ])
+                    /* Unir con las tablas Auxiliares */
+
+                    ->join('LEFT JOIN', 'centro_clasificacion',
+                    'centro_clasificacion.id = lugar.centro_clasificacion_id')
+                    ->join('LEFT JOIN', 'centro',
+                    'centro.id = centro_clasificacion.centro_id')
+                    ->join('LEFT JOIN', 'centro_tipo',
+                    'centro_tipo.id = centro.centro_tipo_id')
+                    ->join('LEFT JOIN', 'parroquias', 'lugar.parroquia_id = parroquias.id')
+                    ->join('LEFT JOIN', 'municipios', 'parroquias.municipio_id = municipios.id')
+                    ->join('LEFT JOIN', 'estados', 'municipios.estado_id = estados.id')
+
+                    /* Filtro para los Reportes */
+
+                    ->andFilterWhere([
+                        'centro.centro_tipo_id' => $model->centro_tipo,
+                        'centro_clasificacion.centro_id' => $model->centro,
+                        'lugar.centro_clasificacion_id' => $model->centro_clasificacion_id,
+                        'lugar.parroquia_id' => $model->parroquia_id,
+                        'parroquias.municipio_id' => $model->municipio_id,
+                        'municipios.estado_id' => $model->estado_id,
+                    ])
                     ->asArray()->all();
                     return $this->render('mapgm', [
                         'data' => $data,

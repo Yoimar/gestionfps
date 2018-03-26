@@ -9,7 +9,7 @@ $coordenadacentral = new LatLng([
 ]);
 $map = new Map([
     'center' => $coordenadacentral,
-    'zoom' => 10,
+    'zoom' => 7,
     'width'=>1000,
     'height'=>400,
 ]);

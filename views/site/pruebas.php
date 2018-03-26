@@ -24,7 +24,9 @@ $aliasvendor = Yii::getAlias('@vendor');
 $aliasbower = Yii::getAlias('@bower');
 $aliasnpm = Yii::getAlias('@npm');
 $path = Yii::getAlias('@app').'\web\img\adjuntos';
+$prueba1 = Yii::getAlias('@web').'/img/MarkerMapHospital.png';
 
+echo "<br>".$prueba1."<br>";
 
             //$path =  Yii::getAlias('@app')."/nombre" ;
             $prueba = Url::home();

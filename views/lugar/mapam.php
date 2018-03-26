@@ -4,10 +4,10 @@ use yii\helpers\ArrayHelper;
 foreach ($data as $elindice => $elarray) {
 
     foreach ($elarray as $key => $value) {
-        $elarray['zoomLevel'] = 20;
-        $elarray['width'] = 15;
-        $elarray['height'] = 15;
-        $elarray['imageURL'] = "https://www.amcharts.com/images/weather/weather-rain.png";
+        $elarray['zoomLevel'] = 30;
+        $elarray['width'] = 30;
+        $elarray['height'] = 30;
+        $elarray['imageURL'] = Yii::getAlias('@web').'/img/MarkerMapHospital2.png';
     }
     $ammapdata[$elindice]=$elarray;
 }

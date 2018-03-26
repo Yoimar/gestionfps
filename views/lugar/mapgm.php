@@ -3,22 +3,39 @@ use dosamigos\google\maps\Map;
 use dosamigos\google\maps\LatLng;
 use dosamigos\google\maps\overlays\Marker;
 
-    $coord = new LatLng([
-        'lat' => $model->lat,
-        'lng' => $model->lng
-    ]);
-    $map = new Map([
-        'center' => $coord,
-        'zoom' => 16,
-        'width'=>500,
-        'height'=>400,
-    ]);
-    $marker = new Marker([
-        'position' => $coord,
-        'title' => $model->nombre,
-    ]);
-    // Add marker to the map
-    $map->addOverlay($marker);
+$coordenadacentral = new LatLng([
+    'lat' => $data['0']['lat'],
+    'lng' => $data['0']['lng']
+]);
+$map = new Map([
+    'center' => $coordenadacentral,
+    'zoom' => 10,
+    'width'=>1000,
+    'height'=>400,
+]);
+
+foreach ($data as $elindice => $elarray) {
+
+    foreach ($elarray as $key => $value) {
+
+        $coord[$elindice] = new LatLng([
+            'lat' => $elarray['lat'],
+            'lng' => $elarray['lng']
+        ]);
+        $marker[$elindice] = new Marker([
+            'position' => $coord[$elindice],
+            'title' => $elarray['nombre'],
+        ]);
+        // Add marker to the map
+        $map->addOverlay($marker[$elindice]);
+
+
+    }
+
+}
+
+
     echo $map->display();
+
 
 ?>

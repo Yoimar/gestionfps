@@ -183,7 +183,16 @@ class LugarController extends Controller
                     ]);
                     break;
                 case 4:
-                    return $this->render('mapgm');
+                    $data = Lugar::find()
+                    ->select([
+                        "nombre",
+                        "lat",
+                        "lng",
+                        ])
+                    ->asArray()->all();
+                    return $this->render('mapgm', [
+                        'data' => $data,
+                    ]);
                     break;
                 default:
                     # code...

@@ -33,12 +33,20 @@ $map = new Map([
     'zoom' => 8,
 ]);
 
+$coord15 = new LatLng(['lat' => 10.1543807, 'lng' =>-66.1134839]);
+// lets use the directions renderer
+
 
 // Lets add a marker now'@bower' => '@vendor/yidas/yii2-bower-asset/bower'
-//$marker = new Marker([
-//    'position' => $coord,
-//    'title' => 'My Home Town',
-//]);
+$marker = new Marker([
+    'position' => $coord,
+    'title' => 'My Home Town',
+]);
+
+$marker15 = new Marker([
+    'position' => $coord15,
+    'title' => 'My Home Town',
+]);
 
 
 //// Provide a shared InfoWindow to the marker
@@ -49,7 +57,8 @@ $map = new Map([
 //);
 //
 //// Add marker to the map
-//$map->addOverlay($marker);
+$map->addOverlay($marker);
+$map->addOverlay($marker15);
 
 
 // Lets show the BicyclingLayer :)

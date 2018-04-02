@@ -47,7 +47,7 @@ class Fotossolicitud extends \yii\db\ActiveRecord
                 'tooSmall' => 'El tamaño mínimo permitido son 10 BYTES', //Error
                 'extensions' => 'pdf, txt, doc, jpg, png, gif, pptx',
                 'wrongExtension' => 'El archivo {imagen} no contiene una extensión permitida {extensions}', //Error
-                'maxFiles' => 1,
+                'maxFiles' => 2,
                 'tooMany' => 'El máximo de archivos permitidos son {limit}', //Error
             ],
             [['solicitud_id', 'descripcion', 'foto', 'created_at', 'updated_at'], 'required'],

@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use kartik\select2\Select2;
+use app\models\Centroclasificacion;
+use yii\helpers\ArrayHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\LugarSearch */
@@ -28,9 +31,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'id',
             'nombre',
-            'centro_clasificacion_id',
+            //'centro_clasificacion_id',
             'lat',
             'lng',
+            [
+            'attribute' => 'centro_clasificacion_id',
+            'value' => 'centroclasificacion.nombre',
+            'format' => 'text',
+            'filter' => Select2::widget([
+                        'model' => $searchModel,
+                        'attribute' => 'centro_clasificacion_id',
+                        'data' => ArrayHelper::map(Centroclasificacion::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+                        'options' =>
+                            ['placeholder' => 'Seleccione el Cenetro de Clasificación'],
+                        'pluginOptions' => [ 'allowClear' => true ],
+                ]),
+            ],
             //'nombre_slug',
             //'parroquia_id',
             //'direccion',

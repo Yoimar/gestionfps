@@ -30,29 +30,32 @@ use kartik\file\FileInput;
 //    'options' => ['multiple' => true]
 //    ]); ?>
 
-    <?php
-        echo $form->field($model, 'imagen[]')
-                ->widget(FileInput::classname(),[
-                        'options'=>[
-                            'accept'=>'imagen/*',
-                            'multiple'=>true
-                        ],
-                        'pluginOptions' => [
-                          'initialPreview'=>[
-                              Yii::getAlias('@web')."/img/adjuntos/".$model->foto
-                          ],
-                          'initialPreviewAsData'=>true,
-                          'initialCaption'=>"Subir Archivo",
-                          'initialPreviewConfig' => [
-                              ['caption' => "Archivo: ".$model->foto]
-                          ],
-                          'overwriteInitial'=>false,
-                          'maxFileSize'=>28000,
-                          'showRemove' => false,
-                        ],
+<?php
+    echo $form->field($model, 'imagen[]')
+        ->widget(FileInput::classname(),[
+                'options'=>[
+                    'accept'=>'imagen/*',
+                    'multiple'=>true
+                ],
+                'pluginOptions' => [
+                    'initialPreview'=>[
+                    isset($model->foto)?Yii::getAlias('@web')."/img/adjuntos/".$model->foto:"",
+                    ],
+                    'initialPreviewAsData'=>true,
+                    'initialPreviewShowDelete' => false,
+                    'initialCaption'=>"Subir Archivo",
+                    'initialPreviewConfig' => [
+                        [
+                        'caption' => $model->foto,
+                        ]
+                    ],
+                    'overwriteInitial'=>false,
+                    'maxFileSize'=>28000,
+                    'showRemove' => false,
+                ],
 
-                    ])
-    ?>
+            ])
+?>
 
     <?php // echo $form->field($model, 'ind_reporte')->checkbox() ?>
 

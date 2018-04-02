@@ -25,19 +25,27 @@ $aliasbower = Yii::getAlias('@bower');
 $aliasnpm = Yii::getAlias('@npm');
 $path = Yii::getAlias('@app').'\web\img\adjuntos';
 $prueba1 = Yii::getAlias('@web').'/img/MarkerMapHospital.png';
+$prueba = Yii::$app->getUrlManager()->getBaseUrl();
 
+$baselapath = Yii::$app->basePath;
+$urllapath = Yii::$app->urlManager->baseUrl;
+
+
+
+echo "<br>".$baselapath."    <- Baselapath <br>";
+echo "<br>".$urllapath."     <- urllapath  <br>";
 echo "<br>".$prueba1."<br>";
 
             //$path =  Yii::getAlias('@app')."/nombre" ;
-            $prueba = Url::home();
+
 
  echo "<br>".$path."<br>";
- echo $prueba;
+ echo "<br><br> Obtener base url:".$prueba."<br><br>";
  echo $aliasyii . "<br>";
  echo $aliasapp . "   <- app<br>";
  echo $aliasruntime . "<br>";
- echo $aliasweb . "<br>";
- echo $aliaswebroot . "<br>";
+ echo $aliasweb . "   <- web<br>";
+ echo $aliaswebroot . " <- webroot<br>";
  echo $aliasvendor . "<br>";
  echo $aliasbower . "<br>";
  echo $aliasnpm . "<br>";
@@ -189,7 +197,7 @@ echo DateTimePicker::widget([
         'format' => 'dd/mm/yyyy',
     ]
 ]);
-
+/*
 
 echo Carousel::widget([
     'items' => [
@@ -205,6 +213,8 @@ echo Carousel::widget([
         ],
     ]
 ]);
+
+*/
 ?>
 <div class="container">
     <div class="panel panel-primary" >

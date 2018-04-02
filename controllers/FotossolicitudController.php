@@ -120,8 +120,29 @@ class FotossolicitudController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        //$oldFile = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$model->foto;
+        $oldfoto = $model->foto;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            // process uploaded image file instance
+            $imagen = UploadedFile::getInstance($model, 'imagen');
+
+            // revert back if no valid file instance uploaded
+            if ($imagen === false) {
+                $model->foto = $oldfoto;
+            }
+
+            if ($model->save() && unlink($oldFile)) {
+                // upload only if valid uploaded file instance found
+                if ($imagen !== false) { // delete old and overwrite
+                    $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$imagen->baseName. '.' .$imagen->extension;
+                    $image->saveAs($path);
+                }
+                return $this->redirect(['view', 'id'=>$model->_id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Error - El archivo No se pudo eliminar');
+            }
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -139,10 +160,30 @@ class FotossolicitudController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        if (isset($model->foto)){
+
+            $file = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$model->foto;
+
+            // verifico si el archivo existe
+            if (empty($file) || !file_exists($file)) {
+                 Yii::$app->session->setFlash('error', 'Error - El archivo No existe');
+            }
+
+            // Verifico si el archivo se puede eliminar y si lo puedo eliminar lo elimino
+            if (!unlink($file)) {
+                Yii::$app->session->setFlash('error', 'Error - El archivo No se pudo eliminar');
+            }
+
+            // Si pude eliminar la imagen coloco un valor
+            $model->foto = null;
+            $model->delete();
+
+        }
 
         return $this->redirect(['index']);
     }
+
 
     /**
      * Finds the Fotossolicitud model based on its primary key value.

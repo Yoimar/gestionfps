@@ -970,6 +970,7 @@ while ($i<11){
                     'codope' => 'CH',
                     'estmov' => ['N','C']
                 ]);
+
             //reviso el estatus del cheque es en caja
             if (isset($modelcheque)&&$modelcheque->estcondoc=='C'){
                 $modelconexionsigesp->date_enviofirma = $modelcheque->fecenvfir;
@@ -991,6 +992,18 @@ while ($i<11){
                 $modelconexionsigesp->estatus_sigesp = 'CHF';
 
             } elseif (empty($modelcheque)) {
+                $modelanulado = Scbmovbco::findOne([
+                        'numdoc' => $modelconexionsigesp->cheque,
+                        'ced_bene' => $modelconexionsigesp->rif,
+                        'codope' => 'CH',
+                        'estmov' => ['A','O']
+                    ]);
+                //reviso el estatus del cheque es entregado y lo coloco en caja
+                if (isset($modelanulado)){
+                    $modelconexionsigesp->estatus_sigesp = 'ANU';
+                    break 1;
+                }
+
                 // Verifico si el cheque existe
                 $modelconexionsigesp->estatus_sigesp = 'PGP';
                 // lo que lleno en CHE
@@ -1049,7 +1062,7 @@ while ($i<11){
                 $modelconexionsigesp->date_entregado = $modelcheque->emichefec;
                 $modelconexionsigesp->ci_entrega = $modelcheque->emicheced;
                 $modelconexionsigesp->nombre_entrega = $modelcheque->emichenom;
-
+                //el caso esta entregado
                 $modelconexionsigesp->estatus_sigesp = 'ENT';
 
             } elseif (isset($modelcheque)&&$modelcheque->estcondoc=='F') {
@@ -1063,6 +1076,57 @@ while ($i<11){
             }
             break 1; // Aquí salé del switch
 
+//////////ESTATUS ENT -> EL CASO SE ENCUENTRA ENTREGADO
+        case 'ENT':
+            //reviso si el modelo del cheque para verificar si esta ENTREGADO
+            $modelcheque = Scbmovbco::findOne([
+                    'numdoc' => $modelconexionsigesp->cheque,
+                    'ced_bene' => $modelconexionsigesp->rif,
+                    'codope' => 'CH'
+                ]);
+
+            if (isset($modelcheque)&&($modelcheque->estmov=='A'||$modelcheque->estmov=='O')){
+
+                //el caso esta anulado
+                $modelconexionsigesp->estatus_sigesp = 'ANU';
+
+            } else {
+                //salgo de los while ya que el caso no esta anulado
+                break 2;
+            }
+            break 1; // Aquí salé del switch
+
+//////////ESTATUS ANU -> EL CASO SE ENCUENTRA ANULADO
+        case 'ANU':
+            //reviso el modelo del cheque para verificar que esta ANULADO
+            $modelcheque = Scbmovbco::findOne([
+                    'numdoc' => $modelconexionsigesp->cheque,
+                    'ced_bene' => $modelconexionsigesp->rif,
+                    'codope' => 'CH'
+                    'estmov' => ['A','O']
+                ]);
+
+            if (isset($modelcheque)) {
+                    $modelconexionsigesp->date_anulado = $modelcheque->fechaanula;
+                    $modelconexionsigesp->motivo_anulado = $modelcheque->conanu;
+                    $modelconexionsigesp->anulado_by = $usuarioid;
+
+            } else {
+                //reviso si el caso tiene impreso un cheque
+                $modelimprcheque = Scbmovbcospg::findOne([
+                    'documento' => $modelconexionsigesp->orpa,
+                    'estmov' => ['N','C']
+                ]);
+
+                if ($modelconexionsigesp->cheque != $modelimprcheque->numdoc)
+                {
+                    $modelconexionsigesp->estatus_sigesp = 'PGP';
+                }
+
+                //salgo de los while ya que el caso no esta anulado
+                break 2;
+            }
+            break 1; // Aquí salé del switch
 
         default:
             break;

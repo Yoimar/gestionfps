@@ -1,10 +1,9 @@
 <?php
 
 namespace app\models;
+
 use yii\behaviors\TimestampBehavior;
-use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
-use yii\db\Expression;
 
 use Yii;
 
@@ -44,16 +43,15 @@ use Yii;
  * @property int $cheque_by
  * @property string $date_enviofirma
  * @property string $date_enviocaja
+ * @property string $date_reccaja
  * @property string $date_entregado
- * @property string $fechahoraregistro_entregado
- * @property string $ci_entrega
- * @property string $nombre_entrega
- * @property string $trabajador_responsableentrega
  * @property int $entregado_by
+ * @property int $retirado_personaid
+ * @property int $responsable_by
+ * @property int $imagenentrega_id
  * @property string $date_anulado
  * @property string $motivo_anulado
  * @property int $anulado_by
- * @property string $imagen_entrega
  * @property string $date_archivo
  * @property int $archivo_by
  *
@@ -75,15 +73,13 @@ class Conexionsigesp extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_presupuesto', 'rif', 'created_by', 'updated_by', 'compromiso_by', 'regdocorpa_by', 'aprdocorpa_by', 'orpa_by', 'aprorpa_by', 'causado_by', 'progpago_by', 'cheque_by', 'entregado_by', 'anulado_by', 'archivo_by'], 'default', 'value' => null],
-            [['id_presupuesto', 'rif', 'created_by', 'updated_by', 'compromiso_by', 'regdocorpa_by', 'aprdocorpa_by', 'orpa_by', 'aprorpa_by', 'causado_by', 'progpago_by', 'cheque_by', 'entregado_by', 'anulado_by', 'archivo_by'], 'integer'],
-            [['codestpre', 'motivo_anulado', 'imagen_entrega'], 'string'],
-            [['date', 'created_at', 'updated_at', 'date_compromiso', 'date_regdocorpa', 'date_aprdocorpa', 'date_orpa', 'date_aprorpa', 'date_causado', 'date_progpago', 'date_cheque', 'date_enviofirma', 'date_enviocaja', 'date_entregado', 'fechahoraregistro_entregado', 'date_anulado', 'date_archivo'], 'safe'],
+            [['id_presupuesto', 'rif', 'created_by', 'updated_by', 'compromiso_by', 'regdocorpa_by', 'aprdocorpa_by', 'orpa_by', 'aprorpa_by', 'causado_by', 'progpago_by', 'cheque_by', 'entregado_by', 'retirado_personaid', 'responsable_by', 'imagenentrega_id', 'anulado_by', 'archivo_by'], 'default', 'value' => null],
+            [['id_presupuesto', 'rif', 'created_by', 'updated_by', 'compromiso_by', 'regdocorpa_by', 'aprdocorpa_by', 'orpa_by', 'aprorpa_by', 'causado_by', 'progpago_by', 'cheque_by', 'entregado_by', 'retirado_personaid', 'responsable_by', 'imagenentrega_id', 'anulado_by', 'archivo_by'], 'integer'],
+            [['codestpre', 'motivo_anulado'], 'string'],
+            [['date', 'created_at', 'updated_at', 'date_compromiso', 'date_regdocorpa', 'date_aprdocorpa', 'date_orpa', 'date_aprorpa', 'date_causado', 'date_progpago', 'date_cheque', 'date_enviofirma', 'date_enviocaja', 'date_reccaja', 'date_entregado', 'date_anulado', 'date_archivo'], 'safe'],
             [['req', 'numrecdoc', 'orpa', 'cheque'], 'string', 'max' => 15],
             [['cuenta'], 'string', 'max' => 25],
             [['estatus_sigesp'], 'string', 'max' => 3],
-            [['ci_entrega'], 'string', 'max' => 12],
-            [['nombre_entrega', 'trabajador_responsableentrega'], 'string', 'max' => 100],
             [['id_presupuesto'], 'exist', 'skipOnError' => true, 'targetClass' => Presupuestos::className(), 'targetAttribute' => ['id_presupuesto' => 'id']],
         ];
     }
@@ -127,21 +123,20 @@ class Conexionsigesp extends \yii\db\ActiveRecord
             'cheque_by' => 'Cheque By',
             'date_enviofirma' => 'Date Enviofirma',
             'date_enviocaja' => 'Date Enviocaja',
+            'date_reccaja' => 'Date Reccaja',
             'date_entregado' => 'Date Entregado',
-            'fechahoraregistro_entregado' => 'Fechahoraregistro Entregado',
-            'ci_entrega' => 'Ci Entrega',
-            'nombre_entrega' => 'Nombre Entrega',
-            'trabajador_responsableentrega' => 'Trabajador Responsableentrega',
             'entregado_by' => 'Entregado By',
+            'retirado_personaid' => 'Retirado Personaid',
+            'responsable_by' => 'Responsable By',
+            'imagenentrega_id' => 'Imagenentrega ID',
             'date_anulado' => 'Date Anulado',
             'motivo_anulado' => 'Motivo Anulado',
             'anulado_by' => 'Anulado By',
-            'imagen_entrega' => 'Imagen Entrega',
             'date_archivo' => 'Date Archivo',
             'archivo_by' => 'Archivo By',
         ];
     }
-    
+
     public function behaviors()
     {
         return [

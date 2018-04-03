@@ -76,25 +76,23 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'date_enviocaja')->textInput() ?>
 
+    <?= $form->field($model, 'date_reccaja')->textInput() ?>
+
     <?= $form->field($model, 'date_entregado')->textInput() ?>
 
-    <?= $form->field($model, 'fechahoraregistro_entregado')->textInput() ?>
-
-    <?= $form->field($model, 'ci_entrega')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'nombre_entrega')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'trabajador_responsableentrega')->textInput(['maxlength' => true]) ?>
-
     <?= $form->field($model, 'entregado_by')->textInput() ?>
+
+    <?= $form->field($model, 'retirado_personaid')->textInput() ?>
+
+    <?= $form->field($model, 'responsable_by')->textInput() ?>
+
+    <?= $form->field($model, 'imagenentrega_id')->textInput() ?>
 
     <?= $form->field($model, 'date_anulado')->textInput() ?>
 
     <?= $form->field($model, 'motivo_anulado')->textInput() ?>
 
     <?= $form->field($model, 'anulado_by')->textInput() ?>
-
-    <?= $form->field($model, 'imagen_entrega')->textInput() ?>
 
     <?= $form->field($model, 'date_archivo')->textInput() ?>
 

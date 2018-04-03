@@ -18,8 +18,8 @@ class ConexionsigespSearch extends Conexionsigesp
     public function rules()
     {
         return [
-            [['id', 'id_presupuesto', 'rif', 'created_by', 'updated_by', 'compromiso_by', 'regdocorpa_by', 'aprdocorpa_by', 'orpa_by', 'aprorpa_by', 'causado_by', 'progpago_by', 'cheque_by', 'entregado_by', 'anulado_by', 'archivo_by'], 'integer'],
-            [['req', 'codestpre', 'cuenta', 'date', 'created_at', 'updated_at', 'estatus_sigesp', 'date_compromiso', 'numrecdoc', 'date_regdocorpa', 'date_aprdocorpa', 'orpa', 'date_orpa', 'date_aprorpa', 'date_causado', 'date_progpago', 'cheque', 'date_cheque', 'date_enviofirma', 'date_enviocaja', 'date_entregado', 'fechahoraregistro_entregado', 'ci_entrega', 'nombre_entrega', 'trabajador_responsableentrega', 'date_anulado', 'motivo_anulado', 'imagen_entrega', 'date_archivo'], 'safe'],
+            [['id', 'id_presupuesto', 'rif', 'created_by', 'updated_by', 'compromiso_by', 'regdocorpa_by', 'aprdocorpa_by', 'orpa_by', 'aprorpa_by', 'causado_by', 'progpago_by', 'cheque_by', 'entregado_by', 'retirado_personaid', 'responsable_by', 'imagenentrega_id', 'anulado_by', 'archivo_by'], 'integer'],
+            [['req', 'codestpre', 'cuenta', 'date', 'created_at', 'updated_at', 'estatus_sigesp', 'date_compromiso', 'numrecdoc', 'date_regdocorpa', 'date_aprdocorpa', 'orpa', 'date_orpa', 'date_aprorpa', 'date_causado', 'date_progpago', 'cheque', 'date_cheque', 'date_enviofirma', 'date_enviocaja', 'date_reccaja', 'date_entregado', 'date_anulado', 'motivo_anulado', 'date_archivo'], 'safe'],
         ];
     }
 
@@ -85,9 +85,12 @@ class ConexionsigespSearch extends Conexionsigesp
             'cheque_by' => $this->cheque_by,
             'date_enviofirma' => $this->date_enviofirma,
             'date_enviocaja' => $this->date_enviocaja,
+            'date_reccaja' => $this->date_reccaja,
             'date_entregado' => $this->date_entregado,
-            'fechahoraregistro_entregado' => $this->fechahoraregistro_entregado,
             'entregado_by' => $this->entregado_by,
+            'retirado_personaid' => $this->retirado_personaid,
+            'responsable_by' => $this->responsable_by,
+            'imagenentrega_id' => $this->imagenentrega_id,
             'date_anulado' => $this->date_anulado,
             'anulado_by' => $this->anulado_by,
             'date_archivo' => $this->date_archivo,
@@ -101,11 +104,7 @@ class ConexionsigespSearch extends Conexionsigesp
             ->andFilterWhere(['ilike', 'numrecdoc', $this->numrecdoc])
             ->andFilterWhere(['ilike', 'orpa', $this->orpa])
             ->andFilterWhere(['ilike', 'cheque', $this->cheque])
-            ->andFilterWhere(['ilike', 'ci_entrega', $this->ci_entrega])
-            ->andFilterWhere(['ilike', 'nombre_entrega', $this->nombre_entrega])
-            ->andFilterWhere(['ilike', 'trabajador_responsableentrega', $this->trabajador_responsableentrega])
-            ->andFilterWhere(['ilike', 'motivo_anulado', $this->motivo_anulado])
-            ->andFilterWhere(['ilike', 'imagen_entrega', $this->imagen_entrega]);
+            ->andFilterWhere(['ilike', 'motivo_anulado', $this->motivo_anulado]);
 
         return $dataProvider;
     }

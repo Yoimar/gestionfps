@@ -120,25 +120,27 @@ class FotossolicitudController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        //$oldFile = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$model->foto;
+        $oldFile = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$model->foto;
         $oldfoto = $model->foto;
 
         if ($model->load(Yii::$app->request->post())) {
             // process uploaded image file instance
-            $imagen = UploadedFile::getInstance($model, 'imagen');
+            $imagen = UploadedFile::getInstances($model, 'imagen');
 
             // revert back if no valid file instance uploaded
-            if ($imagen === false) {
-                $model->foto = $oldfoto;
-            }
+            if ($model->validate()) {
 
-            if ($model->save() && unlink($oldFile)) {
-                // upload only if valid uploaded file instance found
-                if ($imagen !== false) { // delete old and overwrite
-                    $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$imagen->baseName. '.' .$imagen->extension;
-                    $image->saveAs($path);
+                foreach ($imagen as $file) {
+                    $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'
+                    .$file->baseName. '.' .$file->extension;
+                    if ($path != $oldFile){
+                    unlink($oldFile);
+                    $file->saveAs($path);
+                    $model->foto = $file->name;
+                    }
+
                 }
-                return $this->redirect(['view', 'id'=>$model->_id]);
+                $model->save();
             } else {
                 Yii::$app->session->setFlash('error', 'Error - El archivo No se pudo eliminar');
             }

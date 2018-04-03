@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\widgets\Pjax;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ConexionsigespSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -13,7 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="conexionsigesp-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -59,21 +58,19 @@ $this->params['breadcrumbs'][] = $this->title;
             //'cheque_by',
             //'date_enviofirma',
             //'date_enviocaja',
+            //'date_reccaja',
             //'date_entregado',
-            //'fechahoraregistro_entregado',
-            //'ci_entrega',
-            //'nombre_entrega',
-            //'trabajador_responsableentrega',
             //'entregado_by',
+            //'retirado_personaid',
+            //'responsable_by',
+            //'imagenentrega_id',
             //'date_anulado',
             //'motivo_anulado',
             //'anulado_by',
-            //'imagen_entrega',
             //'date_archivo',
             //'archivo_by',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
-    <?php Pjax::end(); ?>
 </div>

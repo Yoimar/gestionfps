@@ -68,10 +68,10 @@ class Fotossolicitud extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'solicitud_id' => 'Solicitud ID',
+            'solicitud_id' => 'Numero de Caso',
             'descripcion' => 'Descripcion',
             'foto' => 'Foto',
-            'ind_reporte' => 'Ind Reporte',
+            'ind_reporte' => '¿Reporte?',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -102,7 +102,7 @@ class Fotossolicitud extends \yii\db\ActiveRecord
     /***   Para revision del Modelo ***/
     public function getImageFile()
     {
-        return isset($this->avatar) ? Yii::$app->params['uploadPath'] . $this->avatar : null;
+        return isset($this->foto) ? Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$model->foto : null;
     }
 
     /**
@@ -111,9 +111,9 @@ class Fotossolicitud extends \yii\db\ActiveRecord
      */
     public function getImageUrl()
     {
-        // return a default image placeholder if your source avatar is not found
-        $avatar = isset($this->avatar) ? $this->avatar : 'default_user.jpg';
-        return Yii::$app->params['uploadUrl'] . $avatar;
+        // Retorno una imagen predefinida si no consigo una imagen
+        $avatar = isset($this->avatar) ? $this->foto : 'default_foto.jpg';
+        return Yii::getAlias('@web')."/img/adjuntos/".$avatar;
     }
 
     /**
@@ -122,25 +122,25 @@ class Fotossolicitud extends \yii\db\ActiveRecord
     * @return mixed the uploaded image instance
     */
     public function uploadImage() {
-        // get the uploaded file instance. for multiple file uploads
-        // the following data will return an array (you may need to use
-        // getInstances method)
-        $image = UploadedFile::getInstance($this, 'image');
+
+        $image = UploadedFile::getInstances($this, 'imagen');
 
         // if no image was uploaded abort the upload
         if (empty($image)) {
             return false;
         }
 
-        // store the source file name
-        $this->filename = $image->name;
-        $ext = end((explode(".", $image->name)));
+        foreach ($image as $file) {
+            $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'
+            .$file->baseName. '.' .$file->extension;
+            $file->saveAs($path);
+            $this->foto = $file->name;
+            }
 
-        // generate a unique file name
-        $this->avatar = Yii::$app->security->generateRandomString().".{$ext}";
+
 
         // the uploaded image instance
-        return $image;
+        return true;
     }
 
     /**
@@ -161,12 +161,9 @@ class Fotossolicitud extends \yii\db\ActiveRecord
             return false;
         }
 
-        // if deletion successful, reset your file attributes
-        $this->avatar = null;
-        $this->filename = null;
-
         return true;
     }
+
 
 //Fin de la clase
 }

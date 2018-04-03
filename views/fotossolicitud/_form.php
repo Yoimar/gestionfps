@@ -22,6 +22,7 @@ use kartik\file\FileInput;
     <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 
     <?php //echo $form->field($model, 'foto')->textInput(['maxlength' => true]) ?>
+    <?php echo $form->field($model, 'ind_reporte')->checkbox() ?>
 
     <?php
 //    echo FileInput::widget([
@@ -57,7 +58,7 @@ use kartik\file\FileInput;
             ])
 ?>
 
-    <?php // echo $form->field($model, 'ind_reporte')->checkbox() ?>
+
 
 
     <div class="form-group">

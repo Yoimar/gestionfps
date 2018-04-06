@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\models\Sepingreso;
 use app\models\Solicitudes;
+use app\models\Presupuestos;
 use yii\db\Query;
 use yii\data\ActiveDataProvider;
 use kartik\mpdf\Pdf;
@@ -18,6 +19,7 @@ use yii\helpers\Html;
 use yii\i18n\Formatter;
 use app\models\Bitacoras;
 use app\models\Trabajador;
+use app\models\Empresainstitucion;
 
 /**
  * SepsolicitudController implements the CRUD actions for Sepsolicitud model.
@@ -179,30 +181,38 @@ class SepsolicitudController extends Controller
 
     public function actionMuestra($numero=null)
     {
-            $consultaempresainstitucion = Yii::$app->db->createCommand("SELECT beneficiario_id from presupuestos WHERE solicitud_id = :id;")
-                    ->bindValue(":id", $numero)
-                    ->queryScalar();
+        //Hay que validar si entran dos casas comerciales
+        //1ero Encuentro las casas comerciales
+        $idempresas = Presupuestos::find()
+                    ->select([
+                        'beneficiario_id',
+                        'solicitud_id'
+                    ])
+                    ->where(['solicitud_id' => $numero])
+                    ->all();
 
-            $empresainsitucionrevision = Yii::$app->db->createCommand("SELECT count(*) from empresa_institucion WHERE id = :id;")
-                    ->bindValue(":id", $consultaempresainstitucion)
-                    ->queryScalar();
 
-            if ($empresainsitucionrevision==0){
-                if ($consultaempresainstitucion == ''){
+        //2do Verifico si cada uno de los ids esta en blanco o tiene un registro
+        foreach ($idempresas as $elemento) {
 
-                    Yii::$app->session->setFlash("warning", "El caso no tiene cargada una casa presupuestaria <br> "
-                            . "Por favor Verifique el caso <br> "
-                            . "Si es un caso de ALMACEN <br> "
-                            . "Entre por el Menu de Aprobacion por Almacen");
-                    return $this->redirect(['ubica']);
+            //3ero si el beneficiario_id esta en blanco devuelvo el caso
+            if ($elemento->beneficiario_id == ''){
 
-                } else {
-                Yii::$app->db->createCommand("INSERT INTO empresa_institucion (id) "
-                ." VALUES(".$consultaempresainstitucion
-                .");")->execute();
-                }
-             }
+                Yii::$app->session->setFlash("warning", "El caso no tiene cargada una casa presupuestaria <br> "
+                        . "Por favor Verifique el caso <br> "
+                        . "Si es un caso de ALMACEN <br> "
+                        . "Entre por el Menu de Aprobacion por Almacen");
+                return $this->redirect(['ubica']);
 
+            }
+            //4to si el caso no tiene un id en la tabla de empresa institucion le creo uno.
+            $empresa = Empresainstitucion::findOne(['id' => $elemento->beneficiario_id]);
+            if (empty($empresa)) {
+                $modelempresa = new Empresainstitucion;
+                $modelempresa->id = $elemento->beneficiario_id;
+                $modelempresa->save();
+            }
+        }
 
             $query = \app\models\PresupuestosSearch::find()
                     ->select([

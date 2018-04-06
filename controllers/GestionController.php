@@ -1102,7 +1102,7 @@ while ($i<11){
             $modelcheque = Scbmovbco::findOne([
                     'numdoc' => $modelconexionsigesp->cheque,
                     'ced_bene' => $modelconexionsigesp->rif,
-                    'codope' => 'CH'
+                    'codope' => 'CH',
                     'estmov' => ['A','O']
                 ]);
 

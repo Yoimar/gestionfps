@@ -21,7 +21,9 @@ use yii\web\JsExpression;
 use yii\helpers\Url;
 use kartik\depdrop\DepDrop;
 use kartik\export\ExportMenu;
-use kartik\date\DatePicker
+use kartik\date\DatePicker;
+use kartik\alert\AlertBlock;
+use kartik\growl\Growl;
 
 ?>
 <!-- Aqui empieza el Div del Form de la Busqueda -->
@@ -29,7 +31,7 @@ use kartik\date\DatePicker
     <div class="container center-block">
 	<div class="col-lg-12">
                             <h3 class="display-3 center-block">
-					Envio de Memorandum					
+					Envio de Memorandum
                             </h3>
         </div>
     </div>
@@ -39,7 +41,7 @@ use kartik\date\DatePicker
 
 
 <?=Html::beginForm(['gestion/cambioestatus'],'post');?>
-    
+
 <div class="container center-block">
     <div class="col-lg-4 col-md-4">
         <div class="panel panel-primary" >
@@ -47,7 +49,7 @@ use kartik\date\DatePicker
         <div class="panel-body">
 	<div class="col-lg-12 col-md-12">
  <!-- Formulario del Origen Memos -->
-<?php 
+<?php
 echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Departamentos::find()->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
@@ -56,7 +58,7 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
         'allowClear' => true
         ],
     ]);
-            
+
 ?>
 
     <?= $form->field($modelorigenmemo, 'unidad')->widget(Select2::classname(), [
@@ -66,10 +68,10 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
         'pluginOptions' => [
         'allowClear' => true
         ],
-    ]); 
-            
+    ]);
+
     ?>
-        
+
     <?=
     /* Trabajador de la Fundacion a la que se le asignó la Gestión*/
         $form->field($modelorigenmemo, 'usuario')->widget(Select2::classname(), [
@@ -81,9 +83,9 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
         'allowClear' => true
         ],
     ]);
-    
+
     ?>
- 
+
         </div>
 
 
@@ -97,7 +99,7 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
             <div class="panel-heading"> Recibido Por :</div>
         <div class="panel-body">
 	<div class="col-lg-6 col-md-6">
-                            
+
     <?= $form->field($modelfinalmemo, 'departamentofinal')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Departamentos::find()->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
@@ -106,7 +108,7 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
         'allowClear' => true
         ],
     ]);
-            
+
     ?>
 
     <?= $form->field($modelfinalmemo, 'unidadfinal')->widget(Select2::classname(), [
@@ -116,8 +118,8 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
         'pluginOptions' => [
         'allowClear' => true
         ],
-    ]); 
-            
+    ]);
+
     ?>
 
     <?=
@@ -131,11 +133,11 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
         'allowClear' => true
         ],
     ]);
-    
+
     ?>
-    </div> 
+    </div>
     <div class="col-lg-6 col-md-6">
-      
+
     <?=
     /* Estatus 1 con Select2 de kartik*/
         $form->field($modelfinalmemo, 'estatus1final')->widget(Select2::classname(), [
@@ -146,10 +148,10 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
         'allowClear' => true
         ],
     ]);
-    
+
     ?>
-    
-    
+
+
     <?php
     /* Estatus 2 con depdrop de kartik*/
     echo $form->field($modelfinalmemo, 'estatus2final')->widget(DepDrop::classname(), [
@@ -163,7 +165,7 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
         'url'=>Url::to(['/estatus3/estatus1']),
     ]
     ]);
-        
+
     ?>
 
     <?=
@@ -179,7 +181,7 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
         'url'=>Url::to(['/estatus3/estatus2']),
     ]
     ]);
-    ?>   
+    ?>
 
 </div>
 </div>
@@ -187,38 +189,38 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
 </div>
 </div>
 
-<!-- AQUI TERMINA EL DIV ENVIADO POR Y RECIBIDO POR -->    
-    
+<!-- AQUI TERMINA EL DIV ENVIADO POR Y RECIBIDO POR -->
+
 <div class="col-lg-12 col-md-12">
 
 <div class="modelorigenmemo-form col-lg-9 col-md-9">
     <?= $form->field($memosgestion, 'asunto')->textInput(['maxlength' => true]) ?>
 </div>
-    
+
 <div class="modelorigenmemo-form col-lg-3 col-md-3">
-<?php 
+<?php
 $fechahoy = Yii::$app->formatter->asDate('now','php:m-d-Y');
 $memosgestion->fechamemo = $fechahoy;
 ?>
     <center>
 <?= $form->field($memosgestion, 'fechamemo')->widget(DatePicker::classname(), [
             'name' => 'dp_3',
-            'type' => DatePicker::TYPE_COMPONENT_APPEND, 
+            'type' => DatePicker::TYPE_COMPONENT_APPEND,
                     'pluginOptions' => [
                         'autoclose'=>true,
                        'format' => 'mm/dd/yyyy',
                         'language' => 'es',
                         'todayBtn' => 'linked',
                     ]
-            ]); 
+            ]);
 ?>
     </center>
 </div>
 
-</div>    
-</div>       
+</div>
+</div>
 
-<?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['gestiona', 
+<?= Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['gestiona',
                 'estatus1' => $estatus1,
                 'estatus2' => $estatus2,
                 'estatus3' => $estatus3,
@@ -230,7 +232,7 @@ $memosgestion->fechamemo = $fechahoy;
                 'vertelefono' => $vertelefono,
                 'verunidad' => $verunidad], ['class'=>'btn btn-primary', 'data-container' => 'body', 'data-toggle' => 'tooltip', 'data-placement'=> 'bottom', 'title'=>'Ver Orden de Pago']) ?>
 
-<?= Html::a('<span class="glyphicon glyphicon-certificate"></span>', ['gestiona', 
+<?= Html::a('<span class="glyphicon glyphicon-certificate"></span>', ['gestiona',
                 'estatus1' => $estatus1,
                 'estatus2' => $estatus2,
                 'estatus3' => $estatus3,
@@ -242,7 +244,7 @@ $memosgestion->fechamemo = $fechahoy;
                 'vertelefono' => $vertelefono,
                 'verunidad' => $verunidad], ['class'=>'btn btn-primary', 'data-container' => 'body', 'data-toggle' => 'tooltip', 'data-placement'=> 'bottom', 'title'=>'Ver Cheque']) ?>
 
-<?= Html::a('<span class="glyphicon glyphicon-earphone"></span>', ['gestiona', 
+<?= Html::a('<span class="glyphicon glyphicon-earphone"></span>', ['gestiona',
                 'estatus1' => $estatus1,
                 'estatus2' => $estatus2,
                 'estatus3' => $estatus3,
@@ -254,7 +256,7 @@ $memosgestion->fechamemo = $fechahoy;
                 'vertelefono' => true,
                 'verunidad' => $verunidad], ['class'=>'btn btn-primary', 'data-container' => 'body', 'data-toggle' => 'tooltip', 'data-placement'=> 'bottom', 'title'=>'Ver Telefono' ]) ?>
 
-<?= Html::a('<span class="glyphicon glyphicon-collapse-down"></span>', ['gestiona', 
+<?= Html::a('<span class="glyphicon glyphicon-collapse-down"></span>', ['gestiona',
                 'estatus1' => $estatus1,
                 'estatus2' => $estatus2,
                 'estatus3' => $estatus3,
@@ -266,13 +268,13 @@ $memosgestion->fechamemo = $fechahoy;
                 'vertelefono' => $vertelefono,
                 'verunidad' => true], ['class'=>'btn btn-primary', 'data-container' => 'body', 'data-toggle' => 'tooltip', 'data-placement'=> 'bottom', 'title'=>'Ver Unidad']) ?>
 
-<?= Html::submitButton('<span class="glyphicon glyphicon-floppy-saved"></span> Enviar e Imprimir', ['class' => 'btn btn-primary btn-lg']) ?>                            
-    
+<?= Html::submitButton('<span class="glyphicon glyphicon-floppy-saved"></span> Enviar e Imprimir', ['class' => 'btn btn-primary btn-lg']) ?>
+
 </center>
 
 <!-- Termina el Formulario de la Busqueda -->
 
-<?php 
+<?php
 
     $columns = [
             [
@@ -284,7 +286,7 @@ $memosgestion->fechamemo = $fechahoy;
                 },
 
             ],
-        
+
             [
             'class'=>'kartik\grid\SerialColumn',
             'contentOptions'=>['class'=>'kartik-sheet-style'],
@@ -300,122 +302,122 @@ $memosgestion->fechamemo = $fechahoy;
             'encodeLabel' => false,
             'format' => 'text',
             'vAlign'=>'middle',
-            'hAlign'=>'center', 
+            'hAlign'=>'center',
             ],
-                    
+
             [
             'attribute' => 'requerimiento',
             'value' => 'requerimiento',
             'format' => 'text',
             'vAlign'=>'middle',
-            'hAlign'=>'center', 
+            'hAlign'=>'center',
             ],
-        
-            [ 
-            'attribute' => 'beneficiario', 				
-            'value' => 'beneficiario', 
-            'format' => 'text', 
+
+            [
+            'attribute' => 'beneficiario',
+            'value' => 'beneficiario',
+            'format' => 'text',
             'vAlign'=>'middle',
-            'hAlign'=>'center', 
+            'hAlign'=>'center',
             ],
-        
-            [ 
-            'attribute' => 'cibeneficiario', 				
-            'value' => 'cibeneficiario', 
-            'format' => 'text', 
+
+            [
+            'attribute' => 'cibeneficiario',
+            'value' => 'cibeneficiario',
+            'format' => 'text',
             'label' => '<center>C.I.<br>Benefic.</center>',
             'encodeLabel' => false,
             'vAlign'=>'middle',
-            'hAlign'=>'center', 
+            'hAlign'=>'center',
             ],
-        
-            [                     
-            'attribute' => 'telefono', 			
-            'value' => 'telefono', 
+
+            [
+            'attribute' => 'telefono',
+            'value' => 'telefono',
             'format' => 'text',
             'visible'=> $vertelefono,
             'vAlign'=>'middle',
-            'hAlign'=>'center', 
-            ],                      
-        
-            [                     
-            'attribute' => 'unidadorigen', 			
-            'value' => 'unidadorigen', 
+            'hAlign'=>'center',
+            ],
+
+            [
+            'attribute' => 'unidadorigen',
+            'value' => 'unidadorigen',
             'format' => 'text',
             'visible'=> $verunidad,
             'vAlign'=>'middle',
-            'hAlign'=>'center', 
+            'hAlign'=>'center',
             ],
-                   
-            [ 
-            'attribute' => 'empresaoinstitucion', 		
+
+            [
+            'attribute' => 'empresaoinstitucion',
             'value' => 'empresaoinstitucion',
             'label' => 'Empresa<br>Casa Comercial',
             'format' => 'text',
             'encodeLabel' => false,
             'vAlign'=>'middle',
-            'hAlign'=>'center', 
+            'hAlign'=>'center',
             ],
-            
-            [ 
-            'attribute' => 'rif', 		
-            'value' => 'rif', 
+
+            [
+            'attribute' => 'rif',
+            'value' => 'rif',
             'format' => 'text',
             'vAlign'=>'middle',
-            'hAlign'=>'center', 
+            'hAlign'=>'center',
             ],
-     
-            [ 
-            'attribute' => 'cantidad', 						
+
+            [
+            'attribute' => 'cantidad',
             'value' => 'cantidad',
             'label' => 'N°',
             'format' => 'text',
             'pageSummary'=>true,
             'vAlign'=>'middle',
-            'hAlign'=>'center', 
+            'hAlign'=>'center',
             ],
-                        
-            [ 
-            'attribute' => 'orpa', 						
-            'value' => 'orpa', 
+
+            [
+            'attribute' => 'orpa',
+            'value' => 'orpa',
             'format' => 'text',
             'visible'=> $verorpa,
             'vAlign'=>'middle',
-            'hAlign'=>'center', 
+            'hAlign'=>'center',
             ],
-                               
-            [ 
-            'attribute' => 'cheque', 						
-            'value' => 'cheque', 
+
+            [
+            'attribute' => 'cheque',
+            'value' => 'cheque',
             'format' => 'text',
             'visible'=> $vercheque,
             'vAlign'=>'middle',
-            'hAlign'=>'center', 
+            'hAlign'=>'center',
             ],
-                    
-                       
-        
-            [ 
-            'attribute' => 'monto', 						
-            'value' => 'monto', 
-            'hAlign'=>'right', 
+
+
+
+            [
+            'attribute' => 'monto',
+            'value' => 'monto',
+            'hAlign'=>'right',
             'vAlign'=>'middle',
             'width'=>'100px',
             'format'=>'currency',
             'pageSummary'=>true,
             ],
-            
+
 //            [
 //            'class'=>'kartik\grid\ActionColumn',
 //            ],
-            
+
             [
             'class'=>'kartik\grid\ActionColumn',
             'template' => '{update} {view} {actualiza}',
             'buttons' => [
                 'view' => function($url, $model){
                         return Html::a('<span class="glyphicon glyphicon-eye-open"></span>',
-                                $url, 
+                                $url,
                                     [
                                         'title' => 'Ver Gestión',
                                     ]
@@ -423,7 +425,7 @@ $memosgestion->fechamemo = $fechahoy;
                 },
                 'update' => function($url, $model){
                         return Html::a('<span class="glyphicon glyphicon-pencil"></span>',
-                                $url, 
+                                $url,
                                     [
                                         'title' => 'Actualizar',
                                     ]
@@ -431,7 +433,7 @@ $memosgestion->fechamemo = $fechahoy;
                 },
                 'actualiza' => function($url, $model){
                         return Html::a('<span class="glyphicon glyphicon-refresh"></span>',
-                                $url, 
+                                $url,
                                     [
                                         'title' => 'Actualizar',
                                     ]
@@ -440,11 +442,17 @@ $memosgestion->fechamemo = $fechahoy;
             ],
             'urlCreator' => function ($action, $model, $key, $index) {
                 if ( $action == 'actualiza'){
-                    return yii\helpers\Url::to(['actualiza', 'id' => $key, 'estatus3' => $model->estatus3_id,'verorpa' => true, 'vercheque' => true, 'vertelefono' => true, 'verunidad' => true ]);
-                }    
+                    return yii\helpers\Url::to(['actualiza',
+                    'id' => $key,
+                    'estatus3' => $model->estatus3_id,
+                    'verorpa' => true,
+                    'vercheque' => true,
+                    'vertelefono' => true,
+                    'verunidad' => true ]);
+                }
             }
             ],
-            
+
         ];
 
 ?>
@@ -469,7 +477,7 @@ echo   GridView::widget([
             'type' => GridView::TYPE_DEFAULT,
             'heading' => 'Localizador',
         ],
-        'toolbar' =>  [ 
+        'toolbar' =>  [
 //            '{export}',
 //            ExportMenu::widget([
 //    'dataProvider' => $dataProvider,
@@ -485,20 +493,40 @@ echo   GridView::widget([
 ?>
 <!-- Termina el GridView empieza el Envio de Información -->
 
-<?= Html::endForm();?> 
+<?= Html::endForm();?>
 
 <!-- Fin del Formulario -->
 
 </div>
+<center>
+<div class="col-lg-12 col-md-12">
+
+     <div>
+         <?php
+            echo AlertBlock::widget([
+                    'useSessionFlash' => true,
+                    'type' => AlertBlock::TYPE_GROWL,
+                    'delay' => 0,
+                    'alertSettings' => [
+                        'success' => ['type' => Growl::TYPE_SUCCESS, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
+                        'danger' => ['type' => Growl::TYPE_DANGER, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
+                        'warning' => ['type' => Growl::TYPE_WARNING, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
+                        'info' => ['type' => Growl::TYPE_INFO, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]]
+                        ],
+                     ])
+         ?>
+        </div>
+</div>
+</center>
 <?php
 $this->registerJs(<<<JS
-   
+
    $(function () {
    $('[data-toggle="tooltip"]').tooltip()
    })
 
 JS
-        
+
 );
 
 ?>

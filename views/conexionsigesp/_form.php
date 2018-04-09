@@ -66,38 +66,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'progpago_by')->textInput() ?>
 
-    <?= $form->field($model, 'cheque')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'date_cheque')->textInput() ?>
-
-    <?= $form->field($model, 'cheque_by')->textInput() ?>
-
-    <?= $form->field($model, 'date_enviofirma')->textInput() ?>
-
-    <?= $form->field($model, 'date_enviocaja')->textInput() ?>
-
-    <?= $form->field($model, 'date_reccaja')->textInput() ?>
-
-    <?= $form->field($model, 'date_entregado')->textInput() ?>
-
-    <?= $form->field($model, 'entregado_by')->textInput() ?>
-
-    <?= $form->field($model, 'retirado_personaid')->textInput() ?>
-
-    <?= $form->field($model, 'responsable_by')->textInput() ?>
-
-    <?= $form->field($model, 'imagenentrega_id')->textInput() ?>
-
-    <?= $form->field($model, 'date_anulado')->textInput() ?>
-
-    <?= $form->field($model, 'motivo_anulado')->textInput() ?>
-
-    <?= $form->field($model, 'anulado_by')->textInput() ?>
-
-    <?= $form->field($model, 'date_archivo')->textInput() ?>
-
-    <?= $form->field($model, 'archivo_by')->textInput() ?>
-
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>

@@ -32,3 +32,6 @@ phpunit.phar
 
 tests/_output/*
 tests/_support/_generated
+
+#carpeta de imagenes, adjuntos y demas
+/web/img/adjuntos

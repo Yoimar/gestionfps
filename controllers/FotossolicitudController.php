@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Yii;
+use yii\filters\AccessControl;
 use app\models\Fotossolicitud;
 use app\models\FotossolicitudSearch;
 use yii\web\Controller;
@@ -10,6 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use yii\helpers\Html;
+use yii\helpers\FileHelper;
 
 /**
  * FotossolicitudController implements the CRUD actions for Fotossolicitud model.
@@ -22,12 +24,54 @@ class FotossolicitudController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => [
+                    'index',
+                    'view',
+                    'create',
+                    'update',
+                    'delete',
+                    ],
+                'rules' => [
+                    [
+                        'actions' => [
+                            'create',
+                            'view',
+                        ],
+                        'allow' => true,
+                        'roles' => ['gestion-crear'],
+                    ],
+                    [
+                        'actions' => [
+                            'index',
+                        ],
+                        'allow' => true,
+                        'roles' => ['gestion-listar'],
+                    ],
+                  [
+                        'actions' => [
+                            'update',
+                        ],
+                        'allow' => true,
+                        'roles' => ['gestion-actualizar'],
+                    ],
+                    [
+                        'actions' => [
+                            'delete',
+                        ],
+                        'allow' => true,
+                        'roles' => ['gestion-eliminar'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
                 ],
             ],
+
         ];
     }
 
@@ -69,6 +113,11 @@ class FotossolicitudController extends Controller
         $model = new Fotossolicitud();
 
         if ($model->load(Yii::$app->request->post())) {
+
+            //Crear la carpeta para los adjuntos
+            $carpeta = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$model->solicitud_id;
+            FileHelper::createDirectory($carpeta);
+
             // Obtener la Imagen de la Foto y se instancia en un objeto para manipularlo
             // la siguiente data retorna un array
             $imagen = UploadedFile::getInstances($model, 'imagen');
@@ -79,10 +128,18 @@ class FotossolicitudController extends Controller
             foreach ($imagen as $file) {
 
             //creo la direccion para guardar la imagen que se llama adjuntos
-            $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$file->baseName. '.' .$file->extension;
-
+            $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'
+            .$model->solicitud_id.'/'.$file->baseName.'.' .$file->extension;
             $model->foto = $file->name;
 
+            //Verifico que el nombre de la imagen no este duplicado
+            $i=1;
+            while (file_exists($path)) {
+                $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'
+                .$model->solicitud_id.'/'.$file->baseName.$i.'.'.$file->extension;
+                $model->foto = $file->baseName.$i.'.'.$file->extension;
+                $i++;
+            }
 
             //Guardar dos de acuerdo al numero de imagenes
                 $modelparaguardar = new Fotossolicitud();
@@ -97,7 +154,6 @@ class FotossolicitudController extends Controller
 
             //Guardo cada Imagen
             $file->saveAs($path);
-
 
             //Fin del Foreach
             }
@@ -120,7 +176,7 @@ class FotossolicitudController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $oldFile = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$model->foto;
+        $oldFile = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$model->solicitud_id.'/'.$model->foto;
         $oldfoto = $model->foto;
 
         if ($model->load(Yii::$app->request->post())) {
@@ -132,11 +188,21 @@ class FotossolicitudController extends Controller
 
                 foreach ($imagen as $file) {
                     $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'
-                    .$file->baseName. '.' .$file->extension;
+                    .$model->solicitud_id.'/'.$file->baseName. '.' .$file->extension;
                     if ($path != $oldFile){
-                    unlink($oldFile);
+                        if (file_exists($oldFile)){
+                            unlink($oldFile);
+                        }
+                    //Verifico que el nombre de la imagen no este duplicado
+                    $i=1;
+                    while (file_exists($path)) {
+                        $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'
+                        .$model->solicitud_id.'/'.$file->baseName.$i.'.'.$file->extension;
+                        $model->foto = $file->baseName.$i.'.'.$file->extension;
+                        $i++;
+                    }
+
                     $file->saveAs($path);
-                    $model->foto = $file->name;
                     }
 
                 }
@@ -165,16 +231,16 @@ class FotossolicitudController extends Controller
         $model = $this->findModel($id);
         if (isset($model->foto)){
 
-            $file = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$model->foto;
+            $file = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$model->solicitud_id.'/'.$model->foto;
 
             // verifico si el archivo existe
             if (empty($file) || !file_exists($file)) {
                  Yii::$app->session->setFlash('error', 'Error - El archivo No existe');
-            }
-
+            }else{
             // Verifico si el archivo se puede eliminar y si lo puedo eliminar lo elimino
             if (!unlink($file)) {
                 Yii::$app->session->setFlash('error', 'Error - El archivo No se pudo eliminar');
+            }
             }
 
             // Si pude eliminar la imagen coloco un valor

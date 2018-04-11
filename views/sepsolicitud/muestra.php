@@ -14,10 +14,10 @@ use kartik\growl\Growl;
   </div>
 <div class="panel-body">
     <div class="col-lg-6 col-md-6">
-        <?= $consulta[0]['solicitante']?> 
+        <?= $consulta[0]['solicitante']?>
         <br>
         <?= $consulta[0]['beneficiario']?>
-        <br>    
+        <br>
         <?= $consulta[0]['requerimiento']?>
     </div>
     <div class="col-lg-6 col-md-6">
@@ -31,7 +31,7 @@ use kartik\growl\Growl;
         <hr><center>
         <?= $consulta[0]['descripcion']?>
         <hr></center>
-    
+
 
 <?php if ($consulta[0]['codestpre'] == 0201){
     $estructuraparaimprimir= "407010201";
@@ -52,14 +52,14 @@ if (count($consulta)<=1){
         'showPageSummary' => true,
         'tableOptions' => ['class' => 'text-center',],
         'layout' => "{items}\n{pager}",
-        
+
         'options' => ['class' => 'text-center primary', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
         'headerRowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF; '],
         'captionOptions' => ['class' => 'text-center', 'style' => 'color: black; margin: 0px; padding: 2px; font-size:16px;'],
         'footerRowOptions'=> ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],
         'rowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
         'caption' => $titulotablacheques,
-    
+
         'columns' => [
             [
                 'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
@@ -69,7 +69,7 @@ if (count($consulta)<=1){
                 'vAlign'=>'middle',
                 'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
             ],
-            
+
             [
              'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
              'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
@@ -77,9 +77,9 @@ if (count($consulta)<=1){
              'hAlign'=>'center',
              'vAlign'=>'middle',
              'pageSummary'=>'Cuenta Presupuestaria',
-             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
-            ],       
-            
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],
+            ],
+
             [
              'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
              'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
@@ -88,9 +88,9 @@ if (count($consulta)<=1){
              'hAlign'=>'center',
              'vAlign'=>'middle',
              'pageSummary'=> $estructuraparaimprimir,
-             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],
             ],
-             
+
             [
              'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
              'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
@@ -99,9 +99,9 @@ if (count($consulta)<=1){
              'pageSummary'=>'',
              'hAlign'=>'center',
              'vAlign'=>'middle',
-             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],
             ],
-            
+
             [
              'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
              'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px;'],
@@ -110,10 +110,10 @@ if (count($consulta)<=1){
              'pageSummary'=>'Total',
              'hAlign'=>'center',
              'vAlign'=>'middle',
-             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],
             ],
-            
-            
+
+
             //'',
             [
             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; '],
@@ -125,9 +125,9 @@ if (count($consulta)<=1){
             'format'=>'currency',
             'pageSummary'=>true,
             'pageSummaryFunc'=>GridView::F_SUM,
-            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],  
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px;  font-size:16px; background: #FFFFFF;'],
             ],
-            
+
             [
             'class'=>'kartik\grid\ActionColumn',
             'template' => '{update}',
@@ -135,8 +135,8 @@ if (count($consulta)<=1){
                 'update' => function($url, $model){
                         return Html::a('<span class="glyphicon glyphicon-pencil"></span>',
                                     yii\helpers\Url::to([
-                                        'empresainstitucion/updates', 
-                                        'id' => $model->beneficiario_id, 
+                                        'empresainstitucion/updates',
+                                        'id' => $model->beneficiario_id,
                                         'volver' => $model->solicitud_id,
                                         'idpresupuesto' => $model->id]),
                                     [
@@ -146,15 +146,15 @@ if (count($consulta)<=1){
                 }
             ],
             ],
-            
-                 
+
+
         ],
         'responsive'=>true,
         'condensed'=>true,
         'bordered'=>true,
 
-        
-        
+
+
     ]); ?>
 
 <br>
@@ -166,15 +166,19 @@ if (count($consulta)<=1){
 </center>
 
 <center>
-    
-<?= Html::a('<span class="glyphicon glyphicon-print"></span>', ['sepsolicitud/imprimir', 'numero' => $numero], ['class' => 'btn btn-info', 'target'=>'_blank']) ?>    
-    
+
+<?php
+if ($imprime == true) {
+echo Html::a('<span class="glyphicon glyphicon-print"></span>', ['sepsolicitud/imprimir', 'numero' => $numero], ['class' => 'btn btn-info', 'target'=>'_blank']);
+}
+?>
+
 </center>
 
 </div>
 
 </div>
-   
+
 </div>
 
 <center>
@@ -187,9 +191,9 @@ if (count($consulta)<=1){
                     'type' => AlertBlock::TYPE_GROWL,
                     'delay' => 0,
                     'alertSettings' => [
-                        'success' => ['type' => Growl::TYPE_SUCCESS, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]], 
-                        'danger' => ['type' => Growl::TYPE_DANGER, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]], 
-                        'warning' => ['type' => Growl::TYPE_WARNING, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]], 
+                        'success' => ['type' => Growl::TYPE_SUCCESS, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
+                        'danger' => ['type' => Growl::TYPE_DANGER, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
+                        'warning' => ['type' => Growl::TYPE_WARNING, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
                         'info' => ['type' => Growl::TYPE_INFO, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]]
                         ],
                      ])
@@ -197,5 +201,3 @@ if (count($consulta)<=1){
         </div>
 </div>
 </center>
-
-

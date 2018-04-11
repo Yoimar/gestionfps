@@ -20,6 +20,7 @@ use yii\i18n\Formatter;
 use app\models\Bitacoras;
 use app\models\Trabajador;
 use app\models\Empresainstitucion;
+use app\models\Conexionsigesp;
 
 /**
  * SepsolicitudController implements the CRUD actions for Sepsolicitud model.
@@ -185,6 +186,7 @@ class SepsolicitudController extends Controller
         //1ero Encuentro las casas comerciales
         $idempresas = Presupuestos::find()
                     ->select([
+                        'id',
                         'beneficiario_id',
                         'solicitud_id'
                     ])
@@ -212,6 +214,13 @@ class SepsolicitudController extends Controller
                 $modelempresa->id = $elemento->beneficiario_id;
                 $modelempresa->save();
             }
+
+            $consultaparaimprimir = Conexionsigesp::findOne(['id_presupuesto' => $elemento->id]);
+            if (isset($consultaparaimprimir)) {
+                $imprime = true;
+            } else {
+                $imprime = false;
+            }
         }
 
             $query = \app\models\PresupuestosSearch::find()
@@ -236,6 +245,8 @@ class SepsolicitudController extends Controller
                         'empresa_institucion.id = presupuestos.beneficiario_id'
                     )
                     ->andFilterWhere(['presupuestos.solicitud_id' => $numero]);
+
+
 
             $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -276,7 +287,8 @@ class SepsolicitudController extends Controller
         return $this->render('muestra', [
             'numero' => $numero,
             'dataProvider' => $dataProvider,
-            'consulta' => $consulta
+            'consulta' => $consulta,
+            'imprime' => $imprime
         ]);
     }
     /**
@@ -408,11 +420,12 @@ class SepsolicitudController extends Controller
             ]);
 
         Yii::$app->session->setFlash("warning", "El caso no posee rif<br>Por Favor rellene los datos de la casa comercial");
-
+        $imprime = false;
                 return $this->render('muestra', [
                 'numero' => $numero,
                 'dataProvider' => $dataProvider,
-                'consulta' => $consulta
+                'consulta' => $consulta,
+                'imprime' => $imprime
                 ]);
         }
 
@@ -561,10 +574,13 @@ class SepsolicitudController extends Controller
 
                   Yii::$app->session->setFlash("warning", "El caso no se puede Aprobar, Ya ha sido procesado<br>Verifique e intente con otro caso");
 
+                  $imprime = false;
+
                 return $this->render('muestra', [
                 'numero' => $numero,
                 'dataProvider' => $dataProvider,
-                'consulta' => $consulta
+                'consulta' => $consulta,
+                'imprime' => $imprime
                 ]);
 
         }
@@ -788,10 +804,13 @@ class SepsolicitudController extends Controller
             $modelbitacora->updated_at = date('Y-m-d H:i:s');
             $modelbitacora->save();
 
+            $imprime = true;
+
         return $this->render('muestra', [
                 'numero' => $numero,
                 'dataProvider' => $dataProvider,
-                'consulta' => $consulta
+                'consulta' => $consulta,
+                'imprime' => $imprime
                 ]);
 
 
@@ -1204,6 +1223,10 @@ class SepsolicitudController extends Controller
 
     public function actionDevolver($numero)
     {
+
+        // $imprime variable para que imprima el caso lo coloca falso por defecto para que no imprima en devolver
+        $imprime = false;
+
         $consulta = Yii::$app->db->createCommand(
             "SELECT CONCAT('Caso N: ' || s1.num_solicitud) AS solicitud, "
             ."CONCAT('Solicitante: ' ||ps.nombre || ' ' || ps.apellido || ' C.I.: ' ||ps.ci ) AS solicitante, "
@@ -1301,10 +1324,12 @@ class SepsolicitudController extends Controller
           Yii::$app->session->setFlash("warning", "El caso no se puede devolver, Tiene estatus Aprobado
           <br> Intente con otro caso");
 
+
               return $this->render('muestra', [
               'numero' => $numero,
               'dataProvider' => $dataProvider,
-              'consulta' => $consulta
+              'consulta' => $consulta,
+              'imprime' => $imprime
               ]);
 
         } else{
@@ -1316,7 +1341,8 @@ class SepsolicitudController extends Controller
                 return $this->render('muestra', [
                 'numero' => $numero,
                 'dataProvider' => $dataProvider,
-                'consulta' => $consulta
+                'consulta' => $consulta,
+                'imprime' => $imprime
                 ]);
 
         }
@@ -1336,7 +1362,7 @@ class SepsolicitudController extends Controller
             Yii::$app->db->createCommand("UPDATE gestion "
                 . "SET estatus3_id = 11 WHERE solicitud_id = ".$numero.";")->execute();
 
-        }http://172.27.8.20/gestionfps/web/sepsolicitud/muestra?numero=101069
+        }
 
 
         /** CONSULTO SI EL CASO POSEE PUNTO DE CUENTA **/
@@ -1400,7 +1426,8 @@ class SepsolicitudController extends Controller
             return $this->render('muestra', [
                 'numero' => $numero,
                 'dataProvider' => $dataProvider,
-                'consulta' => $consulta
+                'consulta' => $consulta,
+                'imprime' => $imprime
                 ]);
 
     }

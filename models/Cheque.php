@@ -37,6 +37,25 @@ use Yii;
  */
 class Cheque extends \yii\db\ActiveRecord
 {
+    //Constantes utilizadas para hacer la entrega del cheque o del caso
+
+    public $solicitante;
+    public $cisolicitante;
+    public $beneficiario;
+    public $cibeneficiario;
+    public $tratamiento;
+    public $especialidad;
+    public $recepcion;
+    public $necesidad;
+    public $tipodeayuda;
+    public $telefono;
+    public $rif;
+    public $orpa;
+    public $num_solicitud;
+
+
+
+
     /**
      * @inheritdoc
      */
@@ -70,23 +89,23 @@ class Cheque extends \yii\db\ActiveRecord
     {
         return [
             'cheque' => 'Cheque',
-            'id_presupuesto' => 'Id Presupuesto',
+            'id_presupuesto' => 'id_presupuesto',
             'estatus_cheque' => 'Estatus Cheque',
-            'date_cheque' => 'Date Cheque',
-            'cheque_by' => 'Cheque By',
-            'date_enviofirma' => 'Date Enviofirma',
-            'date_enviocaja' => 'Date Enviocaja',
-            'date_reccaja' => 'Date Reccaja',
-            'date_entregado' => 'Date Entregado',
-            'entregado_by' => 'Entregado By',
-            'retirado_personaid' => 'Retirado Personaid',
-            'responsable_by' => 'Responsable By',
-            'imagenentrega_id' => 'Imagenentrega ID',
-            'date_anulado' => 'Date Anulado',
+            'date_cheque' => 'Fecha Emitido',
+            'cheque_by' => 'Cheque Impreso por:',
+            'date_enviofirma' => 'Fecha Envio Firma',
+            'date_enviocaja' => 'Fecha Envio Caja',
+            'date_reccaja' => 'Fecha de Recepción en Caja',
+            'date_entregado' => 'Fecha Entregado',
+            'entregado_by' => 'Entregado por:',
+            'retirado_personaid' => 'Retirado Por:',
+            'responsable_by' => 'Responsable de la Entrega',
+            'imagenentrega_id' => 'Id Imagen de Entrega',
+            'date_anulado' => 'Fecha Anulado',
             'motivo_anulado' => 'Motivo Anulado',
-            'anulado_by' => 'Anulado By',
-            'date_archivo' => 'Date Archivo',
-            'archivo_by' => 'Archivo By',
+            'anulado_by' => 'Anulado Por',
+            'date_archivo' => 'Fecha Archivo',
+            'archivo_by' => 'Enviado a Archivo por:',
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',

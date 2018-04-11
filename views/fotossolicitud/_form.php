@@ -35,36 +35,37 @@ use kartik\file\FileInput;
     echo $form->field($model, 'imagen[]')
         ->widget(FileInput::classname(),[
                 'options'=>[
-                    'accept'=>'imagen/*',
+                    //'accept'=>'imagen/*',
                     'multiple'=>true
                 ],
                 'pluginOptions' => [
                     'initialPreview'=>[
-                    isset($model->foto)?Yii::getAlias('@web')."/img/adjuntos/".$model->foto:"",
+                    isset($model->foto)?Yii::getAlias('@web')."/img/adjuntos/".$model->solicitud_id.'/'.$model->foto:"",
                     ],
                     'initialPreviewAsData'=>true,
                     'initialPreviewShowDelete' => false,
                     'initialCaption'=>"Subir Archivo",
                     'initialPreviewConfig' => [
                         [
+                        //comentario para archivos pdf, si no es imagen colocar 'type' => pdf
                         'caption' => $model->foto,
                         ]
                     ],
                     'overwriteInitial'=>false,
                     'maxFileSize'=>28000,
                     'showRemove' => false,
+                    'showUpload' => false,
                 ],
 
-            ])
+            ]);
 ?>
 
 
-
-
+<center>
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Guardar', ['class' => 'btn btn-info']) ?>
     </div>
-
+<center>
     <?php ActiveForm::end(); ?>
 
 </div>

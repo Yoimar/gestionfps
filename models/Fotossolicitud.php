@@ -45,7 +45,7 @@ class Fotossolicitud extends \yii\db\ActiveRecord
                 'tooBig' => 'El tamaño máximo permitido es 4MB', //Error
                 'minSize' => 1, //10 Bytes
                 'tooSmall' => 'El tamaño mínimo permitido son 10 BYTES', //Error
-                'extensions' => 'pdf, txt, doc, jpg, png, gif, pptx',
+                'extensions' => 'jpg, png, gif, jpeg, bmp',
                 'wrongExtension' => 'El archivo {imagen} no contiene una extensión permitida {extensions}', //Error
                 'maxFiles' => 2,
                 'tooMany' => 'El máximo de archivos permitidos son {limit}', //Error
@@ -99,71 +99,6 @@ class Fotossolicitud extends \yii\db\ActiveRecord
 
         ];
     }
-    /***   Para revision del Modelo ***/
-    public function getImageFile()
-    {
-        return isset($this->foto) ? Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$model->foto : null;
-    }
-
-    /**
-     * fetch stored image url
-     * @return string
-     */
-    public function getImageUrl()
-    {
-        // Retorno una imagen predefinida si no consigo una imagen
-        $avatar = isset($this->avatar) ? $this->foto : 'default_foto.jpg';
-        return Yii::getAlias('@web')."/img/adjuntos/".$avatar;
-    }
-
-    /**
-    * Process upload of image
-    *
-    * @return mixed the uploaded image instance
-    */
-    public function uploadImage() {
-
-        $image = UploadedFile::getInstances($this, 'imagen');
-
-        // if no image was uploaded abort the upload
-        if (empty($image)) {
-            return false;
-        }
-
-        foreach ($image as $file) {
-            $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'
-            .$file->baseName. '.' .$file->extension;
-            $file->saveAs($path);
-            $this->foto = $file->name;
-            }
-
-
-
-        // the uploaded image instance
-        return true;
-    }
-
-    /**
-    * Process deletion of image
-    *
-    * @return boolean the status of deletion
-    */
-    public function deleteImage() {
-        $file = $this->getImageFile();
-
-        // check if file exists on server
-        if (empty($file) || !file_exists($file)) {
-            return false;
-        }
-
-        // check if uploaded file can be deleted on server
-        if (!unlink($file)) {
-            return false;
-        }
-
-        return true;
-    }
-
 
 //Fin de la clase
 }

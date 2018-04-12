@@ -6,6 +6,7 @@ use Yii;
 use yii\filters\AccessControl;
 use app\models\Cheque;
 use app\models\ChequeSearch;
+use app\models\ChequeSearchCarga;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -29,12 +30,14 @@ class ChequeController extends Controller
                     'create',
                     'update',
                     'delete',
+                    'busqueda'
                     ],
                 'rules' => [
                     [
                         'actions' => [
                             'create',
                             'view',
+                            'busqueda',
                         ],
                         'allow' => true,
                         'roles' => ['gestion-crear'],
@@ -81,6 +84,17 @@ class ChequeController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionBusqueda()
+    {
+        $searchModel = new ChequeSearchCarga();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('busqueda', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

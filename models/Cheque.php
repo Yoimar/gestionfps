@@ -38,23 +38,30 @@ use Yii;
 class Cheque extends \yii\db\ActiveRecord
 {
     //Constantes utilizadas para hacer la entrega del cheque o del caso
-
-    public $solicitante;
-    public $cisolicitante;
+    public $num_solicitud;
     public $beneficiario;
     public $cibeneficiario;
+    public $solicitante;
+    public $cisolicitante;
+    public $entregadoa;
+    public $cientregadoa;
+    public $estado_beneficiario;
+    public $anocheque;
+    public $mescheque;
+    public $necesidad;
+    public $empresainstitucion;
+    public $monto;
+    public $tipodeayuda;
     public $tratamiento;
     public $especialidad;
-    public $recepcion;
-    public $necesidad;
-    public $tipodeayuda;
-    public $telefono;
     public $rif;
+    public $recepcioninicial;
+    public $telefono;
     public $orpa;
-    public $num_solicitud;
-
-
-
+    public $estatus3;
+    public $estatus2;
+    public $estatus1;
+    public $recepcionactual;
 
     /**
      * @inheritdoc
@@ -110,6 +117,22 @@ class Cheque extends \yii\db\ActiveRecord
             'created_by' => 'Created By',
             'updated_at' => 'Updated At',
             'updated_by' => 'Updated By',
+            'beneficiario' => 'Beneficiario',
+            'cibeneficiario' => 'C.I. Beneficiario',
+            'solicitante' => 'Solicitante',
+            'cisolicitante' => 'C.I. Solicitante',
+            'estado_beneficiario' => 'Estado Beneficiario',
+            'tipodeayuda' => 'Tipo de Ayuda',
+            'tratamiento' => 'Tratamiento',
+            'especialidad' => 'Especialidad',
+            'necesidad' => 'Necesidad',
+            'rif' => 'Rif',
+            'empresainstitucion' => 'Casa Comercial, Beneficiario o Institución',
+            'monto' => 'Monto',
+            'recepcion' => 'Unidad',
+            'telefono' => 'Telefono',
+            'orpa' => 'ORPA',
+            'num_solicitud' => 'N° Solicitud',
         ];
     }
 

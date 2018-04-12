@@ -500,7 +500,6 @@ echo   GridView::widget([
 </div>
 <center>
 <div class="col-lg-12 col-md-12">
-
      <div>
          <?php
             echo AlertBlock::widget([
@@ -513,9 +512,9 @@ echo   GridView::widget([
                         'warning' => ['type' => Growl::TYPE_WARNING, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
                         'info' => ['type' => Growl::TYPE_INFO, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]]
                         ],
-                     ])
+            ])
          ?>
-        </div>
+    </div>
 </div>
 </center>
 <?php

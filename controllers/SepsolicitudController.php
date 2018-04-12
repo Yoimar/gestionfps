@@ -397,7 +397,7 @@ class SepsolicitudController extends Controller
 
         $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
 
-        if ($consulta[0]['tiporif']==""){
+        if ($consulta[0]['tiporif']==""||$consulta[0]['rif']==""||$consulta[0]['nombrecasacomercial']==""){
 
           $query = \app\models\PresupuestosSearch::find()
                       ->select(["conexionsigesp.req as documento",

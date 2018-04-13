@@ -12,11 +12,14 @@ use yii\helpers\ArrayHelper;
 
 <div class="empresa-institucion-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'id' => 'empresa-institucion-form',
+        'enableAjaxValidation' => true,
+    ]); ?>
 
     <?= $form->field($model, 'nombrecompleto')->textInput(['maxlength' => true]) ?>
 
-    <?= 
+    <?=
         $form->field($model, 'rif')->widget(Select2::classname(), [
         'data' => ArrayHelper::map([['id' => 'G', 'nombre' => 'G'],['id' => 'J', 'nombre' => 'J'],['id' => 'V', 'nombre' => 'V']], 'id', 'nombre'),
         'language' => 'es',
@@ -25,7 +28,7 @@ use yii\helpers\ArrayHelper;
         'allowClear' => true
         ],
     ]);
-    
+
     ?>
 
     <?= $form->field($model, 'nrif')->textInput(['maxlength' => true]) ?>

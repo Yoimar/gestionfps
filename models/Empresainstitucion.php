@@ -37,10 +37,11 @@ class Empresainstitucion extends \yii\db\ActiveRecord
     {
         return [
             [['created_at', 'updated_at'], 'safe'],
-            [['created_by', 'updated_by'], 'integer'],
+            [['created_by', 'updated_by', 'nrif'], 'integer'],
             [['nombrecompleto'], 'string', 'max' => 250],
             [['rif'], 'string', 'max' => 1],
-            [['nrif'], 'string', 'max' => 20],
+            [['nrif'], 'string', 'max' => 10, 'message' => 'Por favor coloque solo NUMEROS sin ceros a la izquierda'],
+            [['nrif','rif','nombrecompleto'], 'required']
         ];
     }
 

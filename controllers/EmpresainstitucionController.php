@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Conexionsigesp;
 use app\models\Sepsolicitud;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * EmpresainstitucionController implements the CRUD actions for Empresainstitucion model.
@@ -119,8 +121,14 @@ class EmpresainstitucionController extends Controller
                     return $this->redirect(['sepsolicitud/muestra', 'numero' => $volver]);
         }
         }
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['sepsolicitud/muestra', 'numero' => $volver]);
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            if ($model->validate()) {
+                $model->save();
+                return $this->redirect(['sepsolicitud/muestra', 'numero' => $volver]);
+            }else{
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ActiveForm::validate($model);
+            }
         } else {
             return $this->render('update', [
                 'model' => $model,

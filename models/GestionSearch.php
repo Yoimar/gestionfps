@@ -45,31 +45,31 @@ class GestionSearch extends Gestion
     public function search($params)
     {
         $query = Gestion::find()
-                ->select(["extract(month from programaevento.fechaprograma)::int as mes_actividad", 'programaevento.descripcion', 'solicitudes.num_solicitud', 'gestion.programaevento_id', 
-                'programaevento.id', 'solicitudes.id', 'gestion.id as id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', "estatus1.nombre as estatus1_id", 
+                ->select(["extract(month from programaevento.fechaprograma)::int as mes_actividad", 'programaevento.descripcion', 'solicitudes.num_solicitud', 'gestion.programaevento_id',
+                'programaevento.id', 'solicitudes.id', 'gestion.id as id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', "estatus1.nombre as estatus1_id",
                 "estatus2.nombre as estatus2_id", 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante',
-                'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id', 'gestion.afrodescendiente', 'gestion.indigena', 
-                'gestion.sexodiversidad', 'gestion.trabajador_id', "personasolicitante.ci as cisolicitante", "personabeneficiario.ci as cibeneficiario", 
+                'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id', 'gestion.afrodescendiente', 'gestion.indigena',
+                'gestion.sexodiversidad', 'gestion.trabajador_id', "personasolicitante.ci as cisolicitante", "personabeneficiario.ci as cibeneficiario",
                 "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario", 'solicitudes.ind_beneficiario_menor as nino',
                 "CONCAT(personasolicitante.nombre || ' ' || personasolicitante.apellido) AS solicitante",  "to_char(solicitudes.fecha_aprobacion, 'DD/MM/YYYY') as fechaaprobacion",
-                'users.nombre as trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'areas.nombre as especialidad', 'solicitudes.area_id', 
+                'users.nombre as trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'areas.nombre as especialidad', 'solicitudes.area_id',
                 'solicitudes.recepcion_id', 'recepciones.nombre as recepcion', "CONCAT(trabajadoracargo.dimprofesion || ' ' || trabajadoracargo.primernombre || ' ' || trabajadoracargo.primerapellido) AS trabajadoracargoactividad",
                 "extract(month from solicitudes.created_at)::int as mesingreso", 'estadoactividad.nombre as estado_actividad', 'tipo_ayudas.nombre as tipodeayuda', 'estatussasyc.estatus as estatussa',
-                'solicitudes.estatus', 'procesos.nombre as proceso', 
+                'solicitudes.estatus', 'procesos.nombre as proceso',
                 'solicitudes.descripcion', "date_part('day' ,now()-gestion.updated_at) as diasdeultimamodificacion", "date_part('day' ,now()-solicitudes.created_at) as diasdesolicitud", "date_part('day' ,now()-programaevento.fechaprograma) as diasdesdeactividad",
                 "extract(year from solicitudes.created_at) as anodelasolicitud", "CONCAT(estadobeneficiario.nombre || ' ' || municipiobeneficiario.nombre || ' ' || parroquiabeneficiario.nombre || ' ' || personabeneficiario.zona_sector || ' ' || personabeneficiario.calle_avenida || ' ' || personabeneficiario.apto_casa) as direccion",
                 "to_char(programaevento.fechaprograma, 'DD/MM/YYYY') as fechaactividad", "to_char(solicitudes.created_at, 'DD/MM/YYYY') as fechaingreso", 'estadobeneficiario.nombre as estadodireccion', "TO_CHAR(gestion.updated_at, 'DD/MM/YYYY') as fechaultimamodificacion",
-                "gestion.instruccion_id", 
+                "gestion.instruccion_id",
                 "CONCAT(COALESCE(personabeneficiario.telefono_fijo || ' ', '') || COALESCE(personabeneficiario.telefono_celular || ' ', '') || COALESCE(personabeneficiario.telefono_otro || ' ', '') ) as telefono",
                 "extract(YEAR FROM age(now(),personabeneficiario.fecha_nacimiento)) as edadbeneficiario", "string_agg(empresa_institucion.nombrecompleto, '  //  ') as empresaoinstitucion",
                 "count(presupuestos.cantidad) as cantidad", "string_agg(presupuestos.cheque, ' / ') as cheque", "string_agg(to_char(presupuestos.beneficiario_id,'99999'), ', ')", "string_agg(to_char(presupuestos.proceso_id,'99999'), ', ')", "string_agg(requerimientos.nombre, ', ') as tratamiento", "sum(presupuestos.montoapr) as monto"]);
 
         // add conditions that should always apply here
-        
+
         $query->join('LEFT JOIN', 'convenio', 'gestion.convenio_id = convenio.id')
                 ->join('JOIN', 'solicitudes','gestion.solicitud_id = solicitudes.id')
                 ->join('LEFT JOIN', 'programaevento', 'gestion.programaevento_id = programaevento.id')
-                ->join('LEFT JOIN', 'tipodecontacto', 'gestion.tipodecontacto_id = tipodecontacto.id')               
+                ->join('LEFT JOIN', 'tipodecontacto', 'gestion.tipodecontacto_id = tipodecontacto.id')
                 ->join('LEFT JOIN', 'users', 'solicitudes.usuario_asignacion_id = users.id')
                 ->join('LEFT JOIN', 'estatussasyc', 'solicitudes.estatus = estatussasyc.id')
                 ->join('LEFT JOIN', 'recepciones', 'solicitudes.recepcion_id = recepciones.id')
@@ -97,7 +97,7 @@ class GestionSearch extends Gestion
                 ->join('LEFT JOIN', 'instruccion', 'gestion.instruccion_id = instruccion.id')
                 ->groupBy(['mes_actividad', 'programaevento.descripcion', 'solicitudes.num_solicitud', 'gestion.programaevento_id', 'programaevento.id', 'solicitudes.id', 'gestion.id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', 'estatus1.nombre', 'estatus2.nombre', 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante', 'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id', 'gestion.afrodescendiente', 'gestion.indigena', 'gestion.sexodiversidad', 'gestion.trabajador_id',
                 'cisolicitante', 'cibeneficiario', 'beneficiario', 'nino', 'solicitante', 'trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'especialidad', 'solicitudes.area_id', 'solicitudes.recepcion_id', 'recepcion', 'trabajadoracargoactividad', 'estado_actividad', 'tipodeayuda', 'estatussa', 'solicitudes.estatus', 'proceso', 'solicitudes.descripcion', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'estadodireccion', 'fechaultimamodificacion', 'gestion.instruccion_id', 'telefono', 'edadbeneficiario']);
-        
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -137,182 +137,182 @@ class GestionSearch extends Gestion
                         'asc' => ['convenio.nombre' => \SORT_ASC],
                         'desc' => ['convenio.nombre' => \SORT_DESC],
                     ],
-                    'militar_solicitante' => [ 
+                    'militar_solicitante' => [
                         'asc' => ['gestion.militar_solicitante' => \SORT_ASC],
                         'desc' => ['gestion.militar_solicitante' => \SORT_DESC],
                     ],
-                    'rango_solicitante_id' => [ 
+                    'rango_solicitante_id' => [
                         'asc' => ['rangosolicitante.nombre' => \SORT_ASC],
                         'desc' => ['rangosolicitante.nombre' => \SORT_DESC],
                     ],
-                    'militar_beneficiario' => [ 
+                    'militar_beneficiario' => [
                         'asc' => ['gestion.militar_beneficiario' => \SORT_ASC],
                         'desc' => ['gestion.militar_beneficiario' => \SORT_DESC],
                     ],
-                    'rango_beneficiario_id' => [ 
+                    'rango_beneficiario_id' => [
                         'asc' => ['rangobeneficiario.nombre' => \SORT_ASC],
                         'desc' => ['rangobeneficiario.nombre' => \SORT_DESC],
                     ],
-                    'afrodescendiente' => [ 
+                    'afrodescendiente' => [
                         'asc' => ['gestion.afrodescendiente' => \SORT_ASC],
                         'desc' => ['gestion.afrodescendiente' => \SORT_DESC],
                     ],
-                    'indigena' => [ 
+                    'indigena' => [
                         'asc' => ['gestion.indigena' => \SORT_ASC],
                         'desc' => ['gestion.indigena' => \SORT_DESC],
                     ],
-                    'sexodiversidad' => [ 
+                    'sexodiversidad' => [
                         'asc' => ['gestion.sexodiversidad' => \SORT_ASC],
                         'desc' => ['gestion.sexodiversidad' => \SORT_DESC],
                     ],
-                    'trabajador_id' => [ 
+                    'trabajador_id' => [
                         'asc' => ['gestion.trabajador_id' => \SORT_ASC],
                         'desc' => ['gestion.trabajador_id' => \SORT_DESC],
                     ],
-                    'mes_actividad' => [ 
+                    'mes_actividad' => [
                         'asc' => ['mes_actividad' => \SORT_ASC],
                         'desc' => ['mes_actividad' => \SORT_DESC],
                     ],
-                    'solicitante' => [ 
+                    'solicitante' => [
                         'asc' => ['solicitante' => \SORT_ASC],
                         'desc' => ['solicitante' => \SORT_DESC],
                     ],
-                    'cisolicitante' => [ 
+                    'cisolicitante' => [
                         'asc' => ['cisolicitante' => \SORT_ASC],
                         'desc' => ['cisolicitante' => \SORT_DESC],
                     ],
-                    'beneficiario' => [ 
+                    'beneficiario' => [
                         'asc' => ['beneficiario' => \SORT_ASC],
                         'desc' => ['beneficiario' => \SORT_DESC],
                     ],
-                    'cibeneficiario' => [ 
+                    'cibeneficiario' => [
                         'asc' => ['cibeneficiario' => \SORT_ASC],
                         'desc' => ['cibeneficiario' => \SORT_DESC],
                     ],
-                    'tratamiento' => [ 
+                    'tratamiento' => [
                         'asc' => ['tratamiento' => \SORT_ASC],
                         'desc' => ['tratamiento' => \SORT_DESC],
                     ],
-                    'nino' => [ 
+                    'nino' => [
                         'asc' => ['nino' => \SORT_ASC],
                         'desc' => ['nino' => \SORT_DESC],
                     ],
-                    'trabajadorsocial' => [ 
+                    'trabajadorsocial' => [
                         'asc' => ['trabajadorsocial' => \SORT_ASC],
                         'desc' => ['trabajadorsocial' => \SORT_DESC],
                     ],
-                    'especialidad' => [ 
+                    'especialidad' => [
                         'asc' => ['especialidad' => \SORT_ASC],
                         'desc' => ['especialidad' => \SORT_DESC],
                     ],
-                    'recepcion' => [ 
+                    'recepcion' => [
                         'asc' => ['recepcion' => \SORT_ASC],
                         'desc' => ['recepcion' => \SORT_DESC],
                     ],
-                    'necesidad' => [ 
+                    'necesidad' => [
                         'asc' => ['solicitudes.necesidad' => \SORT_ASC],
                         'desc' => ['solicitudes.necesidad' => \SORT_DESC],
                     ],
-                    'monto' => [ 
+                    'monto' => [
                         'asc' => ['monto' => \SORT_ASC],
                         'desc' => ['monto' => \SORT_DESC],
                     ],
-                    'trabajadoracargoactividad' => [ 
+                    'trabajadoracargoactividad' => [
                         'asc' => ['trabajadoracargoactividad' => \SORT_ASC],
                         'desc' => ['trabajadoracargoactividad' => \SORT_DESC],
                     ],
-                    'mesingreso' => [ 
+                    'mesingreso' => [
                         'asc' => ['mesingreso' => \SORT_ASC],
                         'desc' => ['mesingreso' => \SORT_DESC],
                     ],
-                    'estado_actividad' => [ 
+                    'estado_actividad' => [
                         'asc' => ['estado_actividad' => \SORT_ASC],
                         'desc' => ['estado_actividad' => \SORT_DESC],
                     ],
-                    'tipodeayuda' => [ 
+                    'tipodeayuda' => [
                         'asc' => ['tipodeayuda' => \SORT_ASC],
                         'desc' => ['tipodeayuda' => \SORT_DESC],
                     ],
-                    'estatussa' => [ 
+                    'estatussa' => [
                         'asc' => ['estatussa' => \SORT_ASC],
                         'desc' => ['estatussa' => \SORT_DESC],
                     ],
-                    'empresaoinstitucion' => [ 
+                    'empresaoinstitucion' => [
                         'asc' => ['empresaoinstitucion' => \SORT_ASC],
                         'desc' => ['empresaoinstitucion' => \SORT_DESC],
                     ],
-                    'proceso' => [ 
+                    'proceso' => [
                         'asc' => ['proceso' => \SORT_ASC],
                         'desc' => ['proceso' => \SORT_DESC],
                     ],
-                    'cantidad' => [ 
+                    'cantidad' => [
                         'asc' => ['cantidad' => \SORT_ASC],
                         'desc' => ['cantidad' => \SORT_DESC],
                     ],
-                    'descripcion' => [ 
+                    'descripcion' => [
                         'asc' => ['solicitudes.descripcion' => \SORT_ASC],
                         'desc' => ['solicitudes.descripcion' => \SORT_DESC],
                     ],
-                    'diasdeultimamodificacion' => [ 
+                    'diasdeultimamodificacion' => [
                         'asc' => ['diasdeultimamodificacion' => \SORT_ASC],
                         'desc' => ['diasdeultimamodificacion' => \SORT_DESC],
                     ],
-                    'diasdesolicitud' => [ 
+                    'diasdesolicitud' => [
                         'asc' => ['diasdesolicitud' => \SORT_ASC],
                         'desc' => ['diasdesolicitud' => \SORT_DESC],
                     ],
-                    'diasdesdeactividad' => [ 
+                    'diasdesdeactividad' => [
                         'asc' => ['diasdesdeactividad' => \SORT_ASC],
                         'desc' => ['diasdesdeactividad' => \SORT_DESC],
                     ],
-                    'cheque' => [ 
+                    'cheque' => [
                         'asc' => ['presupuestos.cheque' => \SORT_ASC],
                         'desc' => ['presupuestos.cheque' => \SORT_DESC],
                     ],
-                    'anodelasolicitud' => [ 
+                    'anodelasolicitud' => [
                         'asc' => ['anodelasolicitud' => \SORT_ASC],
                         'desc' => ['anodelasolicitud' => \SORT_DESC],
                     ],
-                    'direccion' => [ 
+                    'direccion' => [
                         'asc' => ['direccion' => \SORT_ASC],
                         'desc' => ['direccion' => \SORT_DESC],
                     ],
-                    'fechaactividad' => [ 
+                    'fechaactividad' => [
                         'asc' => ['fechaactividad' => \SORT_ASC],
                         'desc' => ['fechaactividad' => \SORT_DESC],
                     ],
-                    'fechaingreso' => [ 
+                    'fechaingreso' => [
                         'asc' => ['fechaingreso' => \SORT_ASC],
                         'desc' => ['fechaingreso' => \SORT_DESC],
                     ],
-                    'estadodireccion' => [ 
+                    'estadodireccion' => [
                         'asc' => ['estadodireccion' => \SORT_ASC],
                         'desc' => ['estadodireccion' => \SORT_DESC],
                     ],
-                    'fechaultimamodificacion' => [ 
+                    'fechaultimamodificacion' => [
                         'asc' => ['fechaultimamodificacion' => \SORT_ASC],
                         'desc' => ['fechaultimamodificacion' => \SORT_DESC],
                     ],
-                    'edadbeneficiario' => [ 
+                    'edadbeneficiario' => [
                         'asc' => ['edadbeneficiario' => \SORT_ASC],
                         'desc' => ['edadbeneficiario' => \SORT_DESC],
                     ],
-                    'instruccion_id' => [ 
+                    'instruccion_id' => [
                         'asc' => ['gestion.instrucion_id' => \SORT_ASC],
                         'desc' => ['gestion.intruccion_id' => \SORT_DESC],
                     ],
-                    'telefono' => [ 
+                    'telefono' => [
                         'asc' => ['telefono' => \SORT_ASC],
                         'desc' => ['telefono' => \SORT_DESC],
                     ],
-                    'fechaaprobacion' => [ 
+                    'fechaaprobacion' => [
                         'asc' => ['solicitudes.fecha_aprobacion' => \SORT_ASC],
                         'desc' => ['solicitudes.fecha_aprobacion' => \SORT_DESC],
                     ],
-    
+
                 ],
             ],
-        
+
         ]);
 
         $this->load($params);
@@ -359,7 +359,7 @@ class GestionSearch extends Gestion
             ->andFilterWhere(['like', 'users.nombre', $this->trabajadorsocial])
             ->andFilterWhere(['like', 'areas.nombre', $this->especialidad])
             ->andFilterWhere(['like', 'recepciones.nombre', $this->recepcion])
-            ->andFilterWhere(['like', 'solicitudes.necesidad', $this->necesidad])  
+            ->andFilterWhere(['like', 'solicitudes.necesidad', $this->necesidad])
             ->andFilterWhere(['like', 'estadoactividad.nombre', $this->estado_actividad])
             ->andFilterWhere(['like', 'estadobeneficiario.nombre', $this->estadodireccion])
             ->andFilterWhere(['like', 'tipo_ayudas.nombre', $this->tipodeayuda])
@@ -383,5 +383,5 @@ class GestionSearch extends Gestion
 
         return $dataProvider;
     }
-    
+
 }

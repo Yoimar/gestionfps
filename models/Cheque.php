@@ -39,6 +39,7 @@ class Cheque extends \yii\db\ActiveRecord
 {
     //Constantes utilizadas para hacer la entrega del cheque o del caso
     public $num_solicitud;
+    public $solicitud_id;
     public $beneficiario;
     public $cibeneficiario;
     public $solicitante;
@@ -49,19 +50,24 @@ class Cheque extends \yii\db\ActiveRecord
     public $anocheque;
     public $mescheque;
     public $necesidad;
+    public $descripcion;
+    public $rif;
     public $empresainstitucion;
     public $monto;
     public $tipodeayuda;
     public $tratamiento;
     public $especialidad;
-    public $rif;
     public $recepcioninicial;
+    public $recepcionactual;
     public $telefono;
     public $orpa;
     public $estatus3;
+    public $estatus3_id;
     public $estatus2;
+    public $estatus2_id;
     public $estatus1;
-    public $recepcionactual;
+    public $estatus1_id;
+
 
     /**
      * @inheritdoc

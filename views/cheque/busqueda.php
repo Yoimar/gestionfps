@@ -20,60 +20,23 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Cheque', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
+</div>
+</div>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'cheque',
-            'id_presupuesto',
-            'estatus_cheque',
-            'date_cheque',
-            'cheque_by',
-            'date_enviofirma',
-            'date_enviocaja',
-            'date_reccaja',
-            'date_entregado',
-            'entregado_by',
-            'retirado_personaid',
-            'responsable_by',
-            'imagenentrega_id',
-            'date_anulado',
-            'motivo_anulado',
-            'anulado_by',
-            'date_archivo',
-            'archivo_by',
-            'created_at',
-            'created_by',
-            'updated_at',
-            'updated_by',
-            'beneficiario',
-            'solicitante',
-            'estado_beneficiario',
-            'tipodeayuda',
-            'tratamiento',
-            'especialidad',
-            'necesidad',
-            'empresainstitucion',
-            'recepcioninicial',
-            'recepcionactual',
-            'telefono',
-            'orpa',
             'num_solicitud',
+            'beneficiario',
             'cibeneficiario',
+            'solicitante',
             'cisolicitante',
-            'anocheque',
-            'mescheque',
+            'rif',
+            'empresainstitucion',
+            'cheque',
             'monto',
-            [
-            'attribute' => 'rif',
-            'value' => 'rif',
-            'format' => 'text',
-            'vAlign'=>'middle',
-            'hAlign'=>'center',
-            ],
-
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

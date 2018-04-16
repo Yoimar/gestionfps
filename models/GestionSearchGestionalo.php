@@ -44,21 +44,21 @@ class GestionSearchGestionalo extends Gestion
     public function search($params)
     {
         $query = Gestion::find()
-                ->select(['solicitudes.num_solicitud as num_solicitud', 
-                'gestion.id as id', 
-                "estatus1.id as estatus1_id", 
-                "estatus2.id as estatus2_id", 
+                ->select(['solicitudes.num_solicitud as num_solicitud',
+                'gestion.id as id',
+                "estatus1.id as estatus1_id",
+                "estatus2.id as estatus2_id",
                 'gestion.estatus3_id',
                 'gestion.trabajador_id',
-                'gestion.recepcion_id', 
-                'recepciones2.nombre as unidadorigen',    
-                'departamentos.id as departamento', 
-                "personabeneficiario.ci as cibeneficiario", 
-                "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario", 
-                'users.nombre as trabajadorsocial', 
+                'gestion.recepcion_id',
+                'recepciones2.nombre as unidadorigen',
+                'departamentos.id as departamento',
+                "personabeneficiario.ci as cibeneficiario",
+                "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario",
+                'users.nombre as trabajadorsocial',
                 'solicitudes.usuario_asignacion_id',
                 'solicitudes.estatus',
-                "to_char(solicitudes.created_at, 'DD/MM/YYYY') as fechaingreso", 
+                "to_char(solicitudes.created_at, 'DD/MM/YYYY') as fechaingreso",
                 "TO_CHAR(gestion.updated_at, 'DD/MM/YYYY') as fechaultimamodificacion",
                 "CONCAT(COALESCE(personabeneficiario.telefono_fijo || ' ', '') || COALESCE(personabeneficiario.telefono_celular || ' ', '') || COALESCE(personabeneficiario.telefono_otro || ' ', '') ) as telefono",
                 "extract(YEAR FROM age(now(),personabeneficiario.fecha_nacimiento)) as edadbeneficiario",
@@ -67,12 +67,12 @@ class GestionSearchGestionalo extends Gestion
                 "string_agg(CONCAT(COALESCE(empresa_institucion.rif || '-', '') || empresa_institucion.nrif), '  //  ') as rif",
                 "string_agg(conexionsigesp.req, '  //  ') as requerimiento",
                 "string_agg(empresa_institucion.nombrecompleto, '  //  ') as empresaoinstitucion",
-                "count(presupuestos.cantidad) as cantidad", 
-                "string_agg(presupuestos.cheque, ' // ') as cheque", 
+                "count(presupuestos.cantidad) as cantidad",
+                "string_agg(presupuestos.cheque, ' // ') as cheque",
                 "sum(presupuestos.montoapr) as monto"]);
 
         // add conditions that should always apply here
-        
+
         $query->join('LEFT JOIN', 'solicitudes','gestion.solicitud_id = solicitudes.id')
                 ->join('LEFT JOIN', 'users', 'solicitudes.usuario_asignacion_id = users.id')
                 ->join('LEFT JOIN', 'presupuestos', 'presupuestos.solicitud_id = solicitudes.id')
@@ -86,25 +86,25 @@ class GestionSearchGestionalo extends Gestion
                 ->join('LEFT JOIN', 'recepciones', 'recepciones.id = gestion.recepcion_id')
                 ->join('LEFT JOIN', 'recepciones as recepciones2', 'recepciones2.id = solicitudes.recepcion_id')
                 ->join('LEFT JOIN', 'departamentos', 'recepciones.departamentos_id = departamentos.id')
-                ->groupBy(['num_solicitud', 
-                    'gestion.id', 
-                    'estatus1.id', 
-                    'estatus2.id', 
-                    'gestion.estatus3_id', 
+                ->groupBy(['num_solicitud',
+                    'gestion.id',
+                    'estatus1.id',
+                    'estatus2.id',
+                    'gestion.estatus3_id',
                     'gestion.trabajador_id',
                     'gestion.recepcion_id',
-                    'unidadorigen',    
+                    'unidadorigen',
                     'departamentos.id',
-                    'cibeneficiario', 
-                    'beneficiario', 
-                    'trabajadorsocial', 
-                    'solicitudes.usuario_asignacion_id', 
-                    'solicitudes.estatus', 
-                    'fechaingreso', 
-                    'fechaultimamodificacion', 
-                    'telefono', 
+                    'cibeneficiario',
+                    'beneficiario',
+                    'trabajadorsocial',
+                    'solicitudes.usuario_asignacion_id',
+                    'solicitudes.estatus',
+                    'fechaingreso',
+                    'fechaultimamodificacion',
+                    'telefono',
                     'edadbeneficiario']);
-        
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -136,118 +136,118 @@ class GestionSearchGestionalo extends Gestion
                         'asc' => ['estatus3.nombre' => \SORT_ASC],
                         'desc' => ['estatus3.nombre' => \SORT_DESC],
                     ],
-                    'trabajador_id' => [ 
+                    'trabajador_id' => [
                         'asc' => ['gestion.trabajador_id' => \SORT_ASC],
                         'desc' => ['gestion.trabajador_id' => \SORT_DESC],
                     ],
-                    'mes_actividad' => [ 
+                    'mes_actividad' => [
                         'asc' => ['mes_actividad' => \SORT_ASC],
                         'desc' => ['mes_actividad' => \SORT_DESC],
                     ],
-                    'beneficiario' => [ 
+                    'beneficiario' => [
                         'asc' => ['beneficiario' => \SORT_ASC],
                         'desc' => ['beneficiario' => \SORT_DESC],
                     ],
-                    'cibeneficiario' => [ 
+                    'cibeneficiario' => [
                         'asc' => ['cibeneficiario' => \SORT_ASC],
                         'desc' => ['cibeneficiario' => \SORT_DESC],
                     ],
-                    'tratamiento' => [ 
+                    'tratamiento' => [
                         'asc' => ['tratamiento' => \SORT_ASC],
                         'desc' => ['tratamiento' => \SORT_DESC],
                     ],
-                    'nino' => [ 
+                    'nino' => [
                         'asc' => ['nino' => \SORT_ASC],
                         'desc' => ['nino' => \SORT_DESC],
                     ],
-                    'trabajadorsocial' => [ 
+                    'trabajadorsocial' => [
                         'asc' => ['trabajadorsocial' => \SORT_ASC],
                         'desc' => ['trabajadorsocial' => \SORT_DESC],
                     ],
-                    'necesidad' => [ 
+                    'necesidad' => [
                         'asc' => ['solicitudes.necesidad' => \SORT_ASC],
                         'desc' => ['solicitudes.necesidad' => \SORT_DESC],
                     ],
-                    'monto' => [ 
+                    'monto' => [
                         'asc' => ['monto' => \SORT_ASC],
                         'desc' => ['monto' => \SORT_DESC],
                     ],
-                    'mesingreso' => [ 
+                    'mesingreso' => [
                         'asc' => ['mesingreso' => \SORT_ASC],
                         'desc' => ['mesingreso' => \SORT_DESC],
                     ],
-                    'empresaoinstitucion' => [ 
+                    'empresaoinstitucion' => [
                         'asc' => ['empresaoinstitucion' => \SORT_ASC],
                         'desc' => ['empresaoinstitucion' => \SORT_DESC],
                     ],
-                    'cantidad' => [ 
+                    'cantidad' => [
                         'asc' => ['cantidad' => \SORT_ASC],
                         'desc' => ['cantidad' => \SORT_DESC],
                     ],
-                    'descripcion' => [ 
+                    'descripcion' => [
                         'asc' => ['solicitudes.descripcion' => \SORT_ASC],
                         'desc' => ['solicitudes.descripcion' => \SORT_DESC],
                     ],
-                    'diasdeultimamodificacion' => [ 
+                    'diasdeultimamodificacion' => [
                         'asc' => ['diasdeultimamodificacion' => \SORT_ASC],
                         'desc' => ['diasdeultimamodificacion' => \SORT_DESC],
                     ],
-                    'diasdesolicitud' => [ 
+                    'diasdesolicitud' => [
                         'asc' => ['diasdesolicitud' => \SORT_ASC],
                         'desc' => ['diasdesolicitud' => \SORT_DESC],
                     ],
-                    'cheque' => [ 
+                    'cheque' => [
                         'asc' => ['presupuestos.cheque' => \SORT_ASC],
                         'desc' => ['presupuestos.cheque' => \SORT_DESC],
                     ],
-                    'anodelasolicitud' => [ 
+                    'anodelasolicitud' => [
                         'asc' => ['anodelasolicitud' => \SORT_ASC],
                         'desc' => ['anodelasolicitud' => \SORT_DESC],
                     ],
-                    'fechaingreso' => [ 
+                    'fechaingreso' => [
                         'asc' => ['fechaingreso' => \SORT_ASC],
                         'desc' => ['fechaingreso' => \SORT_DESC],
                     ],
-                    'fechaultimamodificacion' => [ 
+                    'fechaultimamodificacion' => [
                         'asc' => ['fechaultimamodificacion' => \SORT_ASC],
                         'desc' => ['fechaultimamodificacion' => \SORT_DESC],
                     ],
-                    'edadbeneficiario' => [ 
+                    'edadbeneficiario' => [
                         'asc' => ['edadbeneficiario' => \SORT_ASC],
                         'desc' => ['edadbeneficiario' => \SORT_DESC],
                     ],
-                    'instruccion_id' => [ 
+                    'instruccion_id' => [
                         'asc' => ['gestion.instrucion_id' => \SORT_ASC],
                         'desc' => ['gestion.intruccion_id' => \SORT_DESC],
                     ],
-                    'telefono' => [ 
+                    'telefono' => [
                         'asc' => ['telefono' => \SORT_ASC],
                         'desc' => ['telefono' => \SORT_DESC],
                     ],
-                    'requerimiento' => [ 
+                    'requerimiento' => [
                         'asc' => ['requerimiento' => \SORT_ASC],
                         'desc' => ['requerimiento' => \SORT_DESC],
                     ],
-                    'iddoc' => [ 
+                    'iddoc' => [
                         'asc' => ['iddoc' => \SORT_ASC],
                         'desc' => ['iddoc' => \SORT_DESC],
                     ],
-                    'rif' => [ 
+                    'rif' => [
                         'asc' => ['iddoc' => \SORT_ASC],
                         'desc' => ['iddoc' => \SORT_DESC],
                     ],
-                    'unidadorigen' => [ 
+                    'unidadorigen' => [
                         'asc' => ['recepciones2.nombre' => \SORT_ASC],
                         'desc' => ['recepciones2.nombre' => \SORT_DESC],
                     ],
-                    'orpa' => [ 
+                    'orpa' => [
                         'asc' => ['orpa' => \SORT_ASC],
                         'desc' => ['orpa' => \SORT_DESC],
                     ],
-    
+
                 ],
             ],
-        
+
         ]);
 
         $this->load($params);
@@ -279,25 +279,25 @@ class GestionSearchGestionalo extends Gestion
         $query->andFilterWhere(['like', 'afrodescendiente', $this->afrodescendiente])
             ->andFilterWhere(['like', 'indigena', $this->indigena])
             ->andFilterWhere(['like', 'sexodiversidad', $this->sexodiversidad])
-            ->andFilterWhere(['like', "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido)", $this->beneficiario])
+            ->andFilterWhere(['ilike', "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido)", $this->beneficiario])
             ->andFilterWhere(['=', 'extract(month from solicitudes.created_at)', $this->mesingreso])
             ->andFilterWhere(['like', "TRIM(TO_CHAR(personabeneficiario.ci, '99999999'))", $this->cibeneficiario])
             ->andFilterWhere(['like', 'solicitudes.num_solicitud', $this->solicitud_id])
-            ->andFilterWhere(['like', 'users.nombre', $this->trabajadorsocial])
-            ->andFilterWhere(['like', 'solicitudes.necesidad', $this->necesidad])
+            ->andFilterWhere(['ilike', 'users.nombre', $this->trabajadorsocial])
+            ->andFilterWhere(['ilike', 'solicitudes.necesidad', $this->necesidad])
             ->andFilterWhere(['like', "TRIM(TO_CHAR(presupuestos.monto, '9999999999999'))", $this->monto])
-            ->andFilterWhere(['like', 'empresa_institucion.nombrecompleto', $this->empresaoinstitucion])
-            ->andFilterWhere(['like', 'presupuestos.cheque', $this->cheque])
+            ->andFilterWhere(['ilike', 'empresa_institucion.nombrecompleto', $this->empresaoinstitucion])
+            ->andFilterWhere(['ilike', 'presupuestos.cheque', $this->cheque])
             ->andFilterWhere(['like', "TRIM(TO_CHAR(extract(year from solicitudes.created_at),'9999'))", $this->anodelasolicitud])
-            ->andFilterWhere(['like', 'solicitudes.descripcion', $this->descripcion])
+            ->andFilterWhere(['ilike', 'solicitudes.descripcion', $this->descripcion])
             ->andFilterWhere(['=', "date_part('day' ,now()-gestion.updated_at)", $this->diasdeultimamodificacion])
             ->andFilterWhere(['=', "date_part('day' ,now()-solicitudes.created_at)", $this->diasdesolicitud])
             ->andFilterWhere(['=', "date_part('year' ,now()-personabeneficiario.fecha_nacimiento)", $this->edadbeneficiario])
             ->andFilterWhere(['like', "to_char(solicitudes.created_at, 'DD/MM/YYYY')", $this->fechaingreso])
             ->andFilterWhere(['like', "to_char(gestion.updated_at, 'DD/MM/YYYY')", $this->fechaultimamodificacion])
-            ->andFilterWhere(['like', "CONCAT(personabeneficiario.telefono_fijo || ' ' || personabeneficiario.telefono_celular || ' ' || personabeneficiario.telefono_otro)", $this->telefono]);
+            ->andFilterWhere(['ilike', "CONCAT(personabeneficiario.telefono_fijo || ' ' || personabeneficiario.telefono_celular || ' ' || personabeneficiario.telefono_otro)", $this->telefono]);
 
         return $dataProvider;
     }
-    
+
 }

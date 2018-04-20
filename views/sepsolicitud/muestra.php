@@ -10,7 +10,10 @@ use kartik\growl\Growl;
 
 <div class="panel panel-primary">
 <div class="panel-heading">
-    <h3 class="panel-title text-center"><?= "Caso N° -".$consulta[0]['ndonacion']?></h3>
+    <h3 class="panel-title text-center">
+        <?= "Caso N° -"?> 
+        <?= isset($consulta[0]['ndonacion'])?$consulta[0]['ndonacion']:"" ?>
+    </h3>
   </div>
 <div class="panel-body">
     <div class="col-lg-6 col-md-6">

@@ -180,7 +180,7 @@ class SepsolicitudController extends Controller
         }
     }
 
-    public function actionMuestra($numero=null)
+    public function actionMuestra($numero)
     {
         //Hay que validar si entran dos casas comerciales
         //1ero Encuentro las casas comerciales
@@ -255,7 +255,8 @@ class SepsolicitudController extends Controller
             ],
             ]);
 
-            $consulta = Yii::$app->db->createCommand("SELECT CONCAT('Caso N°: ' || s1.num_solicitud) AS solicitud, "
+            $consulta = Yii::$app->db->createCommand("SELECT "
+            ."CONCAT('Caso N°: ' || s1.num_solicitud) AS solicitud, "
             ."CONCAT('Solicitante: ' ||ps.nombre || ' ' || ps.apellido || ' C.I.: ' ||ps.ci ) AS solicitante, "
             ."CONCAT('Beneficiario: ' ||pb.nombre || ' ' || pb.apellido || COALESCE(' C.I.: ' || pb.ci || ' ', '') ) AS beneficiario, "
             ."CONCAT('Requerimiento: ' || r1.nombre) AS requerimiento, "

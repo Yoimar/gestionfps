@@ -21,7 +21,12 @@ use yii\helpers\ArrayHelper;
 
     <?=
         $form->field($model, 'rif')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map([['id' => 'G', 'nombre' => 'G'],['id' => 'J', 'nombre' => 'J'],['id' => 'V', 'nombre' => 'V']], 'id', 'nombre'),
+        'data' => ArrayHelper::map([
+                ['id' => 'G', 'nombre' => 'G'],
+                ['id' => 'J', 'nombre' => 'J'],
+                ['id' => 'V', 'nombre' => 'V'],
+                ['id' => 'E', 'nombre' => 'E']
+            ], 'id', 'nombre'),
         'language' => 'es',
         'options' => ['placeholder' => '¿Tipo de Rif?'],
         'pluginOptions' => [

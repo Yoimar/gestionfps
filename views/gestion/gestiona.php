@@ -24,6 +24,7 @@ use kartik\export\ExportMenu;
 use kartik\date\DatePicker;
 use kartik\alert\AlertBlock;
 use kartik\growl\Growl;
+use yii\widgets\Pjax;
 
 ?>
 <!-- Aqui empieza el Div del Form de la Busqueda -->
@@ -456,7 +457,7 @@ $memosgestion->fechamemo = $fechahoy;
         ];
 
 ?>
-
+<?php Pjax::begin(); ?>
 <?php
 echo   GridView::widget([
 //        'id' => 'kv-grid-gestiona',
@@ -491,6 +492,8 @@ echo   GridView::widget([
 
 
 ?>
+<?php Pjax::end(); ?>
+
 <!-- Termina el GridView empieza el Envio de Información -->
 
 <?= Html::endForm();?>

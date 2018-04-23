@@ -340,31 +340,31 @@ class ChequeSearchCarga extends Cheque
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_presupuesto' => $this->id_presupuesto,
-            'date_cheque' => $this->date_cheque,
-            'cheque_by' => $this->cheque_by,
-            'date_enviofirma' => $this->date_enviofirma,
-            'date_enviocaja' => $this->date_enviocaja,
-            'date_reccaja' => $this->date_reccaja,
-            'date_entregado' => $this->date_entregado,
-            'entregado_by' => $this->entregado_by,
-            'retirado_personaid' => $this->retirado_personaid,
-            'responsable_by' => $this->responsable_by,
-            'imagenentrega_id' => $this->imagenentrega_id,
-            'date_anulado' => $this->date_anulado,
-            'anulado_by' => $this->anulado_by,
-            'date_archivo' => $this->date_archivo,
-            'archivo_by' => $this->archivo_by,
-            'created_at' => $this->created_at,
-            'created_by' => $this->created_by,
-            'updated_at' => $this->updated_at,
-            'updated_by' => $this->updated_by,
+            'cheque.id_presupuesto' => $this->id_presupuesto,
+            'cheque.date_cheque' => $this->date_cheque,
+            'cheque.cheque_by' => $this->cheque_by,
+            'cheque.date_enviofirma' => $this->date_enviofirma,
+            'cheque.date_enviocaja' => $this->date_enviocaja,
+            'cheque.date_reccaja' => $this->date_reccaja,
+            'cheque.date_entregado' => $this->date_entregado,
+            'cheque.entregado_by' => $this->entregado_by,
+            'cheque.retirado_personaid' => $this->retirado_personaid,
+            'cheque.responsable_by' => $this->responsable_by,
+            'cheque.imagenentrega_id' => $this->imagenentrega_id,
+            'cheque.date_anulado' => $this->date_anulado,
+            'cheque.anulado_by' => $this->anulado_by,
+            'cheque.date_archivo' => $this->date_archivo,
+            'cheque.archivo_by' => $this->archivo_by,
+            'cheque.created_at' => $this->created_at,
+            'cheque.created_by' => $this->created_by,
+            'cheque.updated_at' => $this->updated_at,
+            'cheque.updated_by' => $this->updated_by,
             'estatus3_id' => $this->estatus3_id,
             'estatus2_id' => $this->estatus2_id,
             'estatus1_id' => $this->estatus1_id,
         ]);
 
-        $query->andFilterWhere(['ilike', 'cheque', $this->cheque])
+        $query->andFilterWhere(['ilike', 'cheque.cheque', $this->cheque])
             ->andFilterWhere(['ilike', 'estatus_cheque', $this->estatus_cheque])
             ->andFilterWhere(['ilike', 'motivo_anulado', $this->motivo_anulado])
             ->andFilterWhere(['ilike', "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido)", $this->beneficiario])

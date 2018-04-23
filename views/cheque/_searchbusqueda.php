@@ -15,55 +15,54 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'cheque') ?>
+    <div class="col-lg-2 col-md-2">
 
-    <?= $form->field($model, 'id_presupuesto') ?>
+    <?= $form->field($model, 'estado_beneficiario') ?>
+
+    </div>
+    <div class="col-lg-1 col-md-1">
+
+    <?= $form->field($model, 'anocheque') ?>
+
+    </div>
+    <div class="col-lg-1 col-md-1">
+
+    <?= $form->field($model, 'mescheque') ?>
+
+    </div>
+    <div class="col-lg-1 col-md-1">
 
     <?= $form->field($model, 'estatus_cheque') ?>
 
+    </div>
+    <div class="col-lg-1 col-md-1">
+
+    <?= $form->field($model, 'recepcioninicial') ?>
+
+    </div>
+    <div class="col-lg-2 col-md-2">
+
     <?= $form->field($model, 'date_cheque') ?>
 
-    <?= $form->field($model, 'cheque_by') ?>
+    </div>
+    <div class="col-lg-2 col-md-2">
 
-    <?php // echo $form->field($model, 'date_enviofirma') ?>
+    <?= $form->field($model, 'date_reccaja') ?>
 
-    <?php // echo $form->field($model, 'date_enviocaja') ?>
+    </div>
+    <div class="col-lg-1 col-md-1">
 
-    <?php // echo $form->field($model, 'date_reccaja') ?>
+    <?= $form->field($model, 'tipodeayuda') ?>
 
-    <?php // echo $form->field($model, 'date_entregado') ?>
-
-    <?php // echo $form->field($model, 'entregado_by') ?>
-
-    <?php // echo $form->field($model, 'retirado_personaid') ?>
-
-    <?php // echo $form->field($model, 'responsable_by') ?>
-
-    <?php // echo $form->field($model, 'imagenentrega_id') ?>
-
-    <?php // echo $form->field($model, 'date_anulado') ?>
-
-    <?php // echo $form->field($model, 'motivo_anulado') ?>
-
-    <?php // echo $form->field($model, 'anulado_by') ?>
-
-    <?php // echo $form->field($model, 'date_archivo') ?>
-
-    <?php // echo $form->field($model, 'archivo_by') ?>
-
-    <?php // echo $form->field($model, 'created_at') ?>
-
-    <?php // echo $form->field($model, 'created_by') ?>
-
-    <?php // echo $form->field($model, 'updated_at') ?>
-
-    <?php // echo $form->field($model, 'updated_by') ?>
+    </div>
+    <div class="col-lg-1 col-md-1">
 
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+        <br>
+        <?= Html::submitButton('Busqueda', ['class' => 'btn btn-primary']) ?>
     </div>
 
+    </div>
     <?php ActiveForm::end(); ?>
 
 </div>

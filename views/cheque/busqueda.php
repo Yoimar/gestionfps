@@ -13,6 +13,9 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cheque-index">
 
+</div>
+</div>
+
     <h1><?= Html::encode($this->title) ?></h1>
     <?php echo $this->render('_searchbusqueda', ['model' => $searchModel]); ?>
 
@@ -20,9 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Cheque', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-</div>
-</div>
 
+<div class="col-lg-12 col-md-12">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -37,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'empresainstitucion',
             'cheque',
             'monto',
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class'=>'kartik\grid\ActionColumn'],
         ],
     ]); ?>
 </div>

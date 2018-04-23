@@ -646,6 +646,7 @@ class GestionController extends Controller
     $modelpresupuestos = Presupuestos::find()
                                 ->where(['solicitud_id' => $modelsolicitudes->id])
                                 ->all();
+
         if (empty($modelpresupuestos)) {
         Yii::$app->session->setFlash("warning", "El caso no posee presupuestos"
              . " por favor intente con otro caso");
@@ -656,6 +657,7 @@ class GestionController extends Controller
 
     $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
     $usuarioid = Yii::$app->user->id;
+
 
     /////*** DEFINO 10 ESTATUS PARA LOS ESTATUS DEL DOCUMENTO ES DECIR EL ESTATUS DE LA CONEXION A SIGESP ****////
     //** Registro el Foreach para la conexionsigesp en caso de que el caso tenga mas de un presupuesto **//
@@ -965,8 +967,8 @@ while ($i<11){
                 //*** Llenado de Tablas de SASYC solicitudes, presupuestos y Bitacoras ***//
                 $modelsolicitudes->estatus = 'APR';
                 $modelpresupuesto->estatus_doc = 'CHE';
-                $modelpresupuesto->cheque = ltrim(substr($modelgestioncheque->cheque, -5),"0");
-                $modelpresupuesto->numop = ltrim(substr($modelconexionsigesp->orpa, -5),"0");
+                $modelpresupuesto->cheque = ltrim(substr($modelgestioncheque->cheque, -15),"0");
+                $modelpresupuesto->numop = ltrim(substr($modelconexionsigesp->orpa, -9),"0");
 
                 $modelbitacora = new Bitacoras;
                 $modelbitacora->solicitud_id = $modelsolicitudes->id;

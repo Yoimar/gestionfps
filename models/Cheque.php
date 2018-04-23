@@ -108,7 +108,7 @@ class Cheque extends \yii\db\ActiveRecord
             'cheque_by' => 'Cheque Impreso por:',
             'date_enviofirma' => 'Fecha Envio Firma',
             'date_enviocaja' => 'Fecha Envio Caja',
-            'date_reccaja' => 'Fecha de Recepción en Caja',
+            'date_reccaja' => 'Recepción en Caja',
             'date_entregado' => 'Fecha Entregado',
             'entregado_by' => 'Entregado por:',
             'retirado_personaid' => 'Retirado Por:',

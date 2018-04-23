@@ -10,6 +10,9 @@ use app\models\ChequeSearchCarga;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Fotossolicitud;
+use app\models\Scbmovbco;
+use app\models\Trabajador;
 
 /**
  * ChequeController implements the CRUD actions for Cheque model.
@@ -127,6 +130,58 @@ class ChequeController extends Controller
         }
 
         return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionEntregacheque()
+    {
+        $model = new Cheque();
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            $modelcheque = Scbmovbco::findOne([
+                    'numdoc' => $model->cheque,
+                    'codope' => 'CH',
+                    'estmov' => ['N','C','L','O']
+            ]);
+
+            $modelorpa = Scbmovbcospg::findOne([
+                'numdoc' => $model->cheque,
+                'estmov' => ['N','C']
+            ]);
+            //reviso
+            if (isset($modelorpa)){
+                //Para determinar el numero de recpcion
+                $modeldtorpa = Cxpdtsolicitudes::findOne([
+                    'numsol' => $modelorpa->documento,
+                ]);
+
+
+
+            }else{
+                $model->date_enviofirma = $modelcheque->fecenvfir;
+                $model->date_enviocaja = $modelcheque->fecenvcaj;
+                $model->estatus_cheque = 'EMI';
+                $model->date_cheque = $modelcheque->fecmov;
+                $modeluser = Trabajador::findOne([
+                    'usuario_sigesp' => $modelcheque->codusu
+                ]);
+                if(isset($modeluser)){
+                    $modelcheque->cheque_by = $modeluser->user_id;
+                } else {
+                    $modelcheque->cheque_by = $usuarioid;
+                    $modeluser = Trabajador::findOne([
+                    'user_id' => $modelcheque->cheque_by
+                    ]);
+                }
+                $model->save();
+            }
+
+            return $this->redirect(['view', 'id' => $model->cheque]);
+        }
+
+        return $this->render('entrega', [
             'model' => $model,
         ]);
     }

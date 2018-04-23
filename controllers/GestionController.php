@@ -853,10 +853,7 @@ while ($i<11){
             } elseif (empty($modelorpa)) {
                 // Verifico si el modelo orpa existe
                 $modelconexionsigesp->estatus_sigesp = 'AOR';
-                // lo que lleno en ORR
-                $modelconexionsigesp->orpa = '';
-                $modelconexionsigesp->date_orpa = '';
-                $modelconexionsigesp->orpa_by = '';
+
             } else {
                 //salgo de los while ya que el caso no esta co
                 break 2;

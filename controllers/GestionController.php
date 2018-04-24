@@ -205,6 +205,7 @@ class GestionController extends Controller
     elseif ($id > 0) {
         $out['results'] = ['id' => $id, 'text' => Solicitudes::find($id)->num_solicitud];
     }
+    -
     return $out;
     }
 
@@ -380,10 +381,7 @@ class GestionController extends Controller
         $modelorigenmemo = new Origenmemo;
 
         if ($modelorigenmemo->load(Yii::$app->request->post())) {
-            $modelfinalmemo = new Finalmemo;
-            $memosgestion = new Memosgestion;
             $searchModel = new \app\models\GestionSearchGestionalo();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
             if($modelorigenmemo->estatus1!=''){
                 $estatus1 = $modelorigenmemo->estatus1;
@@ -1011,7 +1009,7 @@ while ($i<11){
                 ]);
 
             //reviso el estatus del cheque es en caja
-            if (isset($modelcheque)&&$modelcheque->estcondoc=='C'){
+            if (isset($modelcheque)&&$modelcheque->estcondoc==='C'){
                 $modelgestioncheque->date_enviofirma = $modelcheque->fecenvfir;
                 $modelgestioncheque->date_enviocaja = $modelcheque->fecenvcaj;
                 $modelconexionsigesp->estatus_sigesp = 'CHC';
@@ -1020,7 +1018,7 @@ while ($i<11){
             }
 
             //reviso el estatus del cheque es entregado y lo coloco en caja
-            if (isset($modelcheque)&&$modelcheque->estcondoc=='E'){
+            if (isset($modelcheque)&&$modelcheque->estcondoc==='E'){
                 $modelconexionsigesp->estatus_sigesp = 'CHC';
                 break 1;
             }
@@ -1193,14 +1191,16 @@ while ($i<11){
     }
     ++$i;
     $modelconexionsigesp->save();
-//Fin del Foreach
-}
-        return $this->redirect('gestiona?estatus3='.$estatus3);
-    }
 }
 
-    public function actionMasivo()
-    {
+//Fin del Foreach    
+}
+        return $this->redirect('gestiona?estatus3='.$estatus3);
+   
+}
+
+   public function actionMasivo()
+   {
       $model = new Multiplessolicitudes;
 
       if ($model->load(Yii::$app->request->post())&&$model->validate()) {
@@ -1216,19 +1216,13 @@ while ($i<11){
           $modelgestion->save();
         }
 
-        Yii::$app->session->setFlash("warning", "Los casos fueron"
-         . " cambiados exitosamente");
+        Yii::$app->session->setFlash("warning", "Los casos fueron cambiados exitosamente");
 
-        return $this->render('masivo', [
-            'model' => $model,
-        ]);
-
-
-
-      } else {
-          return $this->render('masivo', [
+      } 
+          
+      return $this->render('masivo', [
               'model' => $model,
-          ]);
-      }
-    }
+      ]); 
+      
+   }
 }

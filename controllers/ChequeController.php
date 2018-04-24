@@ -13,6 +13,11 @@ use yii\filters\VerbFilter;
 use app\models\Fotossolicitud;
 use app\models\Scbmovbco;
 use app\models\Trabajador;
+use app\models\Conexionsigesp;
+use app\models\Scbmovbcospg;
+use app\models\Cxpdtsolicitudes;
+use app\models\Cxprdspg;
+
 
 /**
  * ChequeController implements the CRUD actions for Cheque model.
@@ -140,50 +145,49 @@ class ChequeController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
 
-            $modelcheque = Scbmovbco::findOne([
-                    'numdoc' => $model->cheque,
-                    'codope' => 'CH',
-                    'estmov' => ['N','C','L','O']
-            ]);
-
-            $modelorpa = Scbmovbcospg::findOne([
-                'numdoc' => $model->cheque,
-                'estmov' => ['N','C']
-            ]);
-            //reviso
-            if (isset($modelorpa)){
-                //Para determinar el numero de recpcion
-                $modeldtorpa = Cxpdtsolicitudes::findOne([
-                    'numsol' => $modelorpa->documento,
-                ]);
-
-
-
-            }else{
-                $model->date_enviofirma = $modelcheque->fecenvfir;
-                $model->date_enviocaja = $modelcheque->fecenvcaj;
-                $model->estatus_cheque = 'EMI';
-                $model->date_cheque = $modelcheque->fecmov;
-                $modeluser = Trabajador::findOne([
-                    'usuario_sigesp' => $modelcheque->codusu
-                ]);
-                if(isset($modeluser)){
-                    $modelcheque->cheque_by = $modeluser->user_id;
-                } else {
-                    $modelcheque->cheque_by = $usuarioid;
-                    $modeluser = Trabajador::findOne([
-                    'user_id' => $modelcheque->cheque_by
-                    ]);
-                }
-                $model->save();
+            $idconexionsigesp = $this->Encontrarcaso($model->cheque);
+            
+            if($idconexionsigesp != false){
+                echo "este es el id ".$idconexionsigesp;
+                exit();
             }
-
-            return $this->redirect(['view', 'id' => $model->cheque]);
-        }
-
+            
+            }
+                    
         return $this->render('entrega', [
             'model' => $model,
         ]);
+    }
+    
+    public function Encontrarcaso($cheque){
+        /* Encuentro la orpa */
+        $modelorpa = Scbmovbcospg::findOne([
+            'numdoc' => $cheque, 'estmov' => ['N','C']
+        ]);
+        
+        //reviso el numero de orpa o si existe orpa
+        if (isset($modelorpa)){
+            //Para determinar el numero de recepcion
+            $modeldtorpa = Cxpdtsolicitudes::findOne([
+                'numsol' => $modelorpa->documento,
+            ]);
+            
+            //reviso si el caso esta recibido por orpa
+            $modelrecibidoorpa = Cxprdspg::findOne([
+                'numrecdoc' => $modeldtorpa->numrecdoc,
+                'ced_bene' => $modeldtorpa->ced_bene, 
+            ]);
+            
+            $modelconexionsigesp = Conexionsigesp::findOne([
+                'req' =>  $modelrecibidoorpa->numdoccom,
+                'rif' => $modelrecibidoorpa->ced_bene,
+            ]);
+                    
+            return $modelconexionsigesp->id;
+
+        }else {
+            return false;
+        }    
     }
 
     /**

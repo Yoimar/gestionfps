@@ -10,7 +10,6 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Solicitudes;
 use yii\db\Query;
-use yii\db\ActiveQuery;
 use yii\filters\AccessControl;
 use app\models\Origenmemo;
 use app\models\Finalmemo;
@@ -80,8 +79,6 @@ class GestionController extends Controller
                     ],
                 ],
             ],
-
-
 
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -205,7 +202,7 @@ class GestionController extends Controller
     elseif ($id > 0) {
         $out['results'] = ['id' => $id, 'text' => Solicitudes::find($id)->num_solicitud];
     }
-    -
+    
     return $out;
     }
 
@@ -637,11 +634,21 @@ class GestionController extends Controller
 
     public function actionActualiza($id, $estatus3=null, $verorpa=null, $vercheque =null, $vertelefono=null, $verunidad=null){
 
-    $modelgestion = Gestion::findOne($id);
+        $idparagestion = $this->reload($id);
+        
+        return $this->redirect('gestiona?estatus3='.$estatus3);
+   
+    }
 
-    $modelsolicitudes = Solicitudes::findOne($modelgestion->solicitud_id);
+    public function reload($id){
+        
+        $estatus3=61;
+        
+        $modelgestion = Gestion::findOne($id);
 
-    $modelpresupuestos = Presupuestos::find()
+        $modelsolicitudes = Solicitudes::findOne($modelgestion->solicitud_id);
+        
+          $modelpresupuestos = Presupuestos::find()
                                 ->where(['solicitud_id' => $modelsolicitudes->id])
                                 ->all();
 
@@ -653,11 +660,11 @@ class GestionController extends Controller
 
         }
 
-    $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
-    $usuarioid = Yii::$app->user->id;
-
-
-    /////*** DEFINO 10 ESTATUS PARA LOS ESTATUS DEL DOCUMENTO ES DECIR EL ESTATUS DE LA CONEXION A SIGESP ****////
+        $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
+        $usuarioid = Yii::$app->user->id;
+    
+    
+            /////*** DEFINO 10 ESTATUS PARA LOS ESTATUS DEL DOCUMENTO ES DECIR EL ESTATUS DE LA CONEXION A SIGESP ****////
     //** Registro el Foreach para la conexionsigesp en caso de que el caso tenga mas de un presupuesto **//
 // Inicio del Foreach
 foreach ($modelpresupuestos as $modelpresupuesto) {
@@ -665,6 +672,7 @@ foreach ($modelpresupuestos as $modelpresupuesto) {
         $modelconexionsigesp = Conexionsigesp::findOne(
             ['id_presupuesto' => $modelpresupuesto->id ]
             );
+        
         if (empty($modelconexionsigesp)) {
         Yii::$app->session->setFlash("warning", "El caso no ha sido aprobado por SIGESP"
              . " este año");
@@ -686,12 +694,11 @@ while ($i<11){
         // ESTATUS ELA -> ELABORADO
         case 'ELA':
             //VERIFICO QUE EL ESTATUS ES DIFERENTE DE 61 (EN ELABORACIÓN DE MEMO)
-            if ($modelgestion->estatus3_id != 61){
+            
             $modelconexionsigesp->estatus_sigesp = 'APR';
-            }else{
+            
             //salgo de los while ya que el caso no esta aprobado
-                break 2;
-            }
+            
             break 1; // Aquí salé del switch
 
         //ESTATUS APR -> APROBADO Y ENVIADO A ADMINISTRACIÓN
@@ -722,19 +729,24 @@ while ($i<11){
             if (isset($modelrecibidoorpa)){
                 // Si esta recibido en el modulo de Orpa
                 $modelconexionsigesp->numrecdoc = $modelrecibidoorpa->numrecdoc;
-                $modeldocorpa = Cxprd::findOne([
-                    'numrecdoc' => $modelconexionsigesp->numrecdoc,
-                    'ced_bene' => $modelconexionsigesp->rif
-                ]);
-                $modelconexionsigesp->date_regdocorpa = $modeldocorpa->fecemidoc;
-                $modeluser = Trabajador::findOne([
-                    'usuario_sigesp' => $modeldocorpa->codusureg
-                ]);
-                if(isset($modeluser)){
-                    $modelconexionsigesp->regdocorpa_by = $modeluser->user_id;
-                } else {
-                    $modelconexionsigesp->regdocorpa_by = $usuarioid;
+                
+                $modeldocorpa = Cxprd::find()
+                ->where(['numrecdoc' => $modelconexionsigesp->numrecdoc])
+                ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
+                ->one();
+                
+                if (isset($modeldocorpa)) {
+                    $modelconexionsigesp->date_regdocorpa = $modeldocorpa->fecemidoc;
+                    $modeluser = Trabajador::findOne([
+                        'usuario_sigesp' => $modeldocorpa->codusureg
+                    ]);
+                    if(isset($modeluser)){
+                        $modelconexionsigesp->regdocorpa_by = $modeluser->user_id;
+                    } else {
+                        $modelconexionsigesp->regdocorpa_by = $usuarioid;
+                    }
                 }
+                
                 $modelconexionsigesp->estatus_sigesp = 'ROR';
             } elseif (empty ($modelcomprometido)) {
                 // Verifico si esta comprometido
@@ -752,21 +764,28 @@ while ($i<11){
 //////////ESTATUS ROR -> EL CASO SE ENCUENTRA RECIBIDO POR ORPA
         case 'ROR':
             //reviso si el caso esta aprobado
-            $modeldocorpa = Cxprd::findOne([
-                'numrecdoc' => $modelconexionsigesp->numrecdoc,
-                'ced_bene' => $modelconexionsigesp->rif
-            ]);
-            if ($modeldocorpa->estaprord==1){
+            
+            $modeldocorpa = Cxprd::find()
+                ->where(['numrecdoc' => $modelconexionsigesp->numrecdoc])
+                ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
+                ->one();
+       
+            if (isset($modeldocorpa)){
                 // Si esta aprobada la orpa
-                $modelconexionsigesp->date_aprdocorpa = $modeldocorpa->fecaprord;
-                $modeluser = Trabajador::findOne(['usuario_sigesp' => $modeldocorpa->usuaprord]);
-                if(isset($modeluser)){
-                    $modelconexionsigesp->aprdocorpa_by = $modeluser->user_id;
-                } else {
-                    $modelconexionsigesp->aprdocorpa_by = $usuarioid;
+                if ($modeldocorpa->estaprord === 1) {
+                    
+                    
+                    $modelconexionsigesp->date_aprdocorpa = $modeldocorpa->fecaprord;
+                    $modeluser = Trabajador::findOne(['usuario_sigesp' => $modeldocorpa->usuaprord]);
+                    if(isset($modeluser)){
+                        $modelconexionsigesp->aprdocorpa_by = $modeluser->user_id;
+                    } else {
+                        $modelconexionsigesp->aprdocorpa_by = $usuarioid;
+                    }
+                    $modelconexionsigesp->estatus_sigesp = 'AOR';
+ 
                 }
-                $modelconexionsigesp->estatus_sigesp = 'AOR';
-
+                
             } elseif (empty($modeldocorpa)) {
                 // Verifico si esta recibido en orpa
                 $modelconexionsigesp->estatus_sigesp = 'COM';
@@ -784,22 +803,23 @@ while ($i<11){
 //////////ESTATUS AOR -> EL CASO SE ENCUENTRA APROBADA LA RECEPCION DEL DOCUMENTO EN ORPA
         case 'AOR':
             //reviso si el caso esta recibido en Solicitud de Pago
-            $modeldtorpa = Cxpdtsolicitudes::findOne([
-                'numrecdoc' => $modelconexionsigesp->numrecdoc,
-                'ced_bene' => $modelconexionsigesp->rif
-            ]);
+            $modeldtorpa = Cxpdtsolicitudes::find()
+                ->where(['numrecdoc' => $modelconexionsigesp->numrecdoc])
+                ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
+                ->one();
             // reviso si el caso esta aprobado en recepcion de documentos de la solicitud de pago
-            $modeldocorpa = Cxprd::findOne([
-                'numrecdoc' => $modelconexionsigesp->numrecdoc,
-                'ced_bene' => $modelconexionsigesp->rif
-            ]);
+            $modeldocorpa = Cxprd::find()
+                ->where(['numrecdoc' => $modelconexionsigesp->numrecdoc])
+                ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
+                ->one();
+            
             if (isset($modeldtorpa)){
                 // Si esta aprobada la orpa
                 $modelconexionsigesp->orpa = $modeldtorpa->numsol;
                 $modelorpa = Cxpsolicitudes::findOne([
                     'numsol' => $modelconexionsigesp->orpa,
-                    'ced_bene' => $modelconexionsigesp->rif
-                    ]);
+                ]);
+                
                 $modelconexionsigesp->date_orpa = $modelorpa->fecemisol;
                 $modeluser = Trabajador::findOne(
                     ['usuario_sigesp' => $modelorpa->codusureg
@@ -832,7 +852,6 @@ while ($i<11){
             //reviso si el caso esta aprobado en en Solicitud de Pago
             $modelorpa = Cxpsolicitudes::findOne([
                     'numsol' => $modelconexionsigesp->orpa,
-                    'ced_bene' => $modelconexionsigesp->rif
             ]);
             if (isset($modelorpa)){
                 if ($modelorpa->estaprosol == 1){
@@ -865,7 +884,6 @@ while ($i<11){
             //reviso si el caso esta aprobado en en Solicitud de Pago
             $modelorpa = Cxpsolicitudes::findOne([
                     'numsol' => $modelconexionsigesp->orpa,
-                    'ced_bene' => $modelconexionsigesp->rif
             ]);
             if (isset($modelcausado)){
                 // el caso esta causado
@@ -919,29 +937,44 @@ while ($i<11){
 //////////ESTATUS PGP -> EL CASO SE ENCUENTRA EN PROGRAMACION DE PAGO
         case 'PGP':
             //reviso si el caso tiene impreso un cheque
-            $modelimprcheque = Scbmovbcospg::findOne([
+            $modelimprcheques = Scbmovbcospg::find()
+                ->where([
                 'documento' => $modelconexionsigesp->orpa,
-                'estmov' => ['N','C']
-            ]);
+                'estmov' => ['N','C','O']
+                ])
+                ->all();
             //reviso si la orpa tiene programado un pago
             $modelprogpago = Scbprogpago::findOne(['numsol' => $modelconexionsigesp->orpa]);
-            if (isset($modelimprcheque)){
+            
+            if (isset($modelimprcheques)){
                 // el caso tiene un cheque
-                $modelgestioncheque = Cheque::findOne(['cheque' => $modelimprcheque->numdoc]);
-                if(empty($modelgestioncheque)){
-                    $modelgestioncheque = new Cheque;
-                    $modelgestioncheque->cheque = $modelimprcheque->numdoc;
-                    $modelgestioncheque->id_presupuesto = $modelconexionsigesp->id_presupuesto;
-                    $modelgestioncheque->estatus_cheque = 'EMI';
-                    $modelgestioncheque->save();
-                }
+                foreach ($modelimprcheques as $modelimprcheque){
+                    
+                    $modelgestioncheque = Cheque::findOne(['cheque' => $modelimprcheque->numdoc]);
+                    if(empty($modelgestioncheque)){
+                        $modelgestioncheque = new Cheque;
+                        $modelgestioncheque->cheque = $modelimprcheque->numdoc;
+                        $modelgestioncheque->id_presupuesto = $modelconexionsigesp->id_presupuesto;
+                        if ($modelimprcheque->estmov === 'O') {
+                            $modelgestioncheque->estatus_cheque = 'ANU';
+                        }else{
+                        $modelgestioncheque->estatus_cheque = 'EMI';
+                        }
+                        $modelgestioncheque->save();
+                    }
 
-                $modelscbcheque = Scbmovbco::findOne([
+                $modelscbcheque = Scbmovbco::find()
+                    ->where([
                     'numdoc' => $modelgestioncheque->cheque,
-                    'ced_bene' => $modelconexionsigesp->rif,
                     'codope' => 'CH',
-                    'estmov' => ['N','C']
-                ]);
+                    'estmov' => ['N','C','O']
+                    ])
+                    ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
+                    ->one();
+                
+                
+                
+                
                 $fechabitacora = Yii::$app->formatter
                                  ->asDate($modelgestioncheque->date_cheque,'php:d/m/Y');
                 $modeluser = Trabajador::findOne([
@@ -958,8 +991,11 @@ while ($i<11){
                 $modelgestioncheque->date_cheque = $modelscbcheque->fecmov;
                 $modelconexionsigesp->estatus_sigesp = 'CHE';
                 $modelgestioncheque->save();
+                
+                
 
                 //*** Llenado de Tablas de SASYC solicitudes, presupuestos y Bitacoras ***//
+                if ($modelgestioncheque->estatus_cheque == 'EMI'){
                 $modelsolicitudes->estatus = 'APR';
                 $modelpresupuesto->estatus_doc = 'CHE';
                 $modelpresupuesto->cheque = ltrim(substr($modelgestioncheque->cheque, -15),"0");
@@ -983,6 +1019,10 @@ while ($i<11){
                 $modelsolicitudes->save();
                 $modelpresupuesto->save();
                 $modelgestioncheque->save();
+                
+                }
+                
+                }
 
             } elseif (empty($modelprogpago)) {
                 // Verifico si el modelo de programacion de pago existe
@@ -998,18 +1038,23 @@ while ($i<11){
             //reviso si el modelo del cheque para verificar si esta anulado
             $modelgestioncheque = Cheque::findOne([
                 'id_presupuesto' => $modelconexionsigesp->id_presupuesto,
-                'estatus_cheque' => ['EMI','PEN','ENT']
+                'estatus_cheque' => ['EMI','PEN','ENT'],
             ]);
-
-            $modelcheque = Scbmovbco::findOne([
+            
+            if (isset($modelgestioncheque)){
+            $modelcheque = Scbmovbco::find()
+                    ->where([
                     'numdoc' => $modelgestioncheque->cheque,
-                    'ced_bene' => $modelconexionsigesp->rif,
                     'codope' => 'CH',
-                    'estmov' => ['N','C']
-                ]);
-
+                    'estmov' => ['N','C','O']
+                    ])
+                    ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
+                    ->one();
+            
+            }
+            
             //reviso el estatus del cheque es en caja
-            if (isset($modelcheque)&&$modelcheque->estcondoc==='C'){
+            if (isset($modelgestioncheque)&&isset($modelcheque)&&$modelcheque->estcondoc==='C'){
                 $modelgestioncheque->date_enviofirma = $modelcheque->fecenvfir;
                 $modelgestioncheque->date_enviocaja = $modelcheque->fecenvcaj;
                 $modelconexionsigesp->estatus_sigesp = 'CHC';
@@ -1018,24 +1063,29 @@ while ($i<11){
             }
 
             //reviso el estatus del cheque es entregado y lo coloco en caja
-            if (isset($modelcheque)&&$modelcheque->estcondoc==='E'){
+            if (isset($modelgestioncheque)&&isset($modelcheque)&&$modelcheque->estcondoc==='E'){
                 $modelconexionsigesp->estatus_sigesp = 'CHC';
                 break 1;
             }
 
             //reviso si el estatus es para la firma
-            if (isset($modelcheque)&&$modelcheque->estcondoc=='F'){
+            if (isset($modelgestioncheque)&&isset($modelcheque)&&$modelcheque->estcondoc=='F'){
                 // el caso tiene un cheque
                 $modelconexionsigesp->date_enviofirma = $modelcheque->fecenvfir;
                 $modelconexionsigesp->estatus_sigesp = 'CHF';
 
-            } elseif (empty($modelcheque)) {
-                $modelanulado = Scbmovbco::findOne([
-                        'numdoc' => $modelgestioncheque->cheque,
-                        'ced_bene' => $modelconexionsigesp->rif,
-                        'codope' => 'CH',
-                        'estmov' => ['A','O']
-                    ]);
+            } elseif (empty($modelcheque)&&isset ($modelgestioncheque)) {
+                
+                $modelanulado = Scbmovbco::find()
+                    ->where([
+                    'numdoc' => $modelgestioncheque->cheque,
+                    'codope' => 'CH',
+                    'estmov' => ['A','O']
+                    ])
+                    ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
+                    ->one();
+                
+                
                 //reviso el estatus del cheque es entregado y lo coloco en caja
                 if (isset($modelanulado)){
                     $modelconexionsigesp->estatus_sigesp = 'ANU';
@@ -1061,12 +1111,14 @@ while ($i<11){
                 'estatus_cheque' => ['EMI','PEN','ENT']
             ]);
             //reviso si el modelo del cheque para verificar si esta anulado
-            $modelcheque = Scbmovbco::findOne([
+            $modelcheque = Scbmovbco::find()
+                    ->where([
                     'numdoc' => $modelgestioncheque->cheque,
-                    'ced_bene' => $modelconexionsigesp->rif,
                     'codope' => 'CH',
                     'estmov' => ['N','C']
-                ]);
+                    ])
+                    ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
+                    ->one();
             //reviso el estatus del cheque
 
             if (isset($modelcheque)&&$modelcheque->estcondoc=='C'){
@@ -1094,12 +1146,14 @@ while ($i<11){
                 'estatus_cheque' => ['EMI','PEN','ENT']
             ]);
 
-            $modelcheque = Scbmovbco::findOne([
+            $modelcheque = Scbmovbco::find()
+                    ->where([
                     'numdoc' => $modelgestioncheque->cheque,
-                    'ced_bene' => $modelconexionsigesp->rif,
                     'codope' => 'CH',
                     'estmov' => ['N','C']
-                ]);
+                    ])
+                    ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
+                    ->one();
             //reviso si la orpa tiene programado un pago
 
             if (isset($modelcheque)&&$modelcheque->estcondoc=='E'){
@@ -1131,11 +1185,13 @@ while ($i<11){
                 'estatus_cheque' => ['EMI','PEN','ENT']
             ]);
 
-            $modelcheque = Scbmovbco::findOne([
+            $modelcheque = Scbmovbco::find()
+                    ->where([
                     'numdoc' => $modelgestioncheque->cheque,
-                    'ced_bene' => $modelconexionsigesp->rif,
-                    'codope' => 'CH'
-                ]);
+                    'codope' => 'CH',
+                    ])
+                    ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
+                    ->one();
 
             if (isset($modelcheque)&&($modelcheque->estmov=='A'||$modelcheque->estmov=='O')){
 
@@ -1156,12 +1212,14 @@ while ($i<11){
                 'estatus_cheque' => ['EMI','PEN','ENT','ANU']
             ]);
 
-            $modelcheque = Scbmovbco::findOne([
+            $modelcheque = Scbmovbco::find()
+                    ->where([
                     'numdoc' => $modelgestioncheque->cheque,
-                    'ced_bene' => $modelconexionsigesp->rif,
                     'codope' => 'CH',
                     'estmov' => ['A','O']
-                ]);
+                    ])
+                    ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
+                    ->one();
 
             if (isset($modelcheque)) {
                     $modelgestioncheque->date_anulado = $modelcheque->fechaanula;
@@ -1195,9 +1253,8 @@ while ($i<11){
 
 //Fin del Foreach    
 }
-        return $this->redirect('gestiona?estatus3='.$estatus3);
-   
-}
+    return $id;
+    }
 
    public function actionMasivo()
    {

@@ -91,9 +91,9 @@ $config = [
             'thousandSeparator' => '.',
             'currencyCode' => ' Bs',
             'nullDisplay' => '',
-            'defaultTimeZone' => 'America/Caracas',
+            //'defaultTimeZone' => 'America/Caracas',
             'timeZone' => 'Etc/GMT+4',
-//            'locale' => 'es'
+            'locale' => 'es'
         ],
 
         'pdf' => [
@@ -152,7 +152,7 @@ $config = [
             Module::FORMAT_DATE => [
                 'class' => 'kartik\date\DatePicker', // example
                 'options' => [
-                    'dateFormat' => 'php:m-d-Y',
+                    'dateFormat' => 'php:d-m-Y',
                     'options' => ['class'=>'form-control'],
                 ]
             ]

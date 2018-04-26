@@ -53,6 +53,15 @@ AppAsset::register($this);
             ],
             'linkOptions' => ['style' => 'color: #FFFFFF;']
             ],
+            ['label' => 'Cheques',
+            'items' => [
+                 '<li class="dropdown-header">Menu Aprobacion</li>',
+                ['label' => 'Buscar Cheques', 'url' => '@web/cheque/busqueda'],
+                ['label' => 'Reporte Disponibilidad', 'url' => '@web/cheque/reporte'],
+                ['label' => 'Cargar cheques por fecha', 'url' => '@web/cheque/actualizafecha'],
+            ],
+            'linkOptions' => ['style' => 'color: #FFFFFF;']
+            ],
             [
             'label' => 'Reportes',
             'items' => [
@@ -119,10 +128,10 @@ AppAsset::register($this);
     NavBar::end();
     ?>
 
-    <div class="container">
+    <div class="container" >
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
+           ]) ?>
         <?= $content ?>
     </div>
 </div>

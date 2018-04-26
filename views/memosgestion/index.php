@@ -4,12 +4,9 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
-use app\models\Departamentos;
 use app\models\Recepciones;
 use app\models\Trabajador;
-use app\models\Estatus3;
 use yii\db\Query;
-use kartik\date\DatePicker;
 use kartik\datecontrol\DateControl;
 
 /* @var $this yii\web\View */

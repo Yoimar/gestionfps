@@ -17,6 +17,9 @@ use app\models\Conexionsigesp;
 use app\models\Scbmovbcospg;
 use app\models\Cxpdtsolicitudes;
 use app\models\Cxprdspg;
+use app\controllers\GestionController;
+use app\models\Presupuestos;
+use app\models\Gestion;
 
 
 /**
@@ -38,7 +41,10 @@ class ChequeController extends Controller
                     'create',
                     'update',
                     'delete',
-                    'busqueda'
+                    'busqueda',
+                    'entregacheque',
+                    'actualizafecha',
+                    'reporte',
                     ],
                 'rules' => [
                     [
@@ -46,6 +52,9 @@ class ChequeController extends Controller
                             'create',
                             'view',
                             'busqueda',
+                            'entregacheque',
+                            'actualizafecha',
+                            'reporte',
                         ],
                         'allow' => true,
                         'roles' => ['gestion-crear'],
@@ -57,7 +66,7 @@ class ChequeController extends Controller
                         'allow' => true,
                         'roles' => ['gestion-listar'],
                     ],
-                  [
+                    [
                         'actions' => [
                             'update',
                         ],
@@ -141,28 +150,95 @@ class ChequeController extends Controller
 
     public function actionEntregacheque()
     {
-        $model = new Cheque();
+        $modelcheque = new Cheque();
+        $iraentrega = 0;
+        $chequemanual = 0;
+        
 
-        if ($model->load(Yii::$app->request->post())) {
+        if ($modelcheque->load(Yii::$app->request->post())) {
 
-            $idconexionsigesp = $this->Encontrarcaso($model->cheque);
+            $idconexionsigesp = $this->Encontrarconexionsigesp($modelcheque->cheque);
+
             
-            if($idconexionsigesp != false){
-                echo "este es el id ".$idconexionsigesp;
-                exit();
+            if ($idconexionsigesp != false) {
+                $idgestion = $this->Encontrargestion($idconexionsigesp);
+                
+                //Si es verdadero lo actualizo para que me traiga el cheque
+                GestionController::reload($idgestion);
+                
+                Yii::$app->session->setFlash("warning", "El cheque fue actualizado"
+                ."Seleccione ir a Entrega");
+                $iraentrega = 1;
+                
+            }else{
+                //Pantalla de carga de Caso Manual con presupuesto Manual
+                Yii::$app->session->setFlash("warning", "El caso no pertenece"
+             . " a un caso por bienestar social Seleccione Carga Manual");
+                $chequemanual = 1;
             }
             
-            }
-                    
+        }    
+                            
         return $this->render('entrega', [
-            'model' => $model,
+            'modelcheque' => $modelcheque,
+            'chequemanual' => $chequemanual,
+            'iraentrega' => $iraentrega,
         ]);
     }
     
-    public function Encontrarcaso($cheque){
+    public function actionActualizafecha()
+    {
+        $modelcheque = new Cheque();
+
+        if ($modelcheque->load(Yii::$app->request->post())) {
+            
+        $modelcheques = Scbmovbco::find()->select([ 'numdoc', ])
+                    ->where([ 'fecmov' => $modelcheque->date_cheque, 
+                              'codope' => 'CH'   ]) 
+                    ->all();
+        
+        $i=0;
+       
+        // Inicio del Foreach
+        foreach ($modelcheques as $instanciacheque) {
+
+        $idconexionsigesp = $this->Encontrarconexionsigesp($instanciacheque->numdoc);
+        
+            if ($idconexionsigesp != false) {
+                
+                $idgestion = $this->Encontrargestion($idconexionsigesp);
+                //Si es verdadero lo actualizo para que me traiga el cheque
+                GestionController::reload($idgestion);
+            }
+            $i++;
+        }
+        
+          Yii::$app->session->setFlash("success", "Fueron cargados ".$i."cheques");
+        
+        }
+        return $this->render('actualizafecha', [
+            'modelcheque' => $modelcheque,
+        ]);
+    
+    }
+    
+    public function Encontrargestion($conexionsigesp){
+        
+        $modelconexionsigesp = Conexionsigesp::findOne($conexionsigesp);
+        
+        $modelpresupuesto = Presupuestos::findOne($modelconexionsigesp->id_presupuesto);
+        
+        $modelgestion = Gestion::findOne([
+            'solicitud_id' => $modelpresupuesto->solicitud_id,
+        ]);
+        
+        return $modelgestion->id;
+    }
+    
+    public function Encontrarconexionsigesp($cheque){
         /* Encuentro la orpa */
         $modelorpa = Scbmovbcospg::findOne([
-            'numdoc' => $cheque, 'estmov' => ['N','C']
+            'numdoc' => $cheque, 'estmov' => ['N','C','O']
         ]);
         
         //reviso el numero de orpa o si existe orpa
@@ -238,5 +314,16 @@ class ChequeController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+    
+    public function actionReporte()
+    {
+        $searchModel = new ChequeSearchCarga();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('reporte', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\ChequeSearch */
+/* @var $modelcheque app\models\ChequeSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -17,42 +17,42 @@ use yii\widgets\ActiveForm;
 
     <div class="col-lg-2 col-md-2">
 
-    <?= $form->field($model, 'estado_beneficiario') ?>
+    <?= $form->field($modelcheque, 'estado_beneficiario') ?>
 
     </div>
     <div class="col-lg-1 col-md-1">
 
-    <?= $form->field($model, 'anocheque') ?>
+    <?= $form->field($modelcheque, 'anocheque') ?>
 
     </div>
     <div class="col-lg-1 col-md-1">
 
-    <?= $form->field($model, 'mescheque') ?>
+    <?= $form->field($modelcheque, 'mescheque') ?>
 
     </div>
     <div class="col-lg-1 col-md-1">
 
-    <?= $form->field($model, 'estatus_cheque') ?>
+    <?= $form->field($modelcheque, 'estatus_cheque') ?>
 
     </div>
     <div class="col-lg-1 col-md-1">
 
-    <?= $form->field($model, 'recepcioninicial') ?>
+    <?= $form->field($modelcheque, 'recepcioninicial') ?>
 
     </div>
     <div class="col-lg-2 col-md-2">
 
-    <?= $form->field($model, 'date_cheque') ?>
+    <?= $form->field($modelcheque, 'date_cheque') ?>
 
     </div>
     <div class="col-lg-2 col-md-2">
 
-    <?= $form->field($model, 'date_reccaja') ?>
+    <?= $form->field($modelcheque, 'date_reccaja') ?>
 
     </div>
     <div class="col-lg-1 col-md-1">
 
-    <?= $form->field($model, 'tipodeayuda') ?>
+    <?= $form->field($modelcheque, 'tipodeayuda') ?>
 
     </div>
     <div class="col-lg-1 col-md-1">

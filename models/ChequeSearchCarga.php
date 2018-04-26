@@ -85,7 +85,7 @@ class ChequeSearchCarga extends Cheque
             'solicitudes.necesidad as necesidad',
             'solicitudes.descripcion as descripcion',
             'empresa_institucion.nombrecompleto as empresainstitucion',
-            'presupuestos.monto as monto',
+            'presupuestos.montoapr as monto',
             'tipo_ayudas.nombre as tipodeayuda',
             'requerimientos.nombre as tratamiento',
             'areas.nombre as especialidad',

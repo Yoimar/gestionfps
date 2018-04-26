@@ -19,13 +19,13 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="cheque-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php echo $this->render('_searchbusqueda', ['model' => $searchModel]); ?>
+    <?php echo $this->render('_searchbusqueda', ['modelcheque' => $searchModel]); ?>
 
 </div>
     
     <br><br><br>
     <p>
-        <?= Html::a('Crear Cheque', ['entregacheque'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Agregar Cheque', ['entregacheque'], ['class' => 'btn btn-primary']) ?>
     </p>
     
 

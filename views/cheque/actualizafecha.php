@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Cheque */
 
-$this->title = 'Agregar Cheque';
+$this->title = 'Actualizar casos por Fecha';
 $this->params['breadcrumbs'][] = ['label' => 'Cheques', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -14,10 +14,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('_formentrega', [
+    <?= $this->render('_porfecha', [
         'modelcheque' => $modelcheque,
-        'chequemanual' => $chequemanual,
-        'iraentrega' => $iraentrega,
     ]) ?>
 
 </div>

@@ -20,6 +20,7 @@ use app\models\Cxprdspg;
 use app\controllers\GestionController;
 use app\models\Presupuestos;
 use app\models\Gestion;
+use app\models\Solicitudes;
 
 
 /**
@@ -327,20 +328,65 @@ class ChequeController extends Controller
     public function actionCargafoto($cheque){
         
         $modelcheque = Cheque::findOne($cheque);
+        
+        //encontrar el id de solicitud
+        $idsolicitud = $this->Encontrarsolicitud($modelcheque->id_presupuesto);
+        
+        //Encontrar el id de la Persona Beneficiario
+        $idbeneficiario = $this->Encontrarbeneficiario($idsolicitud);
+        
         //Cargo las Fotos solicitud Necesito Solicitud ID
         $modelfotossolicitud = new Fotossolicitud();
         
-        //Cargo las personas 
-        $modelpersonabeneficiario = Personas::findOne($id);
+        //Cargo el beneficiario para los cambios
+        $modelpersonabeneficiario = Personas::findOne($idbeneficiario);
         
         // Cargar los cheques en una pantallita y seleccionarlos
+        $cheques = $this->Chequesporcaso($idsolicitud);
     
-        
+        return $this->render('cargafoto', [
+            'modelcheque' => $modelcheque,
+            'modelfotossolicitud' => $modelfotossolicitud,
+            'modelpersonabeneficiario' => $modelpersonabeneficiario, 
+            'cheques' => $cheques,
+        ]);
     }
     
+     /* 
+     Metodo para encontrar los cheques asociados a una solicitud
+     */
     public function Chequesporcaso($id_solicitud){
-        $casosconcheque = Presupuestos::find()
+        $presupuestos = Presupuestos::find()
                 ->where(['solicitud_id' => $id_solicitud])
                 ->all();
+        
+        foreach ($presupuestos as $presupuesto){
+            
+            $modelcheque = Cheque::findOne(['id_presupuesto' => $presupuesto->id]);
+            $cheques[] = $modelcheque->cheque;
+        
+        }
+        
+        return $cheques;    
+    }
+    
+    /* 
+     Metodo para encontrar la solicitud con el id del presupuesto
+     */
+    public function Encontrarsolicitud($id_presupuesto){
+        
+        $presupuesto = Presupuestos::findOne($id_presupuesto);
+        
+        return $presupuesto->solicitud_id; 
+    }
+    
+    /* 
+     Metodo para encontrar el id del beneficiario de una solicitud 
+     */
+    public function Encontrarbeneficiario($idsolicitud){
+        
+        $solicitud = Solicitudes::findOne($idsolicitud);
+        
+        return $solicitud->persona_beneficiario_id;
     }
 }

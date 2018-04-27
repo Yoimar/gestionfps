@@ -12,24 +12,22 @@ $this->params['breadcrumbs'][] = ['label' => 'Reiniciar Busqueda', 'url' => ['bu
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-</div>
+
 
 <div class="container-fluid">
-    
-<div class="cheque-index">
-
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php echo $this->render('_searchbusqueda', ['modelcheque' => $searchModel]); ?>
-
 </div>
-    
+<div class="cheque-index">
+    <?php echo $this->render('_searchbusqueda', ['modelcheque' => $searchModel]); ?>
+</div>
     <br><br><br>
     <p>
         <?= Html::a('Agregar Cheque', ['entregacheque'], ['class' => 'btn btn-primary']) ?>
     </p>
     
+</div>
 
-
+<div class="container-fluid" style="text-align: center;">
     
     <div class="col-lg-12 col-md-12">
         <?= GridView::widget([
@@ -46,8 +44,28 @@ $this->params['breadcrumbs'][] = $this->title;
                 'empresainstitucion',
                 'cheque',
                 'monto',
-                ['class'=>'kartik\grid\ActionColumn'],
+                
+                [
+                'class' => 'kartik\grid\ActionColumn',
+                'template' => '{cambiotrabajador}',
+                'buttons' => [
+                'cambiotrabajador' => function($url, $model){
+                                    return Html::a('<span class="glyphicon glyphicon-log-in"></span>',
+                                        yii\helpers\Url::to(['cargarfoto', 'cheque' => $model->cheque, ]),
+                                        [
+                                            'title' => 'Entregar Cheque',
+                                        ]
+                                        );
+                                    }
+
+                                  ],
+                ],
             ],
+            'bordered' => true,
+            'striped' => true,
+            'condensed' => true,
+            'responsive' => true,
+            'hover' => true,
         ]); ?>
     </div>
         

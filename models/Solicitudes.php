@@ -229,10 +229,10 @@ class Solicitudes extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPersonas()
-    {
-         return $this->hasOne(Personas::className(), ['id' => 'persona_solicitante_id']);
-    }
+//    public function getPersonas()
+//    {
+//         return $this->hasOne(Personas::className(), ['id' => 'persona_solicitante_id']);
+//    }
 
     public function getPersonasolicitante()
     {

@@ -17,8 +17,12 @@ use kartik\date\DatePicker;
     <?php //echo $form->field($model, 'cheque')->textInput(['maxlength' => true]) ?>
     
 <?php
-$fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
+
+if (empty($modelcheque->date_cheque)) {
+$fechahoy = Yii::$app->formatter->asDate('now','php:Y/m/d');    
 $modelcheque->date_cheque = $fechahoy;
+}
+
 ?>
     <center>
             <div class="col-lg-6 col-md-6 col-md-offset-3 col-lg-offset-3">
@@ -46,14 +50,10 @@ $modelcheque->date_cheque = $fechahoy;
     </center>
     
 
-
-                     
-
-
                 
     <div class="col-lg-6 col-md-8 col-lg-offset-3 col-md-offset-2">
     <div class="form-group">
-        <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton('Cargar', ['class' => 'btn btn-primary']) ?>
     </div>
     </div>
 

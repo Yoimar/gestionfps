@@ -65,7 +65,7 @@ use kartik\select2\Select2;
     }
     
     if ($iraentrega == 1) {
-    echo Html::a('Realizar Entrega<span class="glyphicon glyphicon-download-alt"></span>', ['iraentrega',
+    echo Html::a('Realizar Entrega<span class="glyphicon glyphicon-download-alt"></span>', ['cargarfoto',
             'cheque' => $modelcheque->cheque,
             ], 
             [
@@ -77,8 +77,6 @@ use kartik\select2\Select2;
             ]);
         
     } 
-    
-    
     
     ?>
     

@@ -166,7 +166,7 @@ class ChequeController extends Controller
                 //Si es verdadero lo actualizo para que me traiga el cheque
                 GestionController::reload($idgestion);
                 
-                Yii::$app->session->setFlash("warning", "El cheque fue actualizado"
+                Yii::$app->session->setFlash("warning", "El cheque fue actualizado".$idconexionsigesp
                 ."Seleccione ir a Entrega");
                 $iraentrega = 1;
                 
@@ -186,34 +186,32 @@ class ChequeController extends Controller
         ]);
     }
     
-    public function actionActualizafecha()
-    {
+    public function actionActualizafecha(){
         $modelcheque = new Cheque();
 
         if ($modelcheque->load(Yii::$app->request->post())) {
             
         $modelcheques = Scbmovbco::find()->select([ 'numdoc', ])
                     ->where([ 'fecmov' => $modelcheque->date_cheque, 
-                              'codope' => 'CH'   ]) 
+                              'codope' => 'CH',
+                              'estmov' => ['N','C','O','L']   ]) 
                     ->all();
-        
         $i=0;
        
         // Inicio del Foreach
-        foreach ($modelcheques as $instanciacheque) {
+        foreach ($modelcheques as $instanciacheque){
 
         $idconexionsigesp = $this->Encontrarconexionsigesp($instanciacheque->numdoc);
         
             if ($idconexionsigesp != false) {
-                
                 $idgestion = $this->Encontrargestion($idconexionsigesp);
                 //Si es verdadero lo actualizo para que me traiga el cheque
                 GestionController::reload($idgestion);
+                $i++;
             }
-            $i++;
         }
         
-          Yii::$app->session->setFlash("success", "Fueron cargados ".$i."cheques");
+        Yii::$app->session->setFlash("success", "Fueron cargados ".$i." cheques");
         
         }
         return $this->render('actualizafecha', [
@@ -256,10 +254,9 @@ class ChequeController extends Controller
             
             $modelconexionsigesp = Conexionsigesp::findOne([
                 'req' =>  $modelrecibidoorpa->numdoccom,
-                'rif' => $modelrecibidoorpa->ced_bene,
             ]);
-                    
-            return $modelconexionsigesp->id;
+
+            return isset($modelconexionsigesp)?$modelconexionsigesp->id:false;
 
         }else {
             return false;
@@ -325,5 +322,25 @@ class ChequeController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+    
+    public function actionCargafoto($cheque){
+        
+        $modelcheque = Cheque::findOne($cheque);
+        //Cargo las Fotos solicitud Necesito Solicitud ID
+        $modelfotossolicitud = new Fotossolicitud();
+        
+        //Cargo las personas 
+        $modelpersonabeneficiario = Personas::findOne($id);
+        
+        // Cargar los cheques en una pantallita y seleccionarlos
+    
+        
+    }
+    
+    public function Chequesporcaso($id_solicitud){
+        $casosconcheque = Presupuestos::find()
+                ->where(['solicitud_id' => $id_solicitud])
+                ->all();
     }
 }

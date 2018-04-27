@@ -139,6 +139,10 @@ class Cheque extends \yii\db\ActiveRecord
             'telefono' => 'Telefono',
             'orpa' => 'ORPA',
             'num_solicitud' => 'N° Solicitud',
+            'anocheque' => 'Año',
+            'mescheque' => 'Mes',
+            'recepcioninicial' => 'Unidad',
+            'recepcionactual' => 'Ubicación',
         ];
     }
 

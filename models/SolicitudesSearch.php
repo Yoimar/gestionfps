@@ -49,7 +49,10 @@ class SolicitudesSearch extends Solicitudes
 
         // add conditions that should always apply here
         
-        $query->joinWith('personas', true, 'LEFT JOIN')->joinWith('estatussasyc', true, 'LEFT JOIN')->joinWith('users', true, 'LEFT JOIN');
+        $query->joinWith('personabeneficiario as personabeneficiario', true, 'LEFT JOIN')
+              ->joinWith('personasolicitante as personasolicitante', true, 'LEFT JOIN') 
+              ->joinWith('estatussasyc', true, 'LEFT JOIN')
+              ->joinWith('users', true, 'LEFT JOIN');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -149,12 +152,12 @@ class SolicitudesSearch extends Solicitudes
             ->andFilterWhere(['like', 'beneficiario_json', $this->beneficiario_json])
             ->andFilterWhere(['like', 'solicitante_json', $this->solicitante_json])
             ->andFilterWhere(['like', 'num_solicitud', $this->num_solicitud])
-            ->andFilterWhere(['like', 'personas.nombre', $this->persona_beneficiario_nombre])
-            ->andFilterWhere(['like', 'personas.apellido', $this->persona_beneficiario_apellido])
-            ->andFilterWhere(['like', 'personas.nombre', $this->persona_solicitante_nombre])
-            ->andFilterWhere(['like', 'personas.apellido', $this->persona_solicitante_apellido])
-            ->andFilterWhere(['personas.ci' => $this->persona_beneficiario_ci])
-            ->andFilterWhere(['personas.ci' => $this->persona_solicitante_ci,]);
+            ->andFilterWhere(['ilike', 'personabeneficiario.nombre', $this->persona_beneficiario_nombre])
+            ->andFilterWhere(['ilike', 'personabeneficiario.apellido', $this->persona_beneficiario_apellido])
+            ->andFilterWhere(['ilike', 'personasolicitante.nombre', $this->persona_solicitante_nombre])
+            ->andFilterWhere(['ilike', 'personasolicitante.apellido', $this->persona_solicitante_apellido])
+            ->andFilterWhere(['like', "TRIM(TO_CHAR(personabeneficiario.ci, '999999999'))", $this->persona_beneficiario_ci])
+            ->andFilterWhere(['like', "TRIM(TO_CHAR(personasolicitante.ci, '999999999'))", $this->persona_solicitante_ci,]);
 
         return $dataProvider;
     }

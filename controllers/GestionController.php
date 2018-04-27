@@ -723,19 +723,30 @@ while ($i<11){
 //////////ESTATUS COM -> EL CASO SE ENCUENTRA COMPROMETIDO
         case 'COM':
             //reviso si el caso esta recibido por orpa
-            $modelrecibidoorpa = Cxprdspg::findOne(['numdoccom' => $modelconexionsigesp->req]);
+            $modelrecibidoorpas = Cxprdspg::find()
+                ->select([
+                    'numrecdoc'
+                ])
+                ->where(['numdoccom' => $modelconexionsigesp->req])
+                ->all();
+            
             //reviso si esta comprometido
             $modelcomprometido = Spgdtcmp::findOne(['comprobante' => $modelconexionsigesp->req]);
-            if (isset($modelrecibidoorpa)){
-                // Si esta recibido en el modulo de Orpa
-                $modelconexionsigesp->numrecdoc = $modelrecibidoorpa->numrecdoc;
+            if (isset($modelrecibidoorpas)){
+                
+                foreach ($modelrecibidoorpas as $modelrecibidoorpa){
                 
                 $modeldocorpa = Cxprd::find()
-                ->where(['numrecdoc' => $modelconexionsigesp->numrecdoc])
+                ->where([
+                    'numrecdoc' => $modelrecibidoorpa->numrecdoc,
+                    'estprodoc' => ['C', 'R', 'E'],
+                    ])
                 ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
                 ->one();
                 
+                // Si esta recibido en el modulo de Orpa y no esta anulado               
                 if (isset($modeldocorpa)) {
+                    $modelconexionsigesp->numrecdoc = $modelrecibidoorpa->numrecdoc;
                     $modelconexionsigesp->date_regdocorpa = $modeldocorpa->fecemidoc;
                     $modeluser = Trabajador::findOne([
                         'usuario_sigesp' => $modeldocorpa->codusureg
@@ -745,9 +756,10 @@ while ($i<11){
                     } else {
                         $modelconexionsigesp->regdocorpa_by = $usuarioid;
                     }
+                    $modelconexionsigesp->estatus_sigesp = 'ROR';
+                    
+                    }
                 }
-                
-                $modelconexionsigesp->estatus_sigesp = 'ROR';
             } elseif (empty ($modelcomprometido)) {
                 // Verifico si esta comprometido
                 $modelconexionsigesp->estatus_sigesp = 'APR';
@@ -769,11 +781,11 @@ while ($i<11){
                 ->where(['numrecdoc' => $modelconexionsigesp->numrecdoc])
                 ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
                 ->one();
+            
        
             if (isset($modeldocorpa)){
                 // Si esta aprobada la orpa
-                if ($modeldocorpa->estaprord === 1) {
-                    
+                if ($modeldocorpa->estaprord == 1) {
                     
                     $modelconexionsigesp->date_aprdocorpa = $modeldocorpa->fecaprord;
                     $modeluser = Trabajador::findOne(['usuario_sigesp' => $modeldocorpa->usuaprord]);

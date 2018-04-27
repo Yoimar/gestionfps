@@ -152,13 +152,13 @@ use yii\widgets\MaskedInput;
     ]);
     ?>
     <?= $form->field($model, 'telefono_celular')->widget(MaskedInput::classname(), [ 
-    'name' => 'input-1',
+    'name' => 'input-2',
     'mask' => '9999-9999999'
     ]);
     ?>
 
     <?= $form->field($model, 'telefono_otro')->widget(MaskedInput::classname(), [ 
-    'name' => 'input-1',
+    'name' => 'input-3',
     'mask' => '9999-9999999'
     ]);
     ?>

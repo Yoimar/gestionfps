@@ -67,6 +67,7 @@ class Cheque extends \yii\db\ActiveRecord
     public $estatus2_id;
     public $estatus1;
     public $estatus1_id;
+    public $cheques;
 
 
     /**
@@ -86,7 +87,7 @@ class Cheque extends \yii\db\ActiveRecord
             [['cheque'], 'required'],
             [['id_presupuesto', 'cheque_by', 'entregado_by', 'retirado_personaid', 'responsable_by', 'imagenentrega_id', 'anulado_by', 'archivo_by', 'created_by', 'updated_by'], 'default', 'value' => null],
             [['id_presupuesto', 'cheque_by', 'entregado_by', 'retirado_personaid', 'responsable_by', 'imagenentrega_id', 'anulado_by', 'archivo_by', 'created_by', 'updated_by'], 'integer'],
-            [['date_cheque', 'date_enviofirma', 'date_enviocaja', 'date_reccaja', 'date_entregado', 'date_anulado', 'date_archivo', 'created_at', 'updated_at'], 'safe'],
+            [['date_cheque', 'date_enviofirma', 'date_enviocaja', 'date_reccaja', 'date_entregado', 'date_anulado', 'date_archivo', 'created_at', 'updated_at', 'cheques'], 'safe'],
             [['motivo_anulado'], 'string'],
             [['cheque'], 'string', 'max' => 15],
             [['estatus_cheque'], 'string', 'max' => 3],

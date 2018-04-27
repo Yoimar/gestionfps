@@ -146,6 +146,7 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
         'language' => 'es',
         'options' => ['placeholder' => 'Seleccione el Estatus Nivel 1'],
         'pluginOptions' => [
+        'initialize' => true,
         'allowClear' => true
         ],
     ]);
@@ -162,6 +163,7 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
     'pluginOptions'=>[
         'placeholder' => 'Seleccione el Estatus Nivel 2',
+        'initialize' => true,
         'depends'=>['finalmemo-estatus1final'],
         'url'=>Url::to(['/estatus3/estatus1']),
     ]
@@ -178,6 +180,7 @@ echo $form->field($modelorigenmemo, 'departamento')->widget(Select2::classname()
     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
     'pluginOptions'=>[
         'placeholder' => 'Seleccione el Estatus Nivel 3',
+        'initialize' => true,
         'depends'=>['estatus2_idfinal'],
         'url'=>Url::to(['/estatus3/estatus2']),
     ]

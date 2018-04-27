@@ -21,6 +21,7 @@ use app\controllers\GestionController;
 use app\models\Presupuestos;
 use app\models\Gestion;
 use app\models\Solicitudes;
+use app\models\Personas;
 
 
 /**
@@ -325,12 +326,15 @@ class ChequeController extends Controller
         ]);
     }
     
-    public function actionCargafoto($cheque){
+    public function actionCargarfoto($cheque){
         
         $modelcheque = Cheque::findOne($cheque);
         
         //encontrar el id de solicitud
         $idsolicitud = $this->Encontrarsolicitud($modelcheque->id_presupuesto);
+        
+        //Encontrar el id de solicitud y enviar
+        $modelsolicitud = Solicitudes::findOne($idsolicitud);
         
         //Encontrar el id de la Persona Beneficiario
         $idbeneficiario = $this->Encontrarbeneficiario($idsolicitud);
@@ -342,13 +346,21 @@ class ChequeController extends Controller
         $modelpersonabeneficiario = Personas::findOne($idbeneficiario);
         
         // Cargar los cheques en una pantallita y seleccionarlos
-        $cheques = $this->Chequesporcaso($idsolicitud);
+        $chequesdisponibles = $this->Chequesporcaso($idsolicitud);
+        
+        if ($modelcheque->load(Yii::$app->request->post())) {
+            echo "Entre<pre>";
+            print_r ($modelcheque->cheques);
+            echo "</pre>";
+            exit();
+        }
     
-        return $this->render('cargafoto', [
+        return $this->render('cargarfoto', [
             'modelcheque' => $modelcheque,
             'modelfotossolicitud' => $modelfotossolicitud,
-            'modelpersonabeneficiario' => $modelpersonabeneficiario, 
-            'cheques' => $cheques,
+            'modelpersonabeneficiario' => $modelpersonabeneficiario,
+            'modelsolicitud' => $modelsolicitud,  
+            'chequesdisponibles' => $chequesdisponibles,
         ]);
     }
     
@@ -362,11 +374,13 @@ class ChequeController extends Controller
         
         foreach ($presupuestos as $presupuesto){
             
-            $modelcheque = Cheque::findOne(['id_presupuesto' => $presupuesto->id]);
-            $cheques[] = $modelcheque->cheque;
-        
-        }
-        
+            $modelcheques = Cheque::find()
+                    ->where(['id_presupuesto' => $presupuesto->id])
+                    ->all();
+            foreach ($modelcheques as $modelcheque) {
+                $cheques[$modelcheque->cheque] = $modelcheque->cheque;
+            }
+        }        
         return $cheques;    
     }
     

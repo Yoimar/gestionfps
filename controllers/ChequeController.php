@@ -339,14 +339,25 @@ class ChequeController extends Controller
         //Encontrar el id de la Persona Beneficiario
         $idbeneficiario = $this->Encontrarbeneficiario($idsolicitud);
         
+        //Encontrar el id de la Persona Solicitante
+        $idsolicitante = $this->Encontrarsolicitante($idsolicitud);
+        
         //Cargo las Fotos solicitud Necesito Solicitud ID
         $modelfotossolicitud = new Fotossolicitud();
         
         //Cargo el beneficiario para los cambios
         $modelpersonabeneficiario = Personas::findOne($idbeneficiario);
         
+        //Cargo el solicitante para los cambios
+        $modelpersonasolicitante = Personas::findOne($idsolicitante);
+        
         // Cargar los cheques en una pantallita y seleccionarlos
         $chequesdisponibles = $this->Chequesporcaso($idsolicitud);
+        
+        //Buscar Gestion 
+        $modelgestion = Gestion::findOne([
+            'solicitud_id' => $idsolicitud,
+        ]);
         
         if ($modelcheque->load(Yii::$app->request->post())) {
             echo "Entre<pre>";
@@ -357,8 +368,10 @@ class ChequeController extends Controller
     
         return $this->render('cargarfoto', [
             'modelcheque' => $modelcheque,
+            'modelgestion' => $modelgestion,
             'modelfotossolicitud' => $modelfotossolicitud,
             'modelpersonabeneficiario' => $modelpersonabeneficiario,
+            'modelpersonasolicitante' => $modelpersonasolicitante,
             'modelsolicitud' => $modelsolicitud,  
             'chequesdisponibles' => $chequesdisponibles,
         ]);
@@ -402,5 +415,15 @@ class ChequeController extends Controller
         $solicitud = Solicitudes::findOne($idsolicitud);
         
         return $solicitud->persona_beneficiario_id;
+    }
+    
+    /* 
+     Metodo para encontrar el id del solicitante de una solicitud 
+     */
+    public function Encontrarsolicitante($idsolicitud){
+        
+        $solicitud = Solicitudes::findOne($idsolicitud);
+        
+        return $solicitud->persona_solicitante_id;
     }
 }

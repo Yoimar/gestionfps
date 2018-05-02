@@ -24,7 +24,17 @@ use yii\widgets\MaskedInput;
 
 <div class="personas-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(); 
+    if (isset($model->parroquia_id)) {
+    $parroquia = Parroquias::findOne($model->parroquia_id);
+    $municipio = Municipios::findOne($parroquia->municipio_id);
+    $model->municipio_id = $municipio->id;
+    $model->estado_id = $municipio->estado_id;
+    }
+    
+    
+    
+    ?>
 
     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 

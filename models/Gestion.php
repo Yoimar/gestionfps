@@ -1,11 +1,9 @@
 <?php
 
 namespace app\models;
-use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
-use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
 use Yii;

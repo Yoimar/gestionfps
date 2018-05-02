@@ -121,4 +121,19 @@ class PersonasController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
+   public function actionCrear($cheque)
+    {
+        $model = new Personas();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model = $model->Valorpersonasxdefecto($model);
+            $model->save();
+            return $this->redirect(['cheque/cargarfoto', 'cheque' => $cheque]);
+        } else {
+            return $this->render('crear', [
+                'model' => $model,
+            ]);
+        }
+    }
 }

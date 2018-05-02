@@ -185,9 +185,9 @@ class SolicitudesController extends Controller
     $out = ['results' => ['id' => '', 'text' => '']];
     if (!is_null($q)) {
         $query = new Query;
-        $query->addSelect(["id", "concat('C.I.: ',ci,' // ',nombre,' ',apellido) as text"])
+        $query->addSelect(["id", "concat('C.I.: ',ci,' // ', nombre,' ',apellido) as text"])
             ->from('personas')
-            ->andFilterWhere(['like', "concat(ci,'',nombre,'',apellido)", $q])
+            ->andFilterWhere(['like', "concat(ci,' ',nombre,' ',apellido)", $q])
             ->limit(20);
         $command = $query->createCommand();
         $data = $command->queryAll();

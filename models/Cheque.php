@@ -113,7 +113,7 @@ class Cheque extends \yii\db\ActiveRecord
             'date_entregado' => 'Fecha Entregado',
             'entregado_by' => 'Entregado por:',
             'retirado_personaid' => 'Retirado Por:',
-            'responsable_by' => 'Responsable de la Entrega',
+            'responsable_by' => 'Responsable',
             'imagenentrega_id' => 'Id Imagen de Entrega',
             'date_anulado' => 'Fecha Anulado',
             'motivo_anulado' => 'Motivo Anulado',

@@ -224,8 +224,8 @@ class Personas extends \yii\db\ActiveRecord
     {
         return "C.I.: ".$this->ci." // ".$this->nombre." ".$this->apellido;
     }
-    public function behaviors()
-    {
+    
+    public function behaviors() {
         return [
             'timestamp' => [
                 'class' => 'yii\behaviors\TimestampBehavior',
@@ -233,10 +233,21 @@ class Personas extends \yii\db\ActiveRecord
                     ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
                 ],
-                'value' => new Expression('NOW()'),
+                'value' => Yii::$app->formatter->asDate('now','php:m-d-Y H:i:s'),
             ],
 
         ];
+    }
+    
+    public function Valorpersonasxdefecto($model){
+        
+        $model->ind_trabaja = false;
+        $model->ind_asegurado = false;
+        $model->version = 1;
+        $model->created_at = Yii::$app->formatter->asDate('now','php:m-d-Y H:i:s');
+        $model->updated_at = Yii::$app->formatter->asDate('now','php:m-d-Y H:i:s');
+        return $model;
+        
     }
     
 }

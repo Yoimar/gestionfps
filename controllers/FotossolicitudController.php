@@ -114,57 +114,30 @@ class FotossolicitudController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
 
-            //Crear la carpeta para los adjuntos
-            $carpeta = Yii::getAlias('@app').'/web/img/adjuntos'.'/'.$model->solicitud_id;
-            FileHelper::createDirectory($carpeta);
+            // process uploaded image file instance
+            $image = $model->cargarimagen();
 
-            // Obtener la Imagen de la Foto y se instancia en un objeto para manipularlo
-            // la siguiente data retorna un array
-            $imagen = UploadedFile::getInstances($model, 'imagen');
-            $model->ind_reporte = false;
-            $model->created_at = Yii::$app->formatter->asDate('now','php:Y-m-d H:i:s');
-            $model->updated_at = Yii::$app->formatter->asDate('now','php:Y-m-d H:i:s');
+            $model->foto = $model->getRevisarimagen($image);
+            $model = $model->cargardefecto($model);
 
-            foreach ($imagen as $file) {
-
-            //creo la direccion para guardar la imagen que se llama adjuntos
-            $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'
-            .$model->solicitud_id.'/'.$file->baseName.'.' .$file->extension;
-            $model->foto = $file->name;
-
-            //Verifico que el nombre de la imagen no este duplicado
-            $i=1;
-            while (file_exists($path)) {
-                $path = Yii::getAlias('@app').'/web/img/adjuntos'.'/'
-                .$model->solicitud_id.'/'.$file->baseName.$i.'.'.$file->extension;
-                $model->foto = $file->baseName.$i.'.'.$file->extension;
-                $i++;
-            }
-
-            //Guardar dos de acuerdo al numero de imagenes
-                $modelparaguardar = new Fotossolicitud();
-
-                $modelparaguardar->solicitud_id = $model->solicitud_id;
-                $modelparaguardar->descripcion = $model->descripcion;
-                $modelparaguardar->foto = $model->foto;
-                $modelparaguardar->ind_reporte = $model->ind_reporte;
-                $modelparaguardar->created_at = $model->created_at;
-                $modelparaguardar->updated_at = $model->updated_at;
-                $modelparaguardar->save();
-
-            //Guardo cada Imagen
-            $file->saveAs($path);
-
-            //Fin del Foreach
-            }
+            if ($model->save()) {
+                // upload only if valid uploaded file instance found
+                if ($image !== false) {
+                    
+                    $path = $model->getArchivoimagen();
+                    $image->saveAs($path);
+                }
 
             return $this->redirect(['index']);
+            }
         }
 
         return $this->render('create', [
             'model' => $model,
         ]);
     }
+    
+    
 
     /**
      * Updates an existing Fotossolicitud model.

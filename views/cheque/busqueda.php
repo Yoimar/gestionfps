@@ -24,11 +24,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Agregar Cheque', ['entregacheque'], ['class' => 'btn btn-primary']) ?>
     </p>
-    
+
 </div>
 
 <div class="container-fluid" style="text-align: center;">
-    
+
     <div class="col-lg-12 col-md-12">
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
@@ -44,18 +44,27 @@ $this->params['breadcrumbs'][] = $this->title;
                 'empresainstitucion',
                 'cheque',
                 'monto',
-                
+
                 [
                 'class' => 'kartik\grid\ActionColumn',
                 'template' => '{cambiotrabajador}',
                 'buttons' => [
                 'cambiotrabajador' => function($url, $model){
+                                if ($model->estatus_cheque == 'EMI'){
                                     return Html::a('<span class="glyphicon glyphicon-log-in"></span>',
                                         yii\helpers\Url::to(['cargarfoto', 'cheque' => $model->cheque, ]),
                                         [
                                             'title' => 'Entregar Cheque',
                                         ]
                                         );
+                                 } elseif ($model->estatus_cheque == 'ENT') {
+                                     return Html::a('<span class="glyphicon glyphicon-print"></span>',
+                                         yii\helpers\Url::to(['imprimirentrega', 'cheque' => $model->cheque, ]),
+                                         [
+                                             'title' => 'Imprimir Entrega ',
+                                         ]
+                                         );
+                                 }
                                     }
 
                                   ],
@@ -68,6 +77,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'hover' => true,
         ]); ?>
     </div>
-        
+
 
 </div>

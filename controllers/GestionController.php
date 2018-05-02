@@ -228,7 +228,7 @@ class GestionController extends Controller
                 $modelfinalmemo->unidadfinal = 8;
                 $modelfinalmemo->usuariofinal = 11;
                 $modelfinalmemo->estatus1final = 1;
-                $modelfinalmemo->estatus2final = 2;
+                $modelfinalmemo->estatus2final = 18;
                 $modelfinalmemo->estatus3final = 62;
 
                 /** Filtro los que tienen o estan en estatus de elaboración de Memo **/

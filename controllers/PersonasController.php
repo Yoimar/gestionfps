@@ -124,7 +124,7 @@ class PersonasController extends Controller
     
    public function actionCrear($cheque)
     {
-        $model = new Personas();
+        $model = new Personas(['scenario' => 'crear']);
 
         if ($model->load(Yii::$app->request->post())) {
             $model = $model->Valorpersonasxdefecto($model);

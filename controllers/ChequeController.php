@@ -22,6 +22,9 @@ use app\models\Presupuestos;
 use app\models\Gestion;
 use app\models\Solicitudes;
 use app\models\Personas;
+use app\models\Bitacoras;
+use yii\helpers\Html;
+use kartik\mpdf\Pdf;
 
 
 /**
@@ -155,56 +158,56 @@ class ChequeController extends Controller
         $modelcheque = new Cheque();
         $iraentrega = 0;
         $chequemanual = 0;
-        
+
 
         if ($modelcheque->load(Yii::$app->request->post())) {
 
             $idconexionsigesp = $this->Encontrarconexionsigesp($modelcheque->cheque);
 
-            
+
             if ($idconexionsigesp != false) {
                 $idgestion = $this->Encontrargestion($idconexionsigesp);
-                
+
                 //Si es verdadero lo actualizo para que me traiga el cheque
                 GestionController::reload($idgestion);
-                
+
                 Yii::$app->session->setFlash("warning", "El cheque fue actualizado".$idconexionsigesp
                 ."Seleccione ir a Entrega");
                 $iraentrega = 1;
-                
+
             }else{
                 //Pantalla de carga de Caso Manual con presupuesto Manual
                 Yii::$app->session->setFlash("warning", "El caso no pertenece"
              . " a un caso por bienestar social Seleccione Carga Manual");
                 $chequemanual = 1;
             }
-            
-        }    
-                            
+
+        }
+
         return $this->render('entrega', [
             'modelcheque' => $modelcheque,
             'chequemanual' => $chequemanual,
             'iraentrega' => $iraentrega,
         ]);
     }
-    
+
     public function actionActualizafecha(){
         $modelcheque = new Cheque();
 
         if ($modelcheque->load(Yii::$app->request->post())) {
-            
+
         $modelcheques = Scbmovbco::find()->select([ 'numdoc', ])
-                    ->where([ 'fecmov' => $modelcheque->date_cheque, 
+                    ->where([ 'fecmov' => $modelcheque->date_cheque,
                               'codope' => 'CH',
-                              'estmov' => ['N','C','O','L']   ]) 
+                              'estmov' => ['N','C','O','L']   ])
                     ->all();
         $i=0;
-       
+
         // Inicio del Foreach
         foreach ($modelcheques as $instanciacheque){
 
         $idconexionsigesp = $this->Encontrarconexionsigesp($instanciacheque->numdoc);
-        
+
             if ($idconexionsigesp != false) {
                 $idgestion = $this->Encontrargestion($idconexionsigesp);
                 //Si es verdadero lo actualizo para que me traiga el cheque
@@ -212,48 +215,48 @@ class ChequeController extends Controller
                 $i++;
             }
         }
-        
+
         Yii::$app->session->setFlash("success", "Fueron cargados ".$i." cheques");
-        
+
         }
         return $this->render('actualizafecha', [
             'modelcheque' => $modelcheque,
         ]);
-    
+
     }
-    
+
     public function Encontrargestion($conexionsigesp){
-        
+
         $modelconexionsigesp = Conexionsigesp::findOne($conexionsigesp);
-        
+
         $modelpresupuesto = Presupuestos::findOne($modelconexionsigesp->id_presupuesto);
-        
+
         $modelgestion = Gestion::findOne([
             'solicitud_id' => $modelpresupuesto->solicitud_id,
         ]);
-        
+
         return $modelgestion->id;
     }
-    
+
     public function Encontrarconexionsigesp($cheque){
         /* Encuentro la orpa */
         $modelorpa = Scbmovbcospg::findOne([
             'numdoc' => $cheque, 'estmov' => ['N','C','O']
         ]);
-        
+
         //reviso el numero de orpa o si existe orpa
         if (isset($modelorpa)){
             //Para determinar el numero de recepcion
             $modeldtorpa = Cxpdtsolicitudes::findOne([
                 'numsol' => $modelorpa->documento,
             ]);
-            
+
             //reviso si el caso esta recibido por orpa
             $modelrecibidoorpa = Cxprdspg::findOne([
                 'numrecdoc' => $modeldtorpa->numrecdoc,
-                'ced_bene' => $modeldtorpa->ced_bene, 
+                'ced_bene' => $modeldtorpa->ced_bene,
             ]);
-            
+
             $modelconexionsigesp = Conexionsigesp::findOne([
                 'req' =>  $modelrecibidoorpa->numdoccom,
             ]);
@@ -262,7 +265,7 @@ class ChequeController extends Controller
 
         }else {
             return false;
-        }    
+        }
     }
 
     /**
@@ -314,7 +317,7 @@ class ChequeController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-    
+
     public function actionReporte()
     {
         $searchModel = new ChequeSearchCarga();
@@ -325,105 +328,352 @@ class ChequeController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-    
+
     public function actionCargarfoto($cheque){
-        
+
         $modelcheque = Cheque::findOne($cheque);
-        
+
+        /** Inicializar el responsable y el entregado por **/
+        $usuarioid = Yii::$app->user->id;
+        $modelcheque->responsable_by = $usuarioid;
+        $modelcheque->entregado_by = $usuarioid;
+
+
         //encontrar el id de solicitud
         $idsolicitud = $this->Encontrarsolicitud($modelcheque->id_presupuesto);
-        
+
         //Encontrar el id de solicitud y enviar
         $modelsolicitud = Solicitudes::findOne($idsolicitud);
-        
+
         //Encontrar el id de la Persona Beneficiario
         $idbeneficiario = $this->Encontrarbeneficiario($idsolicitud);
-        
+
         //Encontrar el id de la Persona Solicitante
         $idsolicitante = $this->Encontrarsolicitante($idsolicitud);
-        
+
         //Cargo las Fotos solicitud Necesito Solicitud ID
-        $modelfotossolicitud = new Fotossolicitud();
-        
+        $modelfotossolicitud = $this->Cargamodelofotossolicitud($modelcheque->imagenentrega_id);
+
         //Cargo el beneficiario para los cambios
         $modelpersonabeneficiario = Personas::findOne($idbeneficiario);
-        
+
         //Cargo el solicitante para los cambios
         $modelpersonasolicitante = Personas::findOne($idsolicitante);
-        
+
         // Cargar los cheques en una pantallita y seleccionarlos
         $chequesdisponibles = $this->Chequesporcaso($idsolicitud);
-        
-        //Buscar Gestion 
+
+        //Buscar Gestion
         $modelgestion = Gestion::findOne([
             'solicitud_id' => $idsolicitud,
         ]);
-        
-        if ($modelcheque->load(Yii::$app->request->post())) {
-            echo "Entre<pre>";
-            print_r ($modelcheque->cheques);
-            echo "</pre>";
-            exit();
+
+        if (
+                $modelcheque->load(Yii::$app->request->post()) &&
+                $modelfotossolicitud->load(Yii::$app->request->post()) &&
+                //$modelgestion->load(Yii::$app->request->post()) &&
+                $modelpersonabeneficiario->load(Yii::$app->request->post()) &&
+                $modelpersonasolicitante->load(Yii::$app->request->post()) &&
+                $modelsolicitud->load(Yii::$app->request->post())
+           ){
+            //Guardar la Foto
+
+            $image = $modelfotossolicitud->cargarimagen();
+
+            //Verifico que la imagen alla sido cargada si no devuelvo con error
+            if ($image == false){
+                 Yii::$app->session->setFlash("warning", "Por Favor Realize la carga de la Imagen");
+                 return $this->render('cargarfoto', [
+                    'modelcheque' => $modelcheque,
+                    'modelgestion' => $modelgestion,
+                    'modelfotossolicitud' => $modelfotossolicitud,
+                    'modelpersonabeneficiario' => $modelpersonabeneficiario,
+                    'modelpersonasolicitante' => $modelpersonasolicitante,
+                    'modelsolicitud' => $modelsolicitud,
+                    'chequesdisponibles' => $chequesdisponibles,
+                ]);
+            }
+
+            $modelfotossolicitud->descripcion = "Entrega de los cheques ". $this->Chequesfortext($modelcheque->cheques);
+            $modelfotossolicitud->solicitud_id = $modelsolicitud->id;
+            $modelfotossolicitud->foto = $modelfotossolicitud->getRevisarimagen($image);
+            $modelfotossolicitud = $modelfotossolicitud->cargardefecto($modelfotossolicitud);
+
+            if ($modelfotossolicitud->save()) {
+                    $path = $modelfotossolicitud->getArchivoimagen();
+                    $image->saveAs($path);
+            }
+
+            //Entregar el cheque
+
+            $modelcheque->imagenentrega_id = $modelfotossolicitud->id;
+            $modelcheque->estatus_cheque = 'ENT';
+            $modelcheque->save();
+
+            //Verificar si tiene dos cheques para la misma Foto y realizo el registro de sigesp (interno)
+            $this->Duplicadocheque($modelcheque, $modelcheque->cheques);
+
+            //Registro en la Bitacora
+            $this->Registroenlabitacora($modelcheque, $modelfotossolicitud);
+
+            //Guardar los modelos de Beneficiario Solicitante y Solicitud
+            $modelpersonabeneficiario->save();
+
+
         }
-    
+
         return $this->render('cargarfoto', [
             'modelcheque' => $modelcheque,
             'modelgestion' => $modelgestion,
             'modelfotossolicitud' => $modelfotossolicitud,
             'modelpersonabeneficiario' => $modelpersonabeneficiario,
             'modelpersonasolicitante' => $modelpersonasolicitante,
-            'modelsolicitud' => $modelsolicitud,  
+            'modelsolicitud' => $modelsolicitud,
             'chequesdisponibles' => $chequesdisponibles,
         ]);
     }
-    
-     /* 
+
+     /*
      Metodo para encontrar los cheques asociados a una solicitud
      */
     public function Chequesporcaso($id_solicitud){
         $presupuestos = Presupuestos::find()
                 ->where(['solicitud_id' => $id_solicitud])
                 ->all();
-        
+
         foreach ($presupuestos as $presupuesto){
-            
+
             $modelcheques = Cheque::find()
                     ->where(['id_presupuesto' => $presupuesto->id])
                     ->all();
             foreach ($modelcheques as $modelcheque) {
                 $cheques[$modelcheque->cheque] = $modelcheque->cheque;
             }
-        }        
-        return $cheques;    
+        }
+        return $cheques;
     }
-    
-    /* 
+
+    /*
      Metodo para encontrar la solicitud con el id del presupuesto
      */
     public function Encontrarsolicitud($id_presupuesto){
-        
+
         $presupuesto = Presupuestos::findOne($id_presupuesto);
-        
-        return $presupuesto->solicitud_id; 
+
+        return $presupuesto->solicitud_id;
     }
-    
-    /* 
-     Metodo para encontrar el id del beneficiario de una solicitud 
+
+    /*
+     Metodo para encontrar el id del beneficiario de una solicitud
      */
     public function Encontrarbeneficiario($idsolicitud){
-        
+
         $solicitud = Solicitudes::findOne($idsolicitud);
-        
+
         return $solicitud->persona_beneficiario_id;
     }
-    
-    /* 
-     Metodo para encontrar el id del solicitante de una solicitud 
+
+    /*
+     Metodo para encontrar el id del solicitante de una solicitud
      */
     public function Encontrarsolicitante($idsolicitud){
-        
+
         $solicitud = Solicitudes::findOne($idsolicitud);
-        
+
         return $solicitud->persona_solicitante_id;
     }
+
+    public function Cargamodelofotossolicitud($imagenentrega_id){
+        if (empty($imagenentrega_id)){
+            $modelfotossolicitud = new Fotossolicitud;
+        }else{
+            $modelfotossolicitud = Fotossolicitud::findOne($imagenentrega_id);
+        }
+        return $modelfotossolicitud;
+    }
+
+    public function Duplicadocheque($modelcheque, $cheques){
+
+        $this->CambiarSigesp($modelcheque);
+
+        foreach ($cheques as $cheque) {
+            if ($modelcheque->cheque != $cheque) {
+
+                $modelduplicadocheque = Cheque::findOne($cheque);
+                $modelduplicadocheque->estatus_cheque = 'ENT';
+                $modelduplicadocheque->imagenentrega_id = $modelcheque->imagenentrega_id;
+                $modelduplicadocheque->date_reccaja = $modelcheque->date_reccaja;
+                $modelduplicadocheque->date_entregado = $modelcheque->date_entregado;
+                $modelduplicadocheque->entregado_by = $modelcheque->entregado_by;
+                $modelduplicadocheque->retirado_personaid = $modelcheque->retirado_personaid;
+                $modelduplicadocheque->responsable_by = $modelcheque->responsable_by;
+                $modelduplicadocheque->save();
+
+                //Modificar en sigesp
+                $this->CambiarSigesp($modelduplicadocheque);
+
+            }
+
+        }
+        return true;
+    }
+
+    public function Registroenlabitacora($modelcheque, $modelfotossolicitud){
+        $modeltrabajador = Trabajador::findOne([
+            'user_id' => $modelcheque->entregado_by
+            ]);
+        $modelbitacora = new Bitacoras;
+                $modelbitacora->solicitud_id = $modelfotossolicitud->solicitud_id;
+                $modelbitacora->fecha = $modelcheque->date_entregado;
+                $modelbitacora->nota = "El trabajador ".$modeltrabajador->trabajadorfps." ha registrado"
+                    ."la entrega del (los) cheque(s) : "
+                    .$this->Chequesfortext($modelcheque->cheques)
+                    . " el día "
+                    . date('Y-m-d'). " a las ". date('h:i a');
+                $modelbitacora->usuario_id = $modeltrabajador->users_id;
+                $modelbitacora->ind_activo = 1;
+                $modelbitacora->ind_alarma = 0;
+                $modelbitacora->ind_atendida = 0;
+                $modelbitacora->version = 0;
+                $modelbitacora->created_at = date('Y-m-d H:i:s');
+                $modelbitacora->updated_at = date('Y-m-d H:i:s');
+                $modelbitacora->save();
+
+        return true;
+    }
+
+    public function Chequesfortext($cheques){
+
+        $array = array_map(function($v) { return ltrim($v, '0'); }, $cheques);
+        $chequesfortext = implode(", ", $array);
+
+        return $chequesfortext;
+    }
+
+    public function CambiarSigesp($modelcheque){
+
+        $modelsigesp = Scbmovbco::findOne([
+                    'numdoc' => $modelcheque->cheque,
+                    'estmov' => ['N','C','O']
+        ]);
+
+        $modelpersona = Personas::findOne($modelcheque->retirado_personaid);
+
+            $modelsigesp->estcondoc = 'E';
+            $modelsigesp->emichefec = $modelcheque->date_entregado;
+            $modelsigesp->emichenom = $modelpersona->nombre." ".$modelpersona->apellido;
+            $modelsigesp->emicheced = strval($modelpersona->ci);
+            $modelsigesp->emicheproc = 1;
+
+        $modelsigesp->save();
+
+        return true;
+    }
+
+    public function actionImprimirentrega($cheque){
+
+        $model = Cheque::findOne($cheque);
+        $modelfotossolicitud = $this->Cargamodelofotossolicitud($model->imagenentrega_id);
+
+        $headerHtml = '<div class="row">'
+        .Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "150", "class" => "pull-left"])
+        .Html::img("@web/img/despacho.png", ["alt" => "Despacho", "width" => "450", "style" =>"margin-top: 10px; margin-bottom: 10px;", "class" => "pull-right"])
+        .'</div>';
+
+        $footerHtml = '<center>'
+       .'<div class="row">'
+       .'<table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:12px; text-align: center;">'
+       .'<tr>'
+       .'    <td>'
+       .'        <strong>¡CHAVEZ VIVE, LA PATRIA SIGUE!</strong>'
+       .'        <br>"Independencia y Patria Socialista" ¡Viviremos y Venceremos!'
+       .'        <br> <strong>¡PRIMEROS EN EL SACRIFICIO! ¡ULTIMOS EN EL BENEFICIO!</strong>'
+       .'    </td>'
+       .'</tr>'
+       .'</table>'
+       .'</div>'
+       .'<hr style="color: #000000; margin: 0px; padding: 0px;" size="1" />'
+       .'<div class="row">'
+       .'<table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:10px; text-align: center;">'
+       .'<tr>'
+       .'    <td>'
+       .'            <strong>Avenida Urdaneta, Esquina de Boleros, Palacio de Miraflores, Edificio Administrativo</strong>'
+       .'            <br>'
+       .'            <strong>Piso 2, Fundación Pueblo Soberano, RIF G-2000-2056-3</strong>'
+       .'            <br>'
+       .'            <strong>Teléfono: 0212-8063573</strong>'
+       .'     </td></tr>'
+       .'</table>'
+       .'</div></center><p style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></p>';
+        // get your HTML raw content without any layouts or scripts
+        $content = $this->renderPartial('imprimir', [
+                'model' => $model,
+                'modelfotossolicitud' => $modelfotossolicitud
+            ]);
+
+        // setup kartik\mpdf\Pdf component
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_UTF8,
+            // A4 paper format
+            'format' => Pdf::FORMAT_LETTER,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => '.kv-heading-1{font-size:7px}',
+             // set mPDF properties on the fly
+            'options' => ['title' => 'Entrega de Caso'],
+             // call mPDF methods on the fly
+            'marginTop' => '90',
+
+            'methods' => [
+                'SetHTMLHeader'=>[$headerHtml, [ 'E', [TRUE]]],
+                'SetHTMLFooter'=>[$footerHtml, [ 'E', [TRUE]]],
+            ],
+
+        ]);
+
+
+            /*** Pie de Página Bonito
+             * '<center>'
+            .'<div class="row">'
+            .'<table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:12px; text-align: center;">'
+            .'<tr>'
+            .'    <td>'
+            .'        <strong>¡CHAVEZ VIVE, LA PATRIA SIGUE!</strong>'
+            .'        <br>"Independencia y Patria Socialista" ¡Viviremos y Venceremos!'
+            .'        <br> <strong>¡PRIMEROS EN EL SACRIFICIO! ¡ULTIMOS EN EL BENEFICIO!</strong>'
+            .'    </td>'
+            .'</tr>'
+            .'</table>'
+            .'</div>'
+            .'<hr style="color: #000000; margin: 0px; padding: 0px;" size="1" />'
+            .'<div class="row">'
+            .'<table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:10px; text-align: center;">'
+            .'<tr>'
+            .'    <td>'
+            .'            <strong>Avenida Urdaneta, Esquina de Boleros, Palacio de Miraflores, Edificio Administrativo</strong>'
+            .'            <br>'
+            .'            <strong>Piso 2, Fundación Pueblo Soberano, RIF G-2000-2056-3</strong>'
+            .'            <br>'
+            .'            <strong>Teléfono: 0212-8063573</strong>'
+            .'     </td></tr>'
+            .'</table>'
+            .'</div></center>
+             *
+             * **/
+
+
+            // return the pdf output as per the destination setting
+            return $pdf->render();
+
+        }
+
 }

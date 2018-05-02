@@ -8,12 +8,16 @@ use app\models\TipoNacionalidades;
 use app\models\Estados;
 use app\models\Municipios;
 use app\models\Parroquias;
+use app\models\Personas;
 use kartik\depdrop\DepDrop;
 use yii\helpers\Url;
 use yii\widgets\MaskedInput;
 use kartik\file\FileInput;
 use kartik\tabs\TabsX;
 use yii\web\JsExpression;
+use kartik\alert\AlertBlock;
+use kartik\growl\Growl;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Cheque */
@@ -38,7 +42,6 @@ if (isset($modelpersonasolicitante->parroquia_id)) {
     $modelpersonasolicitante->municipio_id = $municipio->id;
     $modelpersonasolicitante->estado_id = $municipio->estado_id;
 }
-
 
 ?>
 <div class="cheque-create">
@@ -191,7 +194,7 @@ if (isset($modelpersonasolicitante->parroquia_id)) {
                         ->from('trabajador')
                         ->all(), 'id', 'nombre'),
         'language' => 'es',
-        'options' => ['placeholder' => 'Seleccione el Area'],
+        'options' => ['placeholder' => 'Seleccione la persona que realizo la impresion del cheque'],
         'disabled' => true,
         'pluginOptions' => [
         'allowClear' => true
@@ -212,22 +215,65 @@ if (isset($modelpersonasolicitante->parroquia_id)) {
         </div>
     <div class="col-md-4">
 
-    <?= $form->field($modelcheque, 'date_reccaja')->textInput(['disabled' => true]) ?>
+    <?= $form->field($modelcheque, 'date_reccaja')->widget(DatePicker::classname(), [
+            'name' => 'dp_3',
+            'type' =>  DatePicker::TYPE_INPUT,
+                    'pluginOptions' => [
+                        'autoclose'=>true,
+                       'format' => 'yyyy-mm-dd',
+                        'language' => 'es',
+                        'todayBtn' => 'linked',
+                    ]
+            ]); ?>
         </div>
      </div>
     
     <div class="row">
-
-        <div class="col-md-4">
-            <?= $form->field($modelcheque, 'date_reccaja')->textInput() ?>
-        </div>
         <div class="col-md-4">
 
-            <?= $form->field($modelcheque, 'date_entregado')->textInput() ?>
+            <?= $form->field($modelcheque, 'date_entregado')->widget(DatePicker::classname(), [
+            'name' => 'dp_3',
+            'type' =>  DatePicker::TYPE_INPUT,
+                    'pluginOptions' => [
+                        'autoclose'=>true,
+                       'format' => 'yyyy-mm-dd',
+                        'language' => 'es',
+                        'todayBtn' => 'linked',
+                    ]
+            ]); ?>
         </div>
+        
         <div class="col-md-4">
-            <?= $form->field($modelcheque, 'responsable_by')->textInput() ?>
+        <?= $form->field($modelcheque, 'responsable_by')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map((new \yii\db\Query())->select([
+                        "CONCAT(trabajador.primernombre, ' ', trabajador.primerapellido) as nombre", 
+                        "trabajador.user_id as id"])
+                        ->from('trabajador')
+                        ->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione el Responsable'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ])->label('Responsable'); ?>
         </div>
+        
+        <div class="col-md-4">
+            <?= $form->field($modelcheque, 'entregado_by')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map((new \yii\db\Query())->select([
+                        "CONCAT(trabajador.primernombre, ' ', trabajador.primerapellido) as nombre", 
+                        "trabajador.user_id as id"])
+                        ->from('trabajador')
+                        ->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione la persona que hizo el registro'],
+        'disabled' => true,
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ])->label('Registrado por:'); ?>
+        </div>
+        
     </div>
 
     <div class="row">
@@ -259,16 +305,17 @@ if (isset($modelpersonasolicitante->parroquia_id)) {
         </div>
         <div class="col-md-6">
             <br>
-
-            <?php
-            echo Html::button('Registrar Persona', [
-                'id' => 'modelButtoncrearPersona',
-                'value' => \yii\helpers\Url::to(['personas/crear']),
-                'class' => 'btn btn-primary']);
-            ?>
-            <?= Html::a('Registrar Persona', ['personas/crear',
+            <?=
+            Html::a('Registrar Persona', ['personas/crear',
                 'cheque' => $modelcheque->cheque,
-                ], ['class'=>'btn btn-primary', 'data-container' => 'body', 'data-toggle' => 'tooltip', 'data-placement'=> 'bottom', 'title'=>'Ingresar Persona' ]) ?>
+                    ], [
+                'class' => 'btn btn-primary',
+                'data-container' => 'body',
+                'data-toggle' => 'tooltip',
+                'data-placement' => 'bottom',
+                'title' => 'Ingresar Persona'
+            ])
+            ?>
         </div>
     </div>
             
@@ -278,7 +325,7 @@ if (isset($modelpersonasolicitante->parroquia_id)) {
             ->widget(FileInput::classname(),[
                     'options'=>[
                         //'accept'=>'imagen/*',
-                        'multiple'=>true
+                        //'multiple'=>true
                     ],
                     'pluginOptions' => [
                         'initialPreview'=>[
@@ -368,7 +415,7 @@ if (isset($modelpersonasolicitante->parroquia_id)) {
                 'select2Options' => ['pluginOptions' => ['allowClear' => true]],
                 'pluginOptions' => [
                     'placeholder' => 'Seleccione el Municipio',
-                    'depends' => ['personas-estado_id_beneficiario'],
+                    'depends' => ['estado_id_beneficiario'],
                     'url' => Url::to(['/parroquias/estadan']),
                 ]
             ]);
@@ -649,21 +696,21 @@ if (isset($modelpersonasolicitante->parroquia_id)) {
             $modelcheque->cheques = $modelcheque->cheque;
             ?>
             
-            
-            
-            <div class="row text-center">
-            
-            <?php
+            <div class="row">
+            <div class="align-items-center">
+                <div class="col text-center">
 
-            echo $form->field($modelcheque, 'cheques')
-                    ->checkboxList($chequesdisponibles, [
-                        'itemOptions' => [
-                            'labelOptions' => ['class' => 'col-md-2']
-                        ]
-            ])
-                    ->label('Seleccione los Cheques a Entregar',['class'=>'label-class text-center']);
-            
-            ?>
+                    <?php
+                    echo $form->field($modelcheque, 'cheques')
+                            ->checkboxList($chequesdisponibles, [
+                                'itemOptions' => [
+                                    'labelOptions' => ['class' => 'col text-center col-md-2']
+                                ]
+                            ])
+                            ->label('Seleccione los Cheques a Entregar', ['class' => 'label-class col text-center']);
+                    ?>
+                </div>
+            </div>
             </div>
             
             <?php
@@ -692,3 +739,22 @@ if (isset($modelpersonasolicitante->parroquia_id)) {
     <?php ActiveForm::end(); ?>
 
 </div>
+<center>
+<div class="col-lg-12 col-md-12">
+     <div>
+         <?php
+            echo AlertBlock::widget([
+                    'useSessionFlash' => true,
+                    'type' => AlertBlock::TYPE_GROWL,
+                    'delay' => 0,
+                    'alertSettings' => [
+                        'success' => ['type' => Growl::TYPE_SUCCESS, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
+                        'danger' => ['type' => Growl::TYPE_DANGER, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
+                        'warning' => ['type' => Growl::TYPE_WARNING, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
+                        'info' => ['type' => Growl::TYPE_INFO, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]]
+                        ],
+            ])
+         ?>
+    </div>
+</div>
+</center>

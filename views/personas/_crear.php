@@ -4,16 +4,12 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
-use yii\bootstrap\Modal;
 use kartik\datetime\DateTimePicker;
 use app\models\TipoNacionalidades;
-use app\models\EstadosCiviles;
-use app\models\NivelesAcademicos;
 use kartik\depdrop\DepDrop;
 use app\models\Estados;
 use app\models\Parroquias;
 use app\models\Municipios;
-use app\models\Seguros;
 use yii\helpers\Url;
 use yii\widgets\MaskedInput;
 
@@ -24,7 +20,10 @@ use yii\widgets\MaskedInput;
 
 <div class="personas-form">
 
-    <?php $form = ActiveForm::begin(); 
+    <?php $form = ActiveForm::begin([
+        "method" => "post",
+        "enableClientValidation" => true,
+    ]); 
     if (isset($model->parroquia_id)) {
     $parroquia = Parroquias::findOne($model->parroquia_id);
     $municipio = Municipios::findOne($parroquia->municipio_id);
@@ -70,7 +69,7 @@ use yii\widgets\MaskedInput;
                 'data' => ArrayHelper::map(Estados::find()->orderBy('nombre')->all(), 'id', 'nombre'),
                 'language' => 'es',
                 'options' => [
-                    'id' => 'estado_id_beneficiario',
+                    'id' => 'estado_id',
                     'placeholder' => 'Seleccione el Estado'],
                 'pluginOptions' => [
                     'allowClear' => true
@@ -85,11 +84,11 @@ use yii\widgets\MaskedInput;
             $form->field($model, 'municipio_id')->widget(DepDrop::classname(), [
                 'data' => ArrayHelper::map(Municipios::find()->orderBy('nombre')->all(), 'id', 'nombre'),
                 'type' => DepDrop::TYPE_SELECT2,
-                'options' => ['id' => 'municipio_id_beneficiario', 'placeholder' => 'Seleccione el Municipio'],
+                'options' => ['id' => 'municipio_id', 'placeholder' => 'Seleccione el Municipio'],
                 'select2Options' => ['pluginOptions' => ['allowClear' => true]],
                 'pluginOptions' => [
                     'placeholder' => 'Seleccione el Municipio',
-                    'depends' => ['personas-estado_id_beneficiario'],
+                    'depends' => ['estado_id'],
                     'url' => Url::to(['/parroquias/estadan']),
                 ]
             ]);
@@ -102,13 +101,13 @@ use yii\widgets\MaskedInput;
             $form->field($model, 'parroquia_id')->widget(DepDrop::classname(), [
                 'data' => ArrayHelper::map(Parroquias::find()->orderBy('nombre')->all(), 'id', 'nombre'),
                 'type' => DepDrop::TYPE_SELECT2,
-                'options' => ['id' => 'parroquia_id_beneficiario', 'placeholder' => 'Seleccione La Parroquia'],
+                'options' => ['id' => 'parroquia_id', 'placeholder' => 'Seleccione La Parroquia'],
                 'select2Options' => ['pluginOptions' => ['allowClear' => true]],
                 'pluginOptions' => [
                     'placeholder' => 'Seleccione La Parroquia',
                     //'initialize' => true,
                     //'initDepends'=>['modelpersonabeneficiario-municipio_id'],
-                    'depends' => ['municipio_id_beneficiario'],
+                    'depends' => ['municipio_id'],
                     'url' => Url::to(['/parroquias/municipan']),
                 ]
             ]);
@@ -119,21 +118,21 @@ use yii\widgets\MaskedInput;
     
     <div class="row">
         
-        <div class="col-md-4">
-            <?=
-            $form->field($model, 'telefono_fijo')
-                ->widget(MaskedInput::classname(), [
-                'name' => 'input-1',
-                'mask' => '9999-9999999'
-            ]);
-            ?>
-        </div>
-        
         <div class="col-md-4"> 
             <?=
             $form->field($model, 'telefono_celular')
                 ->widget(MaskedInput::classname(), [
                 'name' => 'input-2',
+                'mask' => '9999-9999999'
+            ]);
+            ?>
+        </div>
+        
+        <div class="col-md-4">
+            <?=
+            $form->field($model, 'telefono_fijo')
+                ->widget(MaskedInput::classname(), [
+                'name' => 'input-1',
                 'mask' => '9999-9999999'
             ]);
             ?>
@@ -153,7 +152,25 @@ use yii\widgets\MaskedInput;
     
     <div class="row">
         
-        <div class="col-md-6">
+        <div class="col-md-4">
+        
+        <?= $form->field($model, 'fecha_nacimiento')->widget(DateTimePicker::classname(), [
+	'name' => 'datetime_18',
+        'options' => ['placeholder' => 'Ingrese la Fecha de Nacimiento'],
+        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
+        'pluginOptions' => [
+            'todayHighlight' => true,
+            'todayBtn' => true,
+            'autoclose'=>true,
+            'showMeridian' => false,
+            'format' => 'yyyy-mm-dd',
+            'minView' => '2',
+        ]
+        ]);
+        ?>
+         </div>
+        
+        <div class="col-md-4">
 
     <?= $form->field($model, 'email')->widget(MaskedInput::classname(), [
         'name' => 'input-36',
@@ -163,7 +180,7 @@ use yii\widgets\MaskedInput;
     ]);
     ?>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
 
     <?= $form->field($model, 'twitter')->widget(MaskedInput::classname(), [
         'name' => 'input-2',
@@ -172,12 +189,15 @@ use yii\widgets\MaskedInput;
     );
     ?>
         </div>
+        
 
     </div>
 
 
-    <div class="form-group">
+    <div class="form-group align-items-center">
+        <div class="col text-center">
         <?= Html::submitButton('Registrar', ['class' => 'btn btn-primary']) ?>
+        </div>
     </div>
 
     <?php ActiveForm::end(); ?>

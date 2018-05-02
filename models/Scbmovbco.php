@@ -140,11 +140,7 @@ class Scbmovbco extends \yii\db\ActiveRecord
             [['codestprosig'], 'string', 'max' => 33],
             [['codemp', 'estmov', 'numconint'], 'unique', 'targetAttribute' => ['codemp', 'estmov', 'numconint']],
             [['codemp', 'codban', 'ctaban', 'numdoc', 'codope', 'estmov'], 'unique', 'targetAttribute' => ['codemp', 'codban', 'ctaban', 'numdoc', 'codope', 'estmov']],
-            [['codemp', 'ced_bene'], 'exist', 'skipOnError' => true, 'targetClass' => RpcBeneficiario::className(), 'targetAttribute' => ['codemp' => 'codemp', 'ced_bene' => 'ced_bene']],
-            [['codemp', 'cod_pro'], 'exist', 'skipOnError' => true, 'targetClass' => RpcProveedor::className(), 'targetAttribute' => ['codemp' => 'codemp', 'cod_pro' => 'cod_pro']],
-            [['codemp', 'codconmov'], 'exist', 'skipOnError' => true, 'targetClass' => ScbConcepto::className(), 'targetAttribute' => ['codemp' => 'codemp', 'codconmov' => 'codconmov']],
-            [['codemp', 'codban', 'ctaban'], 'exist', 'skipOnError' => true, 'targetClass' => ScbCtabanco::className(), 'targetAttribute' => ['codemp' => 'codemp', 'codban' => 'codban', 'ctaban' => 'ctaban']],
-            [['codemp', 'codcencos'], 'exist', 'skipOnError' => true, 'targetClass' => SigespCencosto::className(), 'targetAttribute' => ['codemp' => 'codemp', 'codcencos' => 'codcencos']],
+            [['codemp', 'ced_bene'], 'exist', 'skipOnError' => true, 'targetClass' => Rpcbeneficiario::className(), 'targetAttribute' => ['codemp' => 'codemp', 'ced_bene' => 'ced_bene']],
         ];
     }
 

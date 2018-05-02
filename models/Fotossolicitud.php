@@ -51,7 +51,7 @@ class Fotossolicitud extends \yii\db\ActiveRecord
                 'maxFiles' => 1,
                 'tooMany' => 'El máximo de archivos permitidos son {limit}', //Error
             ],
-            [['solicitud_id', 'descripcion', 'foto', 'created_at', 'updated_at'], 'required'],
+            [['solicitud_id', 'descripcion', 'foto', 'created_at', 'updated_at',], 'required'],
             [['solicitud_id'], 'default', 'value' => null],
             [['solicitud_id'], 'integer'],
             [['ind_reporte'], 'boolean'],

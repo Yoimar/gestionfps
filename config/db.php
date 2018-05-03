@@ -3,7 +3,7 @@
 return [
     'class' => 'yii\db\Connection',
     //'dsn' => 'pgsql:host=172.27.9.162;dbname=sasycdev', //Servidor Fundación
-    'dsn' => 'pgsql:host=localhost;dbname=sasycdev', //Prueba
+    'dsn' => 'pgsql:host=localhost;dbname=sasycdevprod', //Prueba
     'username' => 'postgres',
     //'password' => 'postgres',  //Password Produccion
     'password' => 'pueblosoberano', //Password Localhost

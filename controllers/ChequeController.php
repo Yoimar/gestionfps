@@ -574,6 +574,13 @@ class ChequeController extends Controller
 
         $model = Cheque::findOne($cheque);
         $modelfotossolicitud = $this->Cargamodelofotossolicitud($model->imagenentrega_id);
+        $cheques = $this->Chequesporentrega($modelfotossolicitud->id);
+        $modelsolicitud = Solicitudes::findOne($modelfotossolicitud->solicitud_id);
+        $modelbeneficiario = Personas::findOne($modelsolicitud->persona_beneficiario_id);
+        $modelsolicitante = Personas::findOne($modelsolicitud->persona_solicitante_id);
+        $modelretirado = Personas::findOne($model->retirado_personaid);
+        $modelresponsable = Trabajador::findOne(['user_id'=> $model->responsable_by]);
+        $modelentregado = Trabajador::findOne(['user_id'=> $model->entregado_by]);
 
         $headerHtml = '<div class="row">'
         .Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "150", "class" => "pull-left"])
@@ -608,7 +615,14 @@ class ChequeController extends Controller
         // get your HTML raw content without any layouts or scripts
         $content = $this->renderPartial('imprimir', [
                 'model' => $model,
-                'modelfotossolicitud' => $modelfotossolicitud
+                'modelfotossolicitud' => $modelfotossolicitud,
+                'cheques' => $cheques,
+                'modelsolicitud' => $modelsolicitud,
+                'modelsolicitante' => $modelsolicitante,
+                'modelbeneficiario' => $modelbeneficiario,
+                'modelretirado' => $modelretirado,
+                'modelresponsable' => $modelresponsable,
+                'modelentregado' => $modelentregado,
             ]);
 
         // setup kartik\mpdf\Pdf component
@@ -627,11 +641,19 @@ class ChequeController extends Controller
             // enhanced bootstrap css built by Krajee for mPDF formatting
             'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
             // any css to be embedded if required
-            'cssInline' => '.kv-heading-1{font-size:7px}',
+            'cssInline' => '.kv-heading-1{font-size:7px} tr{
+            border: 1px solid black !important;
+            vertical-align: middle;}
+            td.negro{
+            border: 1px solid black !important;
+            }
+            negro{
+            border: 1px solid black !important;
+            }',
              // set mPDF properties on the fly
             'options' => ['title' => 'Entrega de Caso'],
              // call mPDF methods on the fly
-            'marginTop' => '90',
+            'marginTop' => '40',
 
             'methods' => [
                 'SetHTMLHeader'=>[$headerHtml, [ 'E', [TRUE]]],
@@ -674,6 +696,24 @@ class ChequeController extends Controller
             // return the pdf output as per the destination setting
             return $pdf->render();
 
+        }
+        
+        public function Chequesporentrega($id_fotossolicitud){
+            $cheques = Cheque::find()
+                ->where(['imagenentrega_id' => $id_fotossolicitud])
+                ->all();
+
+        foreach ($cheques as $cheque){
+
+            $chequesimpr[] = ltrim($cheque->cheque, "0");
+            
+        }
+        
+        $chequesimprimir = implode(", ", $chequesimpr);
+        
+        return $chequesimprimir;
+            
+           
         }
 
 }

@@ -505,5 +505,23 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionTablareportemando($ano=null){
+
+        $model = new Reportes(['scenario' => 'crear']);
+
+        if (isset($ano)||$model->load(Yii::$app->request->post())){
+            if (isset($ano)){$model->ano = $ano;}
+            return $this->render('tablareportemando',
+            [
+                'model' => $model,
+            ]);
+        }
+
+        return $this->render('formulario',
+        [
+            'model' => $model,
+        ]);
+    }
+
 
 }

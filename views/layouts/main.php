@@ -66,7 +66,8 @@ AppAsset::register($this);
             'label' => 'Reportes',
             'items' => [
                  '<li class="dropdown-header">Tablas Resumen</li>',
-                 ['label' => 'Reporte General', 'url' => '@web/site/tablareporte?ano='.date("Y")],
+                 ['label' => 'Consolidado por Unidad', 'url' => '@web/site/tablareportemando?ano='.date("Y")],
+                 ['label' => 'Reporte General Año', 'url' => '@web/site/tablareporte?ano='.date("Y")],
                  ['label' => 'Reportes', 'url' => '@web/site/formulario'],
                  /* Reportes en Mapa de Calor Desactivados por no usarlos
                 '<li class="divider"></li>',

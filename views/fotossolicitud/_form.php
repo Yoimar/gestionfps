@@ -59,7 +59,7 @@ use kartik\file\FileInput;
             ]);
 ?>
 
-
+<?php echo Yii::getAlias('@web')."/img/adjuntos/".$model->solicitud_id.'/'.$model->foto ?>
 <center>
     <div class="form-group">
         <?= Html::submitButton('Guardar', ['class' => 'btn btn-info']) ?>

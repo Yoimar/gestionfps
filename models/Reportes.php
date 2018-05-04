@@ -4,7 +4,7 @@ namespace app\models;
 use yii\base\Model;
 
 /**
- * Esto es para la busqueda de los Casos por Departamento, Usuario y Estatus para buscar los casos asignados en la unidad. 
+ * Esto es para la busqueda de los Casos por Departamento, Usuario y Estatus para buscar los casos asignados en la unidad.
  *
  */
 class Reportes extends Model
@@ -19,13 +19,14 @@ class Reportes extends Model
     public $recepcioninicial;
     public $tiporeporte;
 
-    
+
     public function rules()
     {
         return [
 
             [['mes', 'ano', 'tiporeporte', 'recepcioninicial'], 'integer'],
             [['fechadesde', 'fechahasta',], 'safe'],
+            [['ano'], 'required', 'on' => 'crear'],
 
         ];
     }
@@ -39,13 +40,16 @@ class Reportes extends Model
             'mes' => 'Mes',
             'ano' => 'Año',
             'tiporeporte' => 'Tipo de Reporte',
+            'fechadesde' => 'Fecha desde',
+            'fechahasta' => 'Fecha Hasta',
+            'recepcioninicial' => 'Unidad',
         ];
     }
-    
+
     public function getRecepcioninicial()
     {
         return $this->hasOne(Recepciones::className(), ['id' => 'recepcioninicial']);
     }
 
-        
+
 }

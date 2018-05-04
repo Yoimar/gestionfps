@@ -230,7 +230,19 @@ use kartik\depdrop\DepDrop;
         ],
     ]);
     
-    ?>    
+    ?> 
+    
+    <?=
+        $form->field($model, 'recepcion_id')->widget(Select2::classname(), [
+        'data' => ArrayHelper::map(\app\models\Recepciones::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'language' => 'es',
+        'options' => ['placeholder' => 'Seleccione la Recepción'],
+        'pluginOptions' => [
+        'allowClear' => true
+        ],
+    ]);
+
+    ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Registrar Gestión' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

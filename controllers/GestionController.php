@@ -202,7 +202,7 @@ class GestionController extends Controller
     elseif ($id > 0) {
         $out['results'] = ['id' => $id, 'text' => Solicitudes::find($id)->num_solicitud];
     }
-    
+
     return $out;
     }
 
@@ -635,19 +635,19 @@ class GestionController extends Controller
     public function actionActualiza($id, $estatus3=null, $verorpa=null, $vercheque =null, $vertelefono=null, $verunidad=null){
 
         $idparagestion = $this->reload($id);
-        
+
         return $this->redirect('gestiona?estatus3='.$estatus3);
-   
+
     }
 
     public function reload($id){
-        
+
         $estatus3=61;
-        
+
         $modelgestion = Gestion::findOne($id);
 
         $modelsolicitudes = Solicitudes::findOne($modelgestion->solicitud_id);
-        
+
           $modelpresupuestos = Presupuestos::find()
                                 ->where(['solicitud_id' => $modelsolicitudes->id])
                                 ->all();
@@ -662,8 +662,8 @@ class GestionController extends Controller
 
         $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
         $usuarioid = Yii::$app->user->id;
-    
-    
+
+
             /////*** DEFINO 10 ESTATUS PARA LOS ESTATUS DEL DOCUMENTO ES DECIR EL ESTATUS DE LA CONEXION A SIGESP ****////
     //** Registro el Foreach para la conexionsigesp en caso de que el caso tenga mas de un presupuesto **//
 // Inicio del Foreach
@@ -672,7 +672,7 @@ foreach ($modelpresupuestos as $modelpresupuesto) {
         $modelconexionsigesp = Conexionsigesp::findOne(
             ['id_presupuesto' => $modelpresupuesto->id ]
             );
-        
+
         if (empty($modelconexionsigesp)) {
         Yii::$app->session->setFlash("warning", "El caso no ha sido aprobado por SIGESP"
              . " este año");
@@ -694,11 +694,11 @@ while ($i<11){
         // ESTATUS ELA -> ELABORADO
         case 'ELA':
             //VERIFICO QUE EL ESTATUS ES DIFERENTE DE 61 (EN ELABORACIÓN DE MEMO)
-            
+
             $modelconexionsigesp->estatus_sigesp = 'APR';
-            
+
             //salgo de los while ya que el caso no esta aprobado
-            
+
             break 1; // Aquí salé del switch
 
         //ESTATUS APR -> APROBADO Y ENVIADO A ADMINISTRACIÓN
@@ -729,13 +729,13 @@ while ($i<11){
                 ])
                 ->where(['numdoccom' => $modelconexionsigesp->req])
                 ->all();
-            
+
             //reviso si esta comprometido
             $modelcomprometido = Spgdtcmp::findOne(['comprobante' => $modelconexionsigesp->req]);
             if (isset($modelrecibidoorpas)){
-                
+
                 foreach ($modelrecibidoorpas as $modelrecibidoorpa){
-                
+
                 $modeldocorpa = Cxprd::find()
                 ->where([
                     'numrecdoc' => $modelrecibidoorpa->numrecdoc,
@@ -743,8 +743,8 @@ while ($i<11){
                     ])
                 ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
                 ->one();
-                
-                // Si esta recibido en el modulo de Orpa y no esta anulado               
+
+                // Si esta recibido en el modulo de Orpa y no esta anulado
                 if (isset($modeldocorpa)) {
                     $modelconexionsigesp->numrecdoc = $modelrecibidoorpa->numrecdoc;
                     $modelconexionsigesp->date_regdocorpa = $modeldocorpa->fecemidoc;
@@ -757,7 +757,7 @@ while ($i<11){
                         $modelconexionsigesp->regdocorpa_by = $usuarioid;
                     }
                     $modelconexionsigesp->estatus_sigesp = 'ROR';
-                    
+
                     }
                 }
             } elseif (empty ($modelcomprometido)) {
@@ -776,17 +776,17 @@ while ($i<11){
 //////////ESTATUS ROR -> EL CASO SE ENCUENTRA RECIBIDO POR ORPA
         case 'ROR':
             //reviso si el caso esta aprobado
-            
+
             $modeldocorpa = Cxprd::find()
                 ->where(['numrecdoc' => $modelconexionsigesp->numrecdoc])
                 ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
                 ->one();
-            
-       
+
+
             if (isset($modeldocorpa)){
                 // Si esta aprobada la orpa
                 if ($modeldocorpa->estaprord == 1) {
-                    
+
                     $modelconexionsigesp->date_aprdocorpa = $modeldocorpa->fecaprord;
                     $modeluser = Trabajador::findOne(['usuario_sigesp' => $modeldocorpa->usuaprord]);
                     if(isset($modeluser)){
@@ -795,9 +795,9 @@ while ($i<11){
                         $modelconexionsigesp->aprdocorpa_by = $usuarioid;
                     }
                     $modelconexionsigesp->estatus_sigesp = 'AOR';
- 
+
                 }
-                
+
             } elseif (empty($modeldocorpa)) {
                 // Verifico si esta recibido en orpa
                 $modelconexionsigesp->estatus_sigesp = 'COM';
@@ -824,14 +824,14 @@ while ($i<11){
                 ->where(['numrecdoc' => $modelconexionsigesp->numrecdoc])
                 ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
                 ->one();
-            
+
             if (isset($modeldtorpa)){
                 // Si esta aprobada la orpa
                 $modelconexionsigesp->orpa = $modeldtorpa->numsol;
                 $modelorpa = Cxpsolicitudes::findOne([
                     'numsol' => $modelconexionsigesp->orpa,
                 ]);
-                
+
                 $modelconexionsigesp->date_orpa = $modelorpa->fecemisol;
                 $modeluser = Trabajador::findOne(
                     ['usuario_sigesp' => $modelorpa->codusureg
@@ -957,11 +957,11 @@ while ($i<11){
                 ->all();
             //reviso si la orpa tiene programado un pago
             $modelprogpago = Scbprogpago::findOne(['numsol' => $modelconexionsigesp->orpa]);
-            
+
             if (isset($modelimprcheques)){
                 // el caso tiene un cheque
                 foreach ($modelimprcheques as $modelimprcheque){
-                    
+
                     $modelgestioncheque = Cheque::findOne(['cheque' => $modelimprcheque->numdoc]);
                     if(empty($modelgestioncheque)){
                         $modelgestioncheque = new Cheque;
@@ -983,10 +983,10 @@ while ($i<11){
                     ])
                     ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
                     ->one();
-                
-                
-                
-                
+
+
+
+
                 $fechabitacora = Yii::$app->formatter
                                  ->asDate($modelgestioncheque->date_cheque,'php:d/m/Y');
                 $modeluser = Trabajador::findOne([
@@ -1003,8 +1003,8 @@ while ($i<11){
                 $modelgestioncheque->date_cheque = $modelscbcheque->fecmov;
                 $modelconexionsigesp->estatus_sigesp = 'CHE';
                 $modelgestioncheque->save();
-                
-                
+
+
 
                 //*** Llenado de Tablas de SASYC solicitudes, presupuestos y Bitacoras ***//
                 if ($modelgestioncheque->estatus_cheque == 'EMI'){
@@ -1031,9 +1031,9 @@ while ($i<11){
                 $modelsolicitudes->save();
                 $modelpresupuesto->save();
                 $modelgestioncheque->save();
-                
+
                 }
-                
+
                 }
 
             } elseif (empty($modelprogpago)) {
@@ -1052,7 +1052,7 @@ while ($i<11){
                 'id_presupuesto' => $modelconexionsigesp->id_presupuesto,
                 'estatus_cheque' => ['EMI','PEN','ENT'],
             ]);
-            
+
             if (isset($modelgestioncheque)){
             $modelcheque = Scbmovbco::find()
                     ->where([
@@ -1062,9 +1062,9 @@ while ($i<11){
                     ])
                     ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
                     ->one();
-            
+
             }
-            
+
             //reviso el estatus del cheque es en caja
             if (isset($modelgestioncheque)&&isset($modelcheque)&&$modelcheque->estcondoc==='C'){
                 $modelgestioncheque->date_enviofirma = $modelcheque->fecenvfir;
@@ -1087,7 +1087,7 @@ while ($i<11){
                 $modelconexionsigesp->estatus_sigesp = 'CHF';
 
             } elseif (empty($modelcheque)&&isset ($modelgestioncheque)) {
-                
+
                 $modelanulado = Scbmovbco::find()
                     ->where([
                     'numdoc' => $modelgestioncheque->cheque,
@@ -1096,8 +1096,8 @@ while ($i<11){
                     ])
                     ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
                     ->one();
-                
-                
+
+
                 //reviso el estatus del cheque es entregado y lo coloco en caja
                 if (isset($modelanulado)){
                     $modelconexionsigesp->estatus_sigesp = 'ANU';
@@ -1263,7 +1263,7 @@ while ($i<11){
     $modelconexionsigesp->save();
 }
 
-//Fin del Foreach    
+//Fin del Foreach
 }
     return $id;
     }
@@ -1274,24 +1274,31 @@ while ($i<11){
 
       if ($model->load(Yii::$app->request->post())&&$model->validate()) {
         foreach ($model->caso as $idsolicitud) {
-          $modelgestion = Gestion::findOne(['solicitud_id' => $idsolicitud ]);
+
+            $int = (int)$idsolicitud;
+            $prueba[]= $int;
+
+          $modelgestion = Gestion::findOne(['solicitud_id' => $int ]);
+
           if (isset($modelgestion)) {
             $modelgestion->estatus3_id = $model->estatus3;
+            $modelgestion->programaevento_id = $model->actividad;
           } else {
             $modelgestion = new Gestion;
-            $modelgestion->solicitud_id = $idsolicitud;
+            $modelgestion->solicitud_id = $int;
             $modelgestion->estatus3_id = $model->estatus3;
+            $modelgestion->programaevento_id = $model->actividad;
           }
           $modelgestion->save();
         }
 
-        Yii::$app->session->setFlash("warning", "Los casos fueron cambiados exitosamente");
+        Yii::$app->session->setFlash("warning", "Los casos".implode (',',  $prueba)." fueron cambiados exitosamente");
 
-      } 
-          
+      }
+
       return $this->render('masivo', [
               'model' => $model,
-      ]); 
-      
+      ]);
+
    }
 }

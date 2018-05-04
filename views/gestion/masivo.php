@@ -6,12 +6,14 @@ use kartik\select2\Select2;
 use yii\web\JsExpression;
 use yii\helpers\Url;
 use kartik\alert\AlertBlock;
+use kartik\growl\Growl;
 use app\models\Solicitudes;
 use app\models\Estatus1;
 use app\models\Estatus2;
 use app\models\Estatus3;
 use yii\helpers\ArrayHelper;
 use kartik\depdrop\DepDrop;
+use app\models\Programaevento;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Sepsolicitud */
@@ -109,6 +111,19 @@ use kartik\depdrop\DepDrop;
         ]
         ]);
         ?>
+
+        <?=
+            $form->field($model, 'actividad')->widget(Select2::classname(), [
+            'data' => ArrayHelper::map(Programaevento::find()->orderBy('descripcion')->all(), 'id', 'descripcion'),
+            'language' => 'es',
+            'options' => ['placeholder' => 'Seleccione el Programa Evento o Actividad'],
+            'pluginOptions' => [
+            'allowClear' => true
+            ],
+        ]);
+
+        ?>
+
   <div class="col-lg-6 col-md-8 col-lg-offset-3 col-md-offset-2">
                         <?= Html::submitButton('Cambiar Todos', ['class' => 'btn btn-primary']) ?>
     </div>
@@ -124,16 +139,24 @@ use kartik\depdrop\DepDrop;
 </div>
 
 
-
 <center>
-
-     <div><?= AlertBlock::widget([
-                    'type' => AlertBlock::TYPE_ALERT,
+<div class="col-lg-12 col-md-12">
+     <div>
+         <?php
+            echo AlertBlock::widget([
                     'useSessionFlash' => true,
-                    'delay' => 5000,
-                    ]);
-             ?>
-        </div>
+                    'type' => AlertBlock::TYPE_GROWL,
+                    'delay' => 0,
+                    'alertSettings' => [
+                        'success' => ['type' => Growl::TYPE_SUCCESS, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
+                        'danger' => ['type' => Growl::TYPE_DANGER, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
+                        'warning' => ['type' => Growl::TYPE_WARNING, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]],
+                        'info' => ['type' => Growl::TYPE_INFO, 'pluginOptions' => ['placement' => ['from' => 'top', 'align' => 'center']]]
+                        ],
+            ])
+         ?>
+    </div>
+</div>
 </center>
 
 </div>

@@ -11,7 +11,7 @@ use app\models\ContactForm;
 use app\models\SignupForm;
 use yii\db\Query;
 use yii\data\ActiveDataProvider;
-use app\models\Snohsalida;
+use app\models\Reportes;
 
 class SiteController extends Controller
 {
@@ -270,39 +270,22 @@ class SiteController extends Controller
         return $this->render('totalnivel1');
     }
 
-    public function actionTablareportegeneral()
-    {
-        return $this->render('tablareportegeneral');
-    }
-
-    public function actionTablareportegeneral17()
-    {
-        return $this->render('tablareportegeneral17');
-    }
-
-    public function actionTablareportegeneral18()
-    {
-        return $this->render('tablareportegeneral18');
-    }
-
-    public function actionTablaatencionsoberano()
-    {
-        return $this->render('tablaatencionsoberano');
-    }
-
-    public function actionTablaatencioninstitucional()
-    {
-        return $this->render('tablaatencioninstitucional');
-    }
-
-    public function actionTablainstruccionpresidencial()
-    {
-        return $this->render('tablainstruccionpresidencial');
-    }
-
     public function actionParteportrabajador()
     {
-        return $this->render('parteportrabajador');
+        $model = new Reportes(['scenario' => 'crear']);
+
+        if ($model->load(Yii::$app->request->post())){
+
+            return $this->render('parteportrabajador',
+            [
+                'model' => $model,
+            ]);
+        }
+
+        return $this->render('formulario',
+        [
+            'model' => $model,
+        ]);
     }
 
     public function actionParteindividual()
@@ -440,8 +423,7 @@ class SiteController extends Controller
         return $this->render('pruebas', ['seleccion'=>$selection]);
     }
 
-    public function actionReportes()
-    {
+    public function actionReportes(){
         // Nota: Para ver el sql nativo del query se utiliza:
         // echo $query->createCommand()->sql;
 
@@ -494,5 +476,34 @@ class SiteController extends Controller
             'pruebas' => $columnasmostrar,
         ]);
     }
+
+    public function actionFormulario(){
+
+        $model = new Reportes(['scenario' => 'crear']);
+
+        if ($model->load(Yii::$app->request->post())){
+
+            return $this->render('tablareporte',
+            [
+                'model' => $model,
+            ]);
+        }
+
+        return $this->render('formulario',
+        [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionTablareporte($ano=null, $recepcion=null){
+        $model = new Reportes();
+        $model->ano = $ano;
+        $model->recepcioninicial = $recepcion;
+        return $this->render('tablareporte',
+        [
+            'model' => $model,
+        ]);
+    }
+
 
 }

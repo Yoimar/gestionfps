@@ -68,6 +68,7 @@ class Cheque extends \yii\db\ActiveRecord
     public $estatus1;
     public $estatus1_id;
     public $cheques;
+    public $chequeforprint;
 
 
     /**
@@ -103,6 +104,7 @@ class Cheque extends \yii\db\ActiveRecord
     {
         return [
             'cheque' => 'Cheque',
+            'chequeforprint' => 'Cheque',
             'id_presupuesto' => 'id_presupuesto',
             'estatus_cheque' => 'Estatus',
             'date_cheque' => 'Fecha Emitido',

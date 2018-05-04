@@ -21,7 +21,7 @@ class ChequeSearchCarga extends Cheque
             [['cheque', 'estatus_cheque', 'date_cheque', 'date_enviofirma', 'date_enviocaja',
             'date_reccaja', 'date_entregado', 'date_anulado', 'motivo_anulado', 'date_archivo',
             'created_at', 'updated_at', 'beneficiario',  'solicitante', 'entregadoa', 'estado_beneficiario',  'tipodeayuda', 'tratamiento', 'especialidad', 'necesidad',  'empresainstitucion',  'recepcioninicial',
-            'recepcionactual', 'telefono', 'orpa', 'num_solicitud'], 'safe'],
+            'recepcionactual', 'telefono', 'orpa', 'num_solicitud', 'chequeforprint'], 'safe'],
             [['id_presupuesto', 'cheque_by', 'entregado_by', 'retirado_personaid', 'responsable_by',
             'imagenentrega_id', 'anulado_by', 'cientregadoa', 'archivo_by', 'created_by', 'updated_by', 'cibeneficiario', 'cisolicitante', 'anocheque', 'mescheque', 'monto', 'rif', 'estatus3', 'estatus2', 'estatus1',
             ], 'integer'],
@@ -49,6 +49,7 @@ class ChequeSearchCarga extends Cheque
         $query = Cheque::find()
         ->select([
             'cheque.cheque',
+            "LTRIM(cheque.cheque, '0') as chequeforprint" ,
             'cheque.id_presupuesto',
             'cheque.date_cheque',
             'cheque.cheque_by',
@@ -323,6 +324,10 @@ class ChequeSearchCarga extends Cheque
                     'estatus3' => [
                         'asc' => ['estatus3.nombre' => \SORT_ASC],
                         'desc' => ['estatus3.nombre' => \SORT_DESC],
+                    ],
+                    'chequeforprint' => [
+                        'asc' => ['cheque.cheque' => \SORT_ASC],
+                        'desc' => ['cheque.cheque' => \SORT_DESC],
                     ],
 
                 ],

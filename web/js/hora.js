@@ -1,10 +1,10 @@
 function mueveReloj(){
 
-    
-    
+
+
     btnAdd = document.getElementById("reloj");
     if (btnAdd != null) {
-        
+
     var dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
     var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
@@ -18,10 +18,10 @@ function mueveReloj(){
     fecha = dias[diaSemana] + " " + dia + " de " + meses[mes] + " de " + anho + " Hora: " + formatoAMPM(momentoActual)
     document.getElementById("reloj").innerHTML = fecha;
 
-    setTimeout("mueveReloj()",1000);        
-        
-    } 
-    
+    setTimeout("mueveReloj()",1000);
+
+    }
+
     function formatoAMPM(date) {
         var horas = date.getHours();
         var minutos = date.getMinutes();
@@ -39,6 +39,6 @@ function mueveReloj(){
 function recarga(){
     btnAdd = document.getElementById("reloj");
     if (btnAdd != null) {
-    setInterval("location.reload()", 30000);
+    //setInterval("location.reload()", 30000);
     }
 }

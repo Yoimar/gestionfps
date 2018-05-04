@@ -22,7 +22,7 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body onload="mueveReloj(),//recarga()">
+<body onload="mueveReloj(),recarga()">
 <?php $this->beginBody() ?>
 
 <div class="wrap">
@@ -66,18 +66,17 @@ AppAsset::register($this);
             'label' => 'Reportes',
             'items' => [
                  '<li class="dropdown-header">Tablas Resumen</li>',
-                 ['label' => 'Atención al Soberano', 'url' => '@web/site/tablaatencionsoberano'],
-                 ['label' => 'Atención Institucional', 'url' => '@web/site/tablaatencioninstitucional'],
-                 ['label' => 'Instruccion Presidencial', 'url' => '@web/site/tablainstruccionpresidencial'],
-                 ['label' => 'Reporte General 2017', 'url' => '@web/site/tablareportegeneral17'],
-                 ['label' => 'Reporte General 2018', 'url' => '@web/site/tablareportegeneral18'],
-                 '<li class="divider"></li>',
+                 ['label' => 'Reporte General', 'url' => '@web/site/tablareporte?ano='.date("Y")],
+                 ['label' => 'Reportes', 'url' => '@web/site/formulario'],
+                 /* Reportes en Mapa de Calor Desactivados por no usarlos
+                '<li class="divider"></li>',
                 '<li class="dropdown-header">Reporte Por Unidad</li>',
                  ['label' => 'Atención al Soberano', 'url' => '@web/site/atencionsoberano'],
                  ['label' => 'Atención Institucional', 'url' => '@web/site/atencioninstitucional'],
                  ['label' => 'Instruccion Presidencial', 'url' => '@web/site/instruccionpresidencial'],
                  ['label' => 'Reporte General 2017', 'url' => '@web/site/reportegeneral17'],
                  ['label' => 'Reporte General 2018', 'url' => '@web/site/reportegeneral18'],
+                */
                 '<li class="divider"></li>',
                 '<li class="dropdown-header">Reporte de Trabajador Social</li>',
                 ['label' => 'General Trabajador Social', 'url' => '@web/site/parteportrabajador'],
@@ -128,7 +127,7 @@ AppAsset::register($this);
     NavBar::end();
     ?>
 
-    <div class="container" >
+    <div class="container">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
            ]) ?>

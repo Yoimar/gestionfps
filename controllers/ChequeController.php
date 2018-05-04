@@ -581,6 +581,22 @@ class ChequeController extends Controller
         $modelretirado = Personas::findOne($model->retirado_personaid);
         $modelresponsable = Trabajador::findOne(['user_id'=> $model->responsable_by]);
         $modelentregado = Trabajador::findOne(['user_id'=> $model->entregado_by]);
+        /** Inicializar el depdrown de Kartik Beneficiario **/
+        if (isset($modelbeneficiario->parroquia_id)) {
+            $parroquia = \app\models\Parroquias::findOne($modelbeneficiario->parroquia_id);
+            $municipio = \app\models\Municipios::findOne($parroquia->municipio_id);
+            $modelestado = \app\models\Estados::findOne($municipio->estado_id);
+        }else{
+            //cargo el modelo de caracas defecto 1
+            $modelestado = \app\models\Estados::findOne(1);
+        }
+        
+        //data provider para cintillo con cheques monto y total
+        $searchModel = new ChequeSearchCarga();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['imagenentrega_id'=>$modelfotossolicitud->id]);
+        
+        
 
         $headerHtml = '<div class="row">'
         .Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "150", "class" => "pull-left"])
@@ -623,6 +639,8 @@ class ChequeController extends Controller
                 'modelretirado' => $modelretirado,
                 'modelresponsable' => $modelresponsable,
                 'modelentregado' => $modelentregado,
+                'modelestado' => $modelestado,
+                'dataProvider' => $dataProvider,
             ]);
 
         // setup kartik\mpdf\Pdf component
@@ -653,7 +671,7 @@ class ChequeController extends Controller
              // set mPDF properties on the fly
             'options' => ['title' => 'Entrega de Caso'],
              // call mPDF methods on the fly
-            'marginTop' => '40',
+            'marginTop' => '35',
 
             'methods' => [
                 'SetHTMLHeader'=>[$headerHtml, [ 'E', [TRUE]]],

@@ -16,6 +16,7 @@ class Multiplessolicitudes extends Model
     public $estatus1;
     public $estatus2;
     public $estatus3;
+    public $actividad;
 
 
     public function rules()
@@ -23,6 +24,7 @@ class Multiplessolicitudes extends Model
         return [
 
             [['caso', 'estatus3'], 'required'],
+            //[['caso',], 'integer'],
 
 
         ];

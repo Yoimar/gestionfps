@@ -9,7 +9,7 @@ if ($model->recepcioninicial!=''){
 	$this->title = 'Reporte Por Unidad';
 	$filtrounidad = '';
 }
-$stylecabecera = '"text-align:center; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;"';
+$stylecabecera = 'style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;"';
 
 $styleceldas = '"text-align:center; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;"';
 
@@ -46,26 +46,26 @@ $meses = array(
 			<div>
 				<table class="table table-bordered table-hover table-striped table-condensed">
 <thead>
-	<tr>
-        <th style=<?= $stylecabecera?>>Mes</th>
-		<th style=<?= $stylecabecera?>>Casos</th>
-        <th style=<?= $stylecabecera?>>Casos Resue</th>
-        <th style=<?= $stylecabecera?>>Casos ArtRe</th>
-		<th style=<?= $stylecabecera?>>Casos Artic</th>
-		<th style=<?= $stylecabecera?>>Casos Anula</th>
-		<th style=<?= $stylecabecera?>>Casos Pendi</th>
-		<th style=<?= $stylecabecera?>>Art Tram</th>
-		<th style=<?= $stylecabecera?>>Sin Comun</th>
-		<th style=<?= $stylecabecera?>>Por Llama</th>
-        <th style=<?= $stylecabecera?>>Por Recau</th>
-        <th style=<?= $stylecabecera?>>Por Conve</th>
-        <th style=<?= $stylecabecera?>>Por Conso</th>
-		<th style=<?= $stylecabecera?>>P/APR Eco</th>
-		<th style=<?= $stylecabecera?> width="200" nowrap>Monto Económico</th>
-		<th style=<?= $stylecabecera?>>P/APR Sal</th>
-		<th style=<?= $stylecabecera?> width="200" nowrap>Monto Salud</th>
-		<th style=<?= $stylecabecera?>>En Admin</th>
-	</tr>
+<tr>
+    <th <?= $stylecabecera?>>Unidad</th>
+    <th <?= $stylecabecera?>>Casos</th>
+    <th <?= $stylecabecera?>>Casos Resue</th>
+    <th <?= $stylecabecera?>>Casos ArtRe</th>
+    <th <?= $stylecabecera?>>Casos Artic</th>
+    <th <?= $stylecabecera?>>Casos Anula</th>
+    <th <?= $stylecabecera?>>Casos Pendi</th>
+    <th <?= $stylecabecera?>>Art Tram</th>
+    <th <?= $stylecabecera?>>Sin Comun</th>
+    <th <?= $stylecabecera?>>Por Llama</th>
+    <th <?= $stylecabecera?>>Por Recau</th>
+    <th <?= $stylecabecera?>>Por Conve</th>
+    <th <?= $stylecabecera?>>Por Conso</th>
+    <th <?= $stylecabecera?>>P/APR Eco</th>
+    <th <?= $stylecabecera?> width="200" nowrap>Monto Económico</th>
+    <th <?= $stylecabecera?>>P/APR Sal</th>
+    <th <?= $stylecabecera?> width="200" nowrap>Monto Salud</th>
+    <th <?= $stylecabecera?>>En Admin</th>
+</tr>
 </thead>
 <tbody>
 	<?php for ($i = 0; $i < 3; $i ++) : ?>
@@ -76,8 +76,8 @@ $meses = array(
 		<tr style="vertical-align:middle;">
 			<td><?= $meses[$i];?></td>
 				<td style="text-align:center; vertical-align:middle;" class="info"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad."  extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-				<td style="text-align:center; vertical-align:middle;"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e1.id = 2 and extract(year from s1.created_at) = 2018 and e2.id <> 15")->queryscalar();?></p></td>
-				<td style="text-align:center; vertical-align:middle;" class="info"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e1.id = 2 and extract(year from s1.created_at) = 2018 and e2.id = 15")->queryscalar();?></p></td>
+				<td style="text-align:center; vertical-align:middle;"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e1.id = 2 and extract(year from s1.created_at) = ".$model->ano." and e2.id <> 15")->queryscalar();?></p></td>
+				<td style="text-align:center; vertical-align:middle;" class="info"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e1.id = 2 and extract(year from s1.created_at) = ".$model->ano." and e2.id = 15")->queryscalar();?></p></td>
 				<td style="text-align:center; vertical-align:middle;"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e1.id = 4 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
 				<td style="text-align:center; vertical-align:middle;"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e1.id = 3 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
 				<td style="text-align:center; vertical-align:middle;"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e1.id = 1 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>

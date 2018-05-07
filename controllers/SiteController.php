@@ -522,6 +522,23 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+    public function actionCuadromando($ano=null){
+
+        $model = new Reportes(['scenario' => 'crear']);
+
+        if (isset($ano)||$model->load(Yii::$app->request->post())){
+            if (isset($ano)){$model->ano = $ano;}
+            return $this->render('cuadromando',
+            [
+                'model' => $model,
+            ]);
+        }
+
+        return $this->render('formulario',
+        [
+            'model' => $model,
+        ]);
+    }
 
 
 }

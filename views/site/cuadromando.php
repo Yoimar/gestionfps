@@ -51,11 +51,17 @@ $mesnombre = array(
 	'11' => "Noviembre",
 	'12' => "Diciembre",
 	"Total");
-$partidas = array(
-	'0102',
+$estructura = array(
 	'0201',
+	'0202',
 	'0203',
 	'0204',
+	"Total");
+$partida = array(
+	'407010201',
+	'407010401',
+	'407010201',
+	'407010401',
 	"Total");
 ?>
 
@@ -87,12 +93,12 @@ $partidas = array(
 </thead>
 <tbody>
 	<?php for ($i = 0; $i < 2; $i ++) : ?>
-    <?php 
+    <?php
     if (is_numeric($anos[$i])){
         $filtroano = $anos[$i];
     } else {
         $filtroano = "";
-    } 
+    }
     ?>
 
 		<tr style="vertical-align:middle;">
@@ -108,11 +114,11 @@ $partidas = array(
 		</tr>
 	<?php endfor; ?>
                 <tr style="vertical-align:middle;">
-    <?php 
+    <?php
         $filtroano = " (extract(year from s1.created_at) = ".($model->ano-1)." or extract(year from s1.created_at) = ".$model->ano.")";
     ?>
-                    
-                    
+
+
                     <td style="vertical-align:middle; text-align:center; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger">Total</td>
                     <td <?= $styleceldas ?>><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  " . $tablasconsolicitudes . " where ".$filtroano)->queryscalar(); ?></p></td>
                     <td <?= $styleceldas ?> class="danger totaltabla"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from " . $tablasconjoin . "  where  " .$filtroano)->queryscalar(); ?></p></td>
@@ -140,7 +146,6 @@ $partidas = array(
 <div class="box-header">
 	<h3>
 		<?= $this->title ?> - Ultimos Meses <?= $model->ano ?>
-        <small><p id="reloj" name="reloj" style="float:right; padding-top: 10px;"></p></small>
 	</h3>
 </div>
 <div class="box-body">
@@ -162,12 +167,12 @@ $partidas = array(
 </thead>
 <tbody>
 	<?php for ($i = 0; $i < 2; $i ++) : ?>
-    <?php 
+    <?php
     if (is_numeric($meses[$i])){
         $filtroano = $meses[$i];
     } else {
         $filtroano = "";
-    } 
+    }
     ?>
 
 		<tr style="vertical-align:middle;">
@@ -183,11 +188,11 @@ $partidas = array(
 		</tr>
 	<?php endfor; ?>
                 <tr style="vertical-align:middle;">
-    <?php 
+    <?php
         $filtroano = " extract(year from s1.created_at) = ".($model->ano)." and (extract(month from s1.created_at) = ".(date('m')-1)." or extract(month from s1.created_at) = ".(date('m')-0).")";
     ?>
-                    
-                    
+
+
                     <td style="vertical-align:middle; text-align:center; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger">Total</td>
                     <td <?= $styleceldas ?>><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  " . $tablasconsolicitudes . " where ".$filtroano)->queryscalar(); ?></p></td>
                     <td <?= $styleceldas ?> class="danger totaltabla"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from " . $tablasconjoin . "  where  " .$filtroano)->queryscalar(); ?></p></td>
@@ -213,14 +218,13 @@ $partidas = array(
 <div class="box-header">
 	<h3>
 		Gestión Administrativa <?= $model->ano ?>
-        <small><p id="reloj" name="reloj" style="float:right; padding-top: 10px;"></p></small>
 	</h3>
 </div>
 <div class="box-body">
 	<div class="row">
 		<div class="col-lg-12">
 			<div>
-<?php 
+<?php
 
 $estatus3= Yii::$app->db->createCommand("select e3.nombre from gestion g1 join estatus3 e3 on g1.estatus3_id = e3.id join estatus2 e2 on e3.estatus2_id = e2.id join estatus1 e1 on e2.estatus1_id = e1.id where e2.id = 18 group by e3.nombre")->queryAll();
 
@@ -231,41 +235,41 @@ for ($j = 0; $j < count($estatus3); $j++)
         $valoresdata1[$k]['name']= $estatus3[$j]['nombre'];
         $valoresdata1[$k]['y']= Yii::$app->db->createCommand($sql)->queryscalar();// Su valor;
         $valoresdata1[$k]['drilldown']= $estatus3[$j]['nombre'];
-        
-    $k=$k + 1;    
-           
+
+    $k=$k + 1;
+
 }
 
 echo Highcharts::widget([
-       
+
     'scripts' => [
         'modules/column',
         'modules/drilldown',
         'modules/exporting',
         'themes/default',
-        
+
     ],
 
     'options' => [
 
-            'title' => ['text' => 'REPORTE CASOS BIENESTAR SOCIAL'],
+            'title' => ['text' => 'ESTATUS DE LOS CASOS EN ADMINISTRACIÓN'],
             'chart' => [
                     'type' => 'column',
                     'height' => 300,
             ],
             'xAxis' => [
-                'type' => 'category',    
+                'type' => 'category',
                 //'title' => ['text' => 'Eje X'],
             ],
             'yAxis' => [
                     'title' => ['text' => ''],
             ],
-        
+
             'legend' => [
                 'enable' => false,
             ],
-            
-         
+
+
             'plotOptions' => [
                 'series' => [
                     'borderWidth' => 0,
@@ -275,18 +279,18 @@ echo Highcharts::widget([
                     ],
                 ],
             ],
-        
-      
+
+
 
             'series' => [[
                     'name' => 'Casos',
                     'colorByPoint' => true,
                     'data' => new SeriesDataHelper($valoresdata1,['name','y:int','drilldown']),
-                   
+
                     ]
             ],
-           
-        
+
+
 
 ],
 
@@ -323,22 +327,75 @@ echo Highcharts::widget([
     </tr>
 </thead>
 <tbody>
-	<?php for ($i = 0; $i < 4; $i ++) : ?>
+	<?php
+	$programadototal = 0;
+	$ejecutadototal = 0;
+	$disponibletotal = 0;
+	for ($i = 0; $i < 4; $i ++) : ?>
+
+		<?php
+		/*** ***/
+$sql = "SELECT CASE SUM(monto) WHEN NULL  THEN  0
+ELSE SUM(monto)
+END monto
+FROM  spg_dt_cmp PCT, spg_operaciones O
+WHERE PCT.operacion=O.operacion ";
+
+
+$asignado[$i] = Yii::$app->dbsigesp->createCommand(
+	$sql."and O.asignar=1
+	and PCT.spg_cuenta like '%".$partida[$i]."%'
+	and PCT.codestpro3 like '%".$estructura[$i]."%';"
+	)->queryscalar();
+
+$aumento[$i] = Yii::$app->dbsigesp->createCommand(
+	$sql."and O.aumento=1
+	and PCT.spg_cuenta like '%".$partida[$i]."%'
+	and PCT.codestpro3 like '%".$estructura[$i]."%'"
+	)->queryscalar();
+
+$disminucion[$i] = Yii::$app->dbsigesp->createCommand(
+	$sql."and O.disminucion=1
+	and PCT.spg_cuenta like '%".$partida[$i]."%'
+	and PCT.codestpro3 like '%".$estructura[$i]."%';"
+	)->queryscalar();
+
+$programado[$i] = $asignado[$i]+$aumento[$i]-$disminucion[$i];
+
+$precomprometido[$i] = Yii::$app->dbsigesp->createCommand(
+	$sql."and O.precomprometer=1
+	and PCT.spg_cuenta like '%".$partida[$i]."%'
+	and PCT.codestpro3 like '%".$estructura[$i]."%';"
+	)->queryscalar();
+
+$comprometido[$i] = Yii::$app->dbsigesp->createCommand(
+	$sql."and O.comprometer=1
+	and PCT.spg_cuenta like '%".$partida[$i]."%'
+	and PCT.codestpro3 like '%".$estructura[$i]."%';"
+	)->queryscalar();
+
+$ejecutado[$i] = $precomprometido[$i] + $comprometido[$i];
+
+$disponible[$i] = $programado[$i] - $ejecutado[$i];
+
+$programadototal = $programadototal + $programado[$i];
+$ejecutadototal = $ejecutadototal + $ejecutado[$i];
+$disponibletotal = $disponibletotal + $disponible[$i];
+?>
 
     <tr style="vertical-align:middle;">
-            <td style="margin: 0; vertical-align:middle; text-align:center;"><?= $partidas[$i]; ?></td>
-            <td style="text-align:center; vertical-align:middle;"></td>
-            <td style="text-align:center; vertical-align:middle;"></td>
-            <td style="text-align:center; vertical-align:middle;"></td>
-            <td style="text-align:center; vertical-align:middle;" class="info"></td>
+            <td style="margin: 0; vertical-align:middle; text-align:center;"><?= $estructura[$i]; ?></td>
+            <td style="text-align:center; vertical-align:middle;"><?= $partida[$i] ?></td>
+            <td style="text-align:right; vertical-align:middle;"><?= Yii::$app->formatter->asCurrency($programado[$i]); ?></td>
+            <td style="text-align:right; vertical-align:middle;"><?= Yii::$app->formatter->asCurrency($ejecutado[$i]); ?></td>
+            <td style="text-align:right; vertical-align:middle;" class="info"><?= Yii::$app->formatter->asCurrency($disponible[$i]); ?></td>
         </tr>
 	<?php endfor; ?>
-        <tr style="vertical-align:middle;">            
-            <td style="vertical-align:middle; text-align:center; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger">Total</td>
-            <td <?= $styleceldas ?>><p  style="margin: 0;"></td>
-            <td <?= $styleceldas ?> class="danger totaltabla"></td>
-            <td <?= $styleceldas ?> class="danger"></td>
-            <td <?= $styleceldas ?> class="danger"></td>
+        <tr style="vertical-align:middle;">
+            <td colspan="2" style="vertical-align:middle; text-align:center; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger">Total</td>
+            <td style="vertical-align:middle; text-align:right; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger totaltabla"><?= Yii::$app->formatter->asCurrency( $programadototal);?></td>
+            <td style="vertical-align:middle; text-align:right; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><?= Yii::$app->formatter->asCurrency( $ejecutadototal);?></td>
+            <td style="vertical-align:middle; text-align:right; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><?= Yii::$app->formatter->asCurrency( $disponibletotal);?></td>
         </tr>
 </tbody>
 				</table>
@@ -349,64 +406,176 @@ echo Highcharts::widget([
 		</div>
 	</div>
 </div>
-<center>
-<div class="row">
-	<div class="col-md-2 col-lg-2">
-	<?= Html::a('<span class="glyphicon glyphicon-align-justify"></span>Consolidado '.($model->ano-1), ['tablareportemando',
-	                'ano' => $model->ano-1,],
-					['class'=>'btn btn-info',
-					'data-container' => 'body',
-					'data-toggle' => 'tooltip',
-					'data-placement'=> 'bottom',
-					'title'=>'Reporte General '.($model->ano-1)]) ?>
-	</div>
-	<div class="col-md-2 col-lg-2">
-	<?= Html::a('<span class="glyphicon glyphicon-align-justify"></span>Instrucción Presidencial', ['tablareporte',
-	                'ano' => $model->ano,
-	                'recepcion' => 1],
-					['class'=>'btn btn-primary',
-					'data-container' => 'body',
-					'data-toggle' => 'tooltip',
-					'data-placement'=> 'bottom',
-					'title'=>'Reporte de Instrucción Presidencial' ]) ?>
-	</div>
-	<div class="col-md-2 col-lg-2">
-	<?= Html::a('<span class="glyphicon glyphicon-align-justify"></span>Atención al Soberano', ['tablareporte',
-	                'ano' => $model->ano,
-	                'recepcion' => 2],
-					['class'=>'btn btn-primary',
-					'data-container' => 'body',
-					'data-toggle' => 'tooltip',
-					'data-placement'=> 'bottom',
-					'title'=>'Reporte de Atención al Soberano' ]) ?>
-	</div>
-	<div class="col-md-2 col-lg-2">
-	<?= Html::a('<span class="glyphicon glyphicon-align-justify"></span>Atención Institucional', ['tablareporte',
-	                'ano' => $model->ano,
-	                'recepcion' => 3],
-					['class'=>'btn btn-primary',
-					'data-container' => 'body',
-					'data-toggle' => 'tooltip',
-					'data-placement'=> 'bottom',
-					'title'=>'Reporte de Atención Institucional' ]) ?>
-	</div>
-	<div class="col-md-2 col-lg-2">
-	<?= Html::a('<span class="glyphicon glyphicon-align-justify"></span>Consolidado '.$model->ano, ['tablareporte',
-	                'ano' => $model->ano,],
-					['class'=>'btn btn-primary',
-					'data-container' => 'body',
-					'data-toggle' => 'tooltip',
-					'data-placement'=> 'bottom',
-					'title'=>'Reporte General'.$model->ano ]) ?>
-	</div>
-	<div class="col-md-2 col-lg-2">
-	<?= Html::a('<span class="glyphicon glyphicon-align-justify"></span>Consolidado '.($model->ano+1), ['tablareportemando',
-	                'ano' => $model->ano+1,],
-					['class'=>'btn btn-info',
-					'data-container' => 'body',
-					'data-toggle' => 'tooltip',
-					'data-placement'=> 'bottom',
-					'title'=>'Reporte General '.($model->ano+1)]) ?>
+<div class="row" style="font-size: 1em;" >
+	<div class="col-lg-12">
+		<div class="box">
+<div class="box-header">
+	<h3>
+		Cheques impresos en la Semana
+	</h3>
+</div>
+<div class="box-body">
+	<div class="row">
+		<div class="col-lg-12">
+			<div>
+<?php
+
+
+$f=date("Y-m-d");
+for( $i = 7; $i > -1; $i-- ){
+$fechas [] = date("Y-m-d", strtotime("$f   -$i day"));
+}
+
+$k=0;
+for ($j = 0; $j < count($fechas); $j++)
+    {
+        $sql="select count(*) from cheque c1 where c1.date_cheque = '". $fechas[$j]."'";
+        $valoresdata1[$k]['name']= $fechas[$j];
+        $valoresdata1[$k]['y']= Yii::$app->db->createCommand($sql)->queryscalar();// Su valor;
+        $valoresdata1[$k]['drilldown']= $fechas[$j];
+
+    $k=$k + 1;
+
+}
+
+echo Highcharts::widget([
+
+    'scripts' => [
+        'modules/column',
+        'modules/exporting',
+        'themes/default',
+
+    ],
+
+    'options' => [
+
+            'title' => ['text' => 'CHEQUES IMPRESOS EN LA SEMANA'],
+            'chart' => [
+                    'type' => 'column',
+                    'height' => 300,
+            ],
+            'xAxis' => [
+                'type' => 'category',
+                //'title' => ['text' => 'Eje X'],
+            ],
+            'yAxis' => [
+                    'title' => ['text' => ''],
+            ],
+
+            'legend' => [
+                'enable' => false,
+            ],
+
+
+            'plotOptions' => [
+                'series' => [
+                    'borderWidth' => 0,
+                    'dataLabels' => [
+                        'enabled' => true,
+                        'format' => '{point.y}'
+                    ],
+                ],
+            ],
+
+
+
+            'series' => [[
+                    'name' => 'Cheques',
+                    'colorByPoint' => true,
+                    'data' => new SeriesDataHelper($valoresdata1,['name','y:int','drilldown']),
+
+                    ]
+            ],
+
+
+
+],
+
+]);
+
+?>
+			</div>
+		</div>
 	</div>
 </div>
-</center>
+		</div>
+	</div>
+</div>
+
+<div class="row" style="font-size: 1em;" >
+	<div class="col-lg-12">
+		<div class="box">
+<div class="box-header">
+	<h3>
+		Disponibilidad Financiera
+	</h3>
+</div>
+<div class="box-body">
+	<div class="row">
+		<div class="col-xs-12">
+			<div>
+				<table class="table table-bordered table-hover table-striped table-condensed">
+<thead>
+    <tr>
+        <th <?= $stylecabecera ?>>Cuenta</th>
+        <th <?= $stylecabecera ?>>Denominación</th>
+        <th <?= $stylecabecera ?>>Disponible</th>
+    </tr>
+</thead>
+<tbody>
+	<?php
+	$programadototal = 0;
+	$ejecutadototal = 0;
+	$disponibletotal = 0;
+	for ($i = 0; $i < 1; $i ++) : ?>
+
+		<?php
+		/*** ***/
+$sql = "SELECT SUM(monto-monret) as monto
+FROM scb_movbco
+WHERE codban='008'
+AND ctaban= '01020552210000060008' ";
+
+
+$debito[$i] = Yii::$app->dbsigesp->createCommand(
+	$sql." AND codope in ('CH', 'ND', 'RE')
+	AND estmov = 'A';"
+	)->queryscalar();
+
+$debitoant[$i] = Yii::$app->dbsigesp->createCommand(
+	$sql." AND codope in ('CH', 'ND', 'RE')
+	AND estmov <> 'A';"
+	)->queryscalar();
+
+$credito[$i] = Yii::$app->dbsigesp->createCommand(
+	$sql." AND codope in ('DP', 'NC')
+	AND estmov = 'A';"
+	)->queryscalar();
+
+$creditoant[$i] = Yii::$app->dbsigesp->createCommand(
+	$sql." AND codope in ('DP', 'ND')
+	AND estmov <> 'A';"
+	)->queryscalar();
+$disponible[$i] = $debito[$i] - $debitoant[$i] - $credito[$i] + $creditoant[$i];
+$disponibletotal = $disponibletotal + $disponible[$i];
+?>
+
+    <tr style="vertical-align:middle;">
+            <td style="margin: 0; vertical-align:middle; text-align:center;"><?= $debito[$i]; ?></td>
+            <td style="text-align:center; vertical-align:middle;"></td>
+            <td style="text-align:right; vertical-align:middle;" class="info"><?= Yii::$app->formatter->asCurrency($disponible[$i]); ?></td>
+        </tr>
+	<?php endfor; ?>
+        <tr style="vertical-align:middle;">
+            <td colspan="2" style="vertical-align:middle; text-align:center; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger">Total</td>
+            <td style="vertical-align:middle; text-align:right; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><?= Yii::$app->formatter->asCurrency( $disponibletotal);?></td>
+        </tr>
+</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+		</div>
+	</div>
+</div>

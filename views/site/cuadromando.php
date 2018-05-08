@@ -578,7 +578,7 @@ echo Highcharts::widget([
             ],
 
             'series' => [[
-                    //'name' => 'Cheques',
+                    'name' => 'Cheques',
                     'colorByPoint' => true,
                     'data' => new SeriesDataHelper($valoresdata1,['name','y:int','drilldown']),
 

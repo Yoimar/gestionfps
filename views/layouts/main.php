@@ -109,6 +109,7 @@ AppAsset::register($this);
                 ['label' => 'Administracion',
                 'items' => [
                      '<li class="dropdown-header">Menu Administración</li>',
+                     ['label' => 'Cuadro Mando', 'url' => '@web/site/cuadromando?ano='.date("Y")],
                      ['label' => 'Pruebas', 'url' => '@web/site/pruebas'],
                      ['label' => 'Trabajadores', 'url' => '@web/trabajador/index'],
                      ['label' => 'Perfiles', 'url' => '@web/authassignment/index'],

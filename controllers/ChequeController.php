@@ -529,7 +529,7 @@ class ChequeController extends Controller
                     ."la entrega del (los) cheque(s) : "
                     .$this->Chequesfortext($modelcheque->cheques)
                     . " el día "
-                    . date('Y-m-d'). " a las ". date('h:i a');
+                    . date('d/m/Y') . " a las " . date('h:i a');
                 $modelbitacora->usuario_id = $modeltrabajador->users_id;
                 $modelbitacora->ind_activo = 1;
                 $modelbitacora->ind_alarma = 0;

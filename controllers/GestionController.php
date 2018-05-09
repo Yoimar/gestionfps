@@ -648,12 +648,12 @@ class GestionController extends Controller
 
         $modelsolicitudes = Solicitudes::findOne($modelgestion->solicitud_id);
 
-          $modelpresupuestos = Presupuestos::find()
+        $modelpresupuestos = Presupuestos::find()
                                 ->where(['solicitud_id' => $modelsolicitudes->id])
                                 ->all();
 
         if (empty($modelpresupuestos)) {
-        Yii::$app->session->setFlash("warning", "El caso no posee presupuestos"
+        Yii::$app->session->setFlash("warning", "El caso no posee presupuestos "
              . " por favor intente con otro caso");
 
         return $this->redirect('gestiona?estatus3='.$estatus3);
@@ -689,14 +689,18 @@ while ($i<11){
         // ESTATUS VACIO
         case '':
             $modelconexionsigesp->estatus_sigesp = 'ELA';
+            $modelgestion->estatus3_id = 61;
             break 1; // Aquí salé del switch
 
         // ESTATUS ELA -> ELABORADO
         case 'ELA':
             //VERIFICO QUE EL ESTATUS ES DIFERENTE DE 61 (EN ELABORACIÓN DE MEMO)
-
-            $modelconexionsigesp->estatus_sigesp = 'APR';
-
+            //reviso si el caso esta comprometido
+            $modelcomprometido = Spgdtcmp::findOne(['comprobante' => $modelconexionsigesp->req]);
+            if (isset($modelcomprometido)){
+                $modelgestion->estatus3_id = 62;
+                $modelconexionsigesp->estatus_sigesp = 'APR';
+            }
             //salgo de los while ya que el caso no esta aprobado
 
             break 1; // Aquí salé del switch
@@ -710,6 +714,8 @@ while ($i<11){
                 $modelconexionsigesp->estatus_sigesp = 'COM';
                 $modelconexionsigesp->date_compromiso = $modelcomprometido->fecha;
                 $modelconexionsigesp->compromiso_by = $usuarioid;
+                //Coloco el estatus de Procesado por Presupuesto que es 63
+                $modelgestion->estatus3_id = 63;
             } elseif ($modelgestion->estatus3_id == 61) {
                 // Verifico si por casualidad lo devolvieron a Elaboración de Memo
                 $modelconexionsigesp->estatus_sigesp = 'ELA';
@@ -757,6 +763,8 @@ while ($i<11){
                         $modelconexionsigesp->regdocorpa_by = $usuarioid;
                     }
                     $modelconexionsigesp->estatus_sigesp = 'ROR';
+                    //Coloco el estatus de Recibido en Orpa
+                    $modelgestion->estatus3_id = 64;
 
                     }
                 }
@@ -795,6 +803,8 @@ while ($i<11){
                         $modelconexionsigesp->aprdocorpa_by = $usuarioid;
                     }
                     $modelconexionsigesp->estatus_sigesp = 'AOR';
+                    //Coloco el estatus de Recibido en Orpa
+                    $modelgestion->estatus3_id = 64;
 
                 }
 
@@ -842,6 +852,8 @@ while ($i<11){
                     $modelconexionsigesp->orpa_by = $usuarioid;
                 }
                 $modelconexionsigesp->estatus_sigesp = 'ORR';
+                //Coloco el estatus de Recibido en Orpa
+                $modelgestion->estatus3_id = 64;
 
                 //Guardo el Numero de Orpa en Presupuestos
                 $modelpresupuesto->numop = ltrim(substr($modelconexionsigesp->orpa, -5),"0");
@@ -878,6 +890,8 @@ while ($i<11){
                         $modelconexionsigesp->aprorpa_by = $usuarioid;
                     }
                     $modelconexionsigesp->estatus_sigesp = 'ORP';
+                    //Coloco el estatus de Procesado por Orpa
+                    $modelgestion->estatus3_id = 69;
                 }
             } elseif (empty($modelorpa)) {
                 // Verifico si el modelo orpa existe
@@ -902,6 +916,8 @@ while ($i<11){
                 $modelconexionsigesp->date_causado = $modelcausado->fecha;
                 $modelconexionsigesp->causado_by = $usuarioid;
                 $modelconexionsigesp->estatus_sigesp = 'CAU';
+                //Coloco el estatus de Causado Por Contabilidad
+                $modelgestion->estatus3_id = 65;
 
             } elseif ($modelorpa->estaprosol == 0) {
                 // Verifico si esta recibido en orpa
@@ -933,6 +949,9 @@ while ($i<11){
                     $modelconexionsigesp->progpago_by = $usuarioid;
                 }
                 $modelconexionsigesp->estatus_sigesp = 'PGP';
+                //Coloco el estatus de Programado el Pago
+                $modelgestion->estatus3_id = 66;
+
 
             } elseif (empty($modelcausado)) {
                 // Verifico si el modelo causado existe
@@ -984,8 +1003,11 @@ while ($i<11){
                     ->andFilterWhere(['like', 'ced_bene', $modelconexionsigesp->rif])
                     ->one();
 
-
-
+                $modelgestioncheque->date_cheque = $modelscbcheque->fecmov;
+                $modelconexionsigesp->estatus_sigesp = 'CHE';
+                //Coloco el estatus de Cheque Impreso
+                $modelgestion->estatus3_id = 67;
+                $modelgestioncheque->save();
 
                 $fechabitacora = Yii::$app->formatter
                                  ->asDate($modelgestioncheque->date_cheque,'php:d/m/Y');
@@ -1000,11 +1022,6 @@ while ($i<11){
                     'user_id' => $modelgestioncheque->cheque_by
                     ]);
                 }
-                $modelgestioncheque->date_cheque = $modelscbcheque->fecmov;
-                $modelconexionsigesp->estatus_sigesp = 'CHE';
-                $modelgestioncheque->save();
-
-
 
                 //*** Llenado de Tablas de SASYC solicitudes, presupuestos y Bitacoras ***//
                 if ($modelgestioncheque->estatus_cheque == 'EMI'){
@@ -1070,6 +1087,8 @@ while ($i<11){
                 $modelgestioncheque->date_enviofirma = $modelcheque->fecenvfir;
                 $modelgestioncheque->date_enviocaja = $modelcheque->fecenvcaj;
                 $modelconexionsigesp->estatus_sigesp = 'CHC';
+                //Coloco el estatus de Cheque Enviado en Caja
+                $modelgestion->estatus3_id = 71;
                 $modelgestioncheque->save();
                 break 2;
             }
@@ -1085,6 +1104,8 @@ while ($i<11){
                 // el caso tiene un cheque
                 $modelconexionsigesp->date_enviofirma = $modelcheque->fecenvfir;
                 $modelconexionsigesp->estatus_sigesp = 'CHF';
+                //Coloco el estatus de Cheque Enviado a la Firma
+                $modelgestion->estatus3_id = 70;
 
             } elseif (empty($modelcheque)&&isset ($modelgestioncheque)) {
 
@@ -1138,6 +1159,8 @@ while ($i<11){
                 $modelconexionsigesp->date_enviofirma = $modelcheque->fecenvfir;
                 $modelconexionsigesp->date_enviocaja = $modelcheque->fecenvcaj;
                 $modelconexionsigesp->estatus_sigesp = 'CHC';
+                //Coloco el estatus de Cheque Enviado a Caja
+                $modelgestion->estatus3_id = 71;
 
             } elseif (isset($modelcheque)&&$modelcheque->estcondoc=='S') {
                 // Verifico si el cheque existe
@@ -1175,6 +1198,8 @@ while ($i<11){
                 $modelgestioncheque->date_entregado = $modelcheque->emichefec;
                 //el caso esta entregado
                 $modelconexionsigesp->estatus_sigesp = 'ENT';
+                //Coloco el estatus de Cheque Enviado a Caja
+                $modelgestion->estatus3_id = 79;
                 $modelgestioncheque->estatus_cheque = 'ENT';
                 $modelgestioncheque->save();
 
@@ -1260,6 +1285,7 @@ while ($i<11){
             break;
     }
     ++$i;
+    $modelgestion->save();
     $modelconexionsigesp->save();
 }
 
@@ -1292,7 +1318,7 @@ while ($i<11){
           $modelgestion->save();
         }
 
-        Yii::$app->session->setFlash("warning", "Los casos".implode (',',  $prueba)." fueron cambiados exitosamente");
+        Yii::$app->session->setFlash("warning", "Los casos con el id ".implode (', ',  $prueba)." fueron cambiados exitosamente");
 
       }
 

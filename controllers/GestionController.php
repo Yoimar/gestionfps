@@ -1108,7 +1108,7 @@ while ($i<11){
             //reviso si el estatus es para la firma
             if (isset($modelgestioncheque)&&isset($modelcheque)&&$modelcheque->estcondoc=='F'){
                 // el caso tiene un cheque
-                $modelconexionsigesp->date_enviofirma = $modelcheque->fecenvfir;
+                $modelgestioncheque->date_enviofirma = $modelcheque->fecenvfir;
                 $modelconexionsigesp->estatus_sigesp = 'CHF';
                 //Coloco el estatus de Cheque Enviado a la Firma
                 $modelgestion->estatus3_id = 70;

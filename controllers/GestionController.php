@@ -1071,7 +1071,7 @@ while ($i<11){
             ]);
 
             //Coloco el estatus de Cheque Impreso
-            if ($modelgestion->estatus3_id != 67 && $modelgestion->estatus3_id != 70 && $modelgestion->estatus3_id != 71){
+            if ($modelgestion->estatus3_id != 67 || $modelgestion->estatus3_id != 70 || $modelgestion->estatus3_id != 71){
                 $modelgestion->estatus3_id = 67;
             }
 

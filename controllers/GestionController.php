@@ -1073,8 +1073,8 @@ while ($i<11){
             //Coloco el estatus de Cheque Impreso
             if ($modelgestion->estatus3_id != 67 || $modelgestion->estatus3_id != 70 || $modelgestion->estatus3_id != 71){
                 $modelgestion->estatus3_id = 67;
+                $modelgestion->save();
             }
-
 
             if (isset($modelgestioncheque)){
             $modelcheque = Scbmovbco::find()
@@ -1310,18 +1310,7 @@ while ($i<11){
             $int = (int)$idsolicitud;
             $prueba[]= $int;
 
-          $modelgestion = Gestion::findOne(['solicitud_id' => $int ]);
-
-          if (isset($modelgestion)) {
-            $modelgestion->estatus3_id = $model->estatus3;
-            $modelgestion->programaevento_id = $model->actividad;
-          } else {
-            $modelgestion = new Gestion;
-            $modelgestion->solicitud_id = $int;
-            $modelgestion->estatus3_id = $model->estatus3;
-            $modelgestion->programaevento_id = $model->actividad;
-          }
-          $modelgestion->save();
+            $this->Cambiorapido($int, $model->estatus3, $model->actividad);
         }
 
         Yii::$app->session->setFlash("warning", "Los casos con el id ".implode (', ',  $prueba)." fueron cambiados exitosamente");
@@ -1333,4 +1322,82 @@ while ($i<11){
       ]);
 
    }
+
+   public function actionNumsolicitudxtrabajador($q = null, $id = null) {
+   \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+   $out = ['results' => ['id' => '', 'text' => '']];
+   $usuarioid = Yii::$app->user->id;
+   $modeltrabajador = Trabajador::findOne([
+       'user_id' => $usuarioid
+   ]);
+   if (!is_null($q)) {
+       $query = new Query;
+       $query->addSelect(["id", "num_solicitud as text"])
+           ->from('solicitudes')
+           ->where([
+               'usuario_asignacion_id' => $modeltrabajador->users_id,
+               'estatus' => ['ACA', 'EAA', 'DEV']
+           ])
+           ->andFilterWhere(['like', "num_solicitud", $q])
+           ->limit(20);
+       $command = $query->createCommand();
+       $data = $command->queryAll();
+       $out['results'] = array_values($data);
+   }
+   elseif ($id > 0) {
+       $out['results'] = ['id' => $id, 'text' => Solicitudes::find($id)->num_solicitud];
+   }
+
+   return $out;
+   }
+
+   public function actionMasivoxtrabajador()
+   {
+      $model = new Multiplessolicitudes;
+
+      $usuarioid = Yii::$app->user->id;
+      $modeltrabajador = Trabajador::findOne([
+          'user_id' => $usuarioid
+      ]);
+
+      if ($model->load(Yii::$app->request->post())&&$model->validate()) {
+        foreach ($model->caso as $idsolicitud) {
+
+            $int = (int)$idsolicitud;
+            $prueba[]= $int;
+
+        $this->Cambiorapido($int, $model->estatus3, $model->actividad);
+
+        //Fin del foreach
+        }
+        Yii::$app->session->setFlash("warning", count($prueba)==1?"El caso fue cambiado exitosamante":"Los ".count($prueba)." casos fueron cambiados exitosamente");
+
+        }
+
+      return $this->render('masivoxtrabajador', [
+              'model' => $model,
+      ]);
+
+   }
+
+   public function Cambiorapido ($solicitudid, $estatus3id=null, $actividad=null){
+
+       $modelgestion = Gestion::findOne(['solicitud_id' => $solicitudid ]);
+
+       if (empty($modelgestion)) {
+         $modelgestion = new Gestion;
+         $modelgestion->solicitud_id = $solicitudid;
+       }
+       if ($estatus3id != null) {
+           $modelgestion->estatus3_id = $estatus3id;
+       }
+       if ($actividad != null) {
+          $modelgestion->programaevento_id = $actividad;
+       }
+
+       $modelgestion->save();
+
+       return true;
+   }
+
 }

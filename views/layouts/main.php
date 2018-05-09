@@ -41,7 +41,14 @@ AppAsset::register($this);
                        'style' => 'background-color:  #337ab7;',
             ],
         'items' => [
-            ['label' => 'Gestión', 'url' => ['/gestion'], 'linkOptions' => ['style' => 'color: #FFFFFF;']],
+            ['label' => 'Gestión',
+            'items' => [
+                 '<li class="dropdown-header">Gestion de Casos</li>',
+                 ['label' => 'Gestión', 'url' => '@web/gestion'],
+                ['label' => 'Gestión de Casos', 'url' => '@web/gestion/masivoxtrabajador'],
+            ],
+            'linkOptions' => ['style' => 'color: #FFFFFF;']
+            ],
             ['label' => 'Aprobación',
             'items' => [
                  '<li class="dropdown-header">Menu Aprobacion</li>',
@@ -55,7 +62,7 @@ AppAsset::register($this);
             ],
             ['label' => 'Cheques',
             'items' => [
-                 '<li class="dropdown-header">Menu Aprobacion</li>',
+                 '<li class="dropdown-header">Cheques Emitidos</li>',
                 ['label' => 'Buscar Cheques', 'url' => '@web/cheque/busqueda'],
                 ['label' => 'Reporte Disponibilidad', 'url' => '@web/cheque/reporte'],
                 ['label' => 'Cargar cheques por fecha', 'url' => '@web/cheque/actualizafecha'],

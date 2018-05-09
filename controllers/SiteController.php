@@ -260,6 +260,11 @@ class SiteController extends Controller
         return $this->render('totalnivel3');
     }
 
+    public function actionTotalnivel30()
+    {
+        return $this->render('totalnivel30');
+    }
+
     public function actionTotalnivel2()
     {
         return $this->render('totalnivel2');

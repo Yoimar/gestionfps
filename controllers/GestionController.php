@@ -1070,6 +1070,12 @@ while ($i<11){
                 'estatus_cheque' => ['EMI','PEN','ENT'],
             ]);
 
+            //Coloco el estatus de Cheque Impreso
+            if ($modelgestion->estatus3_id != 67 && $modelgestion->estatus3_id != 70 && $modelgestion->estatus3_id != 71){
+                $modelgestion->estatus3_id = 67;
+            }
+
+
             if (isset($modelgestioncheque)){
             $modelcheque = Scbmovbco::find()
                     ->where([

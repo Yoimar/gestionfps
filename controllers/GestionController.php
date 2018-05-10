@@ -1360,6 +1360,15 @@ while ($i<11){
           'user_id' => $usuarioid
       ]);
 
+      if (empty($modeltrabajador) || empty($modeltrabajador->users_id)){
+          Yii::$app->session->setFlash("warning", "Por Favor coloque la opción 'Ir a perfil' y cargue su usuario de SASYC para poder ver las solicitudes asignadas");
+
+            return $this->render('masivoxtrabajador', [
+                'model' => $model,
+            ]);
+
+      }
+
       if ($model->load(Yii::$app->request->post())&&$model->validate()) {
         foreach ($model->caso as $idsolicitud) {
 

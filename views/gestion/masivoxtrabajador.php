@@ -35,6 +35,8 @@ use miloschuman\highcharts\SeriesDataHelper;
         $modeltrabajador = Trabajador::findOne([
             'user_id' => $usuarioid
         ]);
+
+        if (isset($modeltrabajador->users_id)) :
         $counttrabajador = Yii::$app->db->createCommand("select count(*) from solicitudes s1 join users u1 on s1.usuario_asignacion_id = u1.id join estatussasyc e1 on s1.estatus = e1.id where e1.id in ('ACA', 'EAA', 'DEV') and s1.usuario_asignacion_id = ".$modeltrabajador->users_id." and extract(year from s1.created_at) in (".(date("Y")-1). ', ' . date("Y").")")->queryScalar();
         $countgestion = Yii::$app->db->createCommand("select count(*) from gestion g1 join solicitudes s1 on s1.id = g1.solicitud_id join users u1 on s1.usuario_asignacion_id = u1.id join estatus3 e3 on g1.estatus3_id = e3.id join estatus2 e2 on e3.estatus2_id = e2.id join estatus1 e1 on e2.estatus1_id = e1.id where s1.usuario_asignacion_id = ".$modeltrabajador->users_id." and extract(year from s1.created_at) in (".(date("Y")-1). ', ' . date("Y").")")->queryScalar();
         $countnogestion = $counttrabajador - $countgestion;
@@ -133,11 +135,11 @@ echo Highcharts::widget([
             'series' => [[
                     'name' => 'Casos',
                     'colorByPoint' => true,
-                    'data' => $valoresdata2,
+                    'data' => empty($valoresdata2)?"":$valoresdata2,
                     ]
             ],
             "drilldown" => [
-                'series' => $valoresdata1,
+                'series' => empty($valoresdata1)?"":$valoresdata1,
 
             ],
 
@@ -362,7 +364,7 @@ echo Highcharts::widget([
             'series' => [[
                     'name' => 'Casos',
                     'colorByPoint' => true,
-                    'data' => new SeriesDataHelper($valoresdata3,['name','y:int','drilldown']),
+                    'data' => empty($valoresdata3)?"": new SeriesDataHelper($valoresdata3 ,['name','y:int','drilldown']),
 
                     ]
             ],
@@ -382,11 +384,47 @@ echo Highcharts::widget([
     </div>
 </div>
 
+<?php else: ?>
+    <div class="row" style="font-size: 0.8 em;" >
+        <div class="col-lg-12">
+            <div class="box">
+    <div class="box-header">
+    <center>
+    <h2>
+        Por favor Rellene los datos correspondiente a su usuario en la pestaña/opcion Ir a Perfil
 
+    </h2>
+    </center>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div>
+    <center>
+        <?= Html::a('<span class=" glyphicon glyphicon-user"></span>Ir a Perfil',
+        ['//trabajador/mostrarusuario',
+    	 'idgestion' => Yii::$app->user->getId()],
+    					['class'=>'btn btn-info',
+    					'data-container' => 'body',
+    					'data-toggle' => 'tooltip',
+    					'data-placement'=> 'bottom',
+    					'title'=>'Ir a Perfil']) ?>
+
+    	</div>
+    </center>
+                </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<?php endif; ?>
 <center>
 <div class="col-lg-12 col-md-12">
      <div>
          <?php
+
             echo AlertBlock::widget([
                     'useSessionFlash' => true,
                     'type' => AlertBlock::TYPE_GROWL,

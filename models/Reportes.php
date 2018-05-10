@@ -2,6 +2,8 @@
 namespace app\models;
 
 use yii\base\Model;
+use app\models\Recepciones;
+use app\models\Programaevento;
 
 /**
  * Esto es para la busqueda de los Casos por Departamento, Usuario y Estatus para buscar los casos asignados en la unidad.
@@ -14,6 +16,7 @@ class Reportes extends Model
      */
     public $mes;
     public $ano;
+    public $actividad;
     public $fechadesde;
     public $fechahasta;
     public $recepcioninicial;
@@ -24,9 +27,10 @@ class Reportes extends Model
     {
         return [
 
-            [['mes', 'ano', 'tiporeporte', 'recepcioninicial'], 'integer'],
+            [['mes', 'ano', 'tiporeporte', 'recepcioninicial', 'actividad'], 'integer'],
             [['fechadesde', 'fechahasta',], 'safe'],
             [['ano'], 'required', 'on' => 'crear'],
+            [['actividad'], 'required', 'on' => 'actividad'],
 
         ];
     }
@@ -49,6 +53,11 @@ class Reportes extends Model
     public function getRecepcioninicial()
     {
         return $this->hasOne(Recepciones::className(), ['id' => 'recepcioninicial']);
+    }
+
+    public function getActividad()
+    {
+        return $this->hasOne(Programaevento::className(), ['id' => 'actividad']);
     }
 
 

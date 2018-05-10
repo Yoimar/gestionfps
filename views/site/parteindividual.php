@@ -8,7 +8,7 @@ use yii\helpers\ArrayHelper;
 
 
 if(Yii::$app->request->post()){
-    
+
 }else {
     $partetrabajador =0;
     $partegestion =0;
@@ -21,11 +21,13 @@ if(Yii::$app->request->post()){
 /* @var $model app\models\Procesos */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
 <div class="parteindividual-form">
+<div class="row">
+    <div class="col-lg-4 col-md-4">
+
 
     <?php $form = ActiveForm::begin(); ?>
-    
+
     <?=
     /* Formu con Select2 de kartik*/
         $form->field($model, 'trabajador')->widget(Select2::classname(), [
@@ -36,9 +38,10 @@ if(Yii::$app->request->post()){
         'allowClear' => true
         ],
     ]);
-    
-    ?>
 
+    ?>
+</div>
+<div class="col-lg-4 col-md-4">
     <?=
     /* Formu con Select2 de kartik*/
         $form->field($model, 'anho')->widget(Select2::classname(), [
@@ -49,22 +52,28 @@ if(Yii::$app->request->post()){
         'allowClear' => true
         ],
     ]);
-    
+
 
     ?>
-
+</div>
+<div class="col-lg-4 col-md-4">
     <div class="form-group">
+        <center>
+            <br>
         <?= Html::submitButton('Generar Parte', ['class' => 'btn btn-primary']) ?>
+        </center>
     </div>
 
     <?php ActiveForm::end(); ?>
-    
+</div>
+</div>
+
     <div class="container">
         <center><h3 class="display-3">Parte Por trabajador SASYC <button type="button" class="btn btn-primary display-3"><?= $counttrabajador;?></button></h3></center>
-          
+
     </div>
 
-    
+
 <div class="row">
 					<div class="col-xs-12">
 						<div>
@@ -73,7 +82,7 @@ if(Yii::$app->request->post()){
 									<tr>
                                                                             <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;" width="200" nowrap>Estatus</th>
                                                                             <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;">Total</th>
-                                                                            <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;">Casos Asignados</th>    
+                                                                            <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;">Casos Asignados</th>
 									</tr>
 								</thead>
 
@@ -83,10 +92,10 @@ if(Yii::$app->request->post()){
 											<td><?= $partetrabajador[$i]['estatus'];?></td>
 											<td style="text-align:center" class="info"><p  style="margin: 0;"><?= $partetrabajador[$i]['count'];?></p></td>
 											<td style="text-align:center"><p style="margin: 0;"><?= $partetrabajador[$i]['string_agg'];?></p></td>
-									
+
 										</tr>
 									<?php endfor; ?>
-                                                                                
+
 								</tbody>
 							</table>
 						</div>
@@ -94,9 +103,9 @@ if(Yii::$app->request->post()){
 </div>
       <div class="container">
           <center><h3 class="display-3">Parte Por trabajador Gestión <button type="button" class="btn btn-primary"><?= $countgestion;?></button></h3></center>
-        
+
       </div>
-    
+
 <div class="row">
 					<div class="col-xs-12">
 						<div>
@@ -107,7 +116,7 @@ if(Yii::$app->request->post()){
                                                                             <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;" width="200" nowrap>Estatus 2</th>
                                                                             <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;" width="200" nowrap>Estatus 3</th>
                                                                             <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;">Total</th>
-                                                                            <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;">Casos Asignados</th>    
+                                                                            <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;">Casos Asignados</th>
 									</tr>
 								</thead>
 
@@ -119,22 +128,22 @@ if(Yii::$app->request->post()){
                                                                                         <td><?= $partegestion[$i]['estatus3'];?></td>
 											<td style="text-align:center" class="info"><p  style="margin: 0;"><?= $partegestion[$i]['count'];?></p></td>
 											<td style="text-align:center"><p style="margin: 0;"><?= $partegestion[$i]['string_agg'];?></p></td>
-									
+
 										</tr>
 									<?php endfor; ?>
-                                                                                
+
 								</tbody>
 							</table>
 						</div>
 					</div>
-</div>    
+</div>
 </div>
 <div class="container">
         <center><h3 class="display-3">Parte que no tienen gestión <button type="button" class="btn btn-primary display-3"><?= $countnogestion;?></button></h3></center>
-          
+
     </div>
 
-    
+
 <div class="row">
                     <div class="col-xs-12">
                         <div>
@@ -143,7 +152,7 @@ if(Yii::$app->request->post()){
                                     <tr>
                                                                             <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;" width="200" nowrap>Estatus</th>
                                                                             <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;">Total</th>
-                                                                            <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;">Casos Asignados</th>    
+                                                                            <th style="text-align:center; vertical-align:middle; font-weight: bold; font-size: 1.2em; background-color: #585858; color: white;">Casos Asignados</th>
                                     </tr>
                                 </thead>
 
@@ -153,10 +162,10 @@ if(Yii::$app->request->post()){
                                             <td><?= $partenogestion[$i]['estatus'];?></td>
                                             <td style="text-align:center" class="info"><p  style="margin: 0;"><?= $partenogestion[$i]['count'];?></p></td>
                                             <td style="text-align:center"><p style="margin: 0;"><?= $partenogestion[$i]['string_agg'];?></p></td>
-                                    
+
                                         </tr>
                                     <?php endfor; ?>
-                                                                                
+
                                 </tbody>
                             </table>
                         </div>

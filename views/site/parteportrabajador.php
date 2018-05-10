@@ -1,10 +1,25 @@
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use app\models\Recepciones;
+
+if ($model->recepcioninicial!=''){
+    if ($model->mes!=''){
+    	$this->title = Recepciones::findOne($model->recepcioninicial)->nombre. ' Año - '.$model->ano. ' Mes - '.$model->mes;
+    	$filtrounidad = ' s1.recepcion_id = '. $model->recepcioninicial .' and extract(month from s1.created_at) = '. $model->mes.' and ';
+    }else{
+        $this->title = Recepciones::findOne($model->recepcioninicial)->nombre. ' Año - '.$model->ano;
+        $filtrounidad = ' s1.recepcion_id = '. $model->recepcioninicial .' and ';
+    }
+}else{
+	$this->title = 'Reporte General Año - '.$model->ano;
+    $filtrounidad = '';
+}
+
 //Me traigo todos los trabajadores
 $trabajadorescolumnas= Yii::$app->db->createCommand("select u1.nombre from solicitudes s1 "
                     ."full outer join users u1 on s1.usuario_asignacion_id = u1.id "
-                    ."where extract(year from s1.created_at) = ". $model->ano
+                    ."where ".$filtrounidad." extract(year from s1.created_at) = ". $model->ano
                     ."group by u1.nombre order by u1.nombre")->queryAll();
 //Convierto todos los trabajadores en un array pd. se que hay otra forma pero no me acuerdo Tiene que ver con el asArray()
 foreach ($trabajadorescolumnas as $val) {
@@ -28,7 +43,7 @@ $sqlforingreso = ' solicitudes s1 full outer join users u1 on s1.usuario_asignac
 		<div class="box">
 <div class="box-header">
 	<h3>
-		Parte de Casos Por Trabajador - Año  <?= $model->ano ?>
+		<?= $this->title ?>
                             <small><p id="reloj" name="reloj" style="float:right; padding-top: 10px;"></p></small>
 
 	</h3>
@@ -70,39 +85,39 @@ $sqlforingreso = ' solicitudes s1 full outer join users u1 on s1.usuario_asignac
                 $filtrotrabajador = " = '". $trabajadores[$i] ."'";
             }
             ?>
-			<td class="danger"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforingreso."  where u1.nombre ".$filtrotrabajador." and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td class="info"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and e1.id = 2 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and e1.id = 4 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and e1.id = 3 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and e1.id = 1 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and e2.nombre = 'Sin Comunicación' and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and e2.nombre = 'Por Llamar' and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and e2.nombre = 'Por Recaudos' and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and e2.nombre = 'Por Convenio' and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-            <td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and e2.nombre = 'Por Consulta' and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and e3.nombre = 'Ecónomico' and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and e3.nombre = 'Salud' and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where u1.nombre ".$filtrotrabajador." and e2.nombre = 'EN ADMINISTRACIÓN' and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td class="danger"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforingreso."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td class="info"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and e1.id = 2 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and e1.id = 4 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and e1.id = 3 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and e1.id = 1 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and e2.id = 9 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and e2.id = 1 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and e2.id = 2 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and e2.id = 7 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+            <td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and e2.id = 3 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and e3.id = 11 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad."  u1.nombre ".$filtrotrabajador." and e3.id = 10 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$sqlforgestion."  where ".$filtrounidad." u1.nombre ".$filtrotrabajador." and  e2.id = 18  and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
 
 	</tr>
 <?php endfor; ?>
     <tr style="text-align:center; vertical-align:middle; font-weight: bold; background-color: #585858; color: white;">
             <td style="text-align:left; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger">Total</td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger totaltabla"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsqlingreso." where extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger totaltabla"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql." where extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where e1.id = 2 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where e1.id = 4 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where e1.id = 3 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where e1.id = 1 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where e2.id = 9 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where e2.id = 1 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where e2.id = 2 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where e2.id = 7 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-            <td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where e2.id = 3 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where e3.id = 11 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where e3.id = 10 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where e2.id = 18 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger totaltabla"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsqlingreso." where ".$filtrounidad."  extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger totaltabla"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql." where ".$filtrounidad."  extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where ".$filtrounidad."  e1.id = 2 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where ".$filtrounidad."  e1.id = 4 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where ".$filtrounidad."  e1.id = 3 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where ".$filtrounidad."  e1.id = 1 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where ".$filtrounidad."  e2.id = 9 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where ".$filtrounidad."  e2.id = 1 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where ".$filtrounidad."  e2.id = 2 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where ".$filtrounidad."  e2.id = 7 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+            <td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where ".$filtrounidad."  e2.id = 3 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where ".$filtrounidad."  e3.id = 11 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where ".$filtrounidad."  e3.id = 10 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
+			<td style="font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from  ".$tablasforsql."  where ".$filtrounidad."  e2.id = 18 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
 
 	</tr>
 </tbody>
@@ -114,3 +129,66 @@ $sqlforingreso = ' solicitudes s1 full outer join users u1 on s1.usuario_asignac
 		</div>
 	</div>
 </div>
+<center>
+<div class="row">
+    <center>
+	<div class="col-md-2 col-lg-2">
+	<?= Html::a('<span class="glyphicon glyphicon-align-justify"></span>Consolidado '.($model->ano-1), ['parteportrabajador',
+	                'ano' => $model->ano-1,],
+					['class'=>'btn btn-info',
+					'data-container' => 'body',
+					'data-toggle' => 'tooltip',
+					'data-placement'=> 'bottom',
+					'title'=>'Reporte General '.($model->ano-1)]) ?>
+	</div>
+	<div class="col-md-2 col-lg-2">
+	<?= Html::a('<span class="glyphicon glyphicon-align-justify"></span>Instrucción Presidencial', ['parteportrabajador',
+	                'ano' => $model->ano,
+	                'recepcion' => 1],
+					['class'=>'btn btn-primary',
+					'data-container' => 'body',
+					'data-toggle' => 'tooltip',
+					'data-placement'=> 'bottom',
+					'title'=>'Reporte de Instrucción Presidencial' ]) ?>
+	</div>
+	<div class="col-md-2 col-lg-2">
+	<?= Html::a('<span class="glyphicon glyphicon-align-justify"></span>Atención al Soberano', ['parteportrabajador',
+	                'ano' => $model->ano,
+	                'recepcion' => 2],
+					['class'=>'btn btn-primary',
+					'data-container' => 'body',
+					'data-toggle' => 'tooltip',
+					'data-placement'=> 'bottom',
+					'title'=>'Reporte de Atención al Soberano' ]) ?>
+	</div>
+	<div class="col-md-2 col-lg-2">
+	<?= Html::a('<span class="glyphicon glyphicon-align-justify"></span>Atención Institucional', ['parteportrabajador',
+	                'ano' => $model->ano,
+	                'recepcion' => 3],
+					['class'=>'btn btn-primary',
+					'data-container' => 'body',
+					'data-toggle' => 'tooltip',
+					'data-placement'=> 'bottom',
+					'title'=>'Reporte de Atención Institucional' ]) ?>
+	</div>
+	<div class="col-md-2 col-lg-2">
+	<?= Html::a('<span class="glyphicon glyphicon-align-justify"></span>Consolidado '.$model->ano, ['parteportrabajador',
+	                'ano' => $model->ano,],
+					['class'=>'btn btn-primary',
+					'data-container' => 'body',
+					'data-toggle' => 'tooltip',
+					'data-placement'=> 'bottom',
+					'title'=>'Reporte General'.$model->ano ]) ?>
+	</div>
+	<div class="col-md-2 col-lg-2">
+	<?= Html::a('<span class="glyphicon glyphicon-align-justify"></span>Consolidado '.($model->ano+1), ['parteportrabajador',
+	                'ano' => $model->ano+1,],
+					['class'=>'btn btn-info',
+					'data-container' => 'body',
+					'data-toggle' => 'tooltip',
+					'data-placement'=> 'bottom',
+					'title'=>'Reporte General '.($model->ano+1)]) ?>
+	</div>
+    </center>
+</div>
+</center>

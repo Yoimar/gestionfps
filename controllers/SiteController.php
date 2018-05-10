@@ -275,12 +275,14 @@ class SiteController extends Controller
         return $this->render('totalnivel1');
     }
 
-    public function actionParteportrabajador()
+    public function actionParteportrabajador($ano=null, $recepcion=null, $mes=null)
     {
         $model = new Reportes(['scenario' => 'crear']);
 
-        if ($model->load(Yii::$app->request->post())){
-
+        if (isset($ano)||$model->load(Yii::$app->request->post())){
+            if (isset($ano)){$model->ano = $ano;}
+            if (isset($mes)){$model->mes = $mes;}
+            if (isset($recepcion)){$model->recepcioninicial = $recepcion;}
             return $this->render('parteportrabajador',
             [
                 'model' => $model,
@@ -545,5 +547,20 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionTablaactividad(){
+    $model = new Reportes(['scenario' => 'actividad']);
 
+            if (isset($ano)||$model->load(Yii::$app->request->post())){
+                if (isset($ano)){$model->ano = $ano;}
+                return $this->render('tablaactividad',
+                [
+                    'model' => $model,
+                ]);
+            }
+
+        return $this->render('actividad',
+        [
+            'model' => $model,
+        ]);
+    }
 }

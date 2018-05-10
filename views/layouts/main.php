@@ -45,7 +45,8 @@ AppAsset::register($this);
             'items' => [
                  '<li class="dropdown-header">Gestion de Casos</li>',
                  ['label' => 'Gestión', 'url' => '@web/gestion'],
-                ['label' => 'Gestión de Casos', 'url' => '@web/gestion/masivoxtrabajador'],
+                array_search('administrador', array_keys(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())))!='' ? ['label' => 'Gestión de Casos', 'url' => '@web/gestion/masivoxtrabajador'] : "",
+                array_search('trabajador', array_keys(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())))!='' ? ['label' => 'Gestión de Casos', 'url' => '@web/gestion/masivoxtrabajador'] : "",
             ],
             'linkOptions' => ['style' => 'color: #FFFFFF;']
             ],
@@ -76,6 +77,7 @@ AppAsset::register($this);
                  ['label' => 'Consolidado por Unidad', 'url' => '@web/site/tablareportemando?ano='.date("Y")],
                  ['label' => 'Reporte General Año', 'url' => '@web/site/tablareporte?ano='.date("Y")],
                  ['label' => 'Reportes', 'url' => '@web/site/formulario'],
+                 ['label' => 'Reportes por Actividad', 'url' => '@web/site/tablaactividad'],
                  /* Reportes en Mapa de Calor Desactivados por no usarlos
                 '<li class="divider"></li>',
                 '<li class="dropdown-header">Reporte Por Unidad</li>',

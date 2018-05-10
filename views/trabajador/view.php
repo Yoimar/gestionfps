@@ -6,8 +6,8 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Trabajador */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Trabajadors', 'url' => ['index']];
+$this->title = "Trabajador: $model->dimprofesion $model->primernombre $model->primerapellido";
+$this->params['breadcrumbs'][] = ['label' => 'Trabajadores Registrados', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="trabajador-view">
@@ -15,38 +15,45 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Actualizar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Eliminar', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Está seguro de que desea eliminar este trabajador?',
                 'method' => 'post',
             ],
         ]) ?>
     </p>
+    <div class="row">
+        <div class="col-md-6 col-lg-6">
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            'ci',
+            'primernombre',
+            'segundonombre',
+            'primerapellido',
+            'segundoapellido',
+            'dimprofesion',
+            'profesion',
+        ],
+    ]) ?>
+</div>
+<div class="col-md-6 col-lg-6">
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
-            'user_id',
-            'users_id',
-            'primernombre',
-            'segundonombre',
-            'primerapellido',
-            'segundoapellido',
-            'ci',
+            'user.username',
+            'users.nombre',
             'telfextension',
             'telfpersonal',
             'telfpersonal2',
             'telfcasa',
-            'dimprofesion',
-            'profesion',
-            'created_at',
-            'created_by',
-            'updated_at',
-            'updated_by',
         ],
     ]) ?>
+</div>
+</div>
 
 </div>

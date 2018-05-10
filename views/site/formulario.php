@@ -8,7 +8,6 @@ use app\models\Recepciones;
 
 
 $this->title = 'Realizar Reporte de Tablas';
-$this->params['breadcrumbs'][] = ['label' => 'Rpcbeneficiarios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="rpcbeneficiario-create">

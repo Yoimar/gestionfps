@@ -37,9 +37,10 @@ use miloschuman\highcharts\SeriesDataHelper;
         ]);
 
         if (isset($modeltrabajador->users_id)) :
-        $counttrabajador = Yii::$app->db->createCommand("select count(*) from solicitudes s1 join users u1 on s1.usuario_asignacion_id = u1.id join estatussasyc e1 on s1.estatus = e1.id where e1.id in ('ACA', 'EAA', 'DEV') and s1.usuario_asignacion_id = ".$modeltrabajador->users_id." and extract(year from s1.created_at) in (".(date("Y")-1). ', ' . date("Y").")")->queryScalar();
-        $countgestion = Yii::$app->db->createCommand("select count(*) from gestion g1 join solicitudes s1 on s1.id = g1.solicitud_id join users u1 on s1.usuario_asignacion_id = u1.id join estatus3 e3 on g1.estatus3_id = e3.id join estatus2 e2 on e3.estatus2_id = e2.id join estatus1 e1 on e2.estatus1_id = e1.id where s1.usuario_asignacion_id = ".$modeltrabajador->users_id." and extract(year from s1.created_at) in (".(date("Y")-1). ', ' . date("Y").")")->queryScalar();
+        $counttrabajador = Yii::$app->db->createCommand("select count(*) from solicitudes s1 join users u1 on s1.usuario_asignacion_id = u1.id join estatussasyc e1 on s1.estatus = e1.id where e1.id in ('ACA', 'EAA', 'DEV') and s1.usuario_asignacion_id = ".$modeltrabajador->users_id." and extract(year from s1.created_at) in (".(date('Y')-1). ", " .date('Y').")")->queryScalar();
+        $countgestion = Yii::$app->db->createCommand("select count(*) from gestion g1 join solicitudes s1 on s1.id = g1.solicitud_id join users u1 on s1.usuario_asignacion_id = u1.id join estatus3 e3 on g1.estatus3_id = e3.id join estatus2 e2 on e3.estatus2_id = e2.id join estatus1 e1 on e2.estatus1_id = e1.id where e1.id = 1 and s1.usuario_asignacion_id = ".$modeltrabajador->users_id." and extract(year from s1.created_at) in (".(date("Y")-1). ', ' . date("Y").")")->queryScalar();
         $countnogestion = $counttrabajador - $countgestion;
+
         ?>
  </h5>
 </div>

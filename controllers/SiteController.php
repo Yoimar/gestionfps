@@ -12,6 +12,7 @@ use app\models\SignupForm;
 use yii\db\Query;
 use yii\data\ActiveDataProvider;
 use app\models\Reportes;
+use app\models\Gestion;
 
 class SiteController extends Controller
 {
@@ -547,11 +548,11 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionTablaactividad(){
+    public function actionTablaactividad($actividad){
     $model = new Reportes(['scenario' => 'actividad']);
 
-            if (isset($ano)||$model->load(Yii::$app->request->post())){
-                if (isset($ano)){$model->ano = $ano;}
+            if (isset($actividad)||$model->load(Yii::$app->request->post())){
+                if (isset($actividad)){$model->actividad = $actividad;}
                 return $this->render('tablaactividad',
                 [
                     'model' => $model,
@@ -563,4 +564,5 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
 }

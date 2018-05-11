@@ -156,6 +156,10 @@ foreach ($trabajadorescolumnas as $val) {
         $trabajadores[]=$val['nombre'];
     }
  }
+//Si los trabajadores estan vacios le coloco null para ver que carga
+ if (empty($trabajadores)){
+     $trabajadores[]=null;
+ }
 
 $stylecabecera = '"text-align:center; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;"';
 

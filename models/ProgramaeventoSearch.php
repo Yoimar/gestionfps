@@ -19,7 +19,7 @@ class ProgramaeventoSearch extends Programaevento
     {
         return [
             [['id', 'origenid', 'nprograma', 'trabajadoracargo_id', 'referencia_id', 'parroquia_id', 'created_by', 'updated_by'], 'integer'],
-            [['fechaprograma', 'descripcion', 'fecharecibido', 'created_at', 'updated_at'], 'safe'],
+            [['fechaprograma', 'descripcion', 'fecharecibido', 'dateprograma', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -41,13 +41,94 @@ class ProgramaeventoSearch extends Programaevento
      */
     public function search($params)
     {
-        $query = Programaevento::find();
+        $query = Programaevento::find()
+        ->select([
+            'id',
+            'origenid',
+            'nprograma',
+            'trabajadoracargo_id',
+            'referencia_id',
+            'parroquia_id',
+            'created_by',
+            'updated_by',
+            'fechaprograma',
+            'descripcion',
+            'fecharecibido',
+            "fechaprograma as dateprograma",
+            'created_at',
+            'updated_at',
+
+        ]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'fechaprograma' => SORT_DESC,
+                ],
+                'attributes' => [
+                    'id' => [
+                        'asc' => ['id' => \SORT_ASC],
+                        'desc' => ['id' => \SORT_DESC],
+                    ],
+                    'origenid' => [
+                        'asc' => ['origenid' => \SORT_ASC],
+                        'desc' => ['origenid' => \SORT_DESC],
+                    ],
+                    'nprograma' => [
+                        'asc' => ['nprograma' => \SORT_ASC],
+                        'desc' => ['nprograma' => \SORT_DESC],
+                    ],
+                    'trabajadoracargo_id' => [
+                        'asc' => ['trabajadoracargo_id' => \SORT_ASC],
+                        'desc' => ['trabajadoracargo_id' => \SORT_DESC],
+                    ],
+                    'referencia_id' => [
+                        'asc' => ['referencia_id' => \SORT_ASC],
+                        'desc' => ['referencia_id' => \SORT_DESC],
+                    ],
+                    'parroquia_id' => [
+                        'asc' => ['parroquia_id' => \SORT_ASC],
+                        'desc' => ['parroquia_id' => \SORT_DESC],
+                    ],
+                    'fechaprograma' => [
+                        'asc' => ['fechaprograma' => \SORT_ASC],
+                        'desc' => ['fechaprograma' => \SORT_DESC],
+                    ],
+                    'dateprograma' => [
+                        'asc' => ['fechaprograma' => \SORT_ASC],
+                        'desc' => ['fechaprograma' => \SORT_DESC],
+                    ],
+                    'descripcion' => [
+                        'asc' => ['descripcion' => \SORT_ASC],
+                        'desc' => ['descripcion' => \SORT_DESC],
+                    ],
+                    'created_at' => [
+                        'asc' => ['cheque.created_at' => \SORT_ASC],
+                        'desc' => ['cheque.created_at' => \SORT_DESC],
+                    ],
+                    'created_by' => [
+                        'asc' => ['cheque.created_by' => \SORT_ASC],
+                        'desc' => ['cheque.created_by' => \SORT_DESC],
+                    ],
+                    'updated_at' => [
+                        'asc' => ['cheque.updated_at' => \SORT_ASC],
+                        'desc' => ['cheque.updated_at' => \SORT_DESC],
+                    ],
+                    'updated_by' => [
+                        'asc' => ['cheque.updated_by' => \SORT_ASC],
+                        'desc' => ['cheque.updated_by' => \SORT_DESC],
+                    ],
+                ],
+            ],
+
         ]);
+
 
         $this->load($params);
 
@@ -73,7 +154,8 @@ class ProgramaeventoSearch extends Programaevento
             'updated_by' => $this->updated_by,
         ]);
 
-        $query->andFilterWhere(['like', 'descripcion', $this->descripcion]);
+        $query->andFilterWhere(['ilike', 'descripcion', $this->descripcion]);
+        $query->andFilterWhere(["=", "date(fechaprograma)", $this->dateprograma]);
 
         return $dataProvider;
     }

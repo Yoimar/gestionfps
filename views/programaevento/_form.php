@@ -13,7 +13,7 @@ use app\models\Estados;
 use app\models\Parroquias;
 use app\models\Municipios;
 use yii\helpers\Url;
-use kartik\datetime\DateTimePicker;
+use kartik\datecontrol\DateControl;
 
 
 /* @var $this yii\web\View */
@@ -27,14 +27,19 @@ $data = Trabajador::find()
 ?>
 
 <div class="programaevento-form">
+<div class="row">
 
-    <?php $form = ActiveForm::begin(); ?>
-    
-    <?= $form->field($model, 'descripcion')->textarea(['maxlength' => true]) ?>
-    
+
+
+    <?php $form = ActiveForm::begin([
+        "method" => "post",
+        "enableClientValidation" => true,
+    ]); ?>
+    <div class="col-md-4" class="col-lg-4">
     <?= $form->field($model, 'nprograma')->textInput() ?>
-    
-    <?= 
+    </div>
+    <div class="col-md-4" class="col-lg-4">
+    <?=
         $form->field($model, 'trabajadoracargo_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map($data,'id', 'nombre'),
         'language' => 'es',
@@ -43,10 +48,10 @@ $data = Trabajador::find()
         'allowClear' => true
         ],
     ]);
-    
     ?>
-    
-    <?= 
+    </div>
+    <div class="col-md-4" class="col-lg-4">
+    <?=
         $form->field($model, 'referencia_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map((new \yii\db\Query())->select(["CONCAT(autoridad.nombredim, ' - ', cargo.nombredim) as nombre", "referencia.id as id"])
                 ->from('referencia')
@@ -59,8 +64,13 @@ $data = Trabajador::find()
         'allowClear' => true
         ],
     ]);
-    
+
     ?>
+    </div>
+    <div class="col-md-12" class="col-lg-12">
+    <?= $form->field($model, 'descripcion')->textarea(['maxlength' => true]) ?>
+    </div>
+    <div class="col-md-4" class="col-lg-4">
     <?=
     /* Estado con Select2 de kartik*/
         $form->field($model, 'estado_id')->widget(Select2::classname(), [
@@ -71,9 +81,10 @@ $data = Trabajador::find()
         'allowClear' => true
         ],
     ]);
-    
+
     ?>
-    
+    </div>
+    <div class="col-md-4" class="col-lg-4">
     <?=
     /* Municipio con depdrop de kartik*/
     $form->field($model, 'municipio_id')->widget(DepDrop::classname(), [
@@ -87,7 +98,8 @@ $data = Trabajador::find()
     ]
     ]);
     ?>
-
+    </div>
+    <div class="col-md-4" class="col-lg-4">
     <?=
     /* Parroquia con depdrop de kartik*/
     $form->field($model, 'parroquia_id')->widget(DepDrop::classname(), [
@@ -101,8 +113,9 @@ $data = Trabajador::find()
     ]
     ]);
     ?>
-
-    <?= 
+    </div>
+    <div class="col-md-4" class="col-lg-4">
+    <?=
         $form->field($model, 'origenid')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Origen::find()->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
@@ -111,45 +124,50 @@ $data = Trabajador::find()
         'allowClear' => true
         ],
     ]);
-    
-    ?>
 
-    <?= $form->field($model, 'fechaprograma')->widget(DateTimePicker::classname(), [
-	'name' => 'datetime_20',
-        'options' => ['placeholder' => 'Ingrese la Fecha en que se realizo el Programa'],
-        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
+    ?>
+    </div>
+    <div class="col-md-4" class="col-lg-4">
+    <?= $form->field($model, 'fechaprograma')->widget(DateControl::classname(), [
+    'type'=>DateControl::FORMAT_DATETIME,
+    'ajaxConversion'=>false,
+    'widgetOptions' => [
         'pluginOptions' => [
-            'orientation' => 'up right',
-            'todayHighlight' => true,
-            'todayBtn' => true,
-            'format' => 'dd-mm-yyyy hh:ii:ss',
-            'showMeridian' => true,
-            'autoclose' => true,
-            'language' => 'es',
-	]
+            'autoclose' => true
+        ]
+    ]
 ]);
     ?>
-
-    <?= $form->field($model, 'fecharecibido')->widget(DateTimePicker::classname(), [
+    </div>
+    <div class="col-md-4" class="col-lg-4">
+    <?= $form->field($model, 'fecharecibido')->widget(DateControl::classname(), [
 	'name' => 'datetime_20',
-        'options' => ['placeholder' => 'Ingrese la Fecha en que se recibio la relación en la Unidad y/o Dirección'],
-        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-        'pluginOptions' => [
-            'orientation' => 'up right',
-            'todayHighlight' => true,
-            'todayBtn' => true,
-            'format' => 'dd-mm-yyyy hh:ii:ss',
-            'showMeridian' => true,
-            'autoclose' => true,
-            'language' => 'es',
-    ]
-        ]);
-        ?>
+    'widgetOptions' => [
+        'options' => [
+            'placeholder' => 'Fecha en que se Recibio la Relación',
+            'pluginOptions' => [
+                'orientation' => 'top auto',
+                'todayHighlight' => true,
+                'todayBtn' => true,
+                'showMeridian' => true,
+                'autoclose' => true,
+                'language' => 'es',
+            ],
+            'orientation' => 'top auto',
+        ]
+    ],
+        'type' => DateControl::FORMAT_DATETIME,
+]);
+    ?>
+    </div>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <center>
+        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => 'btn btn-primary']) ?>
+        </center>
     </div>
 
     <?php ActiveForm::end(); ?>
-
+</div>
+</div>
 </div>

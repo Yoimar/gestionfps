@@ -6,8 +6,8 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Programaevento */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Programaeventos', 'url' => ['index']];
+$this->title = $model->descripcion;
+$this->params['breadcrumbs'][] = ['label' => 'Lista de Actividades', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="programaevento-view">
@@ -15,11 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Actualizar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Eliminar', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Esta seguro de que desea eliminar esta Actividad?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -29,12 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'origenid',
+            'origen.nombre',
             'nprograma',
             'fechaprograma',
-            'trabajadoracargo_id',
-            'referencia_id',
+            'trabajador.Trabajadorfps',
+            'referencia.nombre',
             'parroquia_id',
+            'parroquia.estado.nombre',
             'descripcion',
             'fecharecibido',
             'created_at',

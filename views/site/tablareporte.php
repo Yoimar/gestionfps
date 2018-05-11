@@ -73,9 +73,9 @@ $meses = array(
         <th <?= $stylecabecera ?>>Por Conve</th>
         <th <?= $stylecabecera ?>>Por Conso</th>
         <th <?= $stylecabecera ?>>P/APR Eco</th>
-        <th <?= $stylecabecera ?> width="200" nowrap>Monto Económico</th>
+        <th <?= $stylecabecera ?> width="200" nowrap>Monto Económico<br><small>(Bs.)</small></th>
         <th <?= $stylecabecera ?>>P/APR Sal</th>
-        <th <?= $stylecabecera ?> width="200" nowrap>Monto Salud</th>
+        <th <?= $stylecabecera ?> width="200" nowrap>Monto Salud<br><small>(Bs.)</small></th>
     </tr>
 </thead>
 <tbody>
@@ -95,9 +95,9 @@ $meses = array(
 				<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e2.id = 7 and extract(month from s1.created_at)=".($i+1)." and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
                                                                 <td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e2.id = 3 and extract(month from s1.created_at)=".($i+1)." and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
 				<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e3.id = 11 and extract(month from s1.created_at)=".($i+1)." and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-				<td style="text-align:right"><p style="margin: 0;"><?= Yii::$app->formatter->asCurrency(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where ".$filtrounidad." e3.id = 11 and extract(month from s1.created_at)=".($i+1)." and extract(year from s1.created_at) = ".$model->ano)->queryscalar());?></p></td>
+				<td style="text-align:right"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where ".$filtrounidad." e3.id = 11 and extract(month from s1.created_at)=".($i+1)." and extract(year from s1.created_at) = ".$model->ano)->queryscalar(),2);?></p></td>
 				<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e3.id = 10 and extract(month from s1.created_at)=".($i+1)." and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-				<td style="text-align:right"><p style="margin: 0;"><?= Yii::$app->formatter->asCurrency(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where ".$filtrounidad." e3.id = 10 and extract(month from s1.created_at)=".($i+1)." and extract(year from s1.created_at) = ".$model->ano)->queryscalar());?></p></td>
+				<td style="text-align:right"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where ".$filtrounidad." e3.id = 10 and extract(month from s1.created_at)=".($i+1)." and extract(year from s1.created_at) = ".$model->ano)->queryscalar(),2);?></p></td>
 		</tr>
 	<?php endfor; ?>
     	<tr>
@@ -115,9 +115,9 @@ $meses = array(
 				<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e2.id = 7 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
                 <td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e2.id = 3 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
 				<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e3.id = 11 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-				<td style="text-align:right; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->formatter->asCurrency(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where ".$filtrounidad." e3.id = 11 and extract(year from s1.created_at) = ".$model->ano)->queryscalar());?></p></td>
+				<td style="text-align:right; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where ".$filtrounidad." e3.id = 11 and extract(year from s1.created_at) = ".$model->ano)->queryscalar(),2);?></p></td>
 				<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where ".$filtrounidad." e3.id = 10 and extract(year from s1.created_at) = ".$model->ano)->queryscalar();?></p></td>
-                <td style="text-align:right; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->formatter->asCurrency(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where ".$filtrounidad." e3.id = 10 and extract(year from s1.created_at) = ".$model->ano)->queryscalar());?></p></td>
+                <td style="text-align:right; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where ".$filtrounidad." e3.id = 10 and extract(year from s1.created_at) = ".$model->ano)->queryscalar(),2);?></p></td>
 		</tr>
 </tbody>
 				</table>

@@ -6,8 +6,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Programaevento */
 
-$this->title = 'Create Programaevento';
-$this->params['breadcrumbs'][] = ['label' => 'Programaeventos', 'url' => ['index']];
+$this->title = 'Crear Programa Evento o Actividad';
+$this->params['breadcrumbs'][] = ['label' => 'Listado de Actividades', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="programaevento-create">

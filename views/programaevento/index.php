@@ -1,11 +1,12 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use kartik\select2\Select2;
 use app\models\Origen;
 use app\models\Trabajador;
 use yii\helpers\ArrayHelper;
+use kartik\datecontrol\DateControl;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ProgramaeventoSearch */
@@ -20,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Crear Act. Presidencial - Programa - Evento', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Act. Presidencial - Programa - Evento', ['create'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -38,13 +39,26 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $searchModel,
                         'attribute' => 'origenid',
                         'data' => ArrayHelper::map(Origen::find()->orderBy('nombre')->all(), 'id', 'nombre'),
-                        'options' => 
+                        'options' =>
                             ['placeholder' => 'Seleccione Origen'],
                         'pluginOptions' => [ 'allowClear' => true ],
                 ]),
             ],
             //'nprograma',
-            'fechaprograma',
+            [
+                'attribute' => 'dateprograma',
+                'format' => ['date', 'php:d-m-Y'],
+                'filter' => DateControl::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'dateprograma',
+                    'name' => 'kartik-date-2',
+                    'value' => 'dateprograma',
+                    'asyncRequest' => false,
+                    'type' => DateControl::FORMAT_DATE,
+                    'options' => ['layout' => '{input}']
+                    ]),
+                    'contentOptions' => ['style' => 'width: 20%;']
+            ],
             //'trabajadoracargo_id',
             [
             'attribute' => 'trabajadoracargo_id',
@@ -55,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'trabajadoracargo_id',
                         'data' => ArrayHelper::map(Trabajador::find()->asArray()->all(),'id', function($model, $defaultValue) {
                         return $model['dimprofesion'].' '.$model['primernombre'].' '.$model['primerapellido'];}),
-                        'options' => 
+                        'options' =>
                             ['placeholder' => 'Seleccione el Trabajador'],
                         'pluginOptions' => [ 'allowClear' => true ],
                 ]),
@@ -69,7 +83,21 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updated_at',
             // 'updated_by',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+            'class' => 'kartik\grid\ActionColumn',
+            'template' => '{update} {delete} {view} {gestionactividad}',
+            'buttons' => [
+                'gestionactividad' => function($url, $model){
+
+                                    return Html::a('<span class="glyphicon glyphicon-search"></span>',
+                                        yii\helpers\Url::to(['//site/tablaactividad', 'actividad' => $model->id, ]),
+                                        [
+                                            'title' => 'Ver Gestion Actividad',
+                                        ]
+                                        );
+                                    }
+            ],
+            ],
         ],
     ]); ?>
 </div>

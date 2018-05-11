@@ -85,7 +85,13 @@ class Referencia extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Cargo::className(), ['id' => 'cargo_id']);
     }
-    
+
+    //Funcion para obtener el diminutivo de la Autoridad - Mas el Cargo Actual
+    public function getNombre()
+    {
+        return $this->autoridad->nombredim. ' - '.$this->cargo->nombredim;
+    }
+
     public function behaviors()
     {
         return [

@@ -36,7 +36,8 @@ class Programaevento extends \yii\db\ActiveRecord
 {
     public $estado_id;
     public $municipio_id;
-    
+    public $dateprograma;
+
     /**
      * @inheritdoc
      */
@@ -52,7 +53,8 @@ class Programaevento extends \yii\db\ActiveRecord
     {
         return [
             [['origenid', 'nprograma', 'trabajadoracargo_id', 'referencia_id', 'parroquia_id', 'created_by', 'updated_by'], 'integer'],
-            [['fechaprograma', 'fecharecibido', 'created_at', 'updated_at'], 'safe'],
+            [['trabajadoracargo_id', 'referencia_id', 'parroquia_id', 'descripcion', 'fechaprograma'], 'required'],
+            [['fechaprograma', 'fecharecibido', 'dateprograma', 'created_at', 'updated_at'], 'safe'],
             [['descripcion'], 'string', 'max' => 255],
             [['origenid'], 'exist', 'skipOnError' => true, 'targetClass' => Origen::className(), 'targetAttribute' => ['origenid' => 'id']],
             [['parroquia_id'], 'exist', 'skipOnError' => true, 'targetClass' => Parroquias::className(), 'targetAttribute' => ['parroquia_id' => 'id']],
@@ -71,6 +73,7 @@ class Programaevento extends \yii\db\ActiveRecord
             'origenid' => 'Origen',
             'nprograma' => 'Nro de Programa / Oficio',
             'fechaprograma' => 'Fecha de la Actividad',
+            'dateprograma' => 'Fecha',
             'trabajadoracargo_id' => 'Trabajador a Cargo',
             'referencia_id' => 'Referencia - Autoridad y Cargo',
             'parroquia_id' => 'Parroquia',
@@ -132,7 +135,7 @@ class Programaevento extends \yii\db\ActiveRecord
     {
         return $this->hasMany(SolicitudesRecibidas::className(), ['programaevento_id' => 'id']);
     }
-    
+
     public function behaviors()
     {
         return [
@@ -152,5 +155,5 @@ class Programaevento extends \yii\db\ActiveRecord
 
         ];
     }
-    
+
 }

@@ -43,7 +43,7 @@ class Convenio extends \yii\db\ActiveRecord
             [['created_at', 'updated_at'], 'safe'],
             [['nombre'], 'string', 'max' => 50],
             [['dimnombre'], 'string', 'max' => 10],
-            [['tipoconvenio_id'], 'exist', 'skipOnError' => true, 'targetClass' => TipoConvenio::className(), 'targetAttribute' => ['tipoconvenio_id' => 'id']],
+            [['tipoconvenio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tipoconvenio::className(), 'targetAttribute' => ['tipoconvenio_id' => 'id']],
             [['estado_id'], 'exist', 'skipOnError' => true, 'targetClass' => Estados::className(), 'targetAttribute' => ['estado_id' => 'id']],
         ];
     }
@@ -65,7 +65,7 @@ class Convenio extends \yii\db\ActiveRecord
             'updated_by' => 'Actualizado Por: ',
         ];
     }
-    
+
     public function behaviors()
     {
         return [
@@ -101,7 +101,7 @@ class Convenio extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Gestion::className(), ['convenio_id' => 'id']);
     }
-    
+
     /**
      * @return \yii\db\ActiveQuery
      */

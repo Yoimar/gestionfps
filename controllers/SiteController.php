@@ -548,10 +548,10 @@ class SiteController extends Controller
         ]);
     }
 
-    public function actionTablaactividad($actividad){
+    public function actionTablaactividad($actividad=null){
     $model = new Reportes(['scenario' => 'actividad']);
 
-            if (isset($actividad)||$model->load(Yii::$app->request->post())){
+            if ($actividad!=null||$model->load(Yii::$app->request->post())){
                 if (isset($actividad)){$model->actividad = $actividad;}
                 return $this->render('tablaactividad',
                 [

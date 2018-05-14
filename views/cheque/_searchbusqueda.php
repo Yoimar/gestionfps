@@ -25,7 +25,7 @@ use app\models\TipoAyudas;
     <?= $form->field($modelcheque, 'estado_beneficiario')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(Estados::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
                 'language' => 'es',
-                'options' => ['placeholder' => 'Seleccione el Estado'],
+                'options' => ['placeholder' => '¿Estado?'],
                 'pluginOptions' => [
                     'allowClear' => true
                 ],
@@ -78,6 +78,7 @@ use app\models\TipoAyudas;
     <?= $form->field($modelcheque, 'estatus_cheque')->widget(Select2::classname(), [
         'data' => ArrayHelper::map([
             ['id' => 'EMI', 'nombre' => 'Emitido'],
+            ['id' => 'PEN', 'nombre' => 'Pendiente por Entrega'],
             ['id' => 'ENT', 'nombre' => 'Entregado'],
             ['id' => 'ANU', 'nombre' => 'Anulado']], 'id', 'nombre'),
         'language' => 'es',
@@ -93,7 +94,7 @@ use app\models\TipoAyudas;
     <?= $form->field($modelcheque, 'recepcioninicial')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(\app\models\Recepciones::find()->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
-        'options' => ['placeholder' => 'Seleccione la Unidad'],
+        'options' => ['placeholder' => '¿Unidad?'],
         'pluginOptions' => [
         'allowClear' => true
         ],
@@ -105,8 +106,9 @@ use app\models\TipoAyudas;
     <?= $form->field($modelcheque, 'date_cheque')->widget(DateControl::classname(), [
 	'name' => 'datetime_20',
     'widgetOptions' => [
+        'removeButton' => false,
         'options' => [
-            'placeholder' => 'Fecha en que se Recibio la Relación',
+            'placeholder' => '¿Entregado?',
             'pluginOptions' => [
                 'orientation' => 'top auto',
                 'todayHighlight' => true,
@@ -127,8 +129,9 @@ use app\models\TipoAyudas;
     <?= $form->field($modelcheque, 'date_reccaja')->widget(DateControl::classname(), [
 	'name' => 'datetime_20',
     'widgetOptions' => [
+        'removeButton' => false,
         'options' => [
-            'placeholder' => 'Fecha en que se Recibio la Relación',
+            'placeholder' => '¿Recibido?',
             'pluginOptions' => [
                 'orientation' => 'top auto',
                 'todayHighlight' => true,

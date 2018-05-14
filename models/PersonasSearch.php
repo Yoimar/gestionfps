@@ -78,14 +78,14 @@ class PersonasSearch extends Personas
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'nombre', $this->nombre])
-            ->andFilterWhere(['like', 'apellido', $this->apellido])
+        $query->andFilterWhere(['ilike', 'nombre', $this->nombre])
+            ->andFilterWhere(['ilike', 'apellido', $this->apellido])
             ->andFilterWhere(['like', 'sexo', $this->sexo])
             ->andFilterWhere(['like', 'lugar_nacimiento', $this->lugar_nacimiento])
-            ->andFilterWhere(['like', 'ciudad', $this->ciudad])
-            ->andFilterWhere(['like', 'zona_sector', $this->zona_sector])
-            ->andFilterWhere(['like', 'calle_avenida', $this->calle_avenida])
-            ->andFilterWhere(['like', 'apto_casa', $this->apto_casa])
+            ->andFilterWhere(['ilike', 'ciudad', $this->ciudad])
+            ->andFilterWhere(['ilike', 'zona_sector', $this->zona_sector])
+            ->andFilterWhere(['ilike', 'calle_avenida', $this->calle_avenida])
+            ->andFilterWhere(['ilike', 'apto_casa', $this->apto_casa])
             ->andFilterWhere(['like', 'telefono_fijo', $this->telefono_fijo])
             ->andFilterWhere(['like', 'telefono_celular', $this->telefono_celular])
             ->andFilterWhere(['like', 'telefono_otro', $this->telefono_otro])

@@ -47,28 +47,41 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 [
                 'class' => 'kartik\grid\ActionColumn',
-                'template' => '{cambiotrabajador}',
+                'template' => '{reccaja} {entrega}',
                 'buttons' => [
-                'cambiotrabajador' => function($url, $model){
-                                if ($model->estatus_cheque == 'EMI'){
-                                    return Html::a('<span class="glyphicon glyphicon-log-in"></span>',
-                                        yii\helpers\Url::to(['cargarfoto', 'cheque' => $model->cheque, ]),
-                                        [
-                                            'title' => 'Entregar Cheque',
-                                        ]
-                                        );
-                                 } elseif ($model->estatus_cheque == 'ENT') {
-                                     return Html::a('<span class="glyphicon glyphicon-print"></span>',
-                                         yii\helpers\Url::to(['imprimirentrega', 'cheque' => $model->cheque, ]),
-                                         [
-                                             'title' => 'Imprimir Entrega ',
-                                         ]
-                                         );
-                                 }
-                                    }
-
-                                  ],
-                ],
+                'reccaja' => function($url, $model){
+                if ($model->estatus_cheque == 'EMI'){
+                    return Html::a('<span class="glyphicon glyphicon-ok"></span>',
+                        yii\helpers\Url::to(['recibircheque', 'cheque' => $model->cheque, ]),
+                            [
+                                'title' => 'Recibir Cheque',
+                            ]
+                        );
+                }
+                //fin de la Function
+                },
+                'entrega' => function($url, $model){
+                if ($model->estatus_cheque == 'EMI'){
+                    return Html::a('<span class="glyphicon glyphicon-log-in"></span>',
+                        yii\helpers\Url::to(['cargarfoto', 'cheque' => $model->cheque, ]),
+                            [
+                                'title' => 'Entregar Cheque',
+                            ]
+                        );
+                 } elseif ($model->estatus_cheque == 'ENT') {
+                     return Html::a('<span class="glyphicon glyphicon-print"></span>',
+                         yii\helpers\Url::to(['imprimirentrega', 'cheque' => $model->cheque, ]),
+                         [
+                             'title' => 'Imprimir Entrega ',
+                         ]
+                         );
+                 }
+                 //fin de la Function
+                 },
+                 //Fin de Buttons
+                 ],
+                 //Fin del Action Column
+                 ],
             ],
             'bordered' => true,
             'striped' => true,

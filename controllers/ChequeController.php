@@ -590,13 +590,13 @@ class ChequeController extends Controller
             //cargo el modelo de caracas defecto 1
             $modelestado = \app\models\Estados::findOne(1);
         }
-        
+
         //data provider para cintillo con cheques monto y total
         $searchModel = new ChequeSearchCarga();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->andWhere(['imagenentrega_id'=>$modelfotossolicitud->id]);
-        
-        
+
+
 
         $headerHtml = '<div class="row">'
         .Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "150", "class" => "pull-left"])
@@ -715,7 +715,7 @@ class ChequeController extends Controller
             return $pdf->render();
 
         }
-        
+
         public function Chequesporentrega($id_fotossolicitud){
             $cheques = Cheque::find()
                 ->where(['imagenentrega_id' => $id_fotossolicitud])
@@ -724,14 +724,23 @@ class ChequeController extends Controller
         foreach ($cheques as $cheque){
 
             $chequesimpr[] = ltrim($cheque->cheque, "0");
-            
+
         }
-        
+
         $chequesimprimir = implode(", ", $chequesimpr);
-        
+
         return $chequesimprimir;
-            
-           
+
+
+        }
+
+        public function actionRecibircheque($cheque){
+            $model = Cheque::findOne($cheque);
+            $model->estatus_cheque = 'PEN';
+            $model->date_reccaja = date("Y-m-d");
+            $model->save();
+
+            return $this->redirect('busqueda');
         }
 
 }

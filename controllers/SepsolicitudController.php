@@ -21,6 +21,7 @@ use app\models\Bitacoras;
 use app\models\Trabajador;
 use app\models\Empresainstitucion;
 use app\models\Conexionsigesp;
+use app\models\Personas;
 
 /**
  * SepsolicitudController implements the CRUD actions for Sepsolicitud model.
@@ -367,6 +368,8 @@ class SepsolicitudController extends Controller
     {
         $consulta = Yii::$app->db->createCommand("SELECT CONCAT('Caso N: ' || s1.num_solicitud) AS solicitud, "
             ."CONCAT('Solicitante: ' ||ps.nombre || ' ' || ps.apellido || ' C.I.: ' ||ps.ci ) AS solicitante, "
+            ."pb.id as idbeneficiario, "
+            ."ps.id as idsolicitante, "
             ."CONCAT('Beneficiario: ' ||pb.nombre || ' ' || pb.apellido || COALESCE(' C.I.: ' || pb.ci || ' ', '') ) AS beneficiario, "
             ."CONCAT('Requerimiento: ' || r1.nombre) AS requerimiento, "
             ."CONCAT('Unidad: ' || r2.nombre) AS unidad, "
@@ -397,6 +400,15 @@ class SepsolicitudController extends Controller
                         ->queryAll();
 
         $fechahoy = Yii::$app->formatter->asDate('now','php:Y-m-d');
+
+        //Actualizar si es Niño
+        $modelbeneficiario = Personas::findOne($consulta[0]['idbeneficiario']);
+        if ($modelbeneficiario->tipo_nacionalidad_id == "" || $modelbeneficiario->tipo_nacionalidad_id == null ){
+            $modelbeneficiario->tipo_nacionalidad_id = 1;
+            $modelbeneficiario->save();
+        }
+
+
 
         if ($consulta[0]['tiporif']==""||$consulta[0]['rif']==""||$consulta[0]['nombrecasacomercial']==""){
 
@@ -748,6 +760,8 @@ class SepsolicitudController extends Controller
                     ."fecha_aprobacion = '".$fechahoy
                     ."', num_proc = ".$idmemo['valor']
                     ." WHERE id = ".$numero.";")->execute();
+
+
 
                $nuevoidmemo = $idmemo['valor']+1;
                     Yii::$app->db->createCommand("UPDATE configuraciones SET "

@@ -47,6 +47,7 @@ AppAsset::register($this);
                  ['label' => 'Gestión', 'url' => '@web/gestion'],
                 array_search('administrador', array_keys(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())))!='' ? ['label' => 'Gestión de Casos', 'url' => '@web/gestion/masivoxtrabajador'] : "",
                 array_search('trabajador', array_keys(Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId())))!='' ? ['label' => 'Gestión de Casos', 'url' => '@web/gestion/masivoxtrabajador'] : "",
+                ['label' => 'Programas o Actividades', 'url' => '@web/programaevento'],
             ],
             'linkOptions' => ['style' => 'color: #FFFFFF;']
             ],

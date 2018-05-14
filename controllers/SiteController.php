@@ -13,6 +13,7 @@ use yii\db\Query;
 use yii\data\ActiveDataProvider;
 use app\models\Reportes;
 use app\models\Gestion;
+use app\controllers\GestionController;
 
 class SiteController extends Controller
 {
@@ -421,7 +422,6 @@ class SiteController extends Controller
 
     public function actionBulk(){
 
-        $action = Yii::$app->request->post('action');
         $selection=(array)Yii::$app->request->post('selection');
         for ($i = 0; $i<count($selection); $i++) {
             $mensaje = implode($selection);
@@ -533,7 +533,7 @@ class SiteController extends Controller
     public function actionCuadromando($ano=null){
 
         $model = new Reportes(['scenario' => 'crear']);
-
+        $actualiza = GestionController::Actualizarporestatusnivel2(18);
         if (isset($ano)||$model->load(Yii::$app->request->post())){
             if (isset($ano)){$model->ano = $ano;}
             return $this->render('cuadromando',

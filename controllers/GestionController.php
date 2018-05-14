@@ -1324,34 +1324,29 @@ while ($i<11){
    }
 
    public function actionNumsolicitudxtrabajador($q = null, $id = null) {
-   \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-   $out = ['results' => ['id' => '', 'text' => '']];
-   $usuarioid = Yii::$app->user->id;
-   $modeltrabajador = Trabajador::findOne([
-       'user_id' => $usuarioid
-   ]);
-   if (!is_null($q)) {
-       $query = new Query;
-       $query->addSelect(["id", "num_solicitud as text"])
-           ->from('solicitudes')
-           ->where([
-               'usuario_asignacion_id' => $modeltrabajador->users_id,
-               'estatus' => ['ACA', 'EAA', 'DEV']
-           ])
-           ->andFilterWhere(['like', "num_solicitud", $q])
-           ->limit(20);
-       $command = $query->createCommand();
-       $data = $command->queryAll();
-       $out['results'] = array_values($data);
-   }
-   elseif ($id > 0) {
-       $out['results'] = ['id' => $id, 'text' => Solicitudes::find($id)->num_solicitud];
-   }
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $out = ['results' => ['id' => '', 'text' => '']];
+        $usuarioid = Yii::$app->user->id;
+        $modeltrabajador = Trabajador::findOne([ 'user_id' => $usuarioid ]);
+        if (!is_null($q)) {
+            $query = new Query;
+            $query->addSelect(["id", "num_solicitud as text"])
+                    ->from('solicitudes')
+                    ->where([ 'usuario_asignacion_id' => $modeltrabajador->users_id,
+                        'estatus' => ['ACA', 'EAA', 'DEV'],])
+                    ->andFilterWhere(['like', "num_solicitud", $q])
+                    ->limit(20);
+            $command = $query->createCommand();
+            $data = $command->queryAll();
+            $out['results'] = array_values($data);
+        } elseif ($id > 0) {
+            $out['results'] = ['id' => $id, 'text' => Solicitudes::find($id)->num_solicitud];
+        }
 
-   return $out;
-   }
+        return $out;
+    }
 
-   public function actionMasivoxtrabajador()
+    public function actionMasivoxtrabajador()
    {
       $model = new Multiplessolicitudes;
 
@@ -1363,9 +1358,7 @@ while ($i<11){
       if (empty($modeltrabajador) || empty($modeltrabajador->users_id)){
           Yii::$app->session->setFlash("warning", "Por Favor coloque la opción 'Ir a perfil' y cargue su usuario de SASYC para poder ver las solicitudes asignadas");
 
-            return $this->render('masivoxtrabajador', [
-                'model' => $model,
-            ]);
+            return $this->render('masivoxtrabajador', [ 'model' => $model ]);
 
       }
 
@@ -1383,9 +1376,7 @@ while ($i<11){
 
         }
 
-      return $this->render('masivoxtrabajador', [
-              'model' => $model,
-      ]);
+      return $this->render('masivoxtrabajador', [ 'model' => $model, ]);
 
    }
 
@@ -1408,5 +1399,30 @@ while ($i<11){
 
        return true;
    }
+   
+   public function Actualizarporestatusnivel2($estatus2){
+       
+       $modelconnivel2 = Gestion::find()
+       ->select([
+           'gestion.id as id',
+           'estatus2.id as estatus2_id'
+       ])
+       ->join('LEFT JOIN', 'estatus3', 'gestion.estatus3_id = estatus3.id')
+       ->join('LEFT JOIN', 'estatus2', 'estatus3.estatus2_id = estatus2.id')
+       ->andFilterWhere([
+            'estatus2_id' => $estatus2,
+       ])
+       ->all();
+
+       foreach ($modelconnivel2 as $model){
+           
+           GestionController::reload($model->id);
+           
+       }
+
+       return true;
+        
+       }
+       
 
 }

@@ -390,6 +390,7 @@ class ChequeSearchCarga extends Cheque
             ->andFilterWhere(['ilike', 'tipo_ayudas.nombre', $this->tipodeayuda])
             ->andFilterWhere(['ilike', 'requerimientos.nombre', $this->tratamiento])
             ->andFilterWhere(['ilike', 'areas.nombre', $this->especialidad])
+            ->andFilterWhere(['ilike', 'estadobeneficiario.nombre', $this->estado_beneficiario])
             ->andFilterWhere(['ilike', 'recepciones2.nombre', $this->recepcioninicial])
             ->andFilterWhere(['ilike', 'recepciones.nombre', $this->recepcionactual])
             ->andFilterWhere(['like', "TRIM(TO_CHAR(presupuestos.numop, '999999999'))", $this->orpa])

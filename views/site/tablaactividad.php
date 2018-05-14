@@ -47,7 +47,7 @@ $tablasconjoinpresupuesto = ' gestion g1 join estatus3 e3 on g1.estatus3_id = e3
 
 	<div class="col-lg-4">
 	<h5>
-		Personal a Cargo de la Actividad: <?= $modeltrabajador->Trabajadorfps ?>
+		Personal a Cargo de la Actividad: <?= isset($modeltrabajador->Trabajadorfps)?$modeltrabajador->Trabajadorfps:""; ?>
 	</h5>
 	</div>
 

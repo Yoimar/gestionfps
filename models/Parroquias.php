@@ -119,7 +119,7 @@ class Parroquias extends \yii\db\ActiveRecord
 
     public function getEstado()
     {
-        return $this->hasOne(Municipios::className(), ['id' => 'municipio_id'])
-          ->viaTable('estados', ['id' => 'estado_id']);
+        return $this->hasOne(Estados::className(), ['id' => 'estado_id'])
+          ->viaTable('municipios', ['id' => 'municipio_id']);
     }
 }

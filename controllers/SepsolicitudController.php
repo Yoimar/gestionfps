@@ -1014,38 +1014,38 @@ class SepsolicitudController extends Controller
         $Signo="";
 
         if(floatVal($x) < 0)
-         $Signo = $this->Neg . " ";
+         $Signo = $Neg . " ";
         else
          $Signo = "";
 
-        if(intval(number_format($x,2,'.','') )!=$x) //<- averiguar si tiene decimales
-          $s = number_format($x,2,'.','');
-        else
-          $s = number_format($x,2,'.','');
-
-        $Pto = strpos($s, $this->Dot);
-
-        if ($Pto === false)
-        {
-          $Ent = $s;
-          $Frc = $this->Void;
+        if(intval(number_format($x,2,'.','') )!=$x){ //<- averiguar si tiene decimales
+            $s = number_format($x,2,'.','');
+        }else{
+            $s = number_format($x,2,'.','');
         }
-        else
-        {
+
+        $Pto = strpos($s, $Dot);
+
+        //Encuentro el punto despues de redondear para saber los decimales
+        if ($Pto === false){
+          $Ent = $s;
+          $Frc = $Void;
+        } else {
           $Ent = substr($s, 0, $Pto );
           $Frc =  substr($s, $Pto+1);
         }
 
-        if($Ent == $this->Zero || $Ent == $this->Void)
+
+        if($Ent == $Zero || $Ent == $Void){
            $s = "Cero ";
-        elseif( strlen($Ent) > 7)
+        }elseif( strlen($Ent) > 7)
         {
-           $s = $this->SubValLetra(intval( substr($Ent, 0,  strlen($Ent) - 6))) .
-                 "Millones " . $this->SubValLetra(intval(substr($Ent,-6, 6)));
+           $s = SepsolicitudController::SubValLetra(intval( substr($Ent, 0,  strlen($Ent) - 6))) .
+                 "Millones " . SepsolicitudController::SubValLetra(intval(substr($Ent,-6, 6)));
         }
         else
         {
-          $s = $this->SubValLetra(intval($Ent));
+          $s = SepsolicitudController::SubValLetra(intval($Ent));
         }
 
         if (substr($s,-9, 9) == "Millones " || substr($s,-7, 7) == "Millón ")
@@ -1053,10 +1053,8 @@ class SepsolicitudController extends Controller
 
         $s = $s . $Moneda;
 
-        if($Frc != $this->Void)
-        {
-           $s = $s; //. " " . $Frc. "/100";
-           //$s = $s . " " . $Frc . "/100";
+        if($Frc != "00"){
+           $s = $s. " con " . SepsolicitudController::SubValLetra(intval($Frc)) . " Centimos";
         }
         $letrass=$Signo . $s . " M.N.";
         return ($Signo . $s /*. " M.N."*/);
@@ -1081,15 +1079,15 @@ class SepsolicitudController extends Controller
         $x = trim("$numero");
         $n = strlen($x);
 
-        $Tem = $this->Void;
+        $Tem = $Void;
         $i = $n;
 
         while( $i > 0)
         {
-           $Tem = $this->Parte(intval(substr($x, $n - $i, 1).
-                               str_repeat($this->Zero, $i - 1 )));
+           $Tem = SepsolicitudController::Parte(intval(substr($x, $n - $i, 1).
+                               str_repeat($Zero, $i - 1 )));
            If( $Tem != "Cero" )
-              $Rtn .= $Tem . $this->SP;
+              $Rtn .= $Tem . $SP;
            $i = $i - 1;
         }
 
@@ -1102,7 +1100,7 @@ class SepsolicitudController extends Controller
            If(!($Ptr===false))
            {
               If(! (strpos($Rtn, "Mil ",$Ptr + 1) === false ))
-                $this->ReplaceStringFrom($Rtn, "Mil ", "", $Ptr);
+                SepsolicitudController::ReplaceStringFrom($Rtn, "Mil ", "", $Ptr);
               Else
                break;
            }
@@ -1116,10 +1114,10 @@ class SepsolicitudController extends Controller
            if(!($Ptr===false))
            {
               $Tem = substr($Rtn, $Ptr + 5 ,1);
-              if( $Tem == "M" || $Tem == $this->Void)
+              if( $Tem == "M" || $Tem == $Void)
                  ;
               else
-                 $this->ReplaceStringFrom($Rtn, "Cien", "Ciento", $Ptr);
+                 SepsolicitudController::ReplaceStringFrom($Rtn, "Cien", "Ciento", $Ptr);
            }
         }while(!($Ptr === false));
 
@@ -1213,7 +1211,7 @@ class SepsolicitudController extends Controller
              Case 1000000: $t = "Millón";break;
           }
 
-          If($t == $this->Void)
+          If($t == $Void)
           {
             $i = $i + 1;
             $x = $x / 1000;
@@ -1227,7 +1225,7 @@ class SepsolicitudController extends Controller
         $Rtn = $t;
         Switch($i)
         {
-           Case 0: $t = $this->Void;break;
+           Case 0: $t = $Void;break;
            Case 1: $t = " Mil";break;
            Case 2: $t = " Millones";break;
            Case 3: $t = " Billones";break;

@@ -77,8 +77,8 @@ class Programaevento extends \yii\db\ActiveRecord
             'trabajadoracargo_id' => 'Trabajador a Cargo',
             'referencia_id' => 'Referencia - Autoridad y Cargo',
             'parroquia_id' => 'Parroquia',
-            'descripcion' => 'Descripción de la Actividad o Programa',
-            'fecharecibido' => 'Fecha de Recepción de la Relación y/o Oficio',
+            'descripcion' => 'Actividad o Programa',
+            'fecharecibido' => 'Fecha de Recepción',
             'estado_id'=>'Estado',
             'municipio_id'=>'Municipio',
             'created_at' => 'Creado el Día',
@@ -154,6 +154,16 @@ class Programaevento extends \yii\db\ActiveRecord
             ],
 
         ];
+    }
+
+    public function getCreadoprogramapor()
+    {
+        return $this->hasOne(Trabajador::className(), ['users_id' => 'created_by']);
+    }
+
+    public function getActualizadoprogramapor()
+    {
+        return $this->hasOne(Trabajador::className(), ['users_id' => 'updated_by']);
     }
 
 }

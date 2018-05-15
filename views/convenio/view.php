@@ -55,12 +55,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'nombre',
             'dimnombre',
-            'tipoconvenio_id',
-            'estado_id',
-            'created_at',
-            'created_by',
-            'updated_at',
-            'updated_by',
+            'tipoconvenio.nombre',
+            'estados.nombre',
+            'created_at:datetime',
+            [
+                'label' => 'Creado Por:',
+                'attribute' => "creadoconveniopor.Trabajadorfps",
+            ],
+            'updated_at:datetime',
+            [
+                'label' => 'Actualizado Por:',
+                'attribute' => "actualizadoconveniopor.Trabajadorfps",
+            ],
         ],
     ]) ?>
 

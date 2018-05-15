@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Crear Convenio', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear', ['create'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $searchModel,
                         'attribute' => 'tipoconvenio_id',
                         'data' => ArrayHelper::map(Tipoconvenio::find()->orderBy('nombre')->all(), 'id', 'nombre'),
-                        'options' => 
+                        'options' =>
                             ['placeholder' => 'Seleccione el Tipo de Convenio'],
                         'pluginOptions' => [ 'allowClear' => true ],
                 ]),
@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'model' => $searchModel,
                         'attribute' => 'estado_id',
                         'data' => ArrayHelper::map(Estados::find()->orderBy('nombre')->all(), 'id', 'nombre'),
-                        'options' => 
+                        'options' =>
                             ['placeholder' => 'Seleccione el Estado de Convenio'],
                         'pluginOptions' => [ 'allowClear' => true ],
                 ]),

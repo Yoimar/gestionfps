@@ -100,4 +100,18 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
+
+    <?php
+    /* *** Prueba para imprimir desde un model Search *** */
+
+    /*
+    $models = $dataProvider->getModels();
+
+    foreach ($models as $value) {
+        echo "<hr>";
+        echo $value->descripcion;
+        echo "<br>";
+    }
+    */
+    ?>
 </div>

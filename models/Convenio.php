@@ -45,6 +45,7 @@ class Convenio extends \yii\db\ActiveRecord
             [['dimnombre'], 'string', 'max' => 10],
             [['tipoconvenio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tipoconvenio::className(), 'targetAttribute' => ['tipoconvenio_id' => 'id']],
             [['estado_id'], 'exist', 'skipOnError' => true, 'targetClass' => Estados::className(), 'targetAttribute' => ['estado_id' => 'id']],
+            [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['created_by' => 'id']],
         ];
     }
 
@@ -91,7 +92,7 @@ class Convenio extends \yii\db\ActiveRecord
      */
     public function getTipoconvenio()
     {
-        return $this->hasOne(TipoConvenio::className(), ['id' => 'tipoconvenio_id']);
+        return $this->hasOne(Tipoconvenio::className(), ['id' => 'tipoconvenio_id']);
     }
 
     /**
@@ -108,5 +109,15 @@ class Convenio extends \yii\db\ActiveRecord
     public function getEstados()
     {
         return $this->hasOne(Estados::className(), ['id' => 'tipoconvenio_id']);
+    }
+
+    public function getCreadoconveniopor()
+    {
+        return $this->hasOne(Trabajador::className(), ['users_id' => 'created_by']);
+    }
+
+    public function getActualizadoconveniopor()
+    {
+        return $this->hasOne(Trabajador::className(), ['users_id' => 'updated_by']);
     }
 }

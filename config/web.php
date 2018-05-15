@@ -87,18 +87,19 @@ $config = [
         'formatter' => [
             'class' => 'yii\i18n\Formatter',
             'dateFormat' => 'php:d/m/Y',
+            'datetimeFormat' => 'dd/MM/YYYY HH:mm:ss a',
             'decimalSeparator' => ',',
             'thousandSeparator' => '.',
             'currencyCode' => ' Bs',
             'nullDisplay' => '',
             //'defaultTimeZone' => 'America/Caracas',
-            'timeZone' => 'Etc/GMT+4',
+            'timeZone' => 'UTC',
             'locale' => 'es'
         ],
 
         'pdf' => [
         'class' => Pdf::classname(),
-        'format' => Pdf::FORMAT_A4,
+        'format' => Pdf::FORMAT_LETTER,
         'orientation' => Pdf::ORIENT_PORTRAIT,
         'destination' => Pdf::DEST_BROWSER,
         // refer settings section for all configuration options

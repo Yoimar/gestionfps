@@ -368,7 +368,7 @@ class GestionSearch extends Gestion
             ->andFilterWhere(['ilike', 'procesos.nombre', $this->proceso])
             ->andFilterWhere(['like', 'presupuestos.cheque', $this->cheque])
             ->andFilterWhere(['like', "TRIM(TO_CHAR(extract(year from solicitudes.created_at),'9999'))", $this->anodelasolicitud])
-            ->andFilterWhere(['like', 'solicitudes.descripcion', $this->descripcion])
+            ->andFilterWhere(['ilike', 'solicitudes.descripcion', $this->descripcion])
             ->andFilterWhere(['=', "date_part('day' ,now()-gestion.updated_at)", $this->diasdeultimamodificacion])
             ->andFilterWhere(['=', "date_part('day' ,now()-solicitudes.created_at)", $this->diasdesolicitud])
             ->andFilterWhere(['=', "date_part('day' ,now()-programaevento.fechaprograma)", $this->diasdesdeactividad])

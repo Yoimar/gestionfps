@@ -24,24 +24,61 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            //'id',
+            'origen.nombre',
+            'nprograma',
+            'fechaprograma:datetime',
+            'trabajador.Trabajadorfps',
+            'referencia.nombre',
+            'parroquia.estado.nombre',
+            //'descripcion',
+            //'fecharecibido',
+            //'created_at:datetime',
+            //[
+            //    'label' => 'Creado Por:',
+            //    'attribute' => "creadoprogramapor.Trabajadorfps",
+            //],
+            //'updated_at:datetime',
+            //[
+            //    'label' => 'Actualizado Por:',
+            //    'attribute' => "actualizadoprogramapor.Trabajadorfps",
+            //],
+        ],
+    ]) ?>
+
+        </div>
+        <div class="col-lg-6 col-md-6">
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'origen.nombre',
-            'nprograma',
-            'fechaprograma',
-            'trabajador.Trabajadorfps',
-            'referencia.nombre',
-            'parroquia.estado.nombre',
-            'descripcion',
-            'fecharecibido',
-            //'created_at',
-            //'created_by',
-            //'updated_at',
-            //'updated_by',
+            //'id',
+            //'origen.nombre',
+            //'nprograma',
+            //'fechaprograma',
+            //'trabajador.Trabajadorfps',
+            //'referencia.nombre',
+            //'parroquia.estado.nombre',
+            //'descripcion',
+            'fecharecibido:datetime',
+            'created_at:datetime',
+            [
+                'label' => 'Creado Por:',
+                'attribute' => "creadoprogramapor.Trabajadorfps",
+            ],
+            'updated_at:datetime',
+            [
+                'label' => 'Actualizado Por:',
+                'attribute' => "actualizadoprogramapor.Trabajadorfps",
+            ],
         ],
     ]) ?>
+        </div>
+    </div>
 
 </div>

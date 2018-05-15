@@ -20,6 +20,14 @@ use kartik\datecontrol\DateControl;
 /* @var $model app\models\Programaevento */
 /* @var $form yii\widgets\ActiveForm */
 
+if (isset($model->parroquia_id)) {
+$parroquia = Parroquias::findOne($model->parroquia_id);
+$municipio = Municipios::findOne($parroquia->municipio_id);
+$model->municipio_id = $municipio->id;
+$model->estado_id = $municipio->estado_id;
+}
+
+
 $data = Trabajador::find()
         ->select(["id", "CONCAT(dimprofesion, ' ',primernombre,' ', primerapellido) as nombre"])
         ->asArray()
@@ -88,6 +96,7 @@ $data = Trabajador::find()
     <?=
     /* Municipio con depdrop de kartik*/
     $form->field($model, 'municipio_id')->widget(DepDrop::classname(), [
+    'data' => ArrayHelper::map(Municipios::find()->orderBy('nombre')->all(), 'id', 'nombre'),
     'type'=>DepDrop::TYPE_SELECT2,
     'options'=>['id'=>'municipio_id', 'placeholder'=>'Seleccione el Municipio'],
     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
@@ -103,6 +112,7 @@ $data = Trabajador::find()
     <?=
     /* Parroquia con depdrop de kartik*/
     $form->field($model, 'parroquia_id')->widget(DepDrop::classname(), [
+    'data' => ArrayHelper::map(Parroquias::find()->orderBy('nombre')->all(), 'id', 'nombre'),
     'type'=>DepDrop::TYPE_SELECT2,
     'options'=>['id'=>'parroquia_id', 'placeholder'=>'Seleccione la Parroquia'],
     'select2Options'=>['pluginOptions'=>['allowClear'=>true]],

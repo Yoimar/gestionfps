@@ -34,14 +34,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'fechaprograma',
             'trabajador.Trabajadorfps',
             'referencia.nombre',
-            'parroquia_id',
             'parroquia.estado.nombre',
             'descripcion',
             'fecharecibido',
-            'created_at',
-            'created_by',
-            'updated_at',
-            'updated_by',
+            //'created_at',
+            //'created_by',
+            //'updated_at',
+            //'updated_by',
         ],
     ]) ?>
 

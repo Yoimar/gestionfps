@@ -12,37 +12,56 @@ use yii\helpers\ArrayHelper;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
+<div class="panel panel-primary">
+<div class="panel-heading">
+    <h3 class="panel-title text-center"><?= $this->title ?></h3>
+  </div>
+
+    <div class="panel-body center-block">
+    <div class="col-lg-12 col-md-12">
 <div class="convenio-form">
+
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-lg-4 col-md-4">
+            <?= $form->field($model, 'dimnombre')->textInput(['maxlength' => true]) ?>
+        </div>
+        <div class="col-lg-4 col-md-4">
+            <?= $form->field($model, 'tipoconvenio_id')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(Tipoconvenio::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+                'language' => 'es',
+                'options' => ['placeholder' => 'Seleccione el Tipo de Convenio'],
+                'pluginOptions' => [
+                'allowClear' => true
+                ],
+            ]);
+            ?>
+        </div>
+        <div class="col-lg-4 col-md-4">
+            <?= $form->field($model, 'estado_id')->widget(Select2::classname(), [
+                'data' => ArrayHelper::map(Estados::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+                'language' => 'es',
+                'options' => ['placeholder' => 'Seleccione el Estado de Convenio'],
+                'pluginOptions' => [
+                'allowClear' => true
+                ],
+            ]); ?>
+        </div>
+        <div class="col-lg-12 col-md-12 text-center">
+            <div class="form-group">
+                <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            </div>
+        </div>
 
-    <?= $form->field($model, 'dimnombre')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'tipoconvenio_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Tipoconvenio::find()->orderBy('nombre')->all(), 'id', 'nombre'),
-        'language' => 'es',
-        'options' => ['placeholder' => 'Seleccione el Tipo de Convenio'],
-        'pluginOptions' => [
-        'allowClear' => true
-        ],
-    ]); 
-    ?>
-    
-    <?= $form->field($model, 'estado_id')->widget(Select2::classname(), [
-        'data' => ArrayHelper::map(Estados::find()->orderBy('nombre')->all(), 'id', 'nombre'),
-        'language' => 'es',
-        'options' => ['placeholder' => 'Seleccione el Estado de Convenio'],
-        'pluginOptions' => [
-        'allowClear' => true
-        ],
-    ]); ?>
-
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?php ActiveForm::end(); ?>
+        </div>
     </div>
 
-    <?php ActiveForm::end(); ?>
-
+</div>
+</div>
 </div>

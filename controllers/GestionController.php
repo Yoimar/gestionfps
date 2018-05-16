@@ -1399,9 +1399,9 @@ while ($i<11){
 
        return true;
    }
-   
+
    public function Actualizarporestatusnivel2($estatus2){
-       
+
        $modelconnivel2 = Gestion::find()
        ->select([
            'gestion.id as id',
@@ -1415,14 +1415,14 @@ while ($i<11){
        ->all();
 
        foreach ($modelconnivel2 as $model){
-           
+
            GestionController::reload($model->id);
-           
+
        }
 
        return true;
-        
+
        }
-       
+
 
 }

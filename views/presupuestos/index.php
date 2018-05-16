@@ -114,7 +114,7 @@ $defaultExportConfig = [
         'config' => [
             'mode' => 'c',
             'format' => 'Letter',
-            'destination' => 'D', 
+            'destination' => 'D',
             'orientation' => 'L',
             'marginTop' => 20,
             'marginBottom' => 20,
@@ -130,7 +130,7 @@ $defaultExportConfig = [
                 '.kv-table-footer{border-top:4px double #ddd;font-weight: bold;}' .
                 '.kv-table-caption{font-size:0.5em;padding:8px;border:1px solid #ddd;border-bottom:none;}',
             'methods' => [
-                'SetHeader'=>['<h1>Reporte de Gestiones</h1>'], 
+                'SetHeader'=>['<h1>Reporte de Gestiones</h1>'],
                 'SetFooter'=>['{PAGENO}'],
             ],
             'options' => [
@@ -166,9 +166,8 @@ $defaultExportConfig = [
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Presupuestos';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<?php     
+<?php
     $columns = [
             ['class'=>'kartik\grid\SerialColumn', 'order'=>DynaGrid::ORDER_FIX_LEFT],
 
@@ -246,10 +245,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Contacto?'],
             ],
-            
+
             [
             'class'=>'kartik\grid\BooleanColumn',
-            'attribute'=>'militar_solicitante', 
+            'attribute'=>'militar_solicitante',
             'vAlign'=>'middle',
             'visible'=> false,
             ],
@@ -265,15 +264,15 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Rango Solicitante?'],
             ],
-        
-            
+
+
             [
             'class'=>'kartik\grid\BooleanColumn',
             'attribute'=>'militar_beneficiario',
             'vAlign'=>'middle',
             'visible'=> false,
             ],
-        
+
             [
             'attribute' => 'rango_beneficiario_id',
             'value' => 'rangobeneficiario.nombre',
@@ -286,7 +285,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Rango Beneficiario?'],
             ],
-        
+
             [
             'attribute' => 'afrodescendiente',
             'value' => 'afrodescendiente',
@@ -299,7 +298,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Afrodescendiente?'],
             ],
-        
+
             [
             'attribute' => 'indigena',
             'value' => 'indigena',
@@ -312,7 +311,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Indigena?'],
             ],
-        
+
             [
             'attribute' => 'sexodiversidad',
             'value' => 'sexodiversidad',
@@ -325,7 +324,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Sexodiversidad?'],
             ],
-        
+
             //'trabajador_id',
             [
             'attribute' => 'trabajador_id',
@@ -343,8 +342,8 @@ $this->params['breadcrumbs'][] = $this->title;
             //'created_by',
             // 'updated_at',
             // 'updated_by',
-            [ 
-            'attribute' => 'mes_actividad', 				
+            [
+            'attribute' => 'mes_actividad',
             'value' => 'mes_actividad',
             'format' => 'text',
             'visible'=> false,
@@ -355,31 +354,31 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Mes Programa?'],
             ],
-            [ 
-            'attribute' => 'solicitante', 				
-            'value' => 'solicitante', 
+            [
+            'attribute' => 'solicitante',
+            'value' => 'solicitante',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'cisolicitante', 				
-            'value' => 'cisolicitante', 
+            [
+            'attribute' => 'cisolicitante',
+            'value' => 'cisolicitante',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'beneficiario', 				
-            'value' => 'beneficiario', 
-            'format' => 'text', 
+            [
+            'attribute' => 'beneficiario',
+            'value' => 'beneficiario',
+            'format' => 'text',
             ],
-            [ 
-            'attribute' => 'cibeneficiario', 				
-            'value' => 'cibeneficiario', 
-            'format' => 'text', 
+            [
+            'attribute' => 'cibeneficiario',
+            'value' => 'cibeneficiario',
+            'format' => 'text',
             ],
-            [ 
-            'attribute' => 'tratamiento', 				
-            'value' => 'tratamiento', 
+            [
+            'attribute' => 'tratamiento',
+            'value' => 'tratamiento',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -389,15 +388,15 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Tratamiento?'],
             ],
-            [ 
+            [
             'class'=>'kartik\grid\BooleanColumn',
-            'attribute' => 'nino', 
+            'attribute' => 'nino',
             'vAlign'=>'middle',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'trabajadorsocial', 			
-            'value' => 'trabajadorsocial', 
+            [
+            'attribute' => 'trabajadorsocial',
+            'value' => 'trabajadorsocial',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -407,9 +406,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Trabajador Social?'],
             ],
-            [ 
-            'attribute' => 'especialidad', 				
-            'value' => 'especialidad', 
+            [
+            'attribute' => 'especialidad',
+            'value' => 'especialidad',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -419,9 +418,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Especialidad?'],
             ],
-            [ 
-            'attribute' => 'recepcion', 				
-            'value' => 'recepcion', 
+            [
+            'attribute' => 'recepcion',
+            'value' => 'recepcion',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -431,25 +430,25 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Recepción?'],
             ],
-            [ 
-            'attribute' => 'necesidad', 					
-            'value' => 'solicitud.necesidad', 
+            [
+            'attribute' => 'necesidad',
+            'value' => 'solicitud.necesidad',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'monto', 						
-            'value' => 'monto', 
-            'hAlign'=>'right', 
+            [
+            'attribute' => 'monto',
+            'value' => 'monto',
+            'hAlign'=>'right',
             'vAlign'=>'middle',
             'width'=>'100px',
             'format'=>['decimal', 2],
             'pageSummary'=>true,
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'trabajadoracargoactividad', 	
-            'value' => 'trabajadoracargoactividad', 
+            [
+            'attribute' => 'trabajadoracargoactividad',
+            'value' => 'trabajadoracargoactividad',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -457,10 +456,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'filterWidgetOptions'=>[
                 'pluginOptions'=>['allowClear'=>true],
             ],
-            'filterInputOptions'=>['placeholder'=>'¿Trabajador a Cargo?'], 
+            'filterInputOptions'=>['placeholder'=>'¿Trabajador a Cargo?'],
             ],
-            [ 
-            'attribute' => 'mesingreso', 					
+            [
+            'attribute' => 'mesingreso',
             'value' => 'mesingreso',
             'format' => 'text',
             'visible'=> false,
@@ -471,9 +470,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Mes Programa?'],
             ],
-            [ 
-            'attribute' => 'estado_actividad', 			
-            'value' => 'estado_actividad', 
+            [
+            'attribute' => 'estado_actividad',
+            'value' => 'estado_actividad',
             'format' => 'text',
             'visible' => false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -483,9 +482,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Estado Actividad?'],
             ],
-            [ 
-            'attribute' => 'tipodeayuda', 				
-            'value' => 'tipodeayuda', 
+            [
+            'attribute' => 'tipodeayuda',
+            'value' => 'tipodeayuda',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -495,9 +494,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Tipo Ayuda?'],
             ],
-            [ 
-            'attribute' => 'estatussa', 				
-            'value' => 'estatussa', 
+            [
+            'attribute' => 'estatussa',
+            'value' => 'estatussa',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -507,15 +506,15 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Estatus SASYC?'],
             ],
-            [ 
-            'attribute' => 'empresaoinstitucion', 		
-            'value' => 'empresaoinstitucion', 
+            [
+            'attribute' => 'empresaoinstitucion',
+            'value' => 'empresaoinstitucion',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'proceso', 					
-            'value' => 'proceso', 
+            [
+            'attribute' => 'proceso',
+            'value' => 'proceso',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -525,79 +524,79 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Proceso?'],
             ],
-            [ 
-            'attribute' => 'cantidad', 					
-            'value' => 'cantidad', 
-            'hAlign'=>'right', 
+            [
+            'attribute' => 'cantidad',
+            'value' => 'cantidad',
+            'hAlign'=>'right',
             'vAlign'=>'middle',
             'width'=>'100px',
             'format'=>['decimal', 0],
             'pageSummary'=>true,
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'descripcion', 				
-            'value' => 'descripcion', 
+            [
+            'attribute' => 'descripcion',
+            'value' => 'descripcion',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'diasdeultimamodificacion', 	
-            'value' => 'diasdeultimamodificacion', 
+            [
+            'attribute' => 'diasdeultimamodificacion',
+            'value' => 'diasdeultimamodificacion',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'diasdesolicitud', 			
-            'value' => 'diasdesolicitud', 
+            [
+            'attribute' => 'diasdesolicitud',
+            'value' => 'diasdesolicitud',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
+            [
             'attribute' => 'diasdesdeactividad',
-            'value' => 'diasdesdeactividad', 
+            'value' => 'diasdesdeactividad',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'cheque', 						
-            'value' => 'cheque', 
+            [
+            'attribute' => 'cheque',
+            'value' => 'cheque',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'anodelasolicitud', 			
-            'value' => 'anodelasolicitud', 
+            [
+            'attribute' => 'anodelasolicitud',
+            'value' => 'anodelasolicitud',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'direccion', 					
-            'value' => 'direccion', 
+            [
+            'attribute' => 'direccion',
+            'value' => 'direccion',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'fechaactividad', 				
-            'value' => 'fechaactividad', 
-            'format' => 'text',
-            'visible'=> false,    
-            ],
-            [ 
-            'attribute' => 'fechaingreso', 				
-            'value' => 'fechaingreso', 
+            [
+            'attribute' => 'fechaactividad',
+            'value' => 'fechaactividad',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'fechaultimamodificacion', 	
-            'value' => 'fechaultimamodificacion', 
+            [
+            'attribute' => 'fechaingreso',
+            'value' => 'fechaingreso',
             'format' => 'text',
             'visible'=> false,
             ],
-            [ 
-            'attribute' => 'estadodireccion', 			
-            'value' => 'estadodireccion', 
+            [
+            'attribute' => 'fechaultimamodificacion',
+            'value' => 'fechaultimamodificacion',
+            'format' => 'text',
+            'visible'=> false,
+            ],
+            [
+            'attribute' => 'estadodireccion',
+            'value' => 'estadodireccion',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -607,15 +606,15 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'¿Estado Beneficiario?'],
             ],
-            [                     
-            'attribute' => 'edadbeneficiario', 			
-            'value' => 'edadbeneficiario', 
+            [
+            'attribute' => 'edadbeneficiario',
+            'value' => 'edadbeneficiario',
             'format' => 'text',
             'visible'=> false,
             ],
-            
 
-        
+
+
             [
             'class'=>'kartik\grid\ActionColumn',
             ],
@@ -633,7 +632,7 @@ $this->params['breadcrumbs'][] = $this->title;
     [
         'attribute'=>'color',
         'value'=>function ($model, $key, $index, $widget) {
-            return "<span class='badge' style='background-color: {$model->color}'> </span>  <code>" . 
+            return "<span class='badge' style='background-color: {$model->color}'> </span>  <code>" .
                 $model->color . '</code>';
         },
         'filterType'=>GridView::FILTER_COLOR,
@@ -648,13 +647,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'preferredFormat'=>'name',
                 'palette'=>[
                     [
-                        "white", "black", "grey", "silver", "gold", "brown", 
+                        "white", "black", "grey", "silver", "gold", "brown",
                     ],
                     [
                         "red", "orange", "yellow", "indigo", "maroon", "pink"
                     ],
                     [
-                        "blue", "green", "violet", "cyan", "magenta", "purple", 
+                        "blue", "green", "violet", "cyan", "magenta", "purple",
                     ],
                 ]
             ],
@@ -675,17 +674,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'visible'=>false,
     ],
     [
-        'attribute'=>'author_id', 
+        'attribute'=>'author_id',
         'vAlign'=>'middle',
         'width'=>'250px',
-        'value'=>function ($model, $key, $index, $widget) { 
+        'value'=>function ($model, $key, $index, $widget) {
             return Html::a($model->author->name, '#', [
-                'title'=>'View author detail', 
+                'title'=>'View author detail',
                 'onclick'=>'alert("This will open the author page.\n\nDisabled for this demo!")'
             ]);
         },
         'filterType'=>GridView::FILTER_SELECT2,
-        'filter'=>ArrayHelper::map(Author::find()->orderBy('name')->asArray()->all(), 'id', 'name'), 
+        'filter'=>ArrayHelper::map(Author::find()->orderBy('name')->asArray()->all(), 'id', 'name'),
         'filterWidgetOptions'=>[
             'pluginOptions'=>['allowClear'=>true],
         ],
@@ -693,24 +692,24 @@ $this->params['breadcrumbs'][] = $this->title;
         'format'=>'raw'
     ],
     [
-        'attribute'=>'buy_amount', 
-        'hAlign'=>'right', 
+        'attribute'=>'buy_amount',
+        'hAlign'=>'right',
         'vAlign'=>'middle',
         'width'=>'100px',
         'format'=>['decimal', 2],
         'pageSummary'=>true
     ],
     [
-        'attribute'=>'sell_amount', 
+        'attribute'=>'sell_amount',
         'vAlign'=>'middle',
-        'hAlign'=>'right', 
+        'hAlign'=>'right',
         'width'=>'100px',
         'format'=>['decimal', 2],
         'pageSummary'=>true
     ],
     [
         'class'=>'kartik\grid\BooleanColumn',
-        'attribute'=>'status', 
+        'attribute'=>'status',
         'vAlign'=>'middle',
     ],
     [
@@ -719,7 +718,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'urlCreator'=>function($action, $model, $key, $index) { return '#'; },
         'viewOptions'=>['title'=>$viewMsg, 'data-toggle'=>'tooltip'],
         'updateOptions'=>['title'=>$updateMsg, 'data-toggle'=>'tooltip'],
-        'deleteOptions'=>['title'=>$deleteMsg, 'data-toggle'=>'tooltip'], 
+        'deleteOptions'=>['title'=>$deleteMsg, 'data-toggle'=>'tooltip'],
         'order'=>DynaGrid::ORDER_FIX_RIGHT
     ],
     ['class'=>'kartik\grid\CheckboxColumn', 'order'=>DynaGrid::ORDER_FIX_RIGHT],
@@ -727,7 +726,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 
 <!-- Aqui termina el div, y empieza el container -->
-</div>  
+</div>
 
 <?php
 
@@ -744,10 +743,10 @@ $dynagrid = DynaGrid::begin([
         'floatHeader'=>false,
         'pjax'=>true,
         'panel'=>[
-            'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-heart"></i><i class="glyphicon glyphicon-ok"></i>  Gestiones Fundación Pueblo Soberano</h3>',
-            'before' =>  '<div style="padding-top: 7px;"><em>Aqui encontraras todas las gestiones hechas a los casos de la Fundación Pueblo Soberano</em></div>',
+            'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-heart"></i><i class="glyphicon glyphicon-ok"></i>Busqueda de Casos por Presupuesto</h3>',
+            'before' =>  '<div style="padding-top: 7px;"><em>Aqui encontraras todas las gestiones hechas a los casos de la Fundación Pueblo Soberano divididos por Presupuesto</em></div>',
             'after' => false,
-        ],        
+        ],
         'toolbar' =>  [
             ['content'=>
                 Html::a('Crear Presupuesto', ['create'], ['class' => 'btn btn-success']). ' '.
@@ -762,7 +761,7 @@ $dynagrid = DynaGrid::begin([
 ]);
 if (substr($dynagrid->theme, 0, 6) == 'simple') {
     $dynagrid->gridOptions['panel'] = false;
-}  
+}
 DynaGrid::end();
 ?>
 </div>

@@ -73,17 +73,17 @@ class Personas extends \yii\db\ActiveRecord
             [['nombre', 'apellido', 'ind_asegurado',], 'required'],
             [
                 [
-                    'nombre', 
-                    'apellido', 
-                    'tipo_nacionalidad_id', 
-                    'ci', 
-                    'estado_id', 
-                    'municipio_id', 
-                    'parroquia_id', 
-                    'telefono_celular', 
+                    'nombre',
+                    'apellido',
+                    'tipo_nacionalidad_id',
+                    'ci',
+                    'estado_id',
+                    'municipio_id',
+                    'parroquia_id',
+                    'telefono_celular',
                     'fecha_nacimiento'
-                ], 
-                'required', 
+                ],
+                'required',
                 'on' => 'crear'
             ],
             [['tipo_nacionalidad_id', 'ci', 'estado_civil_id', 'nivel_academico_id', 'parroquia_id', 'seguro_id', 'version'], 'integer'],
@@ -104,6 +104,7 @@ class Personas extends \yii\db\ActiveRecord
             [['estado_civil_id'], 'exist', 'skipOnError' => true, 'targetClass' => EstadosCiviles::className(), 'targetAttribute' => ['estado_civil_id' => 'id']],
             [['nivel_academico_id'], 'exist', 'skipOnError' => true, 'targetClass' => NivelesAcademicos::className(), 'targetAttribute' => ['nivel_academico_id' => 'id']],
             [['parroquia_id'], 'exist', 'skipOnError' => true, 'targetClass' => Parroquias::className(), 'targetAttribute' => ['parroquia_id' => 'id']],
+            [['seguro_id'], 'exist', 'skipOnError' => true, 'targetClass' => Seguros::className(), 'targetAttribute' => ['seguro_id' => 'id']],
             [['tipo_nacionalidad_id'], 'exist', 'skipOnError' => true, 'targetClass' => TipoNacionalidades::className(), 'targetAttribute' => ['tipo_nacionalidad_id' => 'id']],
         ];
     }
@@ -201,6 +202,14 @@ class Personas extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getSeguros()
+    {
+        return $this->hasOne(Seguros::className(), ['id' => 'seguro_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getParroquia()
     {
         return $this->hasOne(Parroquias::className(), ['id' => 'parroquia_id']);
@@ -229,17 +238,39 @@ class Personas extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Solicitudes::className(), ['persona_solicitante_id' => 'id']);
     }
-    
-    public function getNombrecompleto() 
+
+    public function getNombrecompleto()
     {
         return $this->nombre." ".$this->apellido;
     }
-    
-    public function getPersonacompleta() 
+
+    public function getPersonacompleta()
     {
         return "C.I.: ".$this->ci." // ".$this->nombre." ".$this->apellido;
     }
-    
+
+    public function getEdad()
+    {
+        $fechaactual = date("Y-m-d");
+        if (isset($this->fecha_nacimiento)){
+        $diff = abs(strtotime($fechaactual) - strtotime($this->fecha_nacimiento));
+        $edad = floor($diff / (365*60*60*24));
+        } else {
+        $edad = "";
+        }
+        return $edad;
+    }
+
+    public function getSexopersona()
+    {
+        if (isset($this->sexo)){
+        $sexopersona =  $this->sexo == 'F' ? "Femenino" : "Masculino";
+        } else {
+        $sexopersona = "";
+        }
+        return $sexopersona;
+    }
+
     public function behaviors() {
         return [
             'timestamp' => [
@@ -253,16 +284,16 @@ class Personas extends \yii\db\ActiveRecord
 
         ];
     }
-    
+
     public function Valorpersonasxdefecto($model){
-        
+
         $model->ind_trabaja = false;
         $model->ind_asegurado = false;
         $model->version = 1;
         $model->created_at = Yii::$app->formatter->asDate('now','php:m-d-Y H:i:s');
         $model->updated_at = Yii::$app->formatter->asDate('now','php:m-d-Y H:i:s');
         return $model;
-        
+
     }
-    
+
 }

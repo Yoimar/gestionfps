@@ -107,6 +107,7 @@ class Solicitudes extends \yii\db\ActiveRecord
             [['persona_beneficiario_id'], 'exist', 'skipOnError' => true, 'targetClass' => Personas::className(), 'targetAttribute' => ['persona_beneficiario_id' => 'id']],
             [['persona_solicitante_id'], 'exist', 'skipOnError' => true, 'targetClass' => Personas::className(), 'targetAttribute' => ['persona_solicitante_id' => 'id']],
             [['recepcion_id'], 'exist', 'skipOnError' => true, 'targetClass' => Recepciones::className(), 'targetAttribute' => ['recepcion_id' => 'id']],
+            [['tipo_vivienda_id'], 'exist', 'skipOnError' => true, 'targetClass' => TipoViviendas::className(), 'targetAttribute' => ['tipo_vivienda_id' => 'id']],
             [['referente_id'], 'exist', 'skipOnError' => true, 'targetClass' => Referentes::className(), 'targetAttribute' => ['referente_id' => 'id']],
             [['usuario_asignacion_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['usuario_asignacion_id' => 'id']],
             [['usuario_autorizacion_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['usuario_autorizacion_id' => 'id']],
@@ -266,6 +267,22 @@ class Solicitudes extends \yii\db\ActiveRecord
     public function getUsers()
     {
         return $this->hasOne(Users::className(), ['id' => 'usuario_asignacion_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTipovivienda()
+    {
+        return $this->hasOne(TipoViviendas::className(), ['id' => 'tipo_vivienda_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTenencia()
+    {
+        return $this->hasOne(Tenencias::className(), ['id' => 'tenencia_id']);
     }
 
     /**

@@ -35,7 +35,7 @@ error_reporting(0);
             <td colspan="2" class="table-bordered col-xs-6 col-sm-6 col-md-6 col-lg-6 negro" style="margin: 0px; padding: 0px; font-size:18px; border: solid 2px black; text-align: center;">
                 <strong>DESCRIPCIÓN DEL CASO</strong>
             </td>
-            
+
         </tr>
         <tr>
             <td style="margin: 0px; padding: 0px; font-size:12px; border: solid 2px black;">
@@ -58,7 +58,7 @@ error_reporting(0);
                 &nbsp;<strong>BENEFICIARIO</strong>
             </td>
             <td class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="margin: 0px; padding: 0px; font-size:12px; border: solid 2px black;">
-                &nbsp;<?php 
+                &nbsp;<?php
                 echo $modelbeneficiario->nombre . " " . $modelbeneficiario->apellido;
                 ?>
             </td>
@@ -79,13 +79,13 @@ error_reporting(0);
                 &nbsp;<?= strtoupper($modelestado->nombre);?>
             </td>
         </tr>
-        
+
         <tr>
             <td style="margin: 0px; padding: 0px; font-size:12px; border: solid 2px black;">
                &nbsp;<strong>RETIRADO POR</strong>
             </td>
             <td style="margin: 0px; padding: 0px; font-size:12px; border: solid 2px black;">
-                &nbsp;<?php 
+                &nbsp;<?php
                 echo $modelretirado->nombre . " " . $modelretirado->apellido;
                 ?>
             </td>
@@ -123,7 +123,7 @@ error_reporting(0);
             </td>
         </tr>
     </table>
-</div>
+
 
 <?php
 
@@ -141,13 +141,13 @@ if ($dataProvider->getTotalCount()==1){
 //        'filterModel' => $searchModel,
 
         'showPageSummary' => true,
-        'tableOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;'],
+        'tableOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 0px; border: solid 2px black; font-size:12px;'],
         'layout' => "{items}\n{pager}",
 
-        'headerRowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; '],
+        'headerRowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 0px; border: solid 2px black; font-size:12px; '],
         'captionOptions' => ['class' => 'text-center', 'style' => 'color: black; margin: 0px; padding: 2px; font-size:12px;'],
-        'footerRowOptions'=> ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;'],
-        'rowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;'],
+        'footerRowOptions'=> ['class' => 'text-center', 'style' => 'margin: 0px; padding: 0px; border: solid 2px black; font-size:12px;'],
+        'rowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 0px; border: solid 2px black; font-size:12px;'],
         'caption' => $titulotablacheques,
 
         'columns' => [
@@ -168,7 +168,7 @@ if ($dataProvider->getTotalCount()==1){
              'vAlign'=>'middle',
              'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; #FFFFFF; vertical-align:middle;'],
             ],
-            
+
             [
              'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; vertical-align:middle;'],
              'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px; background: #FFFFFF; vertical-align:middle;'],
@@ -182,28 +182,29 @@ if ($dataProvider->getTotalCount()==1){
              'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; vertical-align:middle;'],
              'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px; background: #FFFFFF; vertical-align:middle;'],
              'attribute'=>'rif',
+             'width'=>'80px',
              'hAlign'=>'center',
              'vAlign'=>'middle',
              'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; #FFFFFF; vertical-align:middle;'],
             ],
-            
-            
+
+
             [
              'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; vertical-align:middle;'],
              'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px; background: #FFFFFF; vertical-align:middle;'],
              'attribute'=>'empresainstitucion',
-             'width'=>'300px',
+             //'width'=>'300px',
              'hAlign'=>'center',
              'vAlign'=>'middle',
              'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; #FFFFFF; vertical-align:middle;'],
             ],
-            
+
             //'',
             [
             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black; font-size:12px; vertical-align:middle; '],
             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; text-align:center; border: solid 2px black!important; font-size:12px; vertical-align:middle;'],
             'attribute'=>'monto',
-            'width'=>'150px',
+            //'width'=>'150px',
             'hAlign'=>'center',
             'vAlign'=>'middle',
             'format'=>'currency',
@@ -222,6 +223,3 @@ if ($dataProvider->getTotalCount()==1){
 
     ]); ?>
 </div>
-
-
-

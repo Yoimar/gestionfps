@@ -66,7 +66,11 @@ class Presupuestos extends \yii\db\ActiveRecord
     public $num_solicitud;
     public $trabajadorgestion;
     public $montopre;
-    
+    public $documento;
+    public $nombre;
+    public $rif;
+    public $nrif;
+
     /**
      * @inheritdoc
      */

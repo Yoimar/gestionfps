@@ -233,8 +233,8 @@ class GestionSearchGestionalo extends Gestion
                         'desc' => ['iddoc' => \SORT_DESC],
                     ],
                     'rif' => [
-                        'asc' => ['iddoc' => \SORT_ASC],
-                        'desc' => ['iddoc' => \SORT_DESC],
+                        'asc' => ['rif' => \SORT_ASC],
+                        'desc' => ['rif' => \SORT_DESC],
                     ],
                     'unidadorigen' => [
                         'asc' => ['recepciones2.nombre' => \SORT_ASC],

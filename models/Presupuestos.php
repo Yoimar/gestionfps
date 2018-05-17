@@ -40,7 +40,6 @@ class Presupuestos extends \yii\db\ActiveRecord
     public $especialidad;
     public $recepcion;
     public $necesidad;
-    public $monto;
     public $trabajadoracargoactividad;
     public $mesingreso;
     public $estado_actividad;
@@ -48,7 +47,7 @@ class Presupuestos extends \yii\db\ActiveRecord
     public $estatussa;
     public $empresaoinstitucion;
     public $proceso;
-    public $cantidad;
+    public $montopre;
     public $descripcion;
     public $diasdeultimamodificacion;
     public $diasdesolicitud;
@@ -65,11 +64,11 @@ class Presupuestos extends \yii\db\ActiveRecord
     public $militar_beneficiario;
     public $num_solicitud;
     public $trabajadorgestion;
-    public $montopre;
     public $documento;
     public $nombre;
     public $rif;
     public $nrif;
+    public $orpa;
 
     /**
      * @inheritdoc
@@ -102,22 +101,23 @@ class Presupuestos extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'solicitud_id' => 'Solicitud ID',
+            'solicitud_id' => 'Solicitud',
             'requerimiento_id' => 'Requerimiento ID',
             'proceso_id' => 'Proceso ID',
             'documento_id' => 'Documento ID',
             'moneda' => 'Moneda',
             'beneficiario_id' => 'Beneficiario ID',
             'cantidad' => 'Cantidad',
-            'monto' => 'Monto',
-            'montoapr' => 'Montoapr',
+            'monto' => 'Monto Sol.',
+            'montoapr' => 'Monto Apr.',
             'estatus_doc' => 'Estatus Doc',
+            'estatussa' => 'Estatus',
             'cheque' => 'Cheque',
             'version' => 'Version',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'numop' => 'Numop',
-            'montopre' => 'Monto'
+            'numop' => 'Orpa',
+            'empresaoinstitucion' => 'Empresa, Institución, Casa Comercial',
         ];
     }
 }

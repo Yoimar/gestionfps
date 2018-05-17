@@ -181,8 +181,10 @@ $this->title = 'Presupuestos';
             ],
             // 'solicitud_id',
             [
-            'attribute' => 'solicitud_id',
+            'attribute' => 'num_solicitud',
             'value' => 'num_solicitud',
+            'hAlign'=>'middle',
+            'vAlign'=>'middle',
             'format' => 'text',
             ],
             //'convenio_id',
@@ -329,6 +331,8 @@ $this->title = 'Presupuestos';
             [
             'attribute' => 'trabajador_id',
             'value' => 'num_solicitud',
+            'hAlign'=>'middle',
+            'vAlign'=>'middle',
             'format' => 'raw',
             'filterType'=>GridView::FILTER_SELECT2,
             'filter' => ArrayHelper::map(Trabajador::find()->asArray()->all(),'id', function($model, $defaultValue) {
@@ -345,6 +349,8 @@ $this->title = 'Presupuestos';
             [
             'attribute' => 'mes_actividad',
             'value' => 'mes_actividad',
+            'hAlign'=>'right',
+            'vAlign'=>'middle',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -357,28 +363,38 @@ $this->title = 'Presupuestos';
             [
             'attribute' => 'solicitante',
             'value' => 'solicitante',
+            'hAlign'=>'middle',
+            'vAlign'=>'middle',
             'format' => 'text',
             'visible'=> false,
             ],
             [
             'attribute' => 'cisolicitante',
             'value' => 'cisolicitante',
+            'hAlign'=>'middle',
+            'vAlign'=>'middle',
             'format' => 'text',
             'visible'=> false,
             ],
             [
             'attribute' => 'beneficiario',
             'value' => 'beneficiario',
+            'hAlign'=>'middle',
+            'vAlign'=>'middle',
             'format' => 'text',
             ],
             [
             'attribute' => 'cibeneficiario',
             'value' => 'cibeneficiario',
+            'hAlign'=>'middle',
+            'vAlign'=>'middle',
             'format' => 'text',
             ],
             [
             'attribute' => 'tratamiento',
             'value' => 'tratamiento',
+            'hAlign'=>'middle',
+            'vAlign'=>'middle',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -387,6 +403,30 @@ $this->title = 'Presupuestos';
                 'pluginOptions'=>['allowClear'=>true],
             ],
             'filterInputOptions'=>['placeholder'=>'¿Tratamiento?'],
+            ],
+            [
+            'attribute' => 'rif',
+            'value' => 'rif',
+            'hAlign'=>'middle',
+            'vAlign'=>'middle',
+            'format' => 'text',
+            'visible'=> false,
+            ],
+            [
+            'attribute' => 'documento',
+            'value' => 'documento',
+            'format' => 'text',
+            'hAlign'=>'middle',
+            'vAlign'=>'middle',
+            'visible'=> false,
+            ],
+            [
+            'attribute' => 'numop',
+            'value' => 'numop',
+            'hAlign'=>'middle',
+            'vAlign'=>'middle',
+            'format' => 'text',
+            'visible'=> false,
             ],
             [
             'class'=>'kartik\grid\BooleanColumn',
@@ -439,6 +479,16 @@ $this->title = 'Presupuestos';
             [
             'attribute' => 'monto',
             'value' => 'monto',
+            'hAlign'=>'right',
+            'vAlign'=>'middle',
+            'width'=>'100px',
+            'format'=>['decimal', 2],
+            'pageSummary'=>true,
+            'visible'=> false,
+            ],
+            [
+            'attribute' => 'montoapr',
+            'value' => 'montoapr',
             'hAlign'=>'right',
             'vAlign'=>'middle',
             'width'=>'100px',
@@ -509,12 +559,14 @@ $this->title = 'Presupuestos';
             [
             'attribute' => 'empresaoinstitucion',
             'value' => 'empresaoinstitucion',
+            'vAlign'=>'middle',
             'format' => 'text',
             'visible'=> false,
             ],
             [
             'attribute' => 'proceso',
             'value' => 'proceso',
+            'vAlign'=>'middle',
             'format' => 'text',
             'visible'=> false,
             'filterType'=>GridView::FILTER_SELECT2,
@@ -527,7 +579,7 @@ $this->title = 'Presupuestos';
             [
             'attribute' => 'cantidad',
             'value' => 'cantidad',
-            'hAlign'=>'right',
+            'hAlign'=>'middle',
             'vAlign'=>'middle',
             'width'=>'100px',
             'format'=>['decimal', 0],
@@ -757,7 +809,7 @@ $dynagrid = DynaGrid::begin([
             '{export}',
         ]
     ],
-    'options'=>['id'=>'dynagrid-1', 'class' => 'container-fluid'] // a unique identifier is important
+    'options'=>['id'=>'dynagrid-2', 'class' => 'container-fluid'] // a unique identifier is important
 ]);
 if (substr($dynagrid->theme, 0, 6) == 'simple') {
     $dynagrid->gridOptions['panel'] = false;

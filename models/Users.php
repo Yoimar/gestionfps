@@ -147,12 +147,17 @@ class Users extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Groups::className(), ['id' => 'group_id'])->viaTable('users_groups', ['user_id' => 'id']);
     }
-    
+
     public function getDepartamentos()
     {
         return $this->hasOne(Departamentos::className(), ['id' => 'departamento_id']);
     }
-    
+
+    public function getTrabajador()
+    {
+        return $this->hasOne(Trabajador::className(), ['users_id' => 'id']);
+    }
+
     public function behaviors()
     {
         return [

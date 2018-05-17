@@ -19,7 +19,7 @@ text-align:right; margin: 0px; padding: 0px; font-size:10px;"';
 ?>
 <div class="row">
 
-<table table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+<table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-bottom: 0mm; margin-bottom: 0mm;" >
     <tr>
         <td colspan="6" class="text-center" style="background:#d8d8d8; border: solid 2px black; font-size:13px;">
             <strong>INFORME SOCIAL</strong>
@@ -463,7 +463,20 @@ text-align:right; margin: 0px; padding: 0px; font-size:10px;"';
 
 </td>
 </tr>
+<?php
+    $modelos = $dataProvider->getModels();
+
+    if ($dataProvider->getTotalcount()!=0):
+        //If para el Data Provider por Estatus APR y Orden de Pago
+        if($solicitudessearch->estatus == 'APR' && $modelos[0]['proceso_id']==1):
+?>
+<tr>
+    <td colspan="6" class="text-center" style="background:#d8d8d8; border: solid 2px black; font-size:13px;">
+        <strong>DETALLE DE LA SOLICITUD</strong>
+    </td>
+</tr>
 </table>
+
 
 
 <?= GridView::widget([
@@ -471,88 +484,97 @@ text-align:right; margin: 0px; padding: 0px; font-size:10px;"';
 //        'filterModel' => $searchModel,
 
         'showPageSummary' => true,
-        'tableOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px;'],
+        'tableOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 0px; border: solid 1px black; font-size:11px;'],
         'layout' => "{items}\n{pager}",
 
-        'headerRowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px; '],
-        'captionOptions' => ['class' => 'text-center', 'style' => 'color: black; margin: 0px; padding: 2px; font-size:12px;'],
-        'footerRowOptions'=> ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px;'],
-        'rowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px;'],
+        'headerRowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+        'captionOptions' => ['class' => 'text-center', 'style' => 'color: black; margin: 0px; padding: 2px; font-size:11px;'],
+        'footerRowOptions'=> ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px;'],
+        'rowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px;'],
         //'caption' => $titulotablacheques,
 
         'columns' => [
             [
-                'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px; background: #FFFFFF;'],
+                'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+                'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
                 'class'=>'kartik\grid\SerialColumn',
                 'width'=>'10px',
                 'hAlign'=>'center',
                 'vAlign'=>'middle',
-                'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px; #FFFFFF;'],
+                'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;']
             ],
 
             [
-             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px; '],
-             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px; background: #FFFFFF;'],
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+             'attribute'=>'tratamiento',
+             'hAlign'=>'center',
+             'vAlign'=>'middle',
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
+            ],
+
+            [
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+             'attribute'=>'empresaoinstitucion',
+             'width'=>'270px',
+             'hAlign'=>'center',
+             'vAlign'=>'middle',
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
+            ],
+
+            [
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+             'attribute'=>'rif',
+             'hAlign'=>'center',
+             'vAlign'=>'middle',
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px; background: #FFFFFF;']
+
+            ],
+
+            [
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
              'attribute'=>'documento',
              'hAlign'=>'center',
              'vAlign'=>'middle',
-             'pageSummary'=>'Cuenta Presupuestaria',
-             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px; background: #FFFFFF;'],
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
             ],
 
             [
-             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px; '],
-             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px; background: #FFFFFF;'],
-             'attribute'=>'nombre',
-             'width'=>'300px',
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+             'attribute'=>'numop',
              'hAlign'=>'center',
              'vAlign'=>'middle',
-             //'pageSummary'=> $estructuraparaimprimir,
-             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px; background: #FFFFFF;'],
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
             ],
 
             [
-             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px; '],
-             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 2px black!important; font-size:12px; background: #FFFFFF;'],
-             'attribute'=>'rif',
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+             'attribute'=>'cheque',
              'pageSummary'=>'Total',
              'hAlign'=>'center',
              'vAlign'=>'middle',
-             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px;'],
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
             ],
 
-
-            //'',
             [
-            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px; '],
-            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; text-align:center; border: solid 2px black!important; font-size:12px;'],
-            'attribute'=>'montopre',
-            'width'=>'150px',
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; text-align:center; border: solid 1px black!important; font-size:11px;'],
+            'attribute'=>'montoapr',
+            'label' => 'Monto',
+            'width'=>'120px',
             'hAlign'=>'center',
             'vAlign'=>'middle',
             'format'=>'currency',
             'pageSummary'=>true,
             'pageSummaryFunc'=>GridView::F_SUM,
-            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px; #FFFFFF;'],
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;']
             ]
 
-
-
-
-//           'rif',
-//            'req',
-//            'codestpre',
-            // 'cuenta',
-            // 'date',
-            // 'created_at',
-            // 'created_by',
-            // 'updated_at',
-            // 'updated_by',
-
-//            [
-//                'class' => 'yii\grid\ActionColumn',
-
-//            ],
         ],
         'responsive'=>true,
         'condensed'=>true,
@@ -561,4 +583,354 @@ text-align:right; margin: 0px; padding: 0px; font-size:10px;"';
 
 
     ]); ?>
+
+    <?php
+    //End If si es Aprobado y Es una Orden de Pago
+    endif;
+
+    //IF si esta procesado y es una orden de Pago
+
+    if($solicitudessearch->estatus == 'PPA' && $modelos[0]['proceso_id']==1):
+    ?>
+    <tr>
+    <td colspan="6" class="text-center" style="background:#d8d8d8; border: solid 2px black; font-size:13px;">
+    <strong>DETALLE DE LA SOLICITUD</strong>
+    </td>
+    </tr>
+    </table>
+
+
+
+    <?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    //        'filterModel' => $searchModel,
+
+    'showPageSummary' => true,
+    'tableOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 0px; border: solid 1px black; font-size:11px;'],
+    'layout' => "{items}\n{pager}",
+
+    'headerRowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+    'captionOptions' => ['class' => 'text-center', 'style' => 'color: black; margin: 0px; padding: 2px; font-size:11px;'],
+    'footerRowOptions'=> ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px;'],
+    'rowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px;'],
+    //'caption' => $titulotablacheques,
+
+    'columns' => [
+        [
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+            'class'=>'kartik\grid\SerialColumn',
+            'width'=>'10px',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;']
+        ],
+
+        [
+         'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+         'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+         'attribute'=>'tratamiento',
+         'hAlign'=>'center',
+         'vAlign'=>'middle',
+         'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
+        ],
+
+        [
+         'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+         'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+         'attribute'=>'empresaoinstitucion',
+         'width'=>'270px',
+         'hAlign'=>'center',
+         'vAlign'=>'middle',
+         'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
+        ],
+
+        [
+         'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+         'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+         'attribute'=>'rif',
+         'hAlign'=>'center',
+         'vAlign'=>'middle',
+         'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px; background: #FFFFFF;']
+
+        ],
+
+        [
+         'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+         'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+         'attribute'=>'documento',
+         'hAlign'=>'center',
+         'vAlign'=>'middle',
+         'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
+        ],
+
+        [
+         'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+         'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+         'attribute'=>'proceso',
+         'pageSummary'=>'Total',
+         'hAlign'=>'center',
+         'vAlign'=>'middle',
+         'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
+        ],
+
+        [
+        'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+        'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; text-align:center; border: solid 1px black!important; font-size:11px;'],
+        'attribute'=>'montoapr',
+        'label' => 'Monto',
+        'width'=>'120px',
+        'hAlign'=>'center',
+        'vAlign'=>'middle',
+        'format'=>'currency',
+        'pageSummary'=>true,
+        'pageSummaryFunc'=>GridView::F_SUM,
+        'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;']
+        ]
+
+    ],
+    'responsive'=>true,
+    'condensed'=>true,
+    'bordered'=>true,
+
+
+
+    ]); ?>
+
+    <?php
+    //End If si PPA Y Es una Orden de Pago
+    endif;
+
+    //If para determinar si es una solicitud diferente de Orden de Pago
+    if(($solicitudessearch->estatus == 'PPA' || $solicitudessearch->estatus == 'APR') && $modelos[0]['proceso_id']!=1):
+    ?>
+    <tr>
+    <td colspan="6" class="text-center" style="background:#d8d8d8; border: solid 2px black; font-size:13px;">
+    <strong>DETALLE DE LA SOLICITUD</strong>
+    </td>
+    </tr>
+    </table>
+
+
+
+    <?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    //        'filterModel' => $searchModel,
+
+    'showPageSummary' => true,
+    'tableOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 0px; border: solid 1px black; font-size:11px;'],
+    'layout' => "{items}\n{pager}",
+
+    'headerRowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+    'captionOptions' => ['class' => 'text-center', 'style' => 'color: black; margin: 0px; padding: 2px; font-size:11px;'],
+    'footerRowOptions'=> ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px;'],
+    'rowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px;'],
+    //'caption' => $titulotablacheques,
+
+    'columns' => [
+        [
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+            'class'=>'kartik\grid\SerialColumn',
+            'width'=>'10px',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;']
+        ],
+
+        [
+         'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+         'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+         'attribute'=>'tratamiento',
+         'hAlign'=>'center',
+         'vAlign'=>'middle',
+         'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
+        ],
+
+        [
+         'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+         'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+         'attribute'=>'proceso',
+         'pageSummary'=>'Total',
+         'hAlign'=>'center',
+         'vAlign'=>'middle',
+         'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
+        ],
+
+        [
+        'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+        'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; text-align:center; border: solid 1px black!important; font-size:11px;'],
+        'attribute'=>'cantidad',
+        'label' => 'Cantidad',
+        'width'=>'120px',
+        'hAlign'=>'center',
+        'vAlign'=>'middle',
+        'format'=>'decimal',
+        'pageSummary'=>true,
+        'pageSummaryFunc'=>GridView::F_SUM,
+        'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;']
+        ]
+
+    ],
+    'responsive'=>true,
+    'condensed'=>true,
+    'bordered'=>true,
+
+
+
+    ]); ?>
+
+    <?php
+    //End If si PPA o APR Y Es diferente de Orden de Pago
+    endif;
+
+    //If PARA EL PERRAJE ELA, ACA, EAA, CER, ANU, DEV, ART, ELD Y Es una Orden de Pago
+        if(
+            $solicitudessearch->estatus == 'ELA'
+            || $solicitudessearch->estatus == 'ACA'
+            || $solicitudessearch->estatus == 'EAA'
+            || $solicitudessearch->estatus == 'CER'
+            || $solicitudessearch->estatus == 'ANU'
+            || $solicitudessearch->estatus == 'DEV'
+            || $solicitudessearch->estatus == 'ART'
+            || $solicitudessearch->estatus == 'ELD'
+            ):
+        ?>
+        <tr>
+        <td colspan="6" class="text-center" style="background:#d8d8d8; border: solid 2px black; font-size:13px;">
+        <strong>DETALLE DE LA SOLICITUD</strong>
+        </td>
+        </tr>
+        </table>
+
+
+
+        <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        //        'filterModel' => $searchModel,
+
+        'showPageSummary' => true,
+        'tableOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 0px; border: solid 1px black; font-size:11px;'],
+        'layout' => "{items}\n{pager}",
+
+        'headerRowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+        'captionOptions' => ['class' => 'text-center', 'style' => 'color: black; margin: 0px; padding: 2px; font-size:11px;'],
+        'footerRowOptions'=> ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px;'],
+        'rowOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px;'],
+        //'caption' => $titulotablacheques,
+
+        'columns' => [
+            [
+                'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+                'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+                'class'=>'kartik\grid\SerialColumn',
+                'width'=>'10px',
+                'hAlign'=>'center',
+                'vAlign'=>'middle',
+                'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;']
+            ],
+
+            [
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+             'attribute'=>'tratamiento',
+             'hAlign'=>'center',
+             'vAlign'=>'middle',
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
+            ],
+
+            [
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+             'attribute'=>'empresaoinstitucion',
+             'hAlign'=>'center',
+             'vAlign'=>'middle',
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
+            ],
+
+            [
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+             'attribute'=>'rif',
+             'hAlign'=>'center',
+             'vAlign'=>'middle',
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:12px; background: #FFFFFF;']
+
+            ],
+
+
+
+            [
+             'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+             'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black!important; font-size:11px; background: #FFFFFF;'],
+             'attribute'=>'proceso',
+             'pageSummary'=>'Total',
+             'hAlign'=>'center',
+             'vAlign'=>'middle',
+             'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;'],
+            ],
+
+            [
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; text-align:center; border: solid 1px black!important; font-size:11px;'],
+            'attribute'=>'cantidad',
+            'label' => 'Cantidad',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'format'=>'decimal',
+            'pageSummary'=>true,
+            'pageSummaryFunc'=>GridView::F_SUM,
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;']
+        ],
+
+            [
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; text-align:center; border: solid 1px black!important; font-size:11px;'],
+            'attribute'=>'monto',
+            'label' => 'Monto Solicitado',
+            'width'=>'120px',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'format'=>'currency',
+            'pageSummary'=>true,
+            'pageSummaryFunc'=>GridView::F_SUM,
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;']
+            ],
+
+            [
+            'headerOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; '],
+            'contentOptions' => ['class' => 'text-center', 'style' => 'margin: 0px; padding: 2px; text-align:center; border: solid 1px black!important; font-size:11px;'],
+            'attribute'=>'montoapr',
+            'label' => 'Monto Aprobado',
+            'width'=>'120px',
+            'hAlign'=>'center',
+            'vAlign'=>'middle',
+            'format'=>'currency',
+            'pageSummary'=>true,
+            'pageSummaryFunc'=>GridView::F_SUM,
+            'pageSummaryOptions'=>['class'=>'text-center', 'style' => 'margin: 0px; padding: 2px; border: solid 1px black; font-size:11px; background: #FFFFFF;']
+        ],
+
+
+        ],
+        'responsive'=>true,
+        'condensed'=>true,
+        'bordered'=>true,
+
+
+
+        ]); ?>
+
+        <?php
+        //End If si ELA, ACA, EAA, CER, ANU, DEV, ART, ELD Y Es una Orden de Pago
+        endif;
+
+    else:
+    ?>
+    </table>
+    <?php
+    //End If pertenece al vacio del Gridview
+    endif;
+    ?>
+
 </div>

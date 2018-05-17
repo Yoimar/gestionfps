@@ -95,8 +95,13 @@ class GestionSearch extends Gestion
                 ->join('LEFT JOIN', 'municipios as municipiobeneficiario', 'parroquiabeneficiario.municipio_id = municipiobeneficiario.id')
                 ->join('LEFT JOIN', 'estados as estadobeneficiario', 'municipiobeneficiario.estado_id = estadobeneficiario.id')
                 ->join('LEFT JOIN', 'instruccion', 'gestion.instruccion_id = instruccion.id')
-                ->groupBy(['mes_actividad', 'programaevento.descripcion', 'solicitudes.num_solicitud', 'gestion.programaevento_id', 'programaevento.id', 'solicitudes.id', 'gestion.id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', 'estatus1.nombre', 'estatus2.nombre', 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante', 'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id', 'gestion.afrodescendiente', 'gestion.indigena', 'gestion.sexodiversidad', 'gestion.trabajador_id',
-                'cisolicitante', 'cibeneficiario', 'beneficiario', 'nino', 'solicitante', 'trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'especialidad', 'solicitudes.area_id', 'solicitudes.recepcion_id', 'recepcion', 'trabajadoracargoactividad', 'estado_actividad', 'tipodeayuda', 'estatussa', 'solicitudes.estatus', 'proceso', 'solicitudes.descripcion', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'estadodireccion', 'fechaultimamodificacion', 'gestion.instruccion_id', 'telefono', 'edadbeneficiario']);
+                ->groupBy(['mes_actividad', 'programaevento.descripcion', 'solicitudes.num_solicitud', 'gestion.programaevento_id', 'programaevento.id', 'solicitudes.id', 'gestion.id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', 'estatus1.nombre', 'estatus2.nombre', 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante',
+                'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id',
+                'gestion.afrodescendiente', 'gestion.indigena', 'gestion.sexodiversidad', 'gestion.trabajador_id',
+                'cisolicitante', 'cibeneficiario',
+                'beneficiario', 'nino', 'solicitante', 'trabajadorsocial', 'solicitudes.usuario_asignacion_id', 'especialidad', 'solicitudes.area_id', 'solicitudes.recepcion_id', 'recepcion', 'trabajadoracargoactividad', 'estado_actividad', 'tipodeayuda', 'estatussa', 'solicitudes.estatus',
+                'proceso', 'solicitudes.descripcion', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad',
+                'anodelasolicitud', 'direccion', 'fechaactividad', 'fechaingreso', 'estadodireccion', 'fechaultimamodificacion', 'gestion.instruccion_id', 'telefono', 'edadbeneficiario']);
 
 
         $dataProvider = new ActiveDataProvider([

@@ -11,7 +11,7 @@ use kartik\growl\Growl;
 <div class="panel panel-primary">
 <div class="panel-heading">
     <h3 class="panel-title text-center">
-        <?= "Caso N° -"?> 
+        <?= "Caso N° -"?>
         <?= isset($consulta[0]['ndonacion'])?$consulta[0]['ndonacion']:"" ?>
     </h3>
   </div>
@@ -173,6 +173,8 @@ if (count($consulta)<=1){
 <?php
 if ($imprime == true) {
 echo Html::a('<span class="glyphicon glyphicon-print"></span>', ['sepsolicitud/imprimir', 'numero' => $numero], ['class' => 'btn btn-info', 'target'=>'_blank']);
+
+//echo Html::a('<span class="glyphicon glyphicon-list-alt"></span>', ['//solicitudes/imprimirplanilla', 'id' => $numero], ['class' => 'btn btn-info', 'target'=>'_blank']);
 }
 ?>
 

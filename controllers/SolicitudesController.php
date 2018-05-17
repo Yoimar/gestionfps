@@ -392,12 +392,9 @@ class SolicitudesController extends Controller
         //Utilizando el Metodo Mágico GET
         //$solicitudessearch->personabeneficiario->parroquia->estado->nombre;
 
-        $searchModel = new PresupuestosSearch()
-        ->where([
-        'solicitud_id' => $id,
-        ])
-        ->all();
+        $searchModel = new PresupuestosSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['presupuestos.solicitud_id'=>$id]);
 
         $headerHtml = '<div class="row"><table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: solid 2px black; "> '
         .'<tr style="border: solid 2px black;"><td rowspan="3" class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'
@@ -406,22 +403,20 @@ class SolicitudesController extends Controller
         .'</td><td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center" style="font-size:10px; margin: 0px; padding: 0px;"><strong>PÁGINA: </strong>{PAGENO} de {nb}</td></tr><tr> '
         .'<td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center" style="border: solid 2px black; font-size:10px; margin: 0px; padding: 0px;"><strong>FECHA: </strong>'.Yii::$app->formatter->asDate($solicitudessearch->created_at,'php:d/m/Y')
         .'</td></tr><tr> '
-        .'<td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center" style="border: solid 2px black; font-size:10px; margin: 0px; padding: 0px;"><strong>ESTATUS: </strong>'.$solicitudessearch->estatus
-        .'</td></tr></table></div>';
+        .'<td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center" style="border: solid 2px black; font-size:10px; margin: 0px; padding: 0px;"><strong> '.strtoupper($solicitudessearch->estatussasyc->estatus)
+        .'</strong></td></tr></table></div>';
 
-        $footerHtml = '<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border-collapse: collapse; margin: 0px; padding: 0px; font-size:12px; border: solid 2px black;">'
-        .'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
-        .'<strong>6- Presentado por: Dirección de Bienestar Social</strong></td>'
-        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
-        .'<strong>7- Revisado por: Unidad de Presupuesto</strong></td>'
-        .'<td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="border: solid 2px black; margin: 0px; padding: 0px; font-size:12px; background:#d8d8d8;">'
-        .'<strong>8- Aprobado por: Unidad de Contabilidad</strong></td></tr></table></div> <p class="pull-right" style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></span>';
+        $footerHtml = '<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border-collapse: collapse; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="margin: 0px; padding: 0px; font-size:12px;">'
+        ."<strong>"
+        .$solicitudessearch->users->nombre."<strong>"
+        .'</td></tr></table></div> <p class="pull-right" style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></span>';
 
     // get your HTML raw content without any layouts or scripts
     $content = $this->renderPartial('imprimirplanilla', [
 //            'searchModel' => $searchModel,
             'numero' => $id,
-            'dataProvider' => $searchModel,
+            'dataProvider' => $dataProvider,
             'solicitudessearch' => $solicitudessearch,
         ]);
 

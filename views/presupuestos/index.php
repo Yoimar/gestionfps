@@ -217,7 +217,7 @@ $this->title = 'Presupuestos';
             'value' => 'estatus2_id',
             'format' => 'text',
             'filterType'=>GridView::FILTER_SELECT2,
-            'filter' => ArrayHelper::map(Estatus2::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+            'filter' => ArrayHelper::map(Estatus2::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
             'filterWidgetOptions'=>[
                 'pluginOptions'=>['allowClear'=>true],
             ],

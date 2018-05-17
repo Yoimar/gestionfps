@@ -215,7 +215,7 @@ echo Highcharts::widget([
         <?=
         /* Estatus 1 con Select2 de kartik*/
             $form->field($model, 'estatus1')->widget(Select2::classname(), [
-            'data' => ArrayHelper::map(Estatus1::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+            'data' => ArrayHelper::map(Estatus1::find()->where(['<>','id',2])->orderBy('nombre')->all(), 'id', 'nombre'),
             'language' => 'es',
             'options' => ['placeholder' => 'Seleccione el Estatus Nivel 1'],
             'pluginOptions' => [

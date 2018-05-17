@@ -250,6 +250,8 @@ class PresupuestosSearch extends Presupuestos
         // grid filtering conditions
         $query->andFilterWhere([
             'presupuestos.id' => $this->id,
+            'estatus2.nombre' => $this->estatus2_id,
+            'estatus3.nombre' => $this->estatus3_id,
             'presupuestos.solicitud_id' => $this->solicitud_id,
             'presupuestos.requerimiento_id' => $this->requerimiento_id,
             'presupuestos.proceso_id' => $this->proceso_id,

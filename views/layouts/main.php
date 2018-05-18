@@ -122,6 +122,7 @@ AppAsset::register($this);
                      ['label' => 'Cuadro Mando', 'url' => '@web/site/cuadromando?ano='.date("Y")],
                      ['label' => 'Pruebas', 'url' => '@web/site/pruebas'],
                      ['label' => 'Trabajadores', 'url' => '@web/trabajador/index'],
+                     ['label' => 'Permisos', 'url' => '@web/authassignment/index'],
                      ['label' => 'Convenio', 'url' => '@web/convenio'],
                      ['label' => 'Autoridad', 'url' => '@web/autoridad'],
                      ['label' => 'Cargo', 'url' => '@web/cargo'],

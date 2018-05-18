@@ -284,7 +284,9 @@ class SepsolicitudController extends Controller
             ."JOIN requerimientos r1 ON pr1.requerimiento_id=r1.id "
             ."JOIN recepciones r2 ON s1.recepcion_id=r2.id "
             ."JOIN empresa_institucion ei1 ON pr1.beneficiario_id = ei1.id "
-            ."WHERE pr1.solicitud_id = ".$numero)->queryAll();
+            ."WHERE pr1.sodlicitud_id = ".$numero)->queryAll();
+
+            if (empty($imprime)){$imprime=false;}
 
         return $this->render('muestra', [
             'numero' => $numero,

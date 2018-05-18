@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use kartik\select2\Select2;
 use app\models\Personas;
 use app\models\Solicitudes;
@@ -13,8 +13,7 @@ use yii\helpers\BaseHml;
 /* @var $searchModel app\models\SolicitudesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Solicitudes Sasyc';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Solicitudes';
 ?>
 
 
@@ -30,11 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'responsive' => true,
+        'condensed' => true,
         'layout' => "{summary}\n{items}\n<div align='center'>{pager}</div>",
-        'tableOptions' => ['class' => 'table table-bordered table-hover', 'style'=>'max-width: 80px; margin-left: auto; margin-right: auto;'],
+        'tableOptions' => ['class' => 'table table-bordered table-hover table-responsive', 'style'=>'margin-left: auto; margin-right: auto;'],
 
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            ['class'=>'kartik\grid\SerialColumn',],
 
             //'id',
             //'descripcion',
@@ -118,7 +119,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'usuario_asignacion_id',
                         'data' => ArrayHelper::map(Users::find()->where(['activated' => 'TRUE'])->orderBy('nombre')->all(), 'id', 'nombre'),
                         'options' =>
-                            ['placeholder' => '¿Trabajador Asignado?'],
+                            ['placeholder' => '¿Trabajador?'],
                         'pluginOptions' => [ 'allowClear' => true ],
                 ]),
             ],
@@ -142,17 +143,42 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updated_at',
 
             [
-            'class' => 'yii\grid\ActionColumn',
-            'template' => '{cambiotrabajador}',
+            'class'=>'kartik\grid\ActionColumn',
+            'width'=>'200px',
+            'template' => '{bitacora} {cambiotrabajador} {update} {view} {punto} {planilla}',
             'buttons' => [
+            'bitacora' => function($url, $model){
+                                return Html::a('<span class="glyphicon glyphicon-bold"></span>',
+                                    yii\helpers\Url::to(['solicitudes/bitacora', 'id' => $model->id, ]),
+                                    [
+                                        'title' => 'Bitácora',
+                                    ]
+                                    );
+                                },
             'cambiotrabajador' => function($url, $model){
-                                return Html::a('<span class="glyphicon glyphicon-arrow-right"></span>CambTrab.',
+                                return Html::a('<span class="glyphicon glyphicon-arrow-right"></span>CT',
                                     yii\helpers\Url::to(['solicitudes/cambiotrabajador', 'id' => $model->id, ]),
                                     [
                                         'title' => 'Cambio de Trabajador',
                                     ]
                                     );
-                                }
+                                },
+            'punto' => function($url, $model){
+                                return Html::a('<span class="glyphicon glyphicon-print"></span>',
+                                    yii\helpers\Url::to(['solicitudes/imprimirpunto', 'id' => $model->id, ]),
+                                    [
+                                        'title' => 'Imprimir Punto',
+                                    ]
+                                    );
+                                },
+            'planilla' => function($url, $model){
+                                return Html::a('<span class="glyphicon glyphicon-list-alt"></span>',
+                                    yii\helpers\Url::to(['solicitudes/imprimirplanilla', 'id' => $model->id, ]),
+                                    [
+                                        'title' => 'Imprimir Planilla',
+                                    ]
+                                    );
+                                },
 
                               ],
             ],

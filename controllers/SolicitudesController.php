@@ -218,6 +218,8 @@ class SolicitudesController extends Controller
 
     public function actionImprimirpunto($id){
 
+        $id = (int)$id;
+
             $query = \app\models\PresupuestosSearch::find()
                     ->select(["conexionsigesp.req  as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "CONCAT(empresa_institucion.rif || '-' || empresa_institucion.nrif) as rif" ])
                     ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
@@ -231,7 +233,8 @@ class SolicitudesController extends Controller
             ],
             ]);
 
-            $consulta = Yii::$app->db->createCommand("SELECT CONCAT('Caso N: ' || s1.num_solicitud) AS solicitud, "
+            $consulta = Yii::$app->db->createCommand(
+            "SELECT CONCAT('Caso N: ' || s1.num_solicitud) AS solicitud, "
             ."CONCAT(ps.nombre || ' ' || ps.apellido) AS solicitante, "
             ."ps.ci AS cisolicitante, "
             ."CONCAT(pb.nombre || ' ' || pb.apellido) AS beneficiario, "
@@ -267,12 +270,18 @@ class SolicitudesController extends Controller
             ."JOIN empresa_institucion ei1 ON pr1.beneficiario_id = ei1.id "
             ."WHERE pr1.solicitud_id = ".$id)->queryAll();
 
+            if(empty($consulta)){
+                Yii::$app->session->setFlash("warning", "El caso no posee punto "
+                     . " por favor intente con otro caso");
+
+                return $this->redirect("@web/sepsolicitud/muestra?numero=".$id);
+
+            }
+
             $montototal = Yii::$app->db->createCommand("SELECT SUM(monto)FROM presupuestos where solicitud_id = ".$id)->queryScalar();
             $montototalenletras = strtoupper(SepsolicitudController::Valorenletras($montototal, 'Bolivares'));
             $montoapr = Yii::$app->db->createCommand("SELECT SUM(montoapr)FROM presupuestos where solicitud_id = ".$id)->queryScalar();
             $montoaprenletras = strtoupper(SepsolicitudController::Valorenletras($montoapr, 'Bolivares'));
-
-
 
 
         $headerHtml = '<div class="row">'

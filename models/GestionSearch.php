@@ -303,8 +303,8 @@ class GestionSearch extends Gestion
                         'desc' => ['edadbeneficiario' => \SORT_DESC],
                     ],
                     'instruccion_id' => [
-                        'asc' => ['gestion.instrucion_id' => \SORT_ASC],
-                        'desc' => ['gestion.intruccion_id' => \SORT_DESC],
+                        'asc' => ['gestion.instruccion_id' => \SORT_ASC],
+                        'desc' => ['gestion.instruccion_id' => \SORT_DESC],
                     ],
                     'telefono' => [
                         'asc' => ['telefono' => \SORT_ASC],

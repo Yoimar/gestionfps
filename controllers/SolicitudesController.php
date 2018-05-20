@@ -6,6 +6,7 @@ use Yii;
 use app\models\Solicitudes;
 use app\models\SolicitudesSearch;
 use app\models\PresupuestosSearch;
+use app\models\BitacorasSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -447,7 +448,86 @@ class SolicitudesController extends Controller
         // any css to be embedded if required
         'cssInline' => '.kv-heading-1{font-size:10px}',
          // set mPDF properties on the fly
-        'options' => ['title' => 'Punto de Cuenta '. $consulta[0]['solicitud']],
+        'options' => ['title' => 'Planilla '. $solicitudessearch->num_solicitud],
+         // call mPDF methods on the fly
+        'marginTop' => '27',
+
+        'methods' => [
+            'SetHTMLHeader'=>[$headerHtml, [ 'E', [TRUE]]],
+            'SetHTMLFooter'=>[$footerHtml, [ 'E', [TRUE]]],
+        ],
+
+    ]);
+
+
+
+    // return the pdf output as per the destination setting
+    return $pdf->render();
+
+
+    }
+    
+    public function actionBitacora($id){
+
+        $solicitudessearch = SolicitudesSearch::findOne($id);
+        //Manera de llegarle a un valor a traves de relaciones
+        //Utilizando el Metodo Mágico GET
+        //$solicitudessearch->personabeneficiario->parroquia->estado->nombre;
+
+        $searchModel = new PresupuestosSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['presupuestos.solicitud_id'=>$id]);
+        
+        $searchModelBitacoras = new BitacorasSearch();
+        $dataProviderBitacoras = $searchModelBitacoras->search(Yii::$app->request->queryParams);
+        $dataProviderBitacoras->query->andWhere(['bitacoras.solicitud_id'=>$id]);
+        
+        
+        
+
+        $headerHtml = '<div class="row"><table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: solid 2px black; "> '
+        .'<tr style="border: solid 2px black;"><td rowspan="3" class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'
+        .Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "110", "class" => "pull-left"])
+        .'</td><td rowspan="3" class="text-center col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border: solid 2px black; font-size:18px;"><strong>SOLICITUD: '.$solicitudessearch->num_solicitud.'<br/>BITÁCORA</strong> '
+        .'</td><td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center" style="font-size:10px; margin: 0px; padding: 0px;"><strong>PÁGINA: </strong>{PAGENO} de {nb}</td></tr><tr> '
+        .'<td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center" style="border: solid 2px black; font-size:10px; margin: 0px; padding: 0px;"><strong>FECHA: </strong>'.Yii::$app->formatter->asDate($solicitudessearch->created_at,'php:d/m/Y')
+        .'</td></tr><tr> '
+        .'<td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center" style="border: solid 2px black; font-size:10px; margin: 0px; padding: 0px;"><strong> '.strtoupper($solicitudessearch->estatussasyc->estatus)
+        .'</strong></td></tr></table></div>';
+
+        $footerHtml = '<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border-collapse: collapse; margin: 0px; padding: 0px; font-size:12px;">'
+        .'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="margin: 0px; padding: 0px; font-size:12px;">'
+        ."<strong>TRABAJADOR SOCIAL: "
+        .strtoupper($solicitudessearch->users->nombre)."<strong>"
+        .'</td></tr></table></div> <p class="pull-right" style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></span>';
+
+    // get your HTML raw content without any layouts or scripts
+    $content = $this->renderPartial('bitacora', [
+            'numero' => $id,
+            'dataProvider' => $dataProvider,
+            'solicitudessearch' => $solicitudessearch,
+            'dataProviderBitacoras' => $dataProviderBitacoras,
+        ]);
+
+    // setup kartik\mpdf\Pdf component
+    $pdf = new Pdf([
+        // set to use core fonts only
+        'mode' => Pdf::MODE_UTF8,
+        // A4 paper format
+        'format' => Pdf::FORMAT_LETTER,
+        // portrait orientation
+        'orientation' => Pdf::ORIENT_PORTRAIT,
+        // stream to browser inline
+        'destination' => Pdf::DEST_BROWSER,
+        // your html content input
+        'content' => $content,
+        // format content from your own css file if needed or use the
+        // enhanced bootstrap css built by Krajee for mPDF formatting
+        'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+        // any css to be embedded if required
+        'cssInline' => '.kv-heading-1{font-size:10px}',
+         // set mPDF properties on the fly
+        'options' => ['title' => 'Bitacora '. $solicitudessearch->num_solicitud],
          // call mPDF methods on the fly
         'marginTop' => '27',
 

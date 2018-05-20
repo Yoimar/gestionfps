@@ -218,6 +218,14 @@ class Solicitudes extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Areas::className(), ['id' => 'area_id']);
     }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGestion()
+    {
+        return $this->hasOne(Gestion::className(), ['solicitud_id' => 'id']);
+    }
 
     /**
      * @return \yii\db\ActiveQuery

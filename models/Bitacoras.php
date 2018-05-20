@@ -101,4 +101,7 @@ class Bitacoras extends \yii\db\ActiveRecord
 
         ];
     }
+    
+   
+
 }

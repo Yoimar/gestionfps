@@ -49,7 +49,7 @@ text-align:justify; padding-top: 5px; font-size:11px;"';
 ?>
 <div class="row">
 
-<table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-bottom: 0mm; margin-bottom: 0mm; >
+<table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-bottom: 0mm; margin-bottom: 0mm;" >
     <tr>
         <td colspan="6" class="text-center" style="background:#d8d8d8; border: solid 2px black; font-size:13px;">
             <strong>INFORMACIÓN</strong>

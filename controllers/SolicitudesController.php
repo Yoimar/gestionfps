@@ -416,10 +416,18 @@ class SolicitudesController extends Controller
         .'<td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center" style="border: solid 2px black; font-size:10px; margin: 0px; padding: 0px;"><strong> '.strtoupper($solicitudessearch->estatussasyc->estatus)
         .'</strong></td></tr></table></div>';
 
+        if(empty($solicitudessearch->users->nombre)){
+            $nombre = "";
+        }else{
+            $nombre = $solicitudessearch->users->nombre;
+        }
+
         $footerHtml = '<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border-collapse: collapse; margin: 0px; padding: 0px; font-size:12px;">'
         .'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="margin: 0px; padding: 0px; font-size:12px;">'
         ."<strong>"
-        .$solicitudessearch->users->nombre."<strong>"
+        .
+        $nombre
+        ."<strong>"
         .'</td></tr></table></div> <p class="pull-right" style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></span>';
 
     // get your HTML raw content without any layouts or scripts
@@ -480,11 +488,8 @@ class SolicitudesController extends Controller
 
         $searchModelBitacoras = new BitacorasSearch();
         $dataProviderBitacoras = $searchModelBitacoras->search(Yii::$app->request->queryParams);
-        $dataProviderBitacoras->query->andWhere(['bitacoras.solicitud_id'=>$id]);
+        $dataProviderBitacoras->query->andWhere(['solicitud_id'=>$id]);
         $dataProviderBitacoras->query->orderBy('id ASC');
-
-
-
 
         $headerHtml = '<div class="row"><table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: solid 2px black; "> '
         .'<tr style="border: solid 2px black;"><td rowspan="3" class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'
@@ -496,10 +501,16 @@ class SolicitudesController extends Controller
         .'<td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center" style="border: solid 2px black; font-size:10px; margin: 0px; padding: 0px;"><strong> '.strtoupper($solicitudessearch->estatussasyc->estatus)
         .'</strong></td></tr></table></div>';
 
+        if(empty($solicitudessearch->users->nombre)){
+            $nombre = "";
+        }else{
+            $nombre = $solicitudessearch->users->nombre;
+        }
+
         $footerHtml = '<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border-collapse: collapse; margin: 0px; padding: 0px; font-size:12px;">'
         .'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="margin: 0px; padding: 0px; font-size:12px;">'
         ."<strong>TRABAJADOR SOCIAL: "
-        .strtoupper($solicitudessearch->users->nombre)."<strong>"
+        .strtoupper($nombre)."<strong>"
         .'</td></tr></table></div> <p class="pull-right" style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></span>';
 
     // get your HTML raw content without any layouts or scripts

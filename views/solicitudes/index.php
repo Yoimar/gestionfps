@@ -144,8 +144,8 @@ $this->title = 'Solicitudes';
 
             [
             'class'=>'kartik\grid\ActionColumn',
-            'width'=>'200px',
-            'template' => '{bitacora} {cambiotrabajador} {update} {view} {punto} {planilla}',
+            'width'=>'300px',
+            'template' => '{bitacora} {cambiotrabajador} {punto} {planilla} {update} {view}',
             'buttons' => [
             'bitacora' => function($url, $model){
                                 return Html::a('<span class="glyphicon glyphicon-bold"></span>',
@@ -153,6 +153,8 @@ $this->title = 'Solicitudes';
                                     [
                                         'title' => 'Bitácora',
                                         'target'=>'_blank',
+                                        //'class'=> 'btn btn-primary',
+                                        //'style' => 'margin: 0px; padding: 1px;',
                                     ]
                                     );
                                 },
@@ -161,24 +163,32 @@ $this->title = 'Solicitudes';
                                     yii\helpers\Url::to(['solicitudes/cambiotrabajador', 'id' => $model->id, ]),
                                     [
                                         'title' => 'Cambio de Trabajador',
+                                        //'class'=> 'btn btn-primary',
+                                        //'style' => 'margin: 0px; padding: 1px;',
                                     ]
                                     );
                                 },
             'punto' => function($url, $model){
+                if (isset($model->num_proc)){
                                 return Html::a('<span class="glyphicon glyphicon-print"></span>',
                                     yii\helpers\Url::to(['solicitudes/imprimirpunto', 'id' => $model->id, ]),
                                     [
                                         'title' => 'Imprimir Punto',
                                         'target'=>'_blank',
+                                        //'class'=> 'btn btn-primary',
+                                        //'style' => 'margin: 0px; padding: 1px;',
                                     ]
                                     );
-                                },
+                                }
+                            },
             'planilla' => function($url, $model){
-                                return Html::a('<span class="glyphicon glyphicon-list-alt"></span>',
+                                return Html::a('&nbsp;<span class="glyphicon glyphicon-list-alt"></span>&nbsp;',
                                     yii\helpers\Url::to(['solicitudes/imprimirplanilla', 'id' => $model->id, ]),
                                     [
                                         'title' => 'Imprimir Planilla',
                                         'target'=>'_blank',
+                                        //'class'=> 'btn btn-primary',
+                                        //'style' => 'margin: 0px; padding: 1px;',
                                     ]
                                     );
                                 },

@@ -12,21 +12,21 @@ text-align:left;
 margin: 0px; padding: 0px;
 font-size:10px;"';
 $labelbitacoraright = 'style="border-left: solid 1px black;
-border-top: solid 1px black;
+border-top: solid 0.5px black;
 border-right: none;
 border-bottom: none;
 text-align:left;
 margin: 0px; padding: 0px;
 font-size:09px;"';
 $labelbitacoracenter = 'style="border-left: none;
-border-top: solid 1px black;
+border-top: solid 0.5px black;
 border-right: none;
 border-bottom: none;
 text-align:left;
 margin: 0px; padding: 0px;
 font-size:10px;"';
 $labelbitacoraleft = 'style="border-left: none;
-border-top: solid 1px black;
+border-top: solid 0.5px black;
 border-right: solid 1px black;
 border-bottom: none;
 text-align:right;
@@ -36,17 +36,20 @@ $dato = 'style="border-left: solid 1px black;
 border-bottom: solid 1px black;
 border-right: solid 1px black;
 border-top: none;
-text-align:right; margin: 0px; padding: 0px; font-size:10px;"';
+text-align:left; margin: 0px; padding-top: 2px;
+padding-right: 0px;
+padding-left: 0px;
+font-size:10px;"';
 $datobitacora = 'style="border-left: solid 1px black;
-border-bottom: solid 1px black;
+border-bottom: none;
 border-right: solid 1px black;
 border-top: none;
-text-align:right; margin: 0px; padding: 2px; font-size:12px;"';
+text-align:justify; padding-top: 5px; font-size:11px;"';
 
 ?>
 <div class="row">
 
-<table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-bottom: 0mm; margin-bottom: 0mm;" >
+<table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-bottom: 0mm; margin-bottom: 0mm; >
     <tr>
         <td colspan="6" class="text-center" style="background:#d8d8d8; border: solid 2px black; font-size:13px;">
             <strong>INFORMACIÓN</strong>
@@ -167,8 +170,8 @@ text-align:right; margin: 0px; padding: 2px; font-size:12px;"';
         <?= strtoupper($solicitudessearch->area->nombre) ?>&nbsp;
     </td>
     </tr>
-    
-    
+
+
     <?php if ($solicitudessearch->personabeneficiario->id!=$solicitudessearch->personasolicitante->id): ?>
         <!-- Primera Linea de Datos -->
         <tr>
@@ -179,7 +182,7 @@ text-align:right; margin: 0px; padding: 2px; font-size:12px;"';
             <small><strong>C.I.:</strong></small>
         </td>
         <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $label ?> >
-            <small><strong>FECHA DE NAC:</strong></small>
+            <small><strong>FECHA DE NACIMIENTO:</strong></small>
         </td>
         <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $label ?> >
             <small><strong>ESTADO:</strong></small>
@@ -197,7 +200,7 @@ text-align:right; margin: 0px; padding: 2px; font-size:12px;"';
         </td>
         <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
             <?= Yii::$app->formatter->asDate($solicitudessearch->personasolicitante->fecha_nacimiento) ?>&nbsp;
-            <?= isset($solicitudessearch->personasolicitante->edad)?"(".$solicitudessearch->personasolicitante->edad.")":"" ?>&nbsp;
+            <?= empty($solicitudessearch->personasolicitante->edad)?"":"(".$solicitudessearch->personasolicitante->edad." AÑOS)" ?>&nbsp;
         </td>
         <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
             <?= strtoupper($solicitudessearch->personasolicitante->parroquia->estado->nombre) ?>&nbsp;
@@ -209,7 +212,7 @@ text-align:right; margin: 0px; padding: 2px; font-size:12px;"';
         </td>
     </tr>
 <?php endif; ?>
-    
+
     <!-- Primera Linea de Datos -->
         <tr>
         <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $label ?> >
@@ -219,7 +222,7 @@ text-align:right; margin: 0px; padding: 2px; font-size:12px;"';
             <small><strong>C.I.:</strong></small>
         </td>
         <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $label ?> >
-            <small><strong>FECHA DE NAC:</strong></small>
+            <small><strong>FECHA DE NACIMIENTO:</strong></small>
         </td>
         <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $label ?> >
             <small><strong>ESTADO:</strong></small>
@@ -237,7 +240,16 @@ text-align:right; margin: 0px; padding: 2px; font-size:12px;"';
         </td>
         <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
             <?= Yii::$app->formatter->asDate($solicitudessearch->personabeneficiario->fecha_nacimiento) ?>&nbsp;
-            <?= empty($solicitudessearch->personabeneficiario->edad)?"":"(".$solicitudessearch->personabeneficiario->edad.")" ?>&nbsp;
+            <?php
+            if (!empty($solicitudessearch->personabeneficiario->edad)){
+                echo "(".$solicitudessearch->personabeneficiario->edad;
+                if (($solicitudessearch->personabeneficiario->edad)==1){
+                    echo " AÑO)";
+                }else{
+                    echo " AÑOS)";
+                }
+            }
+            ?>&nbsp;
         </td>
         <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
             <?= strtoupper($solicitudessearch->personabeneficiario->parroquia->estado->nombre) ?>&nbsp;
@@ -255,9 +267,9 @@ text-align:right; margin: 0px; padding: 2px; font-size:12px;"';
     </tr>
 <?php
 $modelosbitacoras = $dataProviderBitacoras->getModels();
-        
+
         foreach ($modelosbitacoras as $bitacoras):
-            
+
 ?>
     <tr>
         <td colspan="1" class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $labelbitacoraright ?>>
@@ -275,10 +287,10 @@ $modelosbitacoras = $dataProviderBitacoras->getModels();
         <?= strtoupper($bitacoras->nota) ?>&nbsp;
     </td>
     </tr>
-            
 
-                
-<?php            
+
+
+<?php
         endforeach;
 ?>
 

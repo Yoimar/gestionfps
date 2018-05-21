@@ -13,7 +13,10 @@ use yii\db\Query;
 use yii\data\ActiveDataProvider;
 use app\models\Reportes;
 use app\models\Gestion;
+use app\models\Users;
 use app\controllers\GestionController;
+use kartik\mpdf\Pdf;
+use yii\helpers\Html;
 
 class SiteController extends Controller
 {
@@ -40,6 +43,7 @@ class SiteController extends Controller
                     'tablainstruccionpresidencial',
                     'parteportrabajador',
                     'parteindividual',
+                    'imprimirparteindividual',
                     'pruebas',
                     'mapas',
                     'contact',
@@ -66,6 +70,7 @@ class SiteController extends Controller
                             'mapas',
                             'atencioninstitucional',
                             'instruccionpresidencial',
+                            'imprimirparteindividual',
                         ],
                         'allow' => true,
                         'roles' => ['ver-reporteunidad'],
@@ -325,6 +330,86 @@ class SiteController extends Controller
             // Se despliega la pagina inicial o si hay un error de validacion
          return $this->render('parteindividual', ['model' => $model]);
         }
+    }
+
+    public function actionImprimirparteindividual($trabajador,$anho)
+    {
+        $model = new \app\models\Parteindividual;
+        $model->trabajador = $trabajador;
+        $model->anho = $anho;
+        $modeluser = Users::findOne($model->trabajador);
+
+            // Valida los datos recibidos en $model
+            $partetrabajador = Yii::$app->db->createCommand("select u1.nombre, e1.estatus, count(*), string_agg(s1.num_solicitud, ', ')  from solicitudes s1 join users u1 on s1.usuario_asignacion_id = u1.id join estatussasyc e1 on s1.estatus = e1.id where s1.usuario_asignacion_id =". $model->trabajador ." and extract(year from s1.created_at)= ". $model->anho ." group by u1.nombre, e1.estatus order by u1.nombre, e1.estatus")->queryAll();
+            $partegestion = Yii::$app->db->createCommand("select e1.nombre as estatus1, e2.nombre as estatus2, e3.nombre as estatus3, count(*), string_agg(s1.num_solicitud, ', ') from gestion g1 join solicitudes s1 on s1.id = g1.solicitud_id join users u1 on s1.usuario_asignacion_id = u1.id join estatus3 e3 on g1.estatus3_id = e3.id join estatus2 e2 on e3.estatus2_id = e2.id join estatus1 e1 on e2.estatus1_id = e1.id where s1.usuario_asignacion_id = ". $model->trabajador ." and extract(year from s1.created_at) = ". $model->anho ." group by e1.nombre, e2.nombre, e3.nombre order by e1.nombre, e2.nombre, e3.nombre")->queryAll();
+            $counttrabajador = Yii::$app->db->createCommand("select count(*) from solicitudes s1 join users u1 on s1.usuario_asignacion_id = u1.id join estatussasyc e1 on s1.estatus = e1.id where s1.usuario_asignacion_id =". $model->trabajador ." and extract(year from s1.created_at)= ". $model->anho)->queryScalar();
+            $countgestion = Yii::$app->db->createCommand("select count(*) from gestion g1 join solicitudes s1 on s1.id = g1.solicitud_id join users u1 on s1.usuario_asignacion_id = u1.id join estatus3 e3 on g1.estatus3_id = e3.id join estatus2 e2 on e3.estatus2_id = e2.id join estatus1 e1 on e2.estatus1_id = e1.id where s1.usuario_asignacion_id = ". $model->trabajador ." and extract(year from s1.created_at) = ". $model->anho)->queryScalar();
+            $partenogestion = Yii::$app->db->createCommand("select u1.nombre, e1.estatus, count(*), string_agg(s1.num_solicitud, ', ') from solicitudes s1 join users u1 on s1.usuario_asignacion_id = u1.id join estatussasyc e1 on s1.estatus = e1.id where s1.usuario_asignacion_id = ". $model->trabajador ." and extract(year from s1.created_at)= ". $model->anho ." and not exists (select g1.solicitud_id from gestion g1 where g1.solicitud_id = s1.id and s1.usuario_asignacion_id = ". $model->trabajador ." and extract(year from s1.created_at)= ". $model->anho .") group by u1.nombre, e1.estatus order by u1.nombre, e1.estatus")->queryAll();
+            $countnogestion = Yii::$app->db->createCommand("select count(*) from solicitudes s1 join users u1 on s1.usuario_asignacion_id = u1.id join estatussasyc e1 on s1.estatus = e1.id where s1.usuario_asignacion_id = ". $model->trabajador ." and extract(year from s1.created_at)= ". $model->anho ." and not exists (select g1.solicitud_id from gestion g1 where g1.solicitud_id = s1.id and s1.usuario_asignacion_id = ". $model->trabajador ." and extract(year from s1.created_at)= ". $model->anho .")")->queryScalar();
+
+            // Se puede manipular los datos de $model
+
+
+                    $headerHtml = '<div class="row"><table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: solid 2px black; "> '
+                    .'<tr style="border: solid 2px black;"><td rowspan="3" class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'
+                    .Html::img("@web/img/logo_fps.jpg", ["alt" => "Logo Fundación", "width" => "110", "class" => "pull-left"])
+                    .'</td><td rowspan="3" class="text-center col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border: solid 2px black; font-size:18px;"><strong>PARTE INDIVIDUAL<br/>TRABAJADOR: '.$modeluser->nombre.'</strong> '
+                    .'</td><td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center" style="font-size:10px; margin: 0px; padding: 0px;"><strong>PÁGINA: </strong>{PAGENO} de {nb}</td></tr><tr> '
+                    .'<td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center" style="border: solid 2px black; font-size:10px; margin: 0px; padding: 0px;"><strong>FECHA: </strong>'.Yii::$app->formatter->asDate('now','php:d/m/Y')
+                    .'</td></tr><tr> '
+                    .'<td class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center" style="border: solid 2px black; font-size:10px; margin: 0px; padding: 0px;"><strong> '.strtoupper($model->anho)
+                    .'</strong></td></tr></table></div>';
+
+                    $footerHtml = '<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border-collapse: collapse; margin: 0px; padding: 0px; font-size:12px;">'
+                    .'<tr><td class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center" style="margin: 0px; padding: 0px; font-size:12px;">'
+                    ."<strong><strong>"
+                    .'</td></tr></table></div> <p class="pull-right" style="text-align:right;"><small> Documento Impreso el dia {DATE j/m/Y}</small></span>';
+
+                // get your HTML raw content without any layouts or scripts
+
+                $content = $this->renderPartial('imprimirparteindividual', [
+                    'model' => $model,
+                    'partetrabajador' => $partetrabajador,
+                    'partegestion' => $partegestion,
+                    'counttrabajador' => $counttrabajador,
+                    'countgestion' => $countgestion,
+                    'partenogestion' => $partenogestion,
+                    'countnogestion' => $countnogestion,
+                    ]);
+
+                // setup kartik\mpdf\Pdf component
+                $pdf = new Pdf([
+                    // set to use core fonts only
+                    'mode' => Pdf::MODE_UTF8,
+                    // A4 paper format
+                    'format' => Pdf::FORMAT_LETTER,
+                    // portrait orientation
+                    'orientation' => Pdf::ORIENT_PORTRAIT,
+                    // stream to browser inline
+                    'destination' => Pdf::DEST_BROWSER,
+                    // your html content input
+                    'content' => $content,
+                    // format content from your own css file if needed or use the
+                    // enhanced bootstrap css built by Krajee for mPDF formatting
+                    'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+                    // any css to be embedded if required
+                    'cssInline' => '.kv-heading-1{font-size:8px}',
+                     // set mPDF properties on the fly
+                    'options' => ['title' => 'Parte Individual'],
+                     // call mPDF methods on the fly
+                    'marginTop' => '27',
+
+                    'methods' => [
+                        'SetHTMLHeader'=>[$headerHtml, [ 'E', [TRUE]]],
+                        'SetHTMLFooter'=>[$footerHtml, [ 'E', [TRUE]]],
+                    ],
+
+                ]);
+
+                // return the pdf output as per the destination setting
+                return $pdf->render();
+
+
     }
 
     public function actionRbac(){

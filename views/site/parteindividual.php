@@ -171,3 +171,12 @@ if(Yii::$app->request->post()){
                         </div>
                     </div>
 </div>
+
+<div class="text-center">
+    <?= Html::a('<span class="glyphicon glyphicon-print"></span>IMPRIMIR PARTE', ['imprimirparteindividual',
+    'trabajador' => $model->trabajador,
+    'anho' => $model->anho
+
+    ], ['class' => 'btn btn-info text-center', 'target'=>'_blank']);
+    ?>
+</div>

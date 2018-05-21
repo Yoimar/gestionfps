@@ -466,7 +466,7 @@ class SolicitudesController extends Controller
 
 
     }
-    
+
     public function actionBitacora($id){
 
         $solicitudessearch = SolicitudesSearch::findOne($id);
@@ -477,13 +477,14 @@ class SolicitudesController extends Controller
         $searchModel = new PresupuestosSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->andWhere(['presupuestos.solicitud_id'=>$id]);
-        
+
         $searchModelBitacoras = new BitacorasSearch();
         $dataProviderBitacoras = $searchModelBitacoras->search(Yii::$app->request->queryParams);
         $dataProviderBitacoras->query->andWhere(['bitacoras.solicitud_id'=>$id]);
-        
-        
-        
+        $dataProviderBitacoras->query->orderBy('id ASC');
+
+
+
 
         $headerHtml = '<div class="row"><table class="table table-bordered table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: solid 2px black; "> '
         .'<tr style="border: solid 2px black;"><td rowspan="3" class="text-center col-xs-2 col-sm-2 col-md-2 col-lg-2" style="font-size:14px;">'

@@ -32,6 +32,7 @@ use app\models\Scbmovbco;
 use app\models\Bitacoras;
 use app\models\Multiplessolicitudes;
 use app\models\Cheque;
+use yii\web\Response;
 
 /**
  * GestionController implements the CRUD actions for Gestion model.
@@ -151,6 +152,43 @@ class GestionController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    /**
+     * Updates an existing Gestion model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdateajax($id, $submit = false)
+    {
+        $model = $this->findModel($id);
+
+        if (Yii::$app->request->isAjax
+        && $model->load(Yii::$app->request->post())
+        && $submit == false)
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if ($model->load(Yii::$app->request->post())){
+            if ($model->save()) {
+                $model->refresh();
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return [
+                    'message' => '¡Éxito!',
+                ];
+            } else {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ActiveForm::validate($model);
+            }
+        }
+
+        return $this->renderAjax('updateajax', [
+            'model' => $model,
+        ]);
+
     }
 
     /**
@@ -1372,11 +1410,28 @@ while ($i<11){
 
         //Fin del foreach
         }
-        Yii::$app->session->setFlash("warning", count($prueba)==1?"El caso fue cambiado exitosamante":"Los ".count($prueba)." casos fueron cambiados exitosamente");
-
+            $solicitudes = implode($prueba, ",");
+            return $this->redirect([
+                'masivosuccess',
+                'solicitudes_id' => $solicitudes
+            ]);
         }
 
       return $this->render('masivoxtrabajador', [ 'model' => $model, ]);
+
+   }
+
+   public function actionMasivosuccess($solicitudes_id){
+
+       $array = explode(",", $solicitudes_id);
+
+       $searchModel = new GestionSearch();
+       $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+       $dataProvider->query->andFilterWhere(['in','gestion.solicitud_id',$array]);
+
+       return $this->render('masivosuccess', [
+           'dataProvider' => $dataProvider,
+       ]);
 
    }
 
@@ -1392,7 +1447,7 @@ while ($i<11){
            $modelgestion->estatus3_id = $estatus3id;
        }
        if ($actividad != null) {
-          $modelgestion->programaevento_id = $actividad;
+          $modelgestion->programaevento_id = (int)$actividad;
        }
 
        $modelgestion->save();

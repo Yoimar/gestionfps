@@ -7,6 +7,8 @@ use app\models\Origen;
 use app\models\Trabajador;
 use yii\helpers\ArrayHelper;
 use kartik\datecontrol\DateControl;
+use kartik\alert\AlertBlock;
+use kartik\growl\Growl;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ProgramaeventoSearch */
@@ -115,3 +117,31 @@ $this->params['breadcrumbs'][] = $this->title;
     */
     ?>
 </div>
+
+<center>
+<div class="col-lg-12 col-md-12">
+
+     <div>
+
+ <?php foreach (Yii::$app->session->getAllFlashes() as $message):; ?>
+             <?php
+             echo Growl::widget([
+                 'type' => (!empty($message['type'])) ? $message['type'] : 'danger',
+                 'title' => (!empty($message['title'])) ? Html::encode($message['title']) : '',
+                 'icon' => (!empty($message['icon'])) ? $message['icon'] : 'fa fa-info',
+                 'body' => (!empty($message['message'])) ? Html::encode($message['message']) : '',
+                 'showSeparator' => true,
+                 'delay' => 1, //This delay is how long before the message shows
+                 'pluginOptions' => [
+                     'delay' => (!empty($message['duration'])) ? $message['duration'] : 3000, //This delay is how long the message shows for
+                     'placement' => [
+                         'from' => (!empty($message['positonY'])) ? $message['positonY'] : 'top',
+                         'align' => (!empty($message['positonX'])) ? $message['positonX'] : 'center',
+                     ]
+                 ]
+             ]);
+             ?>
+         <?php endforeach; ?>
+        </div>
+</div>
+</center>

@@ -230,14 +230,14 @@ echo Highcharts::widget([
         <?=
         /* Estatus 2 con depdrop de kartik*/
         $form->field($model, 'estatus2')->widget(DepDrop::classname(), [
-        'data' => ArrayHelper::map(Estatus2::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+        'data' => ArrayHelper::map(Estatus2::find()->where(['<>','id',18])->orderBy('nombre')->all(), 'id', 'nombre'),
         'type'=>DepDrop::TYPE_SELECT2,
         'options'=>['id'=>'estatus2', 'placeholder'=>'Seleccione el Estatus Nivel 2'],
         'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
         'pluginOptions'=>[
             'placeholder' => 'Seleccione el Estatus Nivel 2',
             'depends'=>['multiplessolicitudes-estatus1'],
-            'url'=>Url::to(['/estatus3/estatus1']),
+            'url'=>Url::to(['/estatus3/estatusp1']),
         ]
         ]);
         ?>

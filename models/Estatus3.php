@@ -90,7 +90,7 @@ class Estatus3 extends \yii\db\ActiveRecord
     {
         return $this->hasMany(HistorialSolicitudes::className(), ['estatus3_id' => 'id']);
     }
-    
+
     public function behaviors()
     {
         return [
@@ -110,7 +110,7 @@ class Estatus3 extends \yii\db\ActiveRecord
 
         ];
     }
-    
+
     public static function getEstatusn1($estatus1_id) {
         $data=\app\models\Estatus2::find()
        ->where(['estatus1_id'=>$estatus1_id])
@@ -118,7 +118,16 @@ class Estatus3 extends \yii\db\ActiveRecord
 
             return $data;
         }
-    
+
+    public static function getEstatusp1($estatus1_id) {
+        $data=\app\models\Estatus2::find()
+       ->where(['estatus1_id'=>$estatus1_id])
+       ->andWhere(['<>','id',18])
+       ->select(['id','nombre as name'])->asArray()->all();
+
+            return $data;
+        }
+
         public static function getEstatusn2($estatus2_id) {
         $data=\app\models\Estatus3::find()
        ->where(['estatus2_id'=>$estatus2_id])

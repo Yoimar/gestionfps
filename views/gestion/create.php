@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Gestion */
 
-$this->title = 'Create Gestion';
+$this->title = 'Crear Gestion';
 $this->params['breadcrumbs'][] = ['label' => 'Gestions', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

@@ -123,38 +123,56 @@ class Estatus3Controller extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
+
     public function actionEstatus1() {
     $out = [];
     if (isset($_POST['depdrop_parents'])) {
         $parents = $_POST['depdrop_parents'];
-        
+
         if ($parents != null) {
         $estatus1_id = $parents[0];
-             
+
         $out = \app\models\Estatus3::getEstatusn1($estatus1_id);
-            
+
         echo Json::encode(['output'=>$out, 'selected'=>'']);
             return;
         }
     }
     echo Json::encode(['output'=>'', 'selected'=>'']);
     }
-    
+
+    public function actionEstatusp1() {
+    $out = [];
+    if (isset($_POST['depdrop_parents'])) {
+        $parents = $_POST['depdrop_parents'];
+
+        if ($parents != null) {
+        $estatus1_id = $parents[0];
+
+        $out = \app\models\Estatus3::getEstatusp1($estatus1_id);
+
+        echo Json::encode(['output'=>$out, 'selected'=>'']);
+            return;
+        }
+    }
+    echo Json::encode(['output'=>'', 'selected'=>'']);
+    }
+
     public function actionEstatus2() {
     $out = [];
     if (isset($_POST['depdrop_parents'])) {
         $parents = $_POST['depdrop_parents'];
-        
+
         if ($parents != null) {
         $estatus2_id = $parents[0];
-         
+
         $out = \app\models\Estatus3::getEstatusn2($estatus2_id);
-            
+
         echo Json::encode(['output'=>$out, 'selected'=>'']);
             return;
         }
     }
     echo Json::encode(['output'=>'', 'selected'=>'']);
     }
+
 }

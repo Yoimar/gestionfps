@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Programaevento;
+use app\models\Gestion;
 use app\models\ProgramaeventoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -101,8 +102,22 @@ class ProgramaeventoController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        $validarexistenciagestion = Gestion::find()
+        ->where(['programaevento_id' => $id])
+        ->exists();
+        if($validarexistenciagestion){
+            Yii::$app->session->setFlash("danger", [
+             'type' => 'success',
+             'duration' => 5000,
+             'icon' => 'glyphicon glyphicon-ban-circle',
+             'message' => "La actividad contiene gestiones asociadas",
+             'title' => 'ADVERTENCIA - NO SE PUEDE ELIMINAR',
+             'positonY' => 'top',
+             'positonX' => 'center'
+         ]);
+        }else{
+            $this->findModel($id)->delete();
+        }
         return $this->redirect(['index']);
     }
 

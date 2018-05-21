@@ -74,6 +74,19 @@ class TrabajadorController extends Controller
         }
     }
 
+    public function actionCrearperfil()
+    {
+        $model = new Trabajador(['scenario'=>'crearperfil']);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
+    }
+
     /**
      * Updates an existing Trabajador model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -114,7 +127,7 @@ class TrabajadorController extends Controller
         if (isset($modeluser)){
             return $this->redirect(['update', 'id' => $modeluser->id]);
         } else {
-            return $this->redirect(['create']);
+            return $this->redirect(['crearperfil']);
         }
 
 

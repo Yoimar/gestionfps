@@ -23,7 +23,11 @@ use kartik\depdrop\DepDrop;
 
 <div class="gestion-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'id' => 'gestion-form',
+        'enableAjaxValidation' => true,
+        'enableClientScript' => true,
+        'enableClientValidation' => true,]); ?>
 
     <?=
         $form->field($model, 'solicitud_id')->widget(Select2::classname(), [
@@ -251,3 +255,25 @@ use kartik\depdrop\DepDrop;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+$this->registerJs('
+    // obtener la id del formulario y establecer el manejador de eventos
+        $("form#gestion-form").on("beforeSubmit", function(e) {
+            var form = $(this);
+            $.post(
+                form.attr("action")+"&submit=true",
+                form.serialize()
+            )
+            .done(function(result) {
+                form.parent().html(result.message);
+                $.pjax.reload({container:"#gestion-grid-masivoxtrabajador"});
+            });
+            return false;
+        }).on("submit", function(e){
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            return false;
+        });
+    ');
+?>

@@ -56,6 +56,7 @@ class Trabajador extends \yii\db\ActiveRecord
             [['user_id', 'users_id', 'ci', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
             [['user_id'], 'required', 'on' => 'perfil'],
+            [['user_id', 'primernombre', 'primerapellido', 'users_id',], 'required', 'on' => 'crearperfil'],
             [['primernombre', 'segundonombre', 'primerapellido', 'segundoapellido', 'usuario_sigesp'], 'string', 'max' => 20],
             [['telfextension', 'telfpersonal', 'telfpersonal2', 'telfcasa'], 'string', 'max' => 12],
             [['dimprofesion'], 'string', 'max' => 8],
@@ -133,12 +134,12 @@ class Trabajador extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::className(), ['id' => 'users_id']);
     }
-    
-    public function getTrabajadorfps() 
+
+    public function getTrabajadorfps()
     {
         return $this->dimprofesion." ".$this->primernombre." ".$this->primerapellido;
     }
-    
+
     public function behaviors()
     {
         return [
@@ -158,5 +159,5 @@ class Trabajador extends \yii\db\ActiveRecord
 
         ];
     }
-    
+
 }

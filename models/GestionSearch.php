@@ -45,7 +45,9 @@ class GestionSearch extends Gestion
     public function search($params)
     {
         $query = Gestion::find()
-                ->select(["extract(month from programaevento.fechaprograma)::int as mes_actividad", 'programaevento.descripcion', 'solicitudes.num_solicitud', 'gestion.programaevento_id',
+                ->select(["extract(month from programaevento.fechaprograma)::int as mes_actividad", 'programaevento.descripcion', 'solicitudes.num_solicitud',
+                'solicitudes.necesidad',
+                'gestion.programaevento_id',
                 'programaevento.id', 'solicitudes.id', 'gestion.id as id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', "estatus1.nombre as estatus1_id",
                 "estatus2.nombre as estatus2_id", 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante',
                 'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id', 'gestion.afrodescendiente', 'gestion.indigena',

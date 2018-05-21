@@ -152,6 +152,7 @@ $this->title = 'Solicitudes';
                                     yii\helpers\Url::to(['solicitudes/bitacora', 'id' => $model->id, ]),
                                     [
                                         'title' => 'Bitácora',
+                                        'target'=>'_blank',
                                     ]
                                     );
                                 },
@@ -168,6 +169,7 @@ $this->title = 'Solicitudes';
                                     yii\helpers\Url::to(['solicitudes/imprimirpunto', 'id' => $model->id, ]),
                                     [
                                         'title' => 'Imprimir Punto',
+                                        'target'=>'_blank',
                                     ]
                                     );
                                 },
@@ -176,6 +178,7 @@ $this->title = 'Solicitudes';
                                     yii\helpers\Url::to(['solicitudes/imprimirplanilla', 'id' => $model->id, ]),
                                     [
                                         'title' => 'Imprimir Planilla',
+                                        'target'=>'_blank',
                                     ]
                                     );
                                 },

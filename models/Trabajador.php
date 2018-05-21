@@ -55,6 +55,7 @@ class Trabajador extends \yii\db\ActiveRecord
         return [
             [['user_id', 'users_id', 'ci', 'created_by', 'updated_by'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
+            [['user_id'], 'required', 'on' => 'perfil'],
             [['primernombre', 'segundonombre', 'primerapellido', 'segundoapellido', 'usuario_sigesp'], 'string', 'max' => 20],
             [['telfextension', 'telfpersonal', 'telfpersonal2', 'telfcasa'], 'string', 'max' => 12],
             [['dimprofesion'], 'string', 'max' => 8],

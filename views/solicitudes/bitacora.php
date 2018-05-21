@@ -17,7 +17,7 @@ border-right: none;
 border-bottom: none;
 text-align:left;
 margin: 0px; padding: 0px;
-font-size:10px;"';
+font-size:09px;"';
 $labelbitacoracenter = 'style="border-left: none;
 border-top: solid 1px black;
 border-right: none;
@@ -31,7 +31,7 @@ border-right: solid 1px black;
 border-bottom: none;
 text-align:right;
 margin: 0px; padding: 0px;
-font-size:10px;"';
+font-size:09px;"';
 $dato = 'style="border-left: solid 1px black;
 border-bottom: solid 1px black;
 border-right: solid 1px black;
@@ -53,66 +53,78 @@ text-align:right; margin: 0px; padding: 2px; font-size:12px;"';
         </td>
     </tr>
     <!-- Linea de Estatus -->
-    <tr>
-    <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $label ?> >
-        <small><strong>ESTATUS 1:</strong></small>
-    </td>
-    <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $label ?> >
-        <small><strong>ESTATUS 2:</strong></small>
-    </td>
-    <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $label ?> >
-        <small><strong>ESTATUS 3:</strong></small>
-    </td>
-    </tr>
-    <tr>
-    <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $dato ?> >
-        <?= strtoupper($solicitudessearch->gestion->estatus3->estatus2->estatus1->nombre) ?>&nbsp;
-    </td>
-    <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $dato ?> >
-        <?= strtoupper($solicitudessearch->gestion->estatus3->estatus2->nombre) ?>&nbsp;
-    </td>
-    <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $dato ?> >
-        <?= strtoupper($solicitudessearch->gestion->estatus3->nombre) ?>&nbsp;
-    </td>
-    </tr>
-    <tr>
-        <td colspan="6" class="text-center" <?= $label ?> >
-            <strong>ACTIVIDAD</strong>
-        </td>
-    </tr>
-    <tr>
-    <td colspan="6" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: solid 1px black; border-top:none; text-align:justify; margin: 0px; padding: 2px; font-size:10px;" >
-        <?= strtoupper($solicitudessearch->gestion->programaevento->descripcion) ?>&nbsp;
-    </td>
-    </tr>
-    <tr>
-        <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" <?= $label ?> >
-            <small><strong>REFERENCIA:</strong></small>
-        </td>
-        <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $label ?> >
-            <small><strong>OFICIAL A CARGO:</strong></small>
-        </td>
-        <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $label ?> >
-            <small><strong>ESTADO:</strong></small>
-        </td>
-        <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $label ?> >
-            <small><strong>FECHA:</strong></small>
-        </td>
+    <?php
+    if (isset($solicitudessearch->gestion->estatus3->nombre)):
+    ?>
+        <tr>
+            <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $label ?> >
+                <small><strong>ESTATUS 1:</strong></small>
+            </td>
+            <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $label ?> >
+                <small><strong>ESTATUS 2:</strong></small>
+            </td>
+            <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $label ?> >
+                <small><strong>ESTATUS 3:</strong></small>
+            </td>
         </tr>
         <tr>
-        <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" <?= $dato ?> >
-            <?= strtoupper($solicitudessearch->gestion->programaevento->referencia->nombre) ?>&nbsp;
-        </td>
-        <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
-            <?= strtoupper($solicitudessearch->gestion->programaevento->trabajador->Trabajadorfps) ?>&nbsp;
-        </td>
-        <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
-            <?= strtoupper($solicitudessearch->gestion->programaevento->parroquia->estado->nombre) ?>&nbsp;
-        </td>
-        <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
-            <?= Yii::$app->formatter->asDate($solicitudessearch->gestion->programaevento->fechaprograma) ?>&nbsp;
-        </td>
-    </tr>
+            <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $dato ?> >
+                <?= strtoupper($solicitudessearch->gestion->estatus3->estatus2->estatus1->nombre) ?>&nbsp;
+            </td>
+            <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $dato ?> >
+                <?= strtoupper($solicitudessearch->gestion->estatus3->estatus2->nombre) ?>&nbsp;
+            </td>
+            <td colspan="2" class="col-xs-4 col-sm-4 col-md-4 col-lg-4" <?= $dato ?> >
+                <?= strtoupper($solicitudessearch->gestion->estatus3->nombre) ?>&nbsp;
+            </td>
+        </tr>
+    <?php
+    endif;
+    ?>
+    <?php
+    if (isset($solicitudessearch->gestion->programaevento->descripcion)):
+    ?>
+        <tr>
+            <td colspan="6" class="text-center" <?= $label ?> >
+                <strong>ACTIVIDAD</strong>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: solid 1px black; border-top:none; text-align:justify; margin: 0px; padding: 2px; font-size:10px;" >
+                <?= strtoupper($solicitudessearch->gestion->programaevento->descripcion) ?>&nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" <?= $label ?> >
+                <small><strong>REFERENCIA:</strong></small>
+            </td>
+            <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $label ?> >
+                <small><strong>OFICIAL A CARGO:</strong></small>
+            </td>
+            <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $label ?> >
+                <small><strong>ESTADO:</strong></small>
+            </td>
+            <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $label ?> >
+                <small><strong>FECHA:</strong></small>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" <?= $dato ?> >
+                <?= strtoupper($solicitudessearch->gestion->programaevento->referencia->nombre) ?>&nbsp;
+            </td>
+            <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
+                <?= strtoupper($solicitudessearch->gestion->programaevento->trabajador->Trabajadorfps) ?>&nbsp;
+            </td>
+            <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
+                <?= strtoupper($solicitudessearch->gestion->programaevento->parroquia->estado->nombre) ?>&nbsp;
+            </td>
+            <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
+                <?= Yii::$app->formatter->asDate($solicitudessearch->gestion->programaevento->fechaprograma) ?>&nbsp;
+            </td>
+        </tr>
+    <?php
+    endif;
+    ?>
     <tr>
     <td colspan="6" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" <?= $label ?> >
         <small><strong>DESCRIPCION:</strong></small>
@@ -185,7 +197,7 @@ text-align:right; margin: 0px; padding: 2px; font-size:12px;"';
         </td>
         <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
             <?= Yii::$app->formatter->asDate($solicitudessearch->personasolicitante->fecha_nacimiento) ?>&nbsp;
-            (<?= $solicitudessearch->personasolicitante->edad ?>)&nbsp;
+            <?= isset($solicitudessearch->personasolicitante->edad)?"(".$solicitudessearch->personasolicitante->edad.")":"" ?>&nbsp;
         </td>
         <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
             <?= strtoupper($solicitudessearch->personasolicitante->parroquia->estado->nombre) ?>&nbsp;
@@ -225,7 +237,7 @@ text-align:right; margin: 0px; padding: 2px; font-size:12px;"';
         </td>
         <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
             <?= Yii::$app->formatter->asDate($solicitudessearch->personabeneficiario->fecha_nacimiento) ?>&nbsp;
-            (<?= $solicitudessearch->personabeneficiario->edad ?>)&nbsp;
+            <?= empty($solicitudessearch->personabeneficiario->edad)?"":"(".$solicitudessearch->personabeneficiario->edad.")" ?>&nbsp;
         </td>
         <td  class="col-xs-2 col-sm-2 col-md-2 col-lg-2" <?= $dato ?> >
             <?= strtoupper($solicitudessearch->personabeneficiario->parroquia->estado->nombre) ?>&nbsp;

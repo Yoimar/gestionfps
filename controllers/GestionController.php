@@ -30,9 +30,12 @@ use app\models\Scbprogpago;
 use app\models\Scbmovbcospg;
 use app\models\Scbmovbco;
 use app\models\Bitacoras;
+use app\models\BitacorasSearch;
 use app\models\Multiplessolicitudes;
 use app\models\Cheque;
+use app\models\Personas;
 use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * GestionController implements the CRUD actions for Gestion model.
@@ -186,6 +189,74 @@ class GestionController extends Controller
         }
 
         return $this->renderAjax('updateajax', [
+            'model' => $model,
+        ]);
+
+    }
+
+    public function actionUpdatepersona($id, $submit = false)
+    {
+        $model = Personas::findOne($id);
+        $model->scenario= 'actualizargestion';
+
+        if (Yii::$app->request->isAjax
+        && $model->load(Yii::$app->request->post())
+        && $submit == false)
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if ($model->load(Yii::$app->request->post())){
+            if ($model->save()) {
+                $model->refresh();
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return [
+                    'message' => '¡Éxito!',
+                ];
+            } else {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ActiveForm::validate($model);
+            }
+        }
+
+        return $this->renderAjax('//personas/updateajax', [
+            'model' => $model,
+        ]);
+
+    }
+
+    public function actionUpdatebitacora($id, $submit = false)
+    {
+        $model = new Bitacoras();
+
+        $searchModelBitacoras = new BitacorasSearch();
+        $dataProviderBitacoras = $searchModelBitacoras->search(Yii::$app->request->queryParams);
+        $dataProviderBitacoras->query->andWhere(['solicitud_id'=>$id]);
+        $dataProviderBitacoras->query->orderBy('id ASC');
+
+        if (Yii::$app->request->isAjax
+        && $model->load(Yii::$app->request->post())
+        && $submit == false)
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+
+        if ($model->load(Yii::$app->request->post())){
+            if ($model->save()) {
+                $model->refresh();
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return [
+                    'message' => '¡Éxito!',
+                ];
+            } else {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ActiveForm::validate($model);
+            }
+        }
+
+        return $this->renderAjax('//bitacoras/actualizarbitacoraajax', [
             'model' => $model,
         ]);
 

@@ -18,7 +18,10 @@ class GestionSearch extends Gestion
     public function rules()
     {
         return [
-            [['id', 'programaevento_id', 'convenio_id',  'estatus3_id', 'rango_solicitante_id', 'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by', 'tipodecontacto_id', 'diasdeultimamodificacion', 'diasdesolicitud', 'diasdesdeactividad', 'edadbeneficiario','instruccion_id'], 'integer'],
+            [['id', 'programaevento_id', 'convenio_id',  'estatus3_id', 'rango_solicitante_id',
+             'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by',
+              'tipodecontacto_id', 'diasdeultimamodificacion', 'diasdesolicitud',
+               'diasdesdeactividad', 'edadbeneficiario','instruccion_id', 'persona_beneficiario_id', 'persona_solicitante_id',], 'integer'],
             [['militar_solicitante', 'militar_beneficiario', 'nino', ], 'boolean'],
             [['solicitante', 'solicitud_id', 'estatus1_id', 'estatus2_id', 'cisolicitante', 'cibeneficiario', 'recepcion', 'beneficiario', 'necesidad', 'descripcion', 'anodelasolicitud', 'telefono', 'fechaactividad', 'fechaingreso', 'fechaaprobacion', 'fechaultimamodificacion', 'tratamiento', 'mes_actividad', 'afrodescendiente', 'indigena', 'sexodiversidad', 'trabajadorsocial', 'trabajadoracargoactividad', 'especialidad', 'mesingreso', 'estado_actividad', 'tipodeayuda', 'estatussa', 'empresaoinstitucion', 'proceso', 'cheque', 'direccion', 'estadodireccion','created_at', 'updated_at'], 'safe'],
             [['monto', 'cantidad',], 'number'],
@@ -45,8 +48,13 @@ class GestionSearch extends Gestion
     public function search($params)
     {
         $query = Gestion::find()
-                ->select(["extract(month from programaevento.fechaprograma)::int as mes_actividad", 'programaevento.descripcion', 'solicitudes.num_solicitud',
+                ->select([
+                "extract(month from programaevento.fechaprograma)::int as mes_actividad",
+                'programaevento.descripcion',
+                'solicitudes.num_solicitud',
                 'solicitudes.necesidad',
+                'solicitudes.persona_beneficiario_id as persona_beneficiario_id',
+                'solicitudes.persona_solicitante_id as persona_solicitante_id',
                 'gestion.programaevento_id',
                 'programaevento.id', 'solicitudes.id', 'gestion.id as id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', "estatus1.nombre as estatus1_id",
                 "estatus2.nombre as estatus2_id", 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante',
@@ -97,7 +105,11 @@ class GestionSearch extends Gestion
                 ->join('LEFT JOIN', 'municipios as municipiobeneficiario', 'parroquiabeneficiario.municipio_id = municipiobeneficiario.id')
                 ->join('LEFT JOIN', 'estados as estadobeneficiario', 'municipiobeneficiario.estado_id = estadobeneficiario.id')
                 ->join('LEFT JOIN', 'instruccion', 'gestion.instruccion_id = instruccion.id')
-                ->groupBy(['mes_actividad', 'programaevento.descripcion', 'solicitudes.num_solicitud', 'gestion.programaevento_id', 'programaevento.id', 'solicitudes.id', 'gestion.id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', 'estatus1.nombre', 'estatus2.nombre', 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante',
+                ->groupBy(['mes_actividad', 'programaevento.descripcion', 'solicitudes.num_solicitud',
+                'solicitudes.necesidad',
+                'persona_beneficiario_id',
+                'persona_solicitante_id',
+                'gestion.programaevento_id', 'programaevento.id', 'solicitudes.id', 'gestion.id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', 'estatus1.nombre', 'estatus2.nombre', 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante',
                 'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id',
                 'gestion.afrodescendiente', 'gestion.indigena', 'gestion.sexodiversidad', 'gestion.trabajador_id',
                 'cisolicitante', 'cibeneficiario',
@@ -195,6 +207,14 @@ class GestionSearch extends Gestion
                     'cibeneficiario' => [
                         'asc' => ['cibeneficiario' => \SORT_ASC],
                         'desc' => ['cibeneficiario' => \SORT_DESC],
+                    ],
+                    'persona_solicitante_id' => [
+                        'asc' => ['solicitudes.persona_solicitante_id' => \SORT_ASC],
+                        'desc' => ['solicitudes.persona_solicitante_id' => \SORT_DESC],
+                    ],
+                    'persona_beneficiario_id' => [
+                        'asc' => ['solicitudes.persona_beneficiario_id' => \SORT_ASC],
+                        'desc' => ['solicitudes.persona_beneficiario_id' => \SORT_DESC],
                     ],
                     'tratamiento' => [
                         'asc' => ['tratamiento' => \SORT_ASC],

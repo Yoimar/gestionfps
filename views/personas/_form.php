@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
-use kartik\datetime\DateTimePicker;
+use kartik\datecontrol\DateControl;
 use app\models\TipoNacionalidades;
 use app\models\EstadosCiviles;
 use app\models\NivelesAcademicos;
@@ -24,23 +24,23 @@ use yii\widgets\MaskedInput;
 
 <div class="personas-form">
 
-    <?php $form = ActiveForm::begin(); 
+    <?php $form = ActiveForm::begin();
     if (isset($model->parroquia_id)) {
     $parroquia = Parroquias::findOne($model->parroquia_id);
     $municipio = Municipios::findOne($parroquia->municipio_id);
     $model->municipio_id = $municipio->id;
     $model->estado_id = $municipio->estado_id;
     }
-    
-    
-    
+
+
+
     ?>
 
     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'apellido')->textInput(['maxlength' => true]) ?>
 
-    <?= 
+    <?=
         $form->field($model, 'tipo_nacionalidad_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(TipoNacionalidades::find()->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
@@ -49,12 +49,12 @@ use yii\widgets\MaskedInput;
         'allowClear' => true
         ],
     ]);
-    
+
     ?>
-    
+
     <?= $form->field($model, 'ci')->textInput() ?>
 
-    <?= 
+    <?=
         $form->field($model, 'sexo')->widget(Select2::classname(), [
         'data' => ArrayHelper::map([['id' => 'M', 'nombre' => 'Masculino'],['id' => 'F', 'nombre' => 'Femenino']], 'id', 'nombre'),
         'language' => 'es',
@@ -63,10 +63,10 @@ use yii\widgets\MaskedInput;
         'allowClear' => true
         ],
     ]);
-    
+
     ?>
-    
-    <?= 
+
+    <?=
         $form->field($model, 'estado_civil_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(EstadosCiviles::find()->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
@@ -75,28 +75,24 @@ use yii\widgets\MaskedInput;
         'allowClear' => true
         ],
     ]);
-    
+
     ?>
 
     <?= $form->field($model, 'lugar_nacimiento')->textInput(['maxlength' => true]) ?>
-    
-    <?= $form->field($model, 'fecha_nacimiento')->widget(DateTimePicker::classname(), [
-	'name' => 'datetime_18',
-        'options' => ['placeholder' => 'Ingrese la Fecha de Nacimiento'],
-        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-        'value' => '23-04-2017',
+
+    <?= $form->field($model, 'fecha_nacimiento')->widget(DateControl::classname(), [
+    'type'=>DateControl::FORMAT_DATE,
+    'ajaxConversion'=>true,
+    'widgetOptions' => [
+        'removeButton' => false,
         'pluginOptions' => [
-            'todayHighlight' => true,
-            'todayBtn' => true,
-            'autoclose'=>true,
-            'showMeridian' => true,
-            'format' => 'dd-mm-yyyy',
-            'minView' => '2',
-        ]
-        ]);
+            'autoclose' => true
+        ],
+    ],
+]);
         ?>
 
-    <?= 
+    <?=
         $form->field($model, 'nivel_academico_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(NivelesAcademicos::find()->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
@@ -105,7 +101,7 @@ use yii\widgets\MaskedInput;
         'allowClear' => true
         ],
     ]);
-    
+
     ?>
     <?=
     /* Estado con Select2 de kartik*/
@@ -117,9 +113,9 @@ use yii\widgets\MaskedInput;
         'allowClear' => true
         ],
     ]);
-    
+
     ?>
-    
+
     <?=
     /* Municipio con depdrop de kartik*/
     $form->field($model, 'municipio_id')->widget(DepDrop::classname(), [
@@ -156,32 +152,32 @@ use yii\widgets\MaskedInput;
 
     <?= $form->field($model, 'apto_casa')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'telefono_fijo')->widget(MaskedInput::classname(), [ 
+    <?= $form->field($model, 'telefono_fijo')->widget(MaskedInput::classname(), [
     'name' => 'input-1',
     'mask' => '9999-9999999'
     ]);
     ?>
-    <?= $form->field($model, 'telefono_celular')->widget(MaskedInput::classname(), [ 
+    <?= $form->field($model, 'telefono_celular')->widget(MaskedInput::classname(), [
     'name' => 'input-2',
     'mask' => '9999-9999999'
     ]);
     ?>
 
-    <?= $form->field($model, 'telefono_otro')->widget(MaskedInput::classname(), [ 
+    <?= $form->field($model, 'telefono_otro')->widget(MaskedInput::classname(), [
     'name' => 'input-3',
     'mask' => '9999-9999999'
     ]);
     ?>
 
-    <?= $form->field($model, 'email')->widget(MaskedInput::classname(), [ 
+    <?= $form->field($model, 'email')->widget(MaskedInput::classname(), [
         'name' => 'input-36',
         'clientOptions' => [
             'alias' =>  'email'
         ],
-    ]); 
+    ]);
     ?>
 
-    <?= $form->field($model, 'twitter')->widget(MaskedInput::classname(), [ 
+    <?= $form->field($model, 'twitter')->widget(MaskedInput::classname(), [
         'name' => 'input-2',
         'mask' => '@*{1,50}'
         ]
@@ -196,8 +192,8 @@ use yii\widgets\MaskedInput;
     <?= $form->field($model, 'observaciones')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'ind_asegurado')->checkbox() ?>
-    
-    <?= 
+
+    <?=
         $form->field($model, 'seguro_id')->widget(Select2::classname(), [
         'data' => ArrayHelper::map(Seguros::find()->orderBy('nombre')->all(), 'id', 'nombre'),
         'language' => 'es',
@@ -206,7 +202,7 @@ use yii\widgets\MaskedInput;
         'allowClear' => true
         ],
     ]);
-    
+
     ?>
 
     <?= $form->field($model, 'cobertura')->textInput() ?>

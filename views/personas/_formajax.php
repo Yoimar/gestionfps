@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
-use kartik\datetime\DateTimePicker;
+use kartik\datecontrol\DateControl;
 use app\models\TipoNacionalidades;
 use kartik\depdrop\DepDrop;
 use app\models\Estados;
@@ -21,29 +21,34 @@ use yii\widgets\MaskedInput;
 <div class="personas-form">
 
     <?php $form = ActiveForm::begin([
-        "method" => "post",
-        "enableClientValidation" => true,
-    ]); 
+        'id' => 'personas-form',
+        'enableAjaxValidation' => true,
+        'enableClientScript' => true,
+        'enableClientValidation' => true,
+    ]);
     if (isset($model->parroquia_id)) {
     $parroquia = Parroquias::findOne($model->parroquia_id);
     $municipio = Municipios::findOne($parroquia->municipio_id);
     $model->municipio_id = $municipio->id;
     $model->estado_id = $municipio->estado_id;
     }
-    
-    
-    
+
+
+
     ?>
 
     <div class="row">
 
-        <div class="col-md-3">
+        <div class="col-md-6">
             <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6">
             <?= $form->field($model, 'apellido')->textInput(['maxlength' => true]) ?>
         </div>
-        <div class="col-md-3">
+    </div>
+    <div class="row">
+
+        <div class="col-md-6">
             <?=
             $form->field($model, 'tipo_nacionalidad_id')->widget(Select2::classname(), [
                 'data' => ArrayHelper::map(TipoNacionalidades::find()->orderBy('nombre')->all(), 'id', 'nombre'),
@@ -54,12 +59,12 @@ use yii\widgets\MaskedInput;
                 ],
             ]);
             ?>
-        </div>            
-        <div class="col-md-3">
+        </div>
+        <div class="col-md-6">
             <?= $form->field($model, 'ci')->textInput() ?>
         </div>
     </div>
-    
+
     <div class="row">
 
         <div class="col-md-4">
@@ -77,7 +82,7 @@ use yii\widgets\MaskedInput;
             ]);
             ?>
         </div>
-        
+
         <div class="col-md-4">
             <?=
             /* Municipio con depdrop de kartik */
@@ -94,7 +99,7 @@ use yii\widgets\MaskedInput;
             ]);
             ?>
         </div>
-        
+
         <div class="col-md-4">
             <?=
             /* Parroquia con depdrop de kartik */
@@ -115,10 +120,10 @@ use yii\widgets\MaskedInput;
         </div>
 
     </div>
-    
+
     <div class="row">
-        
-        <div class="col-md-4"> 
+
+        <div class="col-md-4">
             <?=
             $form->field($model, 'telefono_celular')
                 ->widget(MaskedInput::classname(), [
@@ -127,7 +132,7 @@ use yii\widgets\MaskedInput;
             ]);
             ?>
         </div>
-        
+
         <div class="col-md-4">
             <?=
             $form->field($model, 'telefono_fijo')
@@ -137,8 +142,8 @@ use yii\widgets\MaskedInput;
             ]);
             ?>
         </div>
-        
-        <div class="col-md-4"> 
+
+        <div class="col-md-4">
             <?=
             $form->field($model, 'telefono_otro')
                 ->widget(MaskedInput::classname(), [
@@ -147,29 +152,26 @@ use yii\widgets\MaskedInput;
             ]);
             ?>
         </div>
-        
+
     </div>
-    
+
     <div class="row">
-        
+
         <div class="col-md-4">
-        
-        <?= $form->field($model, 'fecha_nacimiento')->widget(DateTimePicker::classname(), [
-	'name' => 'datetime_18',
-        'options' => ['placeholder' => 'Ingrese la Fecha de Nacimiento'],
-        'type' => DateTimePicker::TYPE_COMPONENT_PREPEND,
-        'pluginOptions' => [
-            'todayHighlight' => true,
-            'todayBtn' => true,
-            'autoclose'=>true,
-            'showMeridian' => false,
-            'format' => 'yyyy-mm-dd',
-            'minView' => '2',
+
+        <?= $form->field($model, 'fecha_nacimiento')->widget(DateControl::classname(), [
+        'type'=>DateControl::FORMAT_DATE,
+        'ajaxConversion'=>false,
+        'widgetOptions' => [
+            'removeButton' => false,
+            'pluginOptions' => [
+                'autoclose' => true
+            ]
         ]
-        ]);
+    ]);
         ?>
          </div>
-        
+
         <div class="col-md-4">
 
     <?= $form->field($model, 'email')->widget(MaskedInput::classname(), [
@@ -189,17 +191,38 @@ use yii\widgets\MaskedInput;
     );
     ?>
         </div>
-        
+
 
     </div>
 
 
     <div class="form-group align-items-center">
         <div class="col text-center">
-        <?= Html::submitButton('Registrar', ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton('Actualizar', ['class' => 'btn btn-primary']) ?>
         </div>
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+$this->registerJs('
+    // obtener la id del formulario y establecer el manejador de eventos
+        $("form#personas-form").on("beforeSubmit", function(e) {
+            var form = $(this);
+            $.post(
+                form.attr("action")+"&submit=true",
+                form.serialize()
+            )
+            .done(function(result) {
+                form.parent().html(result.message);
+                $.pjax.reload({container:"#gestion-grid-masivoxtrabajador"});
+            });
+            return false;
+        }).on("submit", function(e){
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            return false;
+        });
+    ');
+?>

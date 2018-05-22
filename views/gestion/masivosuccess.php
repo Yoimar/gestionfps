@@ -40,24 +40,6 @@ $columns = [
             ],
 
             [
-            'attribute' => 'beneficiario',
-            'value' => 'beneficiario',
-            'format' => 'text',
-            'vAlign'=>'middle',
-            'hAlign'=>'center',
-            ],
-
-            [
-            'attribute' => 'cibeneficiario',
-            'value' => 'cibeneficiario',
-            'format' => 'text',
-            'label' => '<center>C.I.<br>Beneficiario</center>',
-            'encodeLabel' => false,
-            'vAlign'=>'middle',
-            'hAlign'=>'center',
-            ],
-
-            [
             'attribute' => 'solicitante',
             'value' => 'solicitante',
             'format' => 'text',
@@ -76,6 +58,24 @@ $columns = [
             ],
 
             [
+            'attribute' => 'beneficiario',
+            'value' => 'beneficiario',
+            'format' => 'text',
+            'vAlign'=>'middle',
+            'hAlign'=>'center',
+            ],
+
+            [
+            'attribute' => 'cibeneficiario',
+            'value' => 'cibeneficiario',
+            'format' => 'text',
+            'label' => '<center>C.I.<br>Beneficiario</center>',
+            'encodeLabel' => false,
+            'vAlign'=>'middle',
+            'hAlign'=>'center',
+            ],
+
+            [
             'attribute' => 'necesidad',
             'value' => 'necesidad',
             'format' => 'text',
@@ -85,15 +85,75 @@ $columns = [
 
             [
             'class'=>'kartik\grid\ActionColumn',
-            'template' => '{view}{update}{delete}',
+            'template' => '{update} {solicitante} {beneficiario} {bitacora} {presupuesto} {solicitud} {informesocial}',
             'buttons' => [
                 'update' => function ($url, $model, $key) {
                     return Html::a('<span class="glyphicon glyphicon-pencil"></span>', '#', [
-                        'id' => 'activity-index-link',
-                        'title' => Yii::t('app', 'Update'),
+                        'id' => 'update-gestion',
+                        'title' => 'Actualizar',
                         'data-toggle' => 'modal',
                         'data-target' => '#modal',
                         'data-url' => Url::to(['updateajax', 'id' => $model->id]),
+                        'data-pjax' => '0',
+                    ]);
+                },
+                'solicitante' => function ($url, $model, $key) {
+                    return Html::a('S<span class="glyphicon glyphicon-user"></span>', '#', [
+                        'id' => 'update-gestion',
+                        'title' => 'Actualizar Solicitante',
+                        'data-toggle' => 'modal',
+                        'data-target' => '#modal',
+                        'data-url' => Url::to(['updatepersona', 'id' => $model->persona_solicitante_id]),
+                        'data-pjax' => '0',
+                    ]);
+                },
+                'beneficiario' => function ($url, $model, $key) {
+                    return Html::a('B<span class="glyphicon glyphicon-user"></span>', '#', [
+                        'id' => 'update-gestion',
+                        'title' => 'Actualizar Beneficiario',
+                        'data-toggle' => 'modal',
+                        'data-target' => '#modal',
+                        'data-url' => Url::to(['updatepersona', 'id' => $model->persona_beneficiario_id]),
+                        'data-pjax' => '0',
+                    ]);
+                },
+                'bitacora' => function ($url, $model, $key) {
+                    return Html::a('<span class="glyphicon glyphicon-bold"></span>', '#', [
+                        'id' => 'update-gestion',
+                        'title' => 'Actualizar Bitacora',
+                        'data-toggle' => 'modal',
+                        'data-target' => '#modal',
+                        'data-url' => Url::to(['updatebitacora', 'id' => $model->solicitud_id]),
+                        'data-pjax' => '0',
+                    ]);
+                },
+                'presupuesto' => function ($url, $model, $key) {
+                    return Html::a('B<span class="glyphicon glyphicon-user"></span>', '#', [
+                        'id' => 'update-gestion',
+                        'title' => 'Actualizar Beneficiario',
+                        'data-toggle' => 'modal',
+                        'data-target' => '#modal',
+                        'data-url' => Url::to(['updatepersona', 'id' => $model->persona_beneficiario_id]),
+                        'data-pjax' => '0',
+                    ]);
+                },
+                'solicitud' => function ($url, $model, $key) {
+                    return Html::a('B<span class="glyphicon glyphicon-user"></span>', '#', [
+                        'id' => 'update-gestion',
+                        'title' => 'Actualizar Beneficiario',
+                        'data-toggle' => 'modal',
+                        'data-target' => '#modal',
+                        'data-url' => Url::to(['updatepersona', 'id' => $model->persona_beneficiario_id]),
+                        'data-pjax' => '0',
+                    ]);
+                },
+                'informesocial' => function ($url, $model, $key) {
+                    return Html::a('B<span class="glyphicon glyphicon-user"></span>', '#', [
+                        'id' => 'update-gestion',
+                        'title' => 'Actualizar Beneficiario',
+                        'data-toggle' => 'modal',
+                        'data-target' => '#modal',
+                        'data-url' => Url::to(['updatepersona', 'id' => $model->persona_beneficiario_id]),
                         'data-pjax' => '0',
                     ]);
                 },
@@ -132,7 +192,7 @@ echo   GridView::widget([
 <?php
 //código para la ventana modal de update
 $this->registerJs(
-    "$(document).on('click', '#activity-index-link', (function() {
+    "$(document).on('click', '#update-gestion', (function() {
         $.get(
             $(this).data('url'),
             function (data) {
@@ -146,8 +206,11 @@ $this->registerJs(
 <?php
 Modal::begin([
     'id' => 'modal',
-    'header' => '<h4 class="modal-title">Actualizar</h4>',
-    'footer' => '<div class"text-center"><a href="#" class="btn btn-primary" data-dismiss="modal">Cerrar</a></div>',
+    'options' => [
+        'tabindex' => false,
+    ],
+    //'header' => '<h4 class="modal-title">Actualizar</h4>',
+    //'footer' => '<div class"text-center"><a href="#" class="btn btn-primary" data-dismiss="modal">Cerrar</a></div>',
 ]);
 
 echo "<div class='well'></div>";

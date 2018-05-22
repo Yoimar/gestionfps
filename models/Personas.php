@@ -86,6 +86,20 @@ class Personas extends \yii\db\ActiveRecord
                 'required',
                 'on' => 'crear'
             ],
+            [
+                [
+                    'nombre',
+                    'apellido',
+                    'tipo_nacionalidad_id',
+                    'estado_id',
+                    'municipio_id',
+                    'parroquia_id',
+                    'telefono_celular',
+                    'fecha_nacimiento'
+                ],
+                'required',
+                'on' => 'actualizargestion'
+            ],
             [['tipo_nacionalidad_id', 'ci', 'estado_civil_id', 'nivel_academico_id', 'parroquia_id', 'seguro_id', 'version'], 'integer'],
             [['fecha_nacimiento', 'created_at', 'updated_at'], 'safe'],
             [['ind_trabaja', 'ind_asegurado'], 'boolean'],

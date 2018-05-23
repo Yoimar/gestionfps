@@ -228,12 +228,21 @@ class GestionController extends Controller
 
     public function actionUpdatebitacora($id, $submit = false)
     {
-        $model = new Bitacoras();
+        $modelnew = new Bitacoras();
+        $model = Bitacoras::cargardefecto($modelnew);
+        $model->solicitud_id = $id;
+        $usuarioid = Yii::$app->user->id;
+        
+        $modeltrabajador = Trabajador::findOne([
+            'user_id' => $usuarioid,
+        ]);
+        
+        $model->usuario_id = $modeltrabajador->users_id;
 
-        $searchModelBitacoras = new BitacorasSearch();
-        $dataProviderBitacoras = $searchModelBitacoras->search(Yii::$app->request->queryParams);
-        $dataProviderBitacoras->query->andWhere(['solicitud_id'=>$id]);
-        $dataProviderBitacoras->query->orderBy('id ASC');
+        $searchModel = new BitacorasSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['solicitud_id'=>$id]);
+        $dataProvider->query->orderBy('id ASC');
 
         if (Yii::$app->request->isAjax
         && $model->load(Yii::$app->request->post())
@@ -248,7 +257,7 @@ class GestionController extends Controller
                 $model->refresh();
                 Yii::$app->response->format = Response::FORMAT_JSON;
                 return [
-                    'message' => '¡Éxito!',
+                    'message' => 'Nota Cargada con Exito.!',
                 ];
             } else {
                 Yii::$app->response->format = Response::FORMAT_JSON;
@@ -258,6 +267,7 @@ class GestionController extends Controller
 
         return $this->renderAjax('//bitacoras/actualizarbitacoraajax', [
             'model' => $model,
+            'dataProvider' => $dataProvider,
         ]);
 
     }
@@ -1515,7 +1525,7 @@ while ($i<11){
          $modelgestion->solicitud_id = $solicitudid;
        }
        if ($estatus3id != null) {
-           $modelgestion->estatus3_id = $estatus3id;
+           $modelgestion->estatus3_id = (int)$estatus3id;
        }
        if ($actividad != null) {
           $modelgestion->programaevento_id = (int)$actividad;

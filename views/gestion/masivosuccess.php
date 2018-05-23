@@ -127,6 +127,7 @@ $columns = [
                         'data-pjax' => '0',
                     ]);
                 },
+                /*        
                 'presupuesto' => function ($url, $model, $key) {
                     return Html::a('B<span class="glyphicon glyphicon-user"></span>', '#', [
                         'id' => 'update-gestion',
@@ -157,6 +158,8 @@ $columns = [
                         'data-pjax' => '0',
                     ]);
                 },
+                
+                 */
             ]
 
             ],

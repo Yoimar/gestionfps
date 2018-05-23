@@ -102,6 +102,15 @@ class Bitacoras extends \yii\db\ActiveRecord
         ];
     }
     
-   
+    public function cargardefecto($model){
+        $model->fecha = date('Y-m-d');
+        $model->ind_activo = 1;
+        $model->ind_alarma = 0;
+        $model->ind_atendida = 0;
+        $model->version = 0;
+        $model->created_at = date('Y-m-d H:i:s');
+        $model->updated_at = date('Y-m-d H:i:s');
+        return $model;
+    }
 
 }

@@ -24,7 +24,7 @@ class Multiplessolicitudes extends Model
         return [
 
             [['caso', 'estatus3'], 'required'],
-            //[['caso',], 'integer'],
+            [['estatus3', 'actividad'], 'integer'],
 
 
         ];

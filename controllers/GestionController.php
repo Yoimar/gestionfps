@@ -1428,6 +1428,8 @@ while ($i<11){
 
             $int = (int)$idsolicitud;
             $prueba[]= $int;
+            $model->estatus3 = (int)$model->estatus3;            
+            $model->actividad = (int)$model->actividad;     
 
             $this->Cambiorapido($int, $model->estatus3, $model->actividad);
         }
@@ -1517,7 +1519,7 @@ while ($i<11){
    }
 
    public function Cambiorapido ($solicitudid, $estatus3id=null, $actividad=null){
-
+    
        $modelgestion = Gestion::findOne(['solicitud_id' => $solicitudid ]);
 
        if (empty($modelgestion)) {

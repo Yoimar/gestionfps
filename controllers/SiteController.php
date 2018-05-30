@@ -650,4 +650,21 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionReportexactividad(){
+    $model = new Reportes();
+
+            if ($model->load(Yii::$app->request->post())){
+                
+                return $this->render('reportexactividad',
+                [
+                    'model' => $model,
+                ]);
+            }
+
+        return $this->render('formularioxactividad',
+        [
+            'model' => $model,
+        ]);
+    }
+
 }

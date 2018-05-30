@@ -158,12 +158,12 @@ class Programaevento extends \yii\db\ActiveRecord
 
     public function getCreadoprogramapor()
     {
-        return $this->hasOne(Trabajador::className(), ['users_id' => 'created_by']);
+        return $this->hasOne(Trabajador::className(), ['user_id' => 'created_by']);
     }
 
     public function getActualizadoprogramapor()
     {
-        return $this->hasOne(Trabajador::className(), ['users_id' => 'updated_by']);
+        return $this->hasOne(Trabajador::className(), ['user_id' => 'updated_by']);
     }
 
 }

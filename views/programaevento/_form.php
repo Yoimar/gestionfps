@@ -151,22 +151,13 @@ $data = Trabajador::find()
     </div>
     <div class="col-md-4" class="col-lg-4">
     <?= $form->field($model, 'fecharecibido')->widget(DateControl::classname(), [
-	'name' => 'datetime_20',
+    'type'=>DateControl::FORMAT_DATETIME,
+    'ajaxConversion'=>false,
     'widgetOptions' => [
-        'options' => [
-            'placeholder' => 'Fecha en que se Recibio la Relación',
-            'pluginOptions' => [
-                'orientation' => 'top auto',
-                'todayHighlight' => true,
-                'todayBtn' => true,
-                'showMeridian' => true,
-                'autoclose' => true,
-                'language' => 'es',
-            ],
-            'orientation' => 'top auto',
+        'pluginOptions' => [
+            'autoclose' => true
         ]
-    ],
-        'type' => DateControl::FORMAT_DATETIME,
+    ]
 ]);
     ?>
     </div>

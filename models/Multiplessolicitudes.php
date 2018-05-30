@@ -23,7 +23,7 @@ class Multiplessolicitudes extends Model
     {
         return [
 
-            [['caso', 'estatus3'], 'required'],
+            [['caso', 'estatus3', ], 'required'],
             [['estatus3', 'actividad'], 'integer'],
 
 

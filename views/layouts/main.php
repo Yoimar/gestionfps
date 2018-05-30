@@ -78,7 +78,8 @@ AppAsset::register($this);
                  ['label' => 'Consolidado por Unidad', 'url' => '@web/site/tablareportemando?ano='.date("Y")],
                  ['label' => 'Reporte General Año', 'url' => '@web/site/tablareporte?ano='.date("Y")],
                  ['label' => 'Reportes', 'url' => '@web/site/formulario'],
-                 ['label' => 'Reportes por Actividad', 'url' => '@web/site/tablaactividad'],
+                 ['label' => 'Parte por Actividad', 'url' => '@web/site/tablaactividad'],
+                 ['label' => 'Reportes por Actividad', 'url' => '@web/site/reportexactividad'],
                  /* Reportes en Mapa de Calor Desactivados por no usarlos
                 '<li class="divider"></li>',
                 '<li class="dropdown-header">Reporte Por Unidad</li>',

@@ -21,13 +21,18 @@ class Reportes extends Model
     public $fechahasta;
     public $recepcioninicial;
     public $tiporeporte;
-
+    public $origen;
+    public $personalidad;
+    public $cargo;
+    public $trabajador;
+    public $estado;
 
     public function rules()
     {
         return [
 
-            [['mes', 'ano', 'tiporeporte', 'recepcioninicial', 'actividad'], 'integer'],
+            [['mes', 'ano', 'tiporeporte', 'recepcioninicial', 'actividad', 'origen', 
+            'personalidad', 'cargo', 'trabajador', 'estado'], 'integer'],
             [['fechadesde', 'fechahasta',], 'safe'],
             [['ano'], 'required', 'on' => 'crear'],
             [['actividad'], 'required', 'on' => 'actividad'],

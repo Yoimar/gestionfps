@@ -163,7 +163,21 @@ class Programaevento extends \yii\db\ActiveRecord
 
     public function getActualizadoprogramapor()
     {
-        return $this->hasOne(Trabajador::className(), ['user_id' => 'updated_by']);
+        return $this->hasOne(Trabajador::className(), ['use_rid' => 'updated_by']);
     }
+
+    public function getEstado()
+    {
+        return $this->hasOne(Estados::className(), ['id' => 'estado_id'])
+          ->via('municipio');
+    }
+
+    public function getMunicipio()
+    {
+        return $this->hasOne(Municipios::className(), ['id' => 'municipio_id'])
+          ->via('parroquia');
+    }
+
+
 
 }

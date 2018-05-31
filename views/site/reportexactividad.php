@@ -21,6 +21,8 @@ $tablasconjoin = ' gestion g1 join estatus3 e3 on g1.estatus3_id = e3.id '
 				.' join estatus1 e1 on e2.estatus1_id = e1.id '
 				.' join programaevento pe1 on pe1.id = g1.programaevento_id '
 				.' join referencia r1 on r1.id = pe1.referencia_id '
+				.' join parroquias pa1 on pe1.parroquia_id = pa1.id '
+				.' join municipios mu1 on pa1.municipio_id = mu1.id '
 				.' join solicitudes s1 on s1.id = g1.solicitud_id ';
 
 $tablasconjoinpresupuesto = ' gestion g1 join estatus3 e3 on g1.estatus3_id = e3.id '
@@ -29,37 +31,77 @@ $tablasconjoinpresupuesto = ' gestion g1 join estatus3 e3 on g1.estatus3_id = e3
 						   	.' join solicitudes s1 on s1.id = g1.solicitud_id '
 							.' join programaevento pe1 on pe1.id = g1.programaevento_id '
 							.' join referencia r1 on r1.id = pe1.referencia_id '
+							.' join parroquias pa1 on pe1.parroquia_id = pa1.id '
+							.' join municipios mu1 on pa1.municipio_id = mu1.id '
 						   	.' join presupuestos p1 on p1.solicitud_id = s1.id ';
 
-$filtroano = ' extract(year from pe1.fechaprograma) = '. $model->ano.' and ';
-$filtromes = 'extract(month from pe1.fechaprograma) = '. $model->mes.' and ';
-$filtroorigen = 'extract(month from pe1.fechaprograma) = '. $model->mes.' and ';
-$filtropersonalidad = 'extract(month from pe1.fechaprograma) = '. $model->mes.' and ';
-$filtrocargo = 'extract(month from pe1.fechaprograma) = '. $model->mes.' and ';
-$filtroestado = 'extract(month from pe1.fechaprograma) = '. $model->mes.' and ';
-$filtroteniente = 'extract(month from pe1.fechaprograma) = '. $model->mes.' and ';
+
+$actividadessql = Programaevento::find()
+				->select([
+					'programaevento.id as id',
+					'programaevento.descripcion as descripcion',
+				])
+				->joinWith('origen', true, 'LEFT JOIN')
+				->joinWith('referencia', true, 'LEFT JOIN')
+				->joinWith('gestions', true, 'LEFT JOIN')
+				->joinWith('estado', true, 'LEFT JOIN')
+				->andFilterWhere([
+		            'extract(year from programaevento.fechaprograma)' => $model->ano,
+		            'extract(month from programaevento.fechaprograma)' => $model->mes,
+		            'origen.id' => $model->origen,
+		            'referencia.autoridad_id' => $model->personalidad,
+		            'referencia.cargo_id' => $model->cargo,
+		            'estados.id' => $model->estado,
+		            'programaevento.trabajadoracargo_id' => $model->trabajador,
+
+		        ])
+		        ->all();
+
 
 $filtro = "";
+$filtrogrande = "";
 
 if (!empty($model->ano)){
-	$filtro = " where ".$filtroano;
-}
-//Me traigo todas las actividades
-$actividades= Yii::$app->db->createCommand("select pe1.id, pe1.descripcion from programaevento pe1 "
-                    ." join referencia r1 on r1.id = pe1.referencia_id "
-                    .' join gestion g1 on pe1.id = g1.programaevento_id '
-                    . $filtro
-                    ."group by pe1.id, pe1.descripcion order by pe1.id")->queryAll();
-
-//Convierto todos las actividades en un array pd. se que hay otra forma pero no me acuerdo Tiene que ver con el asArray()
-foreach ($actividades as $val) {
-
-    $actividad[]=$val['id'];
-    $descripcionactividad[]=$val['descripcion'];
-
+	$filtro .= ' and extract(year from pe1.fechaprograma) = '.$model->ano; 
+	$filtrogrande = ($filtrogrande=="")?" where extract(year from pe1.fechaprograma) = $model->ano":" and extract(year from pe1.fechaprograma) = $model->ano";
 }
 
+if (!empty($model->mes)){
+	$filtro .= ' and extract(month from pe1.fechaprograma) = '.$model->mes; 
+	$filtrogrande = ($filtrogrande=="")?" where extract(month from pe1.fechaprograma) = $model->mes":" and extract(month from pe1.fechaprograma) = $model->mes";
+}
+
+if (!empty($model->origen)){
+	$filtro .= ' and pe1.origenid = '.$model->origen; 
+	$filtrogrande = ($filtrogrande=="")?" where pe1.origenid = $model->origen ":" and pe1.origenid = $model->origen ";
+}
+
+if (!empty($model->personalidad)){
+	$filtro .= ' and r1.autoridad_id = '.$model->personalidad; 
+	$filtrogrande = ($filtrogrande=="")?" where r1.autoridad_id = $model->personalidad ":" and r1.autoridad_id = $model->personalidad ";
+}
+
+if (!empty($model->cargo)){
+	$filtro .= ' and pe1.origenid = '.$model->cargo; 
+	$filtrogrande = ($filtrogrande=="")?" where r1.cargo_id = $model->cargo ":" and r1.cargo_id = $model->cargo ";
+}
+
+if (!empty($model->estado)){
+	$filtro .= ' and mu1.estado_id = '.$model->estado; 
+	$filtrogrande = ($filtrogrande=="")?" where mu1.estado_id = $model->estado ":" and mu1.estado_id = $model->estado ";
+}
+
+if (!empty($model->trabajador)){
+	$filtro .= ' and pe1.trabajadoracargo_id = '.$model->trabajador; 
+	$filtrogrande = ($filtrogrande=="")?" where pe1.trabajadoracargo_id = $model->trabajador ":" and pe1.trabajadoracargo_id = $model->trabajador ";
+}
 ?>
+
+
+
+
+
+
 </div>
 <div class="row container-fluid" style="font-size: 1em;" >
 	<div class="col-lg-12">
@@ -95,47 +137,47 @@ foreach ($actividades as $val) {
 				    </tr>
 				</thead>
 				<tbody>
-					<?php for ($i = 0; $i < count($actividad); $i ++) : ?>
+					<?php foreach ($actividadessql as $actividad): ?>
 						<tr>
-							    <td><?= $descripcionactividad[$i];?></td>
-								<td style="text-align:center" class="info"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin )->queryscalar();?></p></td>
-								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 2 and e2.id <> 15 ")->queryscalar();?></p></td>
-								<td style="text-align:right"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e3.id = 11  ")->queryscalar(),2);?></p></td>
-								<td style="text-align:center" class="info"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 2 and e2.id = 15")->queryscalar();?></p></td>
-								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 4  ")->queryscalar();?></p></td>
-								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 3  ")->queryscalar();?></p></td>
-								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 1  ")->queryscalar();?></p></td>
-								<td style="text-align:center" class="info"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 14")->queryscalar();?></p></td>
-								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 9  ")->queryscalar();?></p></td>
-								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 1  ")->queryscalar();?></p></td>
-								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 2  ")->queryscalar();?></p></td>
-								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 7  ")->queryscalar();?></p></td>
-				                <td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 3  ")->queryscalar();?></p></td>
-								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e3.id = 11 " )->queryscalar();?></p></td>
-								<td style="text-align:right"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e3.id = 11  ")->queryscalar(),2);?></p></td>
-								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e3.id = 10  ")->queryscalar();?></p></td>
-								<td style="text-align:right"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e3.id = 10  ")->queryscalar(),2);?></p></td>
+							    <td><?= $actividad->descripcion;?></td>
+								<td style="text-align:center" class="info"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin." where pe1.id = $actividad->id " )->queryscalar();?></p></td>
+								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 2 and e2.id <> 15 and pe1.id = $actividad->id ")->queryscalar();?></p></td>
+								<td style="text-align:right"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e3.id = 11 and pe1.id = $actividad->id  ")->queryscalar(),2);?></p></td>
+								<td style="text-align:center" class="info"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 2 and e2.id = 15 and pe1.id = $actividad->id")->queryscalar();?></p></td>
+								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 4 and pe1.id = $actividad->id ")->queryscalar();?></p></td>
+								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 3 and pe1.id = $actividad->id ")->queryscalar();?></p></td>
+								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 1 and pe1.id = $actividad->id ")->queryscalar();?></p></td>
+								<td style="text-align:center" class="info"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 14 and pe1.id = $actividad->id ")->queryscalar();?></p></td>
+								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 9 and pe1.id = $actividad->id ")->queryscalar();?></p></td>
+								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 1 and pe1.id = $actividad->id ")->queryscalar();?></p></td>
+								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 2 and pe1.id = $actividad->id ")->queryscalar();?></p></td>
+								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 7 and pe1.id = $actividad->id ")->queryscalar();?></p></td>
+				                <td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 3 and pe1.id = $actividad->id ")->queryscalar();?></p></td>
+								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e3.id = 11 and pe1.id = $actividad->id " )->queryscalar();?></p></td>
+								<td style="text-align:right"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e3.id = 11 and pe1.id = $actividad->id ")->queryscalar(),2);?></p></td>
+								<td style="text-align:center"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e3.id = 10 and pe1.id = $actividad->id ")->queryscalar();?></p></td>
+								<td style="text-align:right"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e3.id = 10 and pe1.id = $actividad->id ")->queryscalar(),2);?></p></td>
 						</tr>
-					<?php endfor; ?>
+					<?php endforeach; ?>
 				    	<tr>
 				                <td style="vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger">Total</td>
-								<td style=<?= $styleceldas?> class="danger totaltabla"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin)->queryscalar();?></p></td>
-								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 2 and e2.id <> 15 ")->queryscalar();?></p></td>
-								<td style="text-align:right; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->formatter->asCurrency(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e3.id = 11 ")->queryscalar());?></p></td>
-								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 2 and e2.id = 15 ")->queryscalar();?></p></td>
-								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 4 ")->queryscalar();?></p></td>
-								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 3 ")->queryscalar();?></p></td>
-								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 1 ")->queryscalar();?></p></td>
-								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 14 ")->queryscalar();?></p></td>
-								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 9  ")->queryscalar();?></p></td>
-								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 1 ")->queryscalar();?></p></td>
-								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 2 ")->queryscalar();?></p></td>
-								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 7 ")->queryscalar();?></p></td>
-				                <td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 3 ")->queryscalar();?></p></td>
-								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e3.id = 11 ")->queryscalar();?></p></td>
-								<td style="text-align:right; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->formatter->asCurrency(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e3.id = 11 ")->queryscalar());?></p></td>
-								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e3.id = 10 ")->queryscalar();?></p></td>
-				                <td style="text-align:right; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->formatter->asCurrency(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e3.id = 10  ")->queryscalar());?></p></td>
+								<td style=<?= $styleceldas?> class="danger totaltabla"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin. " $filtrogrande ")->queryscalar();?></p></td>
+								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 2 and e2.id <> 15 $filtro")->queryscalar();?></p></td>
+								<td style="text-align:right; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->formatter->asCurrency(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e3.id = 11 $filtro ")->queryscalar());?></p></td>
+								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 2 and e2.id = 15 $filtro ")->queryscalar();?></p></td>
+								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 4 $filtro ")->queryscalar();?></p></td>
+								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 3 $filtro ")->queryscalar();?></p></td>
+								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 1 $filtro ")->queryscalar();?></p></td>
+								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 14  $filtro ")->queryscalar();?></p></td>
+								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 9  $filtro ")->queryscalar();?></p></td>
+								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 1 $filtro ")->queryscalar();?></p></td>
+								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 2 $filtro ")->queryscalar();?></p></td>
+								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 7 $filtro ")->queryscalar();?></p></td>
+				                <td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e2.id = 3 $filtro ")->queryscalar();?></p></td>
+								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e3.id = 11 $filtro ")->queryscalar();?></p></td>
+								<td style="text-align:right; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e3.id = 11 $filtro ")->queryscalar(),2);?></p></td>
+								<td style=<?= $styleceldas?> class="danger"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e3.id = 10 $filtro ")->queryscalar();?></p></td>
+				                <td style="text-align:right; vertical-align:middle; font-weight: bold; font-size: 1em; background-color: #585858; color: white;" class="danger"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e3.id = 10 $filtro ")->queryscalar(),2);?></p></td>
 						</tr>
 					
 				</tbody>

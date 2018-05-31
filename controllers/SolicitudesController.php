@@ -222,7 +222,11 @@ class SolicitudesController extends Controller
         $id = (int)$id;
 
             $query = \app\models\PresupuestosSearch::find()
-                    ->select(["conexionsigesp.req  as documento", 'presupuestos.montoapr as montopre', 'empresa_institucion.nombrecompleto as nombre', "CONCAT(empresa_institucion.rif || '-' || empresa_institucion.nrif) as rif" ])
+                    ->select([
+                        "conexionsigesp.req  as documento", 
+                        'presupuestos.montoapr as montopre', 
+                        'empresa_institucion.nombrecompleto as nombre', 
+                        "CONCAT(empresa_institucion.rif || '-' || empresa_institucion.nrif) as rif" ])
                     ->join('LEFT JOIN', 'conexionsigesp', 'conexionsigesp.id_presupuesto = presupuestos.id')
                     ->join('LEFT JOIN', 'empresa_institucion', 'empresa_institucion.id = presupuestos.beneficiario_id')
                     ->andFilterWhere(['presupuestos.solicitud_id' => $id]);

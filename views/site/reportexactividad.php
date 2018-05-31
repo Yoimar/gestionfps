@@ -6,6 +6,9 @@ use app\models\Trabajador;
 use app\models\Estados;
 use app\models\Parroquias;
 use app\models\Municipios;
+use app\models\Origen; 
+use app\models\Autoridad;
+use app\models\Cargo;
 
 
 /* @var $this yii\web\View */
@@ -60,40 +63,48 @@ $actividadessql = Programaevento::find()
 
 $filtro = "";
 $filtrogrande = "";
+$titulo = "";
 
 if (!empty($model->ano)){
 	$filtro .= ' and extract(year from pe1.fechaprograma) = '.$model->ano; 
 	$filtrogrande = ($filtrogrande=="")?" where extract(year from pe1.fechaprograma) = $model->ano":" and extract(year from pe1.fechaprograma) = $model->ano";
+	$titulo .= " - Año: ".$model->ano;
 }
 
 if (!empty($model->mes)){
 	$filtro .= ' and extract(month from pe1.fechaprograma) = '.$model->mes; 
 	$filtrogrande = ($filtrogrande=="")?" where extract(month from pe1.fechaprograma) = $model->mes":" and extract(month from pe1.fechaprograma) = $model->mes";
+	$titulo .= " - Mes: ".$model->mes;
 }
 
 if (!empty($model->origen)){
 	$filtro .= ' and pe1.origenid = '.$model->origen; 
 	$filtrogrande = ($filtrogrande=="")?" where pe1.origenid = $model->origen ":" and pe1.origenid = $model->origen ";
+	$titulo .= " - Origen: ".Origen::findOne($model->origen)->nombre;
 }
 
 if (!empty($model->personalidad)){
 	$filtro .= ' and r1.autoridad_id = '.$model->personalidad; 
 	$filtrogrande = ($filtrogrande=="")?" where r1.autoridad_id = $model->personalidad ":" and r1.autoridad_id = $model->personalidad ";
+	$titulo .= " - Personalidad: ".Autoridad::findOne($model->personalidad)->nombrecompleto;
 }
 
 if (!empty($model->cargo)){
 	$filtro .= ' and pe1.origenid = '.$model->cargo; 
 	$filtrogrande = ($filtrogrande=="")?" where r1.cargo_id = $model->cargo ":" and r1.cargo_id = $model->cargo ";
+	$titulo .= " - Cargo: ".Cargo::findOne($model->cargo)->nombrecompleto;
 }
 
 if (!empty($model->estado)){
 	$filtro .= ' and mu1.estado_id = '.$model->estado; 
 	$filtrogrande = ($filtrogrande=="")?" where mu1.estado_id = $model->estado ":" and mu1.estado_id = $model->estado ";
+	$titulo .= " - Estado: ". Estados::findOne($model->estado)->nombre;
 }
 
 if (!empty($model->trabajador)){
 	$filtro .= ' and pe1.trabajadoracargo_id = '.$model->trabajador; 
 	$filtrogrande = ($filtrogrande=="")?" where pe1.trabajadoracargo_id = $model->trabajador ":" and pe1.trabajadoracargo_id = $model->trabajador ";
+	$titulo .= " - Trabajador: ".Trabajador::findOne($model->trabajador)->Trabajadorfps;
 }
 ?>
 
@@ -107,7 +118,7 @@ if (!empty($model->trabajador)){
 	<div class="col-lg-12">
 		<div class="box">
 			<div class="box-header">
-				<h3 style="padding-top: 0; margin-top: 0; "> Reporte por Actividad </h3>
+				<h3 style="padding-top: 0; margin-top: 0; "> Reporte por Actividad <?= $titulo ?> </h3>
 			</div>
 <div class="box-body">
 	<div class="row">
@@ -139,7 +150,7 @@ if (!empty($model->trabajador)){
 				<tbody>
 					<?php foreach ($actividadessql as $actividad): ?>
 						<tr>
-							    <td style="font-size: 0.9em;"><?= $actividad->descripcion;?></td>
+							    <td style="font-size: 0.9em;"><?= Html::a($actividad->descripcion, ['site/tablaactividad', 'actividad' => $actividad->id], ['target'=>'_blank']) ?></td>
 								<td style="text-align:center; vertical-align:middle;" class="info"><p  style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin." where pe1.id = $actividad->id " )->queryscalar();?></p></td>
 								<td style="text-align:center; vertical-align:middle;"><p style="margin: 0;"><?= Yii::$app->db->createCommand("select count(*) from ".$tablasconjoin."  where  e1.id = 2 and e2.id <> 15 and pe1.id = $actividad->id ")->queryscalar();?></p></td>
 								<td style="text-align:right; vertical-align:middle;"><p style="margin: 0;"><?= Yii::$app->formatter->asDecimal(Yii::$app->db->createCommand("select sum(p1.montoapr) from ".$tablasconjoinpresupuesto." where  e1.id = 2 and pe1.id = $actividad->id  ")->queryscalar(),2);?></p></td>

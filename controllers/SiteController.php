@@ -13,6 +13,7 @@ use yii\db\Query;
 use yii\data\ActiveDataProvider;
 use app\models\Reportes;
 use app\models\Gestion;
+use app\models\GestionSearch;
 use app\models\Users;
 use app\controllers\GestionController;
 use kartik\mpdf\Pdf;
@@ -638,9 +639,16 @@ class SiteController extends Controller
 
             if ($actividad!=null||$model->load(Yii::$app->request->post())){
                 if (isset($actividad)){$model->actividad = $actividad;}
+                $searchModel = new GestionSearch();
+                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+                $dataProvider->query->andWhere(['gestion.programaevento_id'=>$model->actividad]);
+
+
                 return $this->render('tablaactividad',
                 [
                     'model' => $model,
+                    'dataProvider' => $dataProvider,
+
                 ]);
             }
 

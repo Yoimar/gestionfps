@@ -56,8 +56,9 @@ class GestionSearch extends Gestion
                 'solicitudes.persona_beneficiario_id as persona_beneficiario_id',
                 'solicitudes.persona_solicitante_id as persona_solicitante_id',
                 'gestion.programaevento_id',
-                'programaevento.id', 'solicitudes.id', 'gestion.id as id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', "estatus1.nombre as estatus1_id",
-                "estatus2.nombre as estatus2_id", 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante',
+                'programaevento.id', 
+                'solicitudes.id', 'gestion.id as id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', "estatus1.nombre as estatus1_id",
+                "estatus2.nombre as estatus2_id", 'gestion.estatus3_id as estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante',
                 'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id', 'gestion.afrodescendiente', 'gestion.indigena',
                 'gestion.sexodiversidad', 'gestion.trabajador_id', "personasolicitante.ci as cisolicitante", "personabeneficiario.ci as cibeneficiario",
                 "CONCAT(personabeneficiario.nombre || ' ' || personabeneficiario.apellido) AS beneficiario", 'solicitudes.ind_beneficiario_menor as nino',
@@ -141,8 +142,8 @@ class GestionSearch extends Gestion
                         'desc' => ['estatus2.nombre' => \SORT_DESC],
                     ],
                     'estatus3_id' => [
-                        'asc' => ['estatus3.nombre' => \SORT_ASC],
-                        'desc' => ['estatus3.nombre' => \SORT_DESC],
+                        'asc' => ['gestion.estatus3_id' => \SORT_ASC],
+                        'desc' => ['gestion.estatus3_id' => \SORT_DESC],
                     ],
                     'tipodecontacto_id' => [
                         'asc' => ['tipodecontacto.nombre' => \SORT_ASC],

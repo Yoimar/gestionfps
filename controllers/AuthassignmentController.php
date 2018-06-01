@@ -8,6 +8,7 @@ use app\models\AuthassignmentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\User;
 
 /**
  * AuthassignmentController implements the CRUD actions for Authassignment model.
@@ -120,5 +121,17 @@ class AuthassignmentController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionResetpassword($id=null)
+    {
+            if($id == null){
+                $id = Yii::$app->request->post('id'); 
+            }
+            $user = User::findOne($id);
+            $user->setPassword('123456');
+            $user->generateAuthKey();
+            $user->save();
+            return true;
     }
 }

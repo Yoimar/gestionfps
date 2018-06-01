@@ -18,6 +18,7 @@ use app\models\Users;
 use app\controllers\GestionController;
 use kartik\mpdf\Pdf;
 use yii\helpers\Html;
+use app\models\User;
 
 class SiteController extends Controller
 {
@@ -193,6 +194,16 @@ class SiteController extends Controller
         return $this->render('signup', [
             'model' => $model,
         ]);
+    }
+
+    public function actionResetpassword($id)
+    {
+            $user = User::findOne($id);
+            $user->setPassword('123456');
+            $user->generateAuthKey();
+            $user->save();
+            return true;
+
     }
 
     /**

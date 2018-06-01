@@ -163,7 +163,7 @@ class Programaevento extends \yii\db\ActiveRecord
 
     public function getActualizadoprogramapor()
     {
-        return $this->hasOne(Trabajador::className(), ['use_rid' => 'updated_by']);
+        return $this->hasOne(Trabajador::className(), ['user_id' => 'updated_by']);
     }
 
     public function getEstado()

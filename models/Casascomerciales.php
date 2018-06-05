@@ -36,7 +36,7 @@ class Casascomerciales extends \yii\db\ActiveRecord
             [['created_by', 'updated_by'], 'integer'],
             [['nombrecompleto'], 'string', 'max' => 250],
             [['rif'], 'string', 'max' => 1],
-            [['nrif'], 'string', 'max' => 20],
+            [['nrif'], 'string', 'max' => 9],
         ];
     }
 

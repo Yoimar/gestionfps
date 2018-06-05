@@ -54,7 +54,6 @@ class PresupuestosSearch extends Presupuestos
         'programaevento.descripcion',
         'solicitudes.num_solicitud as num_solicitud',
         'gestion.programaevento_id',
-        'programaevento.id',
         'presupuestos.numop',
         'presupuestos.montoapr as montoapr',
         'presupuestos.monto as monto',

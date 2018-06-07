@@ -12,6 +12,11 @@ $this->registerJsFile('https://code.highcharts.com/mapdata/countries/ve/ve-all.j
 <center>
 <?php
 echo Highmaps::widget([
+    'scripts' => [
+        'modules/exporting',
+        'themes/default',
+    ],
+
     'options' => [
         'chart' => [
             'map' => 'countries/ve/ve-all',
@@ -32,23 +37,31 @@ echo Highmaps::widget([
             [
                 // Use the gb-all map with no data as a basemap
                 'name' => 'Basemap',
-                'borderColor' => '#A0A0A0',
+                'borderWidth' => 0.2,
+                'borderColor' => '#000000',
                 'nullColor' => 'rgba(200, 200, 200, 0.3)',
                 'showInLegend' => false
                 ],
             [
                 'name' => 'Separators',
                 'type' => 'mapline',
-                'nullColor' => '#707070',
+                'borderWidth' => 0.2,
+                'borderColor' => '#000000',
+                'nullColor' => '#000000',
                 'showInLegend' => false,
                 'enableMouseTracking' => false
             ],
             [
                 // Specify points using lat/lon
                 'type' => 'mappoint',
-                'name' => 'Lugares',
-                'color' => '#000000',
+                'name' => 'Centros',
+                'color' => '#7F7F7F',
+                'borderWidth' => 1,
+                'borderColor' => '#000000',
                 'data' => $data,
+                'dataLabels' => [
+                    'enabled' => false,
+                ],
             ]
         ]
     ]

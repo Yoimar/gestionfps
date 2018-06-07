@@ -4,7 +4,7 @@ use yii\helpers\ArrayHelper;
 foreach ($data as $elindice => $elarray) {
 
     foreach ($elarray as $key => $value) {
-        $elarray['zoomLevel'] = 30;
+        $elarray['zoomLevel'] = 20;
         $elarray['width'] = 30;
         $elarray['height'] = 30;
         $elarray['imageURL'] = Yii::getAlias('@web').'/img/MarkerMapHospital2.png';
@@ -17,6 +17,7 @@ $chartConfiguration = [
     'theme' => "light",
     'dataProvider' => [
         "map" => "venezuelaHigh",
+        "projection" => "winkel3",
         "zoomLevel" => 1,
         "zoomLongitude" => -66,
         "zoomLatitude" => 6.5,
@@ -30,12 +31,12 @@ $chartConfiguration = [
 
     'areasSettings' => [
         'rollOverOutlineColor' => "#FFFFFF",
-        'rollOverColor' => "#CC0000",
+        'rollOverColor' => "#CCCCCC",
         'alpha' => 0.8
     ],
 
     'export' => [
-        'enabled' => true
+        'enabled' => true,
     ]
   // Fin del char de Configuracion
 ];

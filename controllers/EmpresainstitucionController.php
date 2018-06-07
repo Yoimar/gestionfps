@@ -12,6 +12,7 @@ use app\models\Conexionsigesp;
 use app\models\Sepsolicitud;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
+use yii\db\Query;
 
 /**
  * EmpresainstitucionController implements the CRUD actions for Empresainstitucion model.
@@ -163,5 +164,24 @@ class EmpresainstitucionController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionListaempresas($q = null, $id = null) {
+    \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    $out = ['results' => ['id' => '', 'text' => '']];
+    if (!is_null($q)) {
+        $query = new Query;
+        $query->addSelect(["id", "concat(nombrecompleto,' // ', 'rif: ',' ',nrif) as text"])
+            ->from('empresa_institucion')
+            ->andFilterWhere(['ilike', "concat(nombrecompleto,' ',nrif)", $q])
+            ->limit(20);
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        $out['results'] = array_values($data);
+    }
+    elseif ($id > 0) {
+        $out['results'] = ['id' => $id, 'text' => Empresainstitucion::find($id)->nombrecompleto];
+    }
+    return $out;
     }
 }

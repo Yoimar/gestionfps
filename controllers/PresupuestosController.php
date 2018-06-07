@@ -8,6 +8,9 @@ use app\models\PresupuestosSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\ActiveDataProvider;
+use yii\base\Model;
+
 
 /**
  * PresupuestosController implements the CRUD actions for Presupuestos model.
@@ -89,6 +92,37 @@ class PresupuestosController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+            ]);
+        }
+    }
+
+
+    public function actionTabularpresupuestos($solicitud_id)
+    {
+        $query = Presupuestos::find();
+        $query->where(['solicitud_id' => $solicitud_id])->indexBy('id'); // id es la llave primaria
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $model = new Presupuestos();
+
+        $models = $dataProvider->getModels();
+        if (Presupuestos::loadMultiple($models, Yii::$app->request->post()) && Presupuestos::validateMultiple($models)) {
+            $count = 0;
+            foreach ($models as $index => $model) {
+                // populate and save records for each model
+                if ($model->save()) {
+                    $count++;
+                }
+            }
+            Yii::$app->session->setFlash('success', "Processed {$count} records successfully.");
+            return $this->redirect(['index']); // redirect to your next desired page
+        } else {
+            return $this->render('tabularpresupuestos', [
+                'model'=>$model,
+                'dataProvider'=>$dataProvider
             ]);
         }
     }

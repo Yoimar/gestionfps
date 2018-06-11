@@ -232,11 +232,11 @@ class GestionController extends Controller
         $model = Bitacoras::cargardefecto($modelnew);
         $model->solicitud_id = $id;
         $usuarioid = Yii::$app->user->id;
-        
+
         $modeltrabajador = Trabajador::findOne([
             'user_id' => $usuarioid,
         ]);
-        
+
         $model->usuario_id = $modeltrabajador->users_id;
 
         $searchModel = new BitacorasSearch();
@@ -1281,9 +1281,9 @@ while ($i<11){
 
             if (isset($modelcheque)&&$modelcheque->estcondoc=='C'){
                 // el caso tiene un cheque
-                $modelconexionsigesp->date_enviofirma = $modelcheque->fecenvfir;
-                $modelconexionsigesp->date_enviocaja = $modelcheque->fecenvcaj;
-                $modelconexionsigesp->estatus_sigesp = 'CHC';
+                $modelgestioncheque->date_enviofirma = $modelcheque->fecenvfir;
+                $modelgestioncheque->date_enviocaja = $modelcheque->fecenvcaj;
+                $modelgestion->estatus_sigesp = 'CHC';
                 //Coloco el estatus de Cheque Enviado a Caja
                 $modelgestion->estatus3_id = 71;
 
@@ -1291,7 +1291,7 @@ while ($i<11){
                 // Verifico si el cheque existe
                 $modelconexionsigesp->estatus_sigesp = 'CHE';
                 // lo que lleno en CHF
-                $modelconexionsigesp->date_enviofirma = '';
+                $modelgestioncheque->date_enviofirma = '';
             } else {
                 //salgo de los while ya que el caso no esta co
                 break 2;
@@ -1428,8 +1428,8 @@ while ($i<11){
 
             $int = (int)$idsolicitud;
             $prueba[]= $int;
-            $model->estatus3 = (int)$model->estatus3;            
-            $model->actividad = (int)$model->actividad;     
+            $model->estatus3 = (int)$model->estatus3;
+            $model->actividad = (int)$model->actividad;
 
             $this->Cambiorapido($int, $model->estatus3, $model->actividad);
         }
@@ -1519,7 +1519,7 @@ while ($i<11){
    }
 
    public function Cambiorapido ($solicitudid, $estatus3id=null, $actividad=null){
-    
+
        $modelgestion = Gestion::findOne(['solicitud_id' => $solicitudid ]);
 
        if (empty($modelgestion)) {

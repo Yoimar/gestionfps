@@ -1283,7 +1283,7 @@ while ($i<11){
                 // el caso tiene un cheque
                 $modelgestioncheque->date_enviofirma = $modelcheque->fecenvfir;
                 $modelgestioncheque->date_enviocaja = $modelcheque->fecenvcaj;
-                $modelgestion->estatus_sigesp = 'CHC';
+                $modelconexionsigesp->estatus_sigesp = 'CHC';
                 //Coloco el estatus de Cheque Enviado a Caja
                 $modelgestion->estatus3_id = 71;
 

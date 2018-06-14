@@ -23,6 +23,7 @@ use app\models\Gestion;
 use app\models\Solicitudes;
 use app\models\Personas;
 use app\models\Bitacoras;
+use app\models\Sepingreso;
 use yii\helpers\Html;
 use kartik\mpdf\Pdf;
 
@@ -419,6 +420,9 @@ class ChequeController extends Controller
             //Guardar los modelos de Beneficiario Solicitante y Solicitud
             $modelpersonabeneficiario->save();
 
+            return $this->redirect(['imprimirentrega', 
+                'cheque' => $cheque,
+            ]);
 
         }
 
@@ -742,5 +746,37 @@ class ChequeController extends Controller
 
             return $this->redirect('busqueda');
         }
+
+    public function actionChequemanual($cheque){
+        $model = new Sepingreso;
+
+        if ($model->load(Yii::$app->request->post())) {
+            
+            return $this->redirect(['asociapresupuesto', 
+                'caso' => $model->caso,
+                'cheque' => $model->cheque,
+            ]);            
+
+        }
+
+        return $this->render('chequemanual', [
+                'model' => $model,
+                'cheque' => $cheque,
+            ]);
+    }
+
+    public function actionAsociapresupuesto($caso,$cheque){
+
+        echo $caso;
+        echo "<br /> Hola <br />";
+        echo $cheque;
+        echo "<br /> Hola <br />";
+        exit();
+    }
+
+
+
+
+      
 
 }

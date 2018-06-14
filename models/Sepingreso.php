@@ -13,6 +13,7 @@ class Sepingreso extends Model
      * @inheritdoc
      */
     public $caso;
+    public $cheque;
 
     
     public function rules()
@@ -20,6 +21,7 @@ class Sepingreso extends Model
         return [
 
             [['caso'], 'integer'],
+            [['cheque'], 'safe'],
             [['caso'], 'required']
 
         ];

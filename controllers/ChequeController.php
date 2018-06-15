@@ -420,7 +420,7 @@ class ChequeController extends Controller
             //Guardar los modelos de Beneficiario Solicitante y Solicitud
             $modelpersonabeneficiario->save();
 
-            return $this->redirect(['imprimirentrega', 
+            return $this->redirect(['imprimirentrega',
                 'cheque' => $cheque,
             ]);
 
@@ -751,11 +751,11 @@ class ChequeController extends Controller
         $model = new Sepingreso;
 
         if ($model->load(Yii::$app->request->post())) {
-            
-            return $this->redirect(['asociapresupuesto', 
+
+            return $this->redirect(['asociapresupuesto',
                 'caso' => $model->caso,
                 'cheque' => $model->cheque,
-            ]);            
+            ]);
 
         }
 
@@ -766,17 +766,22 @@ class ChequeController extends Controller
     }
 
     public function actionAsociapresupuesto($caso,$cheque){
+        $presupuestos = Presupuestos::find()
+                ->where(['solicitud_id' => $caso])
+                ->all();
+        if (count($presupuestos) == 1){
 
-        echo $caso;
-        echo "<br /> Hola <br />";
-        echo $cheque;
-        echo "<br /> Hola <br />";
-        exit();
+            $model_banco_cheque = Scbmovbco::findOne(['numdoc' => $cheque]);
+
+
+        }
+
+
     }
 
 
 
 
-      
+
 
 }

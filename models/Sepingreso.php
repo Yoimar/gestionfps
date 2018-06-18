@@ -14,13 +14,14 @@ class Sepingreso extends Model
      */
     public $caso;
     public $cheque;
+    public $presupuesto;
 
-    
+
     public function rules()
     {
         return [
 
-            [['caso'], 'integer'],
+            [['caso', 'presupuesto'], 'integer'],
             [['cheque'], 'safe'],
             [['caso'], 'required']
 
@@ -36,12 +37,10 @@ class Sepingreso extends Model
             'caso' => 'N° Solicitud'
         ];
     }
-    
+
     public function getSolicitud()
     {
         return $this->hasOne(Solicitudes::className(), ['id' => 'caso']);
     }
-        
+
 }
-
-

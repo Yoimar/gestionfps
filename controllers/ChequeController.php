@@ -563,13 +563,14 @@ class ChequeController extends Controller
 
         $modelpersona = Personas::findOne($modelcheque->retirado_personaid);
 
+        if (isset($modelsigesp)){
             $modelsigesp->estcondoc = 'E';
             $modelsigesp->emichefec = $modelcheque->date_entregado;
             $modelsigesp->emichenom = $modelpersona->nombre." ".$modelpersona->apellido;
             $modelsigesp->emicheced = strval($modelpersona->ci);
             $modelsigesp->emicheproc = 1;
-
-        $modelsigesp->save();
+            $modelsigesp->save();
+        }
 
         return true;
     }
@@ -766,22 +767,123 @@ class ChequeController extends Controller
     }
 
     public function actionAsociapresupuesto($caso,$cheque){
+
         $presupuestos = Presupuestos::find()
                 ->where(['solicitud_id' => $caso])
                 ->all();
-        if (count($presupuestos) == 1){
+        switch( count($presupuestos) ){
+            // ESTATUS VACIO
+            case 0:
 
-            $model_banco_cheque = Scbmovbco::findOne(['numdoc' => $cheque]);
+            $model = new Sepingreso;
+            $model->caso = $caso;
+
+            Yii::$app->session->setFlash("warning", "El caso no posee presupuesto asociado");
+
+            return $this->render('chequemanual', [
+                    'model' => $model,
+                    'cheque' => $cheque,
+                ]);
+
+            break 1; // Aquí salé del switch
+
+            case 1:
+
+            $model_banco_cheque = Scbmovbco::findOne([
+                'numdoc' => $cheque,
+                'codope' => 'CH',
+            ]);
+
+            foreach ($presupuestos as $presupuesto) {
+                $modelcheque = new Cheque;
+                $modelcheque->cheque = $model_banco_cheque->numdoc;
+                $modelcheque->date_cheque = $model_banco_cheque->fecmov;
+                $modelcheque->id_presupuesto = $presupuesto->id;
+                if ($model_banco_cheque->estmov === 'O') {
+                    $modelcheque->estatus_cheque = 'ANU';
+                }else{
+                $modelcheque->estatus_cheque = 'EMI';
+                }
+                $modelcheque->save();
+                $presupuesto->estatus_doc = 'CHE';
+                $presupuesto->cheque = ltrim($cheque, '0');
+                $presupuesto->save();
+                $modelgestion = Gestion::findOne([
+                    'solicitud_id' => $presupuesto->solicitud_id,
+                ]);
+                if (empty($modelgestion)){
+                    $modelgestion = new Gestion;
+                    $modelgestion->solicitud_id = $presupuesto->solicitud_id;
+                }
+                $modelgestion->estatus3_id = 67;
+                $modelgestion->save();
+
+            }
+
+            return $this->redirect(['cargarfoto', 'cheque' => $cheque]);
+
+            break 1; // aqui sale del switch caso 1
+
+            default:
+
+            return $this->redirect(['presupuestomanual',
+                    'caso' => $caso,
+                    'cheque' => $cheque,
+                ]);
+
+            break;
 
 
         }
 
-
     }
 
+        public function actionPresupuestomanual($caso,$cheque){
 
+            $model = new Sepingreso;
+            $model->caso = $caso;
+            $model->cheque = $cheque;
 
+            if ($model->load(Yii::$app->request->post())) {
 
+                $model_banco_cheque = Scbmovbco::findOne([
+                    'numdoc' => $cheque,
+                    'codope' => 'CH',
+                ]);
 
+                $presupuesto = Presupuestos::findOne($model->presupuesto);
 
-}
+                $modelcheque = new Cheque;
+                $modelcheque->cheque = $model_banco_cheque->numdoc;
+                $modelcheque->date_cheque = $model_banco_cheque->fecmov;
+                $modelcheque->id_presupuesto = $presupuesto->id;
+                if ($model_banco_cheque->estmov === 'O') {
+                    $modelcheque->estatus_cheque = 'ANU';
+                }else{
+                $modelcheque->estatus_cheque = 'EMI';
+                }
+                $modelcheque->save();
+                $presupuesto->estatus_doc = 'CHE';
+                $presupuesto->cheque = ltrim($cheque, '0');
+                $presupuesto->save();
+                $modelgestion = Gestion::findOne([
+                    'solicitud_id' => $presupuesto->solicitud_id,
+                ]);
+                if (empty($modelgestion)){
+                    $modelgestion = new Gestion;
+                    $modelgestion->solicitud_id = $presupuesto->solicitud_id;
+                }
+                $modelgestion->estatus3_id = 67;
+                $modelgestion->save();
+
+                return $this->redirect(['cargarfoto', 'cheque' => $cheque]);
+
+            }
+
+            return $this->render('presupuestomanual', [
+                    'model' => $model,
+                ]);
+
+        }
+
+    }

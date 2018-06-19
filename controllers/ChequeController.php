@@ -252,15 +252,19 @@ class ChequeController extends Controller
                 'numsol' => $modelorpa->documento,
             ]);
 
-            //reviso si el caso esta recibido por orpa
-            $modelrecibidoorpa = Cxprdspg::findOne([
-                'numrecdoc' => $modeldtorpa->numrecdoc,
-                'ced_bene' => $modeldtorpa->ced_bene,
-            ]);
+            if (isset($modeldtorpa)){
 
-            $modelconexionsigesp = Conexionsigesp::findOne([
-                'req' =>  $modelrecibidoorpa->numdoccom,
-            ]);
+                //reviso si el caso esta recibido por orpa
+                $modelrecibidoorpa = Cxprdspg::findOne([
+                    'numrecdoc' => $modeldtorpa->numrecdoc,
+                    'ced_bene' => $modeldtorpa->ced_bene,
+                ]);
+
+                $modelconexionsigesp = Conexionsigesp::findOne([
+                    'req' =>  $modelrecibidoorpa->numdoccom,
+                ]);
+
+            }
 
             return isset($modelconexionsigesp)?$modelconexionsigesp->id:false;
 

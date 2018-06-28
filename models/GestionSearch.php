@@ -21,9 +21,9 @@ class GestionSearch extends Gestion
             [['id', 'programaevento_id', 'convenio_id',  'estatus3_id', 'rango_solicitante_id',
              'rango_beneficiario_id', 'trabajador_id', 'created_by', 'updated_by',
               'tipodecontacto_id', 'diasdeultimamodificacion', 'diasdesolicitud',
-               'diasdesdeactividad', 'edadbeneficiario','instruccion_id', 'persona_beneficiario_id', 'persona_solicitante_id',], 'integer'],
+               'diasdesdeactividad', 'edadbeneficiario','instruccion_id', 'persona_beneficiario_id', 'persona_solicitante_id', ], 'integer'],
             [['militar_solicitante', 'militar_beneficiario', 'nino', ], 'boolean'],
-            [['solicitante', 'solicitud_id', 'estatus1_id', 'estatus2_id', 'cisolicitante', 'cibeneficiario', 'recepcion', 'beneficiario', 'necesidad', 'descripcion', 'anodelasolicitud', 'telefono', 'fechaactividad', 'fechaingreso', 'fechaaprobacion', 'fechaultimamodificacion', 'tratamiento', 'mes_actividad', 'afrodescendiente', 'indigena', 'sexodiversidad', 'trabajadorsocial', 'trabajadoracargoactividad', 'especialidad', 'mesingreso', 'estado_actividad', 'tipodeayuda', 'estatussa', 'empresaoinstitucion', 'proceso', 'cheque', 'direccion', 'estadodireccion','created_at', 'updated_at'], 'safe'],
+            [['solicitante', 'solicitud_id', 'estatus1_id', 'estatus2_id', 'cisolicitante', 'cibeneficiario', 'recepcion', 'beneficiario', 'necesidad', 'descripcion', 'anodelasolicitud', 'telefono', 'fechaactividad', 'fechaingreso', 'fechaaprobacion', 'fechaultimamodificacion', 'tratamiento', 'mes_actividad', 'afrodescendiente', 'indigena', 'sexodiversidad', 'trabajadorsocial', 'trabajadoracargoactividad', 'especialidad', 'mesingreso', 'estado_actividad', 'tipodeayuda', 'estatussa', 'empresaoinstitucion', 'proceso', 'cheque', 'direccion',  'estadodireccion','created_at', 'updated_at', 'origen',], 'safe'],
             [['monto', 'cantidad',], 'number'],
         ];
     }
@@ -56,7 +56,8 @@ class GestionSearch extends Gestion
                 'solicitudes.persona_beneficiario_id as persona_beneficiario_id',
                 'solicitudes.persona_solicitante_id as persona_solicitante_id',
                 'gestion.programaevento_id',
-                'programaevento.id', 
+                'programaevento.id',
+                'origen.nombre as origen', 
                 'solicitudes.id', 'gestion.id as id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', "estatus1.nombre as estatus1_id",
                 "estatus2.nombre as estatus2_id", 'gestion.estatus3_id as estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante',
                 'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id', 'gestion.afrodescendiente', 'gestion.indigena',
@@ -87,6 +88,7 @@ class GestionSearch extends Gestion
                 ->join('LEFT JOIN', 'presupuestos', 'presupuestos.solicitud_id = solicitudes.id')
                 ->join('LEFT JOIN', 'requerimientos', 'presupuestos.requerimiento_id = requerimientos.id')
                 ->join('LEFT JOIN', 'procesos', 'presupuestos.proceso_id = procesos.id')
+                ->join('LEFT JOIN', 'origen', 'programaevento.origenid = origen.id')
                 ->join('JOIN', 'estatus3', 'gestion.estatus3_id = estatus3.id')
                 ->join('LEFT JOIN', 'estatus2', 'estatus3.estatus2_id = estatus2.id')
                 ->join('LEFT JOIN', 'estatus1', 'estatus2.estatus1_id = estatus1.id')
@@ -110,7 +112,7 @@ class GestionSearch extends Gestion
                 'solicitudes.necesidad',
                 'persona_beneficiario_id',
                 'persona_solicitante_id',
-                'gestion.programaevento_id', 'programaevento.id', 'solicitudes.id', 'gestion.id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', 'estatus1.nombre', 'estatus2.nombre', 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante',
+                'gestion.programaevento_id', 'programaevento.id', 'origen.nombre', 'solicitudes.id', 'gestion.id', 'gestion.solicitud_id', 'gestion.convenio_id', 'convenio.nombre', 'estatus1.nombre', 'estatus2.nombre', 'gestion.estatus3_id', 'gestion.tipodecontacto_id', 'tipodecontacto.nombre', 'gestion.militar_solicitante',
                 'gestion.rango_solicitante_id', 'gestion.militar_beneficiario', 'gestion.rango_beneficiario_id',
                 'gestion.afrodescendiente', 'gestion.indigena', 'gestion.sexodiversidad', 'gestion.trabajador_id',
                 'cisolicitante', 'cibeneficiario',
@@ -337,6 +339,10 @@ class GestionSearch extends Gestion
                         'asc' => ['solicitudes.fecha_aprobacion' => \SORT_ASC],
                         'desc' => ['solicitudes.fecha_aprobacion' => \SORT_DESC],
                     ],
+                    'origen' => [
+                        'asc' => ['origen.nombre' => \SORT_ASC],
+                        'desc' => ['origen.nombre' => \SORT_DESC],
+                    ],
 
                 ],
             ],
@@ -395,6 +401,7 @@ class GestionSearch extends Gestion
             ->andFilterWhere(['ilike', 'empresa_institucion.nombrecompleto', $this->empresaoinstitucion])
             ->andFilterWhere(['ilike', 'procesos.nombre', $this->proceso])
             ->andFilterWhere(['like', 'presupuestos.cheque', $this->cheque])
+            ->andFilterWhere(['=', 'origen.nombre', $this->origen])
             ->andFilterWhere(['like', "TRIM(TO_CHAR(extract(year from solicitudes.created_at),'9999'))", $this->anodelasolicitud])
             ->andFilterWhere(['ilike', 'solicitudes.descripcion', $this->descripcion])
             ->andFilterWhere(['=', "date_part('day' ,now()-gestion.updated_at)", $this->diasdeultimamodificacion])

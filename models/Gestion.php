@@ -88,6 +88,7 @@ class Gestion extends \yii\db\ActiveRecord
     public $fechaaprobacion;
     public $persona_beneficiario_id;
     public $persona_solicitante_id;
+    public $origen;
 
 
     /**
@@ -137,7 +138,7 @@ class Gestion extends \yii\db\ActiveRecord
                 'persona_beneficiario_id',
                 'persona_solicitante_id', ], 'integer'],
             [['militar_solicitante', 'militar_beneficiario', 'nino'], 'boolean'],
-            [['solicitante', 'estatus1_id', 'estatus2_id', 'beneficiario', 'necesidad', 'descripcion', 'anodelasolicitud', 'direccion', 'telefono', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'trabajadorsocial', 'recepcion', 'estatussa', 'created_at', 'updated_at'], 'safe'],
+            [['solicitante', 'estatus1_id', 'estatus2_id', 'beneficiario', 'necesidad', 'descripcion', 'anodelasolicitud', 'direccion', 'telefono', 'fechaactividad', 'fechaingreso', 'fechaultimamodificacion', 'tratamiento', 'trabajadorsocial', 'recepcion', 'estatussa', 'created_at', 'updated_at', 'origen',], 'safe'],
             [['afrodescendiente', 'indigena', 'sexodiversidad'], 'string', 'max' => 2],
             [['monto', 'cantidad',], 'number'],
             [['num_solicitud','solicitud_id',], 'unique', 'message' => 'Este número de caso ya posee una gestión'],
@@ -312,6 +313,12 @@ class Gestion extends \yii\db\ActiveRecord
     public function getTrabajador()
     {
         return $this->hasOne(Trabajador::className(), ['id' => 'trabajador_id']);
+    }
+
+    public function getOrigen()
+    {
+        return $this->hasOne(Origen::className(), ['id' => 'origenid'])
+          ->viaTable('programaevento', ['id' => 'programaevento_id']);
     }
 
     public function getInstruccion()

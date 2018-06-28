@@ -11,6 +11,7 @@ use app\models\Estatus2;
 use app\models\Estatus3;
 use app\models\Tipodecontacto;
 use app\models\Trabajador;
+use app\models\Origen;
 use kartik\dynagrid\DynaGrid;
 use kartik\grid\GridView;
 use kartik\dynagrid\Module;
@@ -266,6 +267,19 @@ $this->title = 'Gestiones';
                 'pluginOptions'=>['allowClear'=>true],
             ],
             'filterInputOptions'=>['placeholder'=>'¿Contacto?'],
+            ],
+
+            [
+            'attribute' => 'origen',
+            'value' => 'origen',
+            'format' => 'text',
+            'visible'=> false,
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter' => ArrayHelper::map(Origen::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'¿Origen?'],
             ],
 
             [

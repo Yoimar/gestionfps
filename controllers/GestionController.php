@@ -342,10 +342,10 @@ class GestionController extends Controller
                  /**  Carga de Las Personas del Memo   **/
                 $modelorigenmemo->departamento = 1;
 //                $modelorigenmemo->unidad = 2;
-                $modelorigenmemo->usuario = 6;
+                $modelorigenmemo->usuario = 56;
                 $modelfinalmemo->departamentofinal = 6;
                 $modelfinalmemo->unidadfinal = 8;
-                $modelfinalmemo->usuariofinal = 11;
+                $modelfinalmemo->usuariofinal = 6;
                 $modelfinalmemo->estatus1final = 1;
                 $modelfinalmemo->estatus2final = 18;
                 $modelfinalmemo->estatus3final = 62;

@@ -911,9 +911,9 @@ class SepsolicitudController extends Controller
         .'</td></tr><tr><td class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;"> '
         .'B- AL: Cap. Rafael Ramón Tesorero Rodríguez<br>Coordinador General de la Fundación Pueblo Soberano '
         .'</td></tr><tr><td class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;"> '
-        .'C- POR: '.$consulta[0]['unidad'].' de la Dirección de Bienestar Social de la Fundación Pueblo Soberano '
+        .'C- POR: Cap. Ramón Salvador Sánchez Valero<br>Director de Bienestar Social de la Fundación Pueblo Soberano '
         .'</td></tr><tr><td class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="margin: 0px; padding: 2px; border: solid 2px black; font-size:12px;"> '
-        .'D- POR: 1erTte. Miguel Silveiro Castillo Pérez<br>Administrador de la Fundación Pueblo Soberano '
+        .'D- POR: Cap. Rafael Ramón Tesorero Rodríguez<br>Administrador de la Fundación Pueblo Soberano '
         .'</td></tr></table></div>';
 
                 $footerHtml = '<div class="row"><table class="table-condensed col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px; padding: 0px; font-size:12px;">'

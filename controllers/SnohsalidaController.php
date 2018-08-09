@@ -475,7 +475,7 @@ order by rifben;")->queryAll();
 
         $usuarioorigen = 'Cap. Enmanuel González<br>';
         $direccionorigen = 'Director de la Oficina de Gestión Humana <br>';
-        $usuariofinal = 'Cap. Rafael Tesorero <br>';
+        $usuariofinal = 'Cap. Rafael Tesorero<br>';
         $direccionfinal = 'Direccion de Administración y Finanzas<br>';
 
         $headerHtml = '<div class="row">'

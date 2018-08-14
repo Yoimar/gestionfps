@@ -39,8 +39,11 @@ class Empresainstitucion extends \yii\db\ActiveRecord
             [['created_at', 'updated_at'], 'safe'],
             [['created_by', 'updated_by', 'nrif'], 'integer'],
             [['nombrecompleto'], 'string', 'max' => 250],
+            //Validación Solo Número y letras
+            [['nombrecompleto'], 'match', 'pattern' => '/^[a-zA-Z0-9Z,.\s-]+$/i'],
             [['rif'], 'string', 'max' => 1],
             [['nrif'], 'string', 'max' => 10, 'message' => 'Por favor coloque solo NUMEROS sin ceros a la izquierda'],
+            [['nrif'], 'integer'],
         ];
     }
 

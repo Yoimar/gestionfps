@@ -40,8 +40,10 @@ class Empresainstitucion extends \yii\db\ActiveRecord
             [['created_by', 'updated_by', 'nrif'], 'integer'],
             [['nombrecompleto'], 'string', 'max' => 250],
             //Validación Solo Número y letras
-            [['nombrecompleto'], 'match', 'pattern' => '/^[a-zA-Z0-9Z,.\s-]+$/i'],
+            [['nombrecompleto'], 'match', 'pattern' => '/^[a-zA-Z0-9Z,.\s-]+$/i', 'message' => 'Por favor coloque solo LETRAS, NÚMEROS Y PUNTOS'],
             [['rif'], 'string', 'max' => 1],
+            [['cta_banco'], 'string', 'max' => 20, 'message' => 'Por favor coloque solo 20 numeros sin puntos ni guiones'],
+            [['cod_banco', 'cod_tip_cta'], 'string', 'max' => 3],
             [['nrif'], 'string', 'max' => 10, 'message' => 'Por favor coloque solo NUMEROS sin ceros a la izquierda'],
             [['nrif'], 'integer'],
         ];
